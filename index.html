@@ -12,13 +12,22 @@
     <div id="readme-content"></div>
 
     <script>
+        console.log('Starting fetch for README.md');
         fetch('README.md')
-            .then(response => response.text())
+            .then(response => {
+                console.log('Fetch response:', response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.text();
+            })
             .then(text => {
+                console.log('Fetched text:', text);
                 document.getElementById('readme-content').innerHTML = marked(text);
             })
             .catch(error => {
                 console.error('Error fetching README:', error);
+                document.getElementById('readme-content').textContent = 'Error loading README.md';
             });
     </script>
 </body>
