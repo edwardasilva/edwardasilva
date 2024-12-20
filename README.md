@@ -4,7 +4,7 @@ Welcome to my GitHub profile! I'm Edward Silva, an Electrical Engineering studen
 
 ## About Me
 
-- 🔧 **Currently working on:** Completing my degree in Electrical Engineering and preparing for the FE Electrical exam.
+- 🔧 **Currently working on:** Completing my degree in Electrical Engineering and preparing for the FE Electrical exam. Also building a website check it out here: [eeprep.com](https://www.eeprep.com/)
 - 🌱 **Learning:** Diving into LaTeX, control systems, and renewable energy technologies.
 - 🤔 **Looking for help with:** Advanced LaTeX tools and efficient workflow tips for managing large projects.
 
