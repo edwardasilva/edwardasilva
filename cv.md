@@ -28,19 +28,20 @@
 *Colorado School of Mines, December 2026*  
 
 - **Minor:** Computer Science, Software and Algorithm Design  
+- **GPA:** 3.435  
 - **Honors:**
 - Dean's List (2 semesters)
 - Honor Roll (2 semesters)
 - Provost Scholarship (\$9,000/year)
 - C-MAPP Scholar 2023-2024, 2024-2025 (\$1,000/year)
 - American Bureau of Shipping Scholar (\$4,000)
-- **GPA:** 3.435  
+
 
 ## Relevant Courses
 
 | **Course**                             | **Elective**                  | **Core**                  |
-|:-------------------------------------- |:----------------------------- |:-------------------------|
-| Fundamentals Electric Machinery        | Software Engineering          | Linear Algebra            |
+|:-------------------------------------- |:----------------------------- |:--------------------------|
+| Fundamentals of Electric Machinery     | Software Engineering          | Linear Algebra            |
 | Engineering Electromagnetics           | Computer Organization         | Differential Equations    |
 | Embedded Systems                       | Data Structures and Algorithms|                           |
 | Feedback Control Systems               | Intro to C# Programming       |                           |
