@@ -6,15 +6,46 @@
 
 ---
 
+## Table of Contents
+
+1. [Education](#education)
+2. [Relevant Courses](#relevant-courses)
+    - [Engineering](#engineering)
+    - [Elective](#elective)
+    - [Core](#core)
+3. [Professional Experience](#professional-experience)
+    - [Work Experience](#work-experience)
+    - [Teaching Experience](#teaching-experience)
+4. [Research Experience](#research-experience)
+5. [Projects](#projects)
+6. [Skills](#skills)
+
+---
+
 ## Education
 
 **Bachelor of Science in Electrical Engineering**  
 *Colorado School of Mines, December 2026*  
 
 - **Minor:** Computer Science, Software and Algorithm Design  
-- **Honors:** Deans list, Honor roll, Provost Scholarship, C-MAPP Scholar  
+- **Honors:**
+- Dean's List (2 semesters)
+- Honor Roll (2 semesters)
+- Provost Scholarship (\$9,000/year)
+- C-MAPP Scholar 2023-2024, 2024-2025 (\$1,000/year)
+- American Bureau of Shipping Scholar (\$4,000)
 - **GPA:** 3.435  
-- **Relevant Courses:** Control Systems, Electric Machines, Electromagnetics, Embedded Systems, Software Engineering
+
+## Relevant Courses
+
+| **Course**                             | **Elective**                  | **Core**                  |
+|:-------------------------------------- |:----------------------------- |:-------------------------|
+| Fundamentals Electric Machinery        | Software Engineering          | Linear Algebra            |
+| Engineering Electromagnetics           | Computer Organization         | Differential Equations    |
+| Embedded Systems                       | Data Structures and Algorithms|                           |
+| Feedback Control Systems               | Intro to C# Programming       |                           |
+| Digital Logic                          | Intro Linux OS                |                           |
+| Electrical Circuits                    | Programming Challenges I      |                           |
 
 ---
 
@@ -133,7 +164,7 @@
 
 - Recognized as Subject Matter Expert (Top 4 of 40 teams).
 - Collaborated with a team of six to design a cost-effective solution for managing acid mine drainage.
-- Engineered a working prototype under $100 using PVC piping and a PH filtration system.
+- Engineered a working prototype under \$100 using PVC piping and a PH filtration system.
 - Contributed to a 90-page detailed documentation.
 
 ---
