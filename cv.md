@@ -44,8 +44,9 @@
 | Engineering Electromagnetics           | Computer Organization         | Differential Equations    |
 | Embedded Systems                       | Data Structures and Algorithms|                           |
 | Feedback Control Systems               | Intro to C# Programming       |                           |
-| Digital Logic                          | Intro Linux OS                |                           |
+| Signals and Systems                    | Intro Linux OS                |                           |
 | Electrical Circuits                    | Programming Challenges I      |                           |
+| Digital Logic                          |                               |                           |
 
 ---
 
