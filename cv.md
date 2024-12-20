@@ -2,7 +2,6 @@
 
 **Email:** [easilva@mines.edu](mailto:easilva@mines.edu)  
 **LinkedIn:** [linkedin.com/in/edwardsilva04](https://www.linkedin.com/in/edwardsilva04/)  
-**Phone:** [(702) 720-7735](tel:7027207735)
 
 ---
 
