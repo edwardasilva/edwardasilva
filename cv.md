@@ -36,7 +36,6 @@
 - C-MAPP Scholar 2023-2024, 2024-2025 (\$1,000/year)
 - American Bureau of Shipping Scholar (\$4,000)
 
-
 ## Relevant Courses
 
 | **Course**                             | **Elective**                  | **Core**                  |
