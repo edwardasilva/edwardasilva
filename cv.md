@@ -1,8 +1,11 @@
 # Edward A. Silva
 
-**School Email:** [esilva@mines.edu](mailto:esilva@mines.edu) 
+**School Email:** [esilva@mines.edu](mailto:esilva@mines.edu)
+
 **Personal Email:** [eddie@silvaspot.com](mailto:eddie@silvaspot.com)
+
 **LinkedIn:** [linkedin.com/in/edwardsilva04](https://www.linkedin.com/in/edwardsilva04/)
+
 **Website:** [eeprep.com](https://www.eeprep.com)
 
 ---
