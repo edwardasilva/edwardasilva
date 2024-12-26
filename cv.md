@@ -59,7 +59,6 @@
 ### Work Experience
 
 **Co-op Intern, Electrical Design**  
-**Co-op Intern, Electrical Design**  
 *Jordan and Skala Engineers, Denver, CO, January 2025 -- Present*
 
 - Assisting in electrical design projects using [Revit](#professional-experience).
