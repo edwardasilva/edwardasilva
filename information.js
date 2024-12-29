@@ -16,7 +16,7 @@ document.querySelectorAll('.info-button').forEach(button => {
         const infoBox = button.nextElementSibling; // Get the next sibling info box
 
         // Update content and show the box
-        infoBox.querySelector('#info-content').textContent = infoData[infoKey];
+        infoBox.querySelector('.info-content').textContent = infoData[infoKey];
         infoBox.classList.remove('hidden');
     });
 

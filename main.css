@@ -29,9 +29,9 @@
     display: none; /* Hides the element */
 }
 
-#info-box {
-    display: block;
-    margin-top: 20px;
+.info-box {
+    display: none;
+    margin-top: 5px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -45,7 +45,8 @@
     opacity: 0;
 }
 
-button.info-button:hover + #info-box {
+button.info-button:hover + .info-box {
+    display: block;
     opacity: 1;
 }
 
