@@ -9,16 +9,21 @@ const infoData = {
     "abs-scholar": "The American Bureau of Shipping Scholar award recognizes students who demonstrate outstanding academic performance and commitment to engineering disciplines. This scholarship supported my academic journey with $4,000 in funding."
 };
 
-
-// Add click event listeners to all buttons
+// Add hover event listeners to all buttons
 document.querySelectorAll('.info-button').forEach(button => {
-    button.addEventListener('click', () => {
+    button.addEventListener('mouseover', () => {
         const infoKey = button.getAttribute('data-info'); // Get the data-info attribute
-        const infoContent = document.getElementById('info-content'); // Get the content box
-        const infoBox = document.getElementById('info-box'); // Get the info box container
+        const infoBox = button.nextElementSibling; // Get the next sibling info box
 
         // Update content and show the box
-        infoContent.textContent = infoData[infoKey];
+        infoBox.querySelector('#info-content').textContent = infoData[infoKey];
         infoBox.classList.remove('hidden');
+    });
+
+    button.addEventListener('mouseout', () => {
+        const infoBox = button.nextElementSibling; // Get the next sibling info box
+
+        // Hide the box
+        infoBox.classList.add('hidden');
     });
 });

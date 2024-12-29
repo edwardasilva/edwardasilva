@@ -25,6 +25,30 @@
     --table-header-bg: #f1f1f1;
 }
 
+.hidden {
+    display: none; /* Hides the element */
+}
+
+#info-box {
+    display: block;
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    position: absolute;
+    z-index: 1000;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+button.info-button:hover + #info-box {
+    opacity: 1;
+}
+
 /* Buttons Styled as Links */
 button {
     background: none;
@@ -56,6 +80,7 @@ button.info-button {
     transition: color 0.3s ease;
     text-align: left; /* Left justify the button text */
     display: inline; /* Display inline to align with bullet points */
+    position: relative;
 }
 
 button.info-button:hover {
