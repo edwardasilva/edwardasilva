@@ -6,9 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edward A. Silva</title>
     <link rel="stylesheet" href="main.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z3HFSWVGND"></script>
     <script>
@@ -16,6 +13,13 @@
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-Z3HFSWVGND');
+    </script>
+    <script>
+        const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const savedTheme = localStorage.getItem('theme');
+        const currentTheme = savedTheme || (userPrefersDark ? 'dark' : 'light');
+    
+        document.documentElement.setAttribute('data-theme', currentTheme);
     </script>
 </head>
 
@@ -220,7 +224,7 @@
 
             <p><strong>Undergraduate Research Assistant</strong><br />
                 Explosives Research Lab, Colorado School of Mines, Golden, CO, August 2022 -- January 2023</p>
-            <ul>
+            <ul></ul>
                 <li>Optimized 3D printer settings to improve precision and output quality.</li>
                 <li>Observed and documented multiple controlled explosive tests in various environments.</li>
                 <li>Supported research activities through manual labor tasks, including site preparation and equipment maintenance.</li>
@@ -281,25 +285,7 @@
     </main>
     <footer>
         <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">Back to Top</button>
-        <button id="theme-toggle">Switch to Light Mode</button>
     </footer>
-    <script>
-        const themeToggle = document.getElementById('theme-toggle');
-        const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const savedTheme = localStorage.getItem('theme');
-        const currentTheme = savedTheme || (userPrefersDark ? 'dark' : 'light');
-    
-        document.documentElement.setAttribute('data-theme', currentTheme);
-    
-        themeToggle.textContent = currentTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-    
-        themeToggle.addEventListener('click', () => {
-            const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            themeToggle.textContent = newTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-        });
-    </script>
 </body>
 
 </html>
