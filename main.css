@@ -1,28 +1,28 @@
 /* Root variables for light and dark mode */
 :root {
-    --bg-color: #1c2833;
-    --text-color: #ecf0f1;
-    --link-color: #3498db;
-    --link-hover: #2980b9;
-    --header-bg: #17202a;
-    --card-bg: #212f3c;
-    --footer-bg: #17202a;
-    --button-bg: #2980b9;
-    --button-hover: #1f618d;
-    --table-header-bg: #34495e;
+    --bg-color: #0a1f44;
+    --text-color: #ffffff;
+    --link-color: #66b2ff;
+    --link-hover: #3399ff;
+    --header-bg: #081c3a;
+    --card-bg: #0d274f;
+    --footer-bg: #081c3a;
+    --button-bg: #1a73e8;
+    --button-hover: #1558b0;
+    --table-header-bg: #0d274f;
 }
 
 [data-theme="light"] {
-    --bg-color: #f9fafb;
-    --text-color: #2c3e50;
-    --link-color: #007bff;
-    --link-hover: #0056b3;
-    --header-bg: #ffffff;
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --link-color: #1a73e8;
+    --link-hover: #1558b0;
+    --header-bg: #f1f1f1;
     --card-bg: #ffffff;
-    --footer-bg: #ffffff;
-    --button-bg: #007bff;
-    --button-hover: #0056b3;
-    --table-header-bg: #f2f2f2;
+    --footer-bg: #f1f1f1;
+    --button-bg: #1a73e8;
+    --button-hover: #1558b0;
+    --table-header-bg: #f1f1f1;
 }
 
 /* General Styles */
@@ -161,4 +161,14 @@ th {
 
 #theme-toggle:hover {
     background: var(--button-hover);
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--link-hover);
 }
