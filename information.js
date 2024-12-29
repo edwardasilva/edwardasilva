@@ -68,6 +68,41 @@ const infoData = {
     "matlab-fundamentals": "Matlab Fundamentals Onramp certification provides foundational knowledge of Matlab, including basic operations, programming, and data visualization."
 };
 
+// Function to adjust the position of the info-box
+function adjustInfoBoxPosition(button, infoBox) {
+    const buttonRect = button.getBoundingClientRect();
+    const infoBoxRect = infoBox.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    // Align the info-box to the button
+    infoBox.style.left = `${buttonRect.left + buttonRect.width / 2 - infoBoxRect.width / 2}px`;
+    infoBox.style.top = `${buttonRect.bottom + window.scrollY + 5}px`; // Adjusted to point to the link
+
+    // Ensure the info-box does not go off the screen horizontally
+    if (infoBoxRect.right > viewportWidth) {
+        infoBox.style.left = `${viewportWidth - infoBoxRect.width - 10}px`;
+    } else if (infoBoxRect.left < 0) {
+        infoBox.style.left = '10px';
+    }
+
+    // Ensure the info-box does not go off the screen vertically
+    if (infoBoxRect.bottom > viewportHeight) {
+        infoBox.style.top = `${buttonRect.top + window.scrollY - infoBoxRect.height - 5}px`;
+    }
+
+    // Recalculate the position after adjustments
+    const adjustedInfoBoxRect = infoBox.getBoundingClientRect();
+    if (adjustedInfoBoxRect.right > viewportWidth) {
+        infoBox.style.left = `${viewportWidth - adjustedInfoBoxRect.width - 10}px`;
+    } else if (adjustedInfoBoxRect.left < 0) {
+        infoBox.style.left = '10px';
+    }
+    if (adjustedInfoBoxRect.bottom > viewportHeight) {
+        infoBox.style.top = `${buttonRect.top + window.scrollY - adjustedInfoBoxRect.height - 5}px`;
+    }
+}
+
 // Add hover event listeners to all buttons
 document.querySelectorAll('.info-button').forEach(button => {
     button.addEventListener('mouseover', () => {
@@ -79,43 +114,7 @@ document.querySelectorAll('.info-button').forEach(button => {
         infoBox.classList.remove('hidden');
 
         // Adjust position to ensure it stays within the viewport
-        const rect = infoBox.getBoundingClientRect();
-        if (rect.right > window.innerWidth) {
-            infoBox.style.left = 'auto';
-            infoBox.style.right = '0';
-        } else {
-            infoBox.style.left = '50%';
-            infoBox.style.right = 'auto';
-        }
-    });
-
-    button.addEventListener('mouseout', () => {
-        const infoBox = button.nextElementSibling; // Get the next sibling info box
-
-        // Hide the box
-        infoBox.classList.add('hidden');
-    });
-});
-
-// Add hover event listeners to all certification info-buttons
-document.querySelectorAll('.certification-info-button').forEach(button => {
-    button.addEventListener('mouseover', () => {
-        const infoKey = button.getAttribute('data-info'); // Get the data-info attribute
-        const infoBox = button.nextElementSibling; // Get the next sibling info box
-
-        // Update content and show the box
-        infoBox.querySelector('.info-content').textContent = infoData[infoKey];
-        infoBox.classList.remove('hidden');
-
-        // Adjust position to ensure it stays within the viewport
-        const rect = infoBox.getBoundingClientRect();
-        if (rect.right > window.innerWidth) {
-            infoBox.style.left = 'auto';
-            infoBox.style.right = '0';
-        } else {
-            infoBox.style.left = '50%';
-            infoBox.style.right = 'auto';
-        }
+        adjustInfoBoxPosition(button, infoBox);
     });
 
     button.addEventListener('mouseout', () => {
