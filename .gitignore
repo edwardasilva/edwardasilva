@@ -21,3 +21,11 @@ node_modules/
 # Optional: Ignore build artifacts if you use a build system
 /dist/
 /build/
+
+# Ignore sensitive files
+*.env
+secrets.json
+
+# Ignore sitemap and robots.txt
+sitemap.xml
+robots.txt
