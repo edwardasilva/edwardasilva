@@ -1,15 +1,15 @@
 /* Root variables for light and dark mode */
 :root {
-    --bg-color: #0a1f44;
+    --bg-color: #05122a;
     --text-color: #ffffff;
-    --link-color: #66b2ff;
-    --link-hover: #3399ff;
-    --header-bg: #081c3a;
-    --card-bg: #0d274f;
-    --footer-bg: #081c3a;
-    --button-bg: #1a73e8;
-    --button-hover: #1558b0;
-    --table-header-bg: #0d274f;
+    --link-color: #4a90e2;
+    --link-hover: #267abf;
+    --header-bg: #041024;
+    --card-bg: #061a3a;
+    --footer-bg: #041024;
+    --button-bg: #1558b0;
+    --button-hover: #0f3e7a;
+    --table-header-bg: #061a3a;
 }
 
 [data-theme="light"] {
@@ -23,6 +23,44 @@
     --button-bg: #1a73e8;
     --button-hover: #1558b0;
     --table-header-bg: #f1f1f1;
+}
+
+/* Buttons Styled as Links */
+button {
+    background: none;
+    color: var(--link-color);
+    border: none;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+button:hover {
+    color: var(--link-hover);
+    text-decoration: none;
+    transform: none; /* Disable scaling effects for link-style buttons */
+}
+
+button.info-button {
+    background: none;
+    color: var(--link-color);
+    border: none;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    text-align: left; /* Left justify the button text */
+    display: inline; /* Display inline to align with bullet points */
+}
+
+button.info-button:hover {
+    color: var(--link-hover);
+    text-decoration: none;
 }
 
 /* General Styles */

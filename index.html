@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="main.css">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z3HFSWVGND"></script>
+    <script src="information.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
@@ -18,7 +19,7 @@
         const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const savedTheme = localStorage.getItem('theme');
         const currentTheme = savedTheme || (userPrefersDark ? 'dark' : 'light');
-    
+
         document.documentElement.setAttribute('data-theme', currentTheme);
     </script>
 </head>
@@ -32,7 +33,9 @@
         <div class="container">
             <p><strong>School Email:</strong> <a href="mailto:easilva@mines.edu">easilva@mines.edu</a></p>
             <p><strong>Personal Email:</strong> <a href="mailto:eddie@silvaspot.com">eddie@silvaspot.com</a></p>
-            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/edwardsilva04/">linkedin.com/in/edwardsilva04</a></p>
+            <p><strong>LinkedIn:</strong> <a
+                    href="https://www.linkedin.com/in/edwardsilva04/">linkedin.com/in/edwardsilva04</a></p>
+            <p><strong>Github:</strong> <a href="https://github.com/easilva04">github.com/easilva04</a></p>
             <p><strong>Website:</strong> <a href="https://www.eeprep.com">eeprep.com</a></p>
 
             <hr />
@@ -67,20 +70,45 @@
             <h2 id="education">Education</h2>
             <p><strong>Bachelor of Science in Electrical Engineering</strong><br />
                 Colorado School of Mines, December 2026</p>
-            <ul>
-                <li><strong>Minor:</strong> Computer Science, Software and Algorithm Design</li>
-                <li><strong>GPA:</strong> 3.435</li>
-                <li><strong>Honors:</strong>
-                    <ul>
-                        <li>Dean's List (2 semesters)</li>
-                        <li>Honor Roll (2 semesters)</li>
-                        <li>Provost Scholarship ($9,000/year)</li>
-                        <li>C-MAPP Scholar 2023-2024, 2024-2025 ($1,000/year)</li>
-                        <li>American Bureau of Shipping Scholar ($4,000)</li>
-                    </ul>
-                </li>
-            </ul>
-
+                <ul>
+                    <li><strong>Minor:</strong> Computer Science, Software and Algorithm Design</li>
+                    <li><strong>GPA:</strong> 3.435</li>
+                    <li><strong>Honors:</strong>
+                        <ul>
+                            <li>
+                                <button class="info-button" data-info="deans-list">
+                                    Dean's List (2 semesters)
+                                </button>
+                            </li>
+                            <li>
+                                <button class="info-button" data-info="honor-roll">
+                                    Honor Roll (2 semesters)
+                                </button>
+                            </li>
+                            <li>
+                                <button class="info-button" data-info="provost-scholarship">
+                                    Provost Scholarship ($9,000/year)
+                                </button>
+                            </li>
+                            <li>
+                                <button class="info-button" data-info="c-mapp">
+                                    C-MAPP Scholar 2023-2024, 2024-2025 ($1,000/year)
+                                </button>
+                            </li>
+                            <li>
+                                <button class="info-button" data-info="abs-scholar">
+                                    American Bureau of Shipping Scholar ($4,000)
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <!-- Information Box -->
+                <div id="info-box" class="hidden">
+                    <p id="info-content"></p>
+                </div>
+                
             <h2 id="relevant-courses">Relevant Courses</h2>
             <table>
                 <thead>
@@ -146,8 +174,10 @@
                 Fairfax County Public Schools, Fairfax, VA, June -- August 2024</p>
             <ul>
                 <li>Streamlined office operations using Microsoft Excel.</li>
-                <li>Responded to 600+ information requests, maintained and updated records of 300+ students, and prepared documents.</li>
-                <li>Coordinated program setup and close-out, managing supply distribution, collection, and event inventory for 15 classrooms, 300+ participants, and 50+ staff.</li>
+                <li>Responded to 600+ information requests, maintained and updated records of 300+ students, and
+                    prepared documents.</li>
+                <li>Coordinated program setup and close-out, managing supply distribution, collection, and event
+                    inventory for 15 classrooms, 300+ participants, and 50+ staff.</li>
             </ul>
 
             <p><strong>Extern</strong><br />
@@ -156,7 +186,9 @@
                 <li>Participated in a week-long externship program focused on networking and cybersecurity.</li>
                 <li>Gained hands-on experience with Cisco's networking technologies and security solutions.</li>
                 <li>Collaborated with a team to complete a capstone project on network security.</li>
-                <li>The theme of our capstone project was Healthcare, and the theme of our group was Black Widow (From Marvel). Our product was a solution that addressed medication adherence issues among elderly and chronic care patients.</li>
+                <li>The theme of our capstone project was Healthcare, and the theme of our group was Black Widow (From
+                    Marvel). Our product was a solution that addressed medication adherence issues among elderly and
+                    chronic care patients.</li>
             </ul>
 
             <h3 id="teaching-experience">Teaching Experience</h3>
@@ -164,15 +196,19 @@
                 Colorado School of Mines, Golden, CO, January 2024 -- December 2024</p>
             <ul>
                 <li>Graded assignments and exams for MATH 225: Differential Equations and MATH 112: Calculus 2.</li>
-                <li>Provided feedback to students to help them improve their understanding of mathematical concepts.</li>
+                <li>Provided feedback to students to help them improve their understanding of mathematical concepts.
+                </li>
             </ul>
 
             <p><strong>Peer Mentor</strong><br />
                 Colorado School of Mines, Golden, CO, August 2023 -- December 2023</p>
             <ul>
-                <li>Co-taught a 1 credit hour course on strategies to acclimate to the rigor of Mines for the incoming first-year class.</li>
-                <li>Created and executed lesson plans on topics of mental health, emotional well-being, and academic success.</li>
-                <li>Co-led a group for Oredigger Camp and Fall Kickoff, a weeklong event for all first-year students.</li>
+                <li>Co-taught a 1 credit hour course on strategies to acclimate to the rigor of Mines for the incoming
+                    first-year class.</li>
+                <li>Created and executed lesson plans on topics of mental health, emotional well-being, and academic
+                    success.</li>
+                <li>Co-led a group for Oredigger Camp and Fall Kickoff, a weeklong event for all first-year students.
+                </li>
             </ul>
 
             <p><strong>Substitute Teacher</strong><br />
@@ -186,8 +222,10 @@
             <p><strong>Lead Counselor</strong><br />
                 Code Ninjas, Fairfax, VA, May 2023 -- August 2023</p>
             <ul>
-                <li>Supplied individual tutoring and resources for children (ages 6 to 14) in the JavaScript and C# programming languages.</li>
-                <li>Led multiple STEM summer camps for up to twenty-five children at a time, covering topics such as 3D Modeling and 3D Printing, Circuits, Robotics, Python, and C# programming.</li>
+                <li>Supplied individual tutoring and resources for children (ages 6 to 14) in the JavaScript and C#
+                    programming languages.</li>
+                <li>Led multiple STEM summer camps for up to twenty-five children at a time, covering topics such as 3D
+                    Modeling and 3D Printing, Circuits, Robotics, Python, and C# programming.</li>
                 <li>Created a 3D printer server via OctoPi for multiple 3D printer systems.</li>
             </ul>
 
@@ -195,7 +233,8 @@
                 Code Ninjas, Fairfax, VA, March -- August 2022</p>
             <ul>
                 <li>Tutored 50+ students in <a href="#skills">JavaScript</a> and C#, enhancing their coding skills.</li>
-                <li>Led STEM camps for 100+ students, covering 3D Modeling &amp; Printing, Robotics, and C# development.</li>
+                <li>Led STEM camps for 100+ students, covering 3D Modeling &amp; Printing, Robotics, and C# development.
+                </li>
                 <li>Deployed and managed a remote 3D printing server via OctoPi.</li>
                 <li>Awarded Instructor of the Month (June 2022 &amp; July 2023) for exceptional teaching methods.</li>
             </ul>
@@ -208,7 +247,8 @@
                 ePower Hubs Research Lab, Colorado School of Mines, Golden, CO, June 2024 -- Present</p>
             <ul>
                 <li>Devised a neural network model to predict sensor system failure in wind turbine systems.</li>
-                <li>Conducted literature review and analysis of offshore and onshore wind energy systems, focusing on variable voltage, power, and frequency integration with the existing power grid.</li>
+                <li>Conducted literature review and analysis of offshore and onshore wind energy systems, focusing on
+                    variable voltage, power, and frequency integration with the existing power grid.</li>
                 <li>Aimed to reduce maintenance, design, and integration costs of complex wind farm grids.</li>
             </ul>
 
@@ -217,7 +257,8 @@
             <ul>
                 <li>Optimized 3D printer settings to improve precision and output quality.</li>
                 <li>Observed and documented multiple controlled explosive tests in various environments.</li>
-                <li>Supported research activities through manual labor tasks, including site preparation and equipment maintenance.</li>
+                <li>Supported research activities through manual labor tasks, including site preparation and equipment
+                    maintenance.</li>
             </ul>
 
             <hr />
@@ -227,17 +268,22 @@
                 Personal Project, November 2023 -- Present</p>
             <ul>
                 <li>Developed a comprehensive website to summarize the entire Electrical Engineering degree.</li>
-                <li>Utilized <a href="#skills">HTML</a>, <a href="#skills">CSS</a>, <a href="#skills">JavaScript</a> for frontend and backend development.</li>
-                <li>Aimed to demonstrate competency and provide educational resources for aspiring Electrical Engineers.</li>
+                <li>Utilized <a href="#skills">HTML</a>, <a href="#skills">CSS</a>, <a href="#skills">JavaScript</a> for
+                    frontend and backend development.</li>
+                <li>Aimed to demonstrate competency and provide educational resources for aspiring Electrical Engineers.
+                </li>
                 <li>Included detailed explanations, tutorials, and practical examples to facilitate learning.</li>
             </ul>
 
             <p><strong>Solar Panel Optimization Robot</strong><br />
-                Personal Project, <a href="#skills">Python</a>, <a href="#skills">Arduino</a>, 
-                <a href="https://github.com/easilva04/SolarPanelProject">Github</a>, Present</p>
+                Personal Project, <a href="#skills">Python</a>, <a href="#skills">Arduino</a>,
+                <a href="https://github.com/easilva04/SolarPanelProject">Github</a>, Present
+            </p>
             <ul>
-                <li>Prototyped and coded controller for optimal solar panel alignment utilizing Arduino microcontroller, light sensors, and motor controllers.</li>
-                <li>Developed a prototype with a servo motor for pitch adjustment and a stepper motor for yaw adjustment.</li>
+                <li>Prototyped and coded controller for optimal solar panel alignment utilizing Arduino microcontroller,
+                    light sensors, and motor controllers.</li>
+                <li>Developed a prototype with a servo motor for pitch adjustment and a stepper motor for yaw
+                    adjustment.</li>
                 <li>Integrated an advanced tracking algorithm into the Arduino microcontroller.</li>
                 <li>Conducted system testing and calibration under various atmospheric conditions.</li>
                 <li>Utilized Raspberry Pi as a brain controller for the Arduino.</li>
@@ -248,17 +294,20 @@
             <p><strong>Clue Game</strong><br />
                 Java, August -- December 2023</p>
             <ul>
-                <li>Collaboratively developed a Java-based Clue game via eclipse on a team of 3, applying SCRUM and Test Driven Development principles.</li>
+                <li>Collaboratively developed a Java-based Clue game via eclipse on a team of 3, applying SCRUM and Test
+                    Driven Development principles.</li>
                 <li>Implemented GitHub for version control, facilitating seamless collaboration.</li>
                 <li>Conducted weekly code reviews and maintained modular code with comprehensive documentation.</li>
-                <li>Developed a user-friendly interface with Java Swing, including a dynamic game board and player status panels.</li>
+                <li>Developed a user-friendly interface with Java Swing, including a dynamic game board and player
+                    status panels.</li>
             </ul>
 
             <p><strong>Hydraulic Ram Pump</strong><br />
                 Engineering Design Cornerstone, August -- December 2022</p>
             <ul>
                 <li>Recognized as Subject Matter Expert (Top 4 of 40 teams).</li>
-                <li>Collaborated with a team of six to design a cost-effective solution for managing acid mine drainage.</li>
+                <li>Collaborated with a team of six to design a cost-effective solution for managing acid mine drainage.
+                </li>
                 <li>Engineered a working prototype under $100 using PVC piping and a PH filtration system.</li>
                 <li>Contributed to a 90-page detailed documentation.</li>
             </ul>
@@ -266,11 +315,16 @@
             <hr />
 
             <h2 id="skills">Skills</h2>
-            <p><strong>Programming Languages:</strong> <a href="#projects">Java</a> (MTA Certified), 
-                <a href="#projects">Python</a> (MTA Certified), Verilog, <a href="#projects">C</a>, <a href="#projects">C++</a>, C#, RISC-V Assembly, <a href="#projects">Bash</a>, <a href="#projects">MATLAB</a>, VBA<br />
-                <strong>Technology:</strong> SolidWorks, Virtualization software, VS Code, SSH, Linux OS (Ubuntu), 
-                <a href="#projects">Raspberry Pi</a>, <a href="#projects">Arduino</a>, <a href="#projects">HTML</a>, <a href="#projects">CSS</a>, <a href="#projects">JavaScript</a>, <a href="#professional-experience">Revit</a><br />
-                <strong>Other:</strong> Git, GitHub, GitHub Pages, Codespaces</p>
+            <p><strong>Programming Languages:</strong> <a href="#projects">Java</a> (MTA Certified),
+                <a href="#projects">Python</a> (MTA Certified), Verilog, <a href="#projects">C</a>, <a
+                    href="#projects">C++</a>, C#, RISC-V Assembly, <a href="#projects">Bash</a>, <a
+                    href="#projects">MATLAB</a>, VBA<br />
+                <strong>Technology:</strong> SolidWorks, Virtualization software, VS Code, SSH, Linux OS (Ubuntu),
+                <a href="#projects">Raspberry Pi</a>, <a href="#projects">Arduino</a>, <a href="#projects">HTML</a>, <a
+                    href="#projects">CSS</a>, <a href="#projects">JavaScript</a>, <a
+                    href="#professional-experience">Revit</a><br />
+                <strong>Other:</strong> Git, GitHub, GitHub Pages, Codespaces
+            </p>
         </div>
     </main>
     <footer>
