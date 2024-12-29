@@ -62,6 +62,39 @@ button.info-button:hover + .info-box {
     opacity: 1;
 }
 
+.certification-info-box {
+    display: none;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    position: absolute;
+    z-index: 1000;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    transform: translateX(-50%);
+}
+
+.certification-info-box::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #fff transparent transparent transparent;
+}
+
+button.certification-info-button:hover + .certification-info-box {
+    display: block;
+    opacity: 1;
+}
+
 /* Buttons Styled as Links */
 button {
     background: none;
@@ -97,6 +130,26 @@ button.info-button {
 }
 
 button.info-button:hover {
+    color: var(--link-hover);
+    text-decoration: none;
+}
+
+button.certification-info-button {
+    background: none;
+    color: var(--link-color);
+    border: none;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    text-align: left; /* Left justify the button text */
+    display: inline; /* Display inline to align with bullet points */
+    position: relative;
+}
+
+button.certification-info-button:hover {
     color: var(--link-hover);
     text-decoration: none;
 }

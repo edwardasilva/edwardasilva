@@ -60,12 +60,45 @@ const infoData = {
       "Focuses on algorithmic problem-solving through hands-on programming exercises and competitions. Emphasizes efficiency, correctness, and robust coding practices.",
   
     "digital-logic": 
-      "Covers the principles of digital logic design, including Boolean algebra, logic gates, and combinational/sequential circuits. Explores design and implementation of basic digital systems and hardware."
-  };
+      "Covers the principles of digital logic design, including Boolean algebra, logic gates, and combinational/sequential circuits. Explores design and implementation of basic digital systems and hardware.",
   
+    "mta-java": "Microsoft Technical Associate -- Java Programming certification demonstrates proficiency in Java programming, including understanding of Java syntax, object-oriented programming, and basic Java development.",
+    "mta-python": "Microsoft Technical Associate -- Python Programming certification validates knowledge of Python programming, including syntax, data structures, and basic programming concepts.",
+    "matlab-signal": "Matlab Signal Processing Onramp certification covers the basics of signal processing using Matlab, including filtering, Fourier transforms, and signal analysis.",
+    "matlab-fundamentals": "Matlab Fundamentals Onramp certification provides foundational knowledge of Matlab, including basic operations, programming, and data visualization."
+};
 
 // Add hover event listeners to all buttons
 document.querySelectorAll('.info-button').forEach(button => {
+    button.addEventListener('mouseover', () => {
+        const infoKey = button.getAttribute('data-info'); // Get the data-info attribute
+        const infoBox = button.nextElementSibling; // Get the next sibling info box
+
+        // Update content and show the box
+        infoBox.querySelector('.info-content').textContent = infoData[infoKey];
+        infoBox.classList.remove('hidden');
+
+        // Adjust position to ensure it stays within the viewport
+        const rect = infoBox.getBoundingClientRect();
+        if (rect.right > window.innerWidth) {
+            infoBox.style.left = 'auto';
+            infoBox.style.right = '0';
+        } else {
+            infoBox.style.left = '50%';
+            infoBox.style.right = 'auto';
+        }
+    });
+
+    button.addEventListener('mouseout', () => {
+        const infoBox = button.nextElementSibling; // Get the next sibling info box
+
+        // Hide the box
+        infoBox.classList.add('hidden');
+    });
+});
+
+// Add hover event listeners to all certification info-buttons
+document.querySelectorAll('.certification-info-button').forEach(button => {
     button.addEventListener('mouseover', () => {
         const infoKey = button.getAttribute('data-info'); // Get the data-info attribute
         const infoBox = button.nextElementSibling; // Get the next sibling info box
