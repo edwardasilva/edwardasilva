@@ -39,16 +39,19 @@
     color: var(--text-color);
     position: absolute;
     z-index: 1000;
-    width: 300px;
+    width: 400px; /* Increase the width of the bounding box */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: opacity 0.3s ease;
     opacity: 0;
     max-width: 90%; /* Ensure the info-box fits within the viewport on mobile */
 }
 
-button.info-button:hover + .info-box, button.info-button:hover + .certification-info-box {
+button.info-button:hover + .info-box, button.info-button:hover + .certification-info-box,
+.info-box:hover, .certification-info-box:hover,
+button.info-button.active + .info-box, button.info-button.active + .certification-info-box {
     display: block;
     opacity: 1;
+    pointer-events: auto; /* Ensure the info-box is interactive */
 }
 
 /* Buttons Styled as Links */

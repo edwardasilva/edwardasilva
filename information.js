@@ -103,7 +103,7 @@ function adjustInfoBoxPosition(button, infoBox) {
     }
 }
 
-// Add hover event listeners to all buttons
+// Add hover and click event listeners to all buttons
 document.querySelectorAll('.info-button').forEach(button => {
     button.addEventListener('mouseover', () => {
         const infoKey = button.getAttribute('data-info'); // Get the data-info attribute
@@ -117,10 +117,54 @@ document.querySelectorAll('.info-button').forEach(button => {
         adjustInfoBoxPosition(button, infoBox);
     });
 
-    button.addEventListener('mouseout', () => {
+    button.addEventListener('mouseout', (event) => {
         const infoBox = button.nextElementSibling; // Get the next sibling info box
 
-        // Hide the box
-        infoBox.classList.add('hidden');
+        // Check if the mouse is moving to the info-box
+        if (!infoBox.contains(event.relatedTarget)) {
+            // Hide the box if not active
+            if (!button.classList.contains('active')) {
+                infoBox.classList.add('hidden');
+            }
+        }
+    });
+
+    button.addEventListener('click', () => {
+        const infoBox = button.nextElementSibling; // Get the next sibling info box
+
+        // Toggle active class
+        button.classList.toggle('active');
+        if (button.classList.contains('active')) {
+            infoBox.classList.remove('hidden');
+        } else {
+            infoBox.classList.add('hidden');
+        }
+    });
+
+    // Add event listeners to the info-box to keep it visible while hovering
+    const infoBox = button.nextElementSibling;
+    infoBox.addEventListener('mouseover', () => {
+        infoBox.classList.remove('hidden');
+    });
+
+    infoBox.addEventListener('mouseout', (event) => {
+        // Check if the mouse is moving to the button
+        if (!button.contains(event.relatedTarget)) {
+            // Hide the box if not active
+            if (!button.classList.contains('active')) {
+                infoBox.classList.add('hidden');
+            }
+        }
+    });
+});
+
+// Hide info-box when clicking outside
+document.addEventListener('click', (event) => {
+    document.querySelectorAll('.info-button').forEach(button => {
+        const infoBox = button.nextElementSibling; // Get the next sibling info box
+        if (!button.contains(event.target) && !infoBox.contains(event.target)) {
+            button.classList.remove('active');
+            infoBox.classList.add('hidden');
+        }
     });
 });
