@@ -9,14 +9,16 @@
     <link rel="shortcut icon" href="#">   
      <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z3HFSWVGND"></script>
-    <script src="information.js" async defer></script>
-    <script src="resume.js" async defer></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-Z3HFSWVGND');
+        if (typeof gtag === 'function') {
+            gtag('js', new Date());
+            gtag('config', 'G-Z3HFSWVGND');
+        }
     </script>
+    <script src="information.js" async defer></script>
+    <script src="resume.js" async defer></script>
     <script>
         const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const savedTheme = localStorage.getItem('theme');
