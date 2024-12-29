@@ -27,9 +27,36 @@
 <body>
     <header>
         <h1>Edward A. Silva</h1>
+        <h4>This website was meticulously crafted by hand using JavaScript, HTML, and CSS as a comprehensive project.
+        </h4>
     </header>
 
     <main>
+        <details>
+            <summary><strong>Contents</strong></summary>
+            <div style="padding-left: 20px;">
+                <ol>
+                    <li><a href="#education">Education</a></li>
+                    <li><a href="#relevant-courses">Relevant Courses</a>
+                        <ul>
+                            <li><a href="#engineering">Engineering</a></li>
+                            <li><a href="#elective">Elective</a></li>
+                            <li><a href="#core">Core</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#professional-experience">Professional Experience</a>
+                        <ul>
+                            <li><a href="#work-experience">Work Experience</a></li>
+                            <li><a href="#teaching-experience">Teaching Experience</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#research-experience">Research Experience</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                </ol>
+            </div>
+        </details>
+
         <div class="container">
             <p><strong>School Email:</strong> <a href="mailto:easilva@mines.edu">easilva@mines.edu</a></p>
             <p><strong>Personal Email:</strong> <a href="mailto:eddie@silvaspot.com">eddie@silvaspot.com</a></p>
@@ -38,88 +65,74 @@
             <p><strong>Github:</strong> <a href="https://github.com/easilva04">github.com/easilva04</a></p>
             <p><strong>Website:</strong> <a href="https://www.eeprep.com">eeprep.com</a></p>
 
-            <hr />
-
-            <details>
-                <summary><strong>Contents</strong></summary>
-                <div style="padding-left: 20px;">
-                    <ol>
-                        <li><a href="#education">Education</a></li>
-                        <li><a href="#relevant-courses">Relevant Courses</a>
-                            <ul>
-                                <li><a href="#engineering">Engineering</a></li>
-                                <li><a href="#elective">Elective</a></li>
-                                <li><a href="#core">Core</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#professional-experience">Professional Experience</a>
-                            <ul>
-                                <li><a href="#work-experience">Work Experience</a></li>
-                                <li><a href="#teaching-experience">Teaching Experience</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#research-experience">Research Experience</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="#skills">Skills</a></li>
-                    </ol>
-                </div>
-            </details>
 
             <hr />
 
             <h2 id="education">Education</h2>
             <p><strong>Bachelor of Science in Electrical Engineering</strong><br />
                 Colorado School of Mines, December 2026</p>
-                <ul>
-                    <li><strong>Minor:</strong> Computer Science, Software and Algorithm Design</li>
-                    <li><strong>GPA:</strong> 3.435</li>
-                    <li><strong>Honors:</strong>
-                        <ul>
-                            <li>
-                                <button class="info-button" data-info="deans-list">
-                                    Dean's List (2 semesters)
-                                </button>
-                                <div class="info-box hidden">
-                                    <p class="info-content"></p>
-                                </div>
-                            </li>
-                            <li>
-                                <button class="info-button" data-info="honor-roll">
-                                    Honor Roll (2 semesters)
-                                </button>
-                                <div class="info-box hidden">
-                                    <p class="info-content"></p>
-                                </div>
-                            </li>
-                            <li>
-                                <button class="info-button" data-info="provost-scholarship">
-                                    Provost Scholarship ($9,000/year)
-                                </button>
-                                <div class="info-box hidden">
-                                    <p class="info-content"></p>
-                                </div>
-                            </li>
-                            <li>
-                                <button class="info-button" data-info="c-mapp">
-                                    C-MAPP Scholar 2023-2024, 2024-2025 ($1,000/year)
-                                </button>
-                                <div class="info-box hidden">
-                                    <p class="info-content"></p>
-                                </div>
-                            </li>
-                            <li>
-                                <button class="info-button" data-info="abs-scholar">
-                                    American Bureau of Shipping Scholar ($4,000)
-                                </button>
-                                <div class="info-box hidden">
-                                    <p class="info-content"></p>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                
-            <h2 id="relevant-courses">Relevant Courses</h2>
+            <ul>
+                <li><strong>Minor:</strong> Computer Science, Software and Algorithm Design</li>
+                <li><strong>GPA:</strong> 3.435</li>
+                <li><strong>Honors:</strong>
+                    <ul>
+                        <li>
+                            <button class="info-button" data-info="deans-list">
+                                Dean's List (2 semesters)
+                            </button>
+                            <div class="info-box hidden">
+                                <p class="info-content"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <button class="info-button" data-info="honor-roll">
+                                Honor Roll (2 semesters)
+                            </button>
+                            <div class="info-box hidden">
+                                <p class="info-content"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <button class="info-button" data-info="provost-scholarship">
+                                Provost Scholarship ($9,000/year)
+                            </button>
+                            <div class="info-box hidden">
+                                <p class="info-content"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <button class="info-button" data-info="c-mapp">
+                                C-MAPP Scholar 2023-2024, 2024-2025 ($1,000/year)
+                            </button>
+                            <div class="info-box hidden">
+                                <p class="info-content"></p>
+                            </div>
+                        </li>
+                        <li>
+                            <button class="info-button" data-info="abs-scholar">
+                                American Bureau of Shipping Scholar ($4,000)
+                            </button>
+                            <div class="info-box hidden">
+                                <p class="info-content"></p>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3 id="skills">Skills</h3>
+            <p><strong>Programming Languages:</strong> <a href="#projects">Java</a> (MTA Certified),
+                <a href="#projects">Python</a> (MTA Certified), Verilog, <a href="#projects">C</a>, <a
+                    href="#projects">C++</a>, C#, RISC-V Assembly, <a href="#projects">Bash</a>, <a
+                    href="#projects">MATLAB</a>, VBA<br />
+                <strong>Technology:</strong> SolidWorks, Virtualization software, VS Code, SSH, Linux OS (Ubuntu),
+                <a href="#projects">Raspberry Pi</a>, <a href="#projects">Arduino</a>, <a href="#projects">HTML</a>, <a
+                    href="#projects">CSS</a>, <a href="#projects">JavaScript</a>, <a
+                    href="#professional-experience">Revit</a><br />
+                <strong>Other:</strong> Git, GitHub, GitHub Pages, Codespaces
+            </p>
+
+            <h3 id="relevant-courses">Relevant Courses</h3>
             <table>
                 <thead>
                     <tr>
@@ -323,18 +336,21 @@
             </ul>
 
             <hr />
-
-            <h2 id="skills">Skills</h2>
-            <p><strong>Programming Languages:</strong> <a href="#projects">Java</a> (MTA Certified),
-                <a href="#projects">Python</a> (MTA Certified), Verilog, <a href="#projects">C</a>, <a
-                    href="#projects">C++</a>, C#, RISC-V Assembly, <a href="#projects">Bash</a>, <a
-                    href="#projects">MATLAB</a>, VBA<br />
-                <strong>Technology:</strong> SolidWorks, Virtualization software, VS Code, SSH, Linux OS (Ubuntu),
-                <a href="#projects">Raspberry Pi</a>, <a href="#projects">Arduino</a>, <a href="#projects">HTML</a>, <a
-                    href="#projects">CSS</a>, <a href="#projects">JavaScript</a>, <a
-                    href="#professional-experience">Revit</a><br />
-                <strong>Other:</strong> Git, GitHub, GitHub Pages, Codespaces
-            </p>
+            <h2 id="future-goals">Future Goals and Aspirations</h2>
+            <p>My objectives in Electrical Engineering are as follows:</p>
+            <ul>
+                <li>Complete a Bachelor's degree with a focus on sustainable energy, emerging technologies, and building
+                    design.</li>
+                <li>Obtain the FE and LEED Green Associate certifications to enhance professional qualifications in
+                    engineering and sustainability.</li>
+                <li>Pursue advanced education, including a Master's and PhD, specializing in renewable energy systems
+                    and smart grid technologies.</li>
+                <li>Contribute to innovative projects and research that address global challenges in energy efficiency
+                    and sustainability.</li>
+                <li>Transition to academia as a professor, mentoring future engineers and advancing the field through
+                    teaching and research after a full career in engineering, contributing to industry advancements and
+                    gaining practical experience.</li>
+            </ul>
         </div>
     </main>
     <footer>
