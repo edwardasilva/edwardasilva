@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.eeprep.com/sitemap.xml
+Sitemap: https://ed-silva.com/sitemap.xml
