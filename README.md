@@ -20,14 +20,7 @@ I am currently pursuing a Bachelor of Science in Electrical Engineering at the C
 Colorado School of Mines, December 2026  
 
 - **Minor:** Computer Science, Software and Algorithm Design
-- **GPA:** 3.435
-- **Honors:**
-  - Dean's List (2 semesters)
-  - Honor Roll (2 semesters)
-  - Provost Scholarship ($9,000/year)
-  - C-MAPP Scholar 2023-2024, 2024-2025 ($1,000/year)
-  - American Bureau of Shipping Scholar ($4,000)
-
+  
 ## Skills
 
 - **Programming Languages:** Java (MTA Certified), Python (MTA Certified), Verilog, C, C++, C#, RISC-V Assembly, Bash, MATLAB, VBA
