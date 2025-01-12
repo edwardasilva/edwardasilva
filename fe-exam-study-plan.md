@@ -1,6 +1,6 @@
 # FE Exam Study Plan To-Do List
 
-## Mathematics Foundations
+## Mathematics Foundations (11-17 questions)
 - [ ] **Algebra & Trigonometry**
   - [ ] Solve quadratic equations.
   - [ ] Study trigonometric identities.
@@ -47,7 +47,7 @@
 
 ---
 
-## Circuit Analysis
+## Circuit Analysis (6-8 questions)
 - [ ] **Kirchhoff's Laws**
   - [ ] Apply Kirchhoff's Voltage Law (KVL).
   - [ ] Apply Kirchhoff's Current Law (KCL).
@@ -90,7 +90,7 @@
 
 ---
 
-## Power Systems
+## Power Systems (6-8 questions)
 - [ ] **Three-Phase Systems**
   - [ ] Review line and phase quantities in Y and Δ configurations.
   - [ ] Study power calculations for balanced and unbalanced systems.
@@ -131,7 +131,7 @@
 
 ---
 
-## Electronics & Digital Systems
+## Electronics & Digital Systems (6-8 questions)
 - [ ] **Semiconductor Basics**
   - [ ] Study diodes and PN junctions.
   - [ ] Learn about Zener diodes and rectifier circuits.
@@ -171,7 +171,7 @@
 
 ---
 
-## Signal Processing & Control Systems
+## Signal Processing & Control Systems (6-8 questions)
 - [ ] **Fourier Analysis**
   - [ ] Review Fourier series and transforms.
   - [ ] Solve problems involving signal decomposition.
@@ -212,7 +212,7 @@
 
 ---
 
-## Engineering Economics & Ethics
+## Engineering Economics & Ethics (6-8 questions)
 - [ ] **Time Value of Money**
   - [ ] Study NPV and IRR concepts.
   - [ ] Solve problems on future and present value.
@@ -251,7 +251,7 @@
 
 ---
 
-## Computer Systems & Networks
+## Computer Systems & Networks (6-8 questions)
 - [ ] **Computer Architecture**
   - [ ] Study memory hierarchy.
   - [ ] Learn CPU performance metrics.

@@ -24,15 +24,18 @@
     </footer>
 
     <script>
+        console.log('Fetching markdown content...');
         fetch('fe-exam-study-plan.md')
             .then(response => {
+                console.log('Response received:', response);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.text();
             })
             .then(text => {
-                document.getElementById('content').innerHTML = marked(text);
+                console.log('Markdown content:', text);
+                document.getElementById('content').innerHTML = marked.parse(text);
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
