@@ -1,18 +1,5 @@
-/* Root variables for light and dark mode */
+/* Root variables for light mode */
 :root {
-    --bg-color: #05122a;
-    --text-color: #ffffff;
-    --link-color: #4a90e2;
-    --link-hover: #267abf;
-    --header-bg: #041024;
-    --card-bg: #061a3a;
-    --footer-bg: #041024;
-    --button-bg: #1558b0;
-    --button-hover: #0f3e7a;
-    --table-header-bg: #061a3a;
-}
-
-[data-theme="light"] {
     --bg-color: #ffffff;
     --text-color: #000000;
     --link-color: #1a73e8;
@@ -214,21 +201,7 @@ th {
 
 /* Toggle Button for Dark/Light Mode */
 #theme-toggle {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: var(--button-bg);
-    color: #fff;
-    border: none;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-#theme-toggle:hover {
-    background: var(--button-hover);
+    display: none; /* Hide the theme toggle button */
 }
 
 a {
