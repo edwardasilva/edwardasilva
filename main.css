@@ -25,6 +25,17 @@
   --border: #333;
 }
 
+[data-theme="dark"] button,
+[data-theme="dark"] .info-button,
+[data-theme="dark"] .resume-button {
+  color: var(--text);
+}
+
+[data-theme="dark"] .resume-button,
+[data-theme="dark"] footer button:hover {
+  color: white;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -221,21 +232,120 @@ header {
   margin-bottom: var(--spacing-sm);
 }
 
-/* Timeline */
+/* Additional fix for flex layout in courses section */
+#courses .flex > div {
+  flex: 1 1 300px;
+  margin-right: 10px;
+}
+
+/* Fix for courses section layout */
+#courses .flex {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+#courses .flex > div {
+  flex: 1 1 30%;
+  min-width: 250px;
+  margin-right: 10px;
+}
+
+#courses .skill-list {
+  width: 100%;
+}
+
+#courses .skill-list li {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.75rem;
+  clear: both;
+  position: relative;
+}
+
+#courses .info-button {
+  display: block;
+  width: 100%;
+}
+
+#courses .info-box {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Timeline improvements */
 .timeline {
   position: relative;
   margin-bottom: var(--spacing-md);
+  padding-left: 28px; /* Increased padding */
+}
+
+.timeline:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 8px;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--primary), var(--accent));
+  border-radius: 3px;
 }
 
 .timeline-item {
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
   position: relative;
+  padding-left: 15px;
+  transition: var(--transition);
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-item:before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 2px var(--primary), 0 0 10px rgba(58, 134, 255, 0.3);
+  transition: var(--transition);
+}
+
+.timeline-item:hover:before {
+  background: var(--accent);
+  transform: scale(1.2);
 }
 
 .timeline-date {
   font-weight: 600;
   color: var(--primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background-color: var(--bg-alt);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--primary);
+}
+
+.timeline-item .card {
+  transition: var(--transition);
+  border-left: 3px solid var(--primary);
+}
+
+.timeline-item:hover .card {
+  transform: translateX(5px);
+  border-left-color: var(--accent);
+}
+
+/* Make sure dark mode looks good with timeline */
+[data-theme="dark"] .timeline-item:before {
+  border-color: var(--bg);
+  box-shadow: 0 0 0 2px var(--primary), 0 0 10px rgba(77, 151, 255, 0.3);
 }
 
 /* Lists */
@@ -258,6 +368,14 @@ header {
   position: absolute;
   left: 0.2rem;
   top: 0;
+}
+
+/* Fix for the courses section list items */
+#courses .skill-list li {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.75rem;
+  clear: both;
 }
 
 /* Info Buttons */
@@ -377,6 +495,19 @@ footer button:hover {
   
   .contact-item {
     flex: 0 0 auto;
+  }
+}
+
+/* Additional responsive adjustments for courses section */
+@media (max-width: 992px) {
+  #courses .flex {
+    flex-direction: column;
+  }
+  
+  #courses .flex > div {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
   }
 }
 
