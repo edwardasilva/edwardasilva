@@ -81,6 +81,12 @@ function initializeEventListeners() {
     link.addEventListener('click', handleNavClick);
   });
   
+  // Add event listener for the resume download button
+  const resumeButton = document.getElementById('download-resume');
+  if (resumeButton) {
+    resumeButton.addEventListener('click', downloadResume);
+  }
+  
   // Delegate other events to body
   document.body.addEventListener('click', event => {
     // Details elements
@@ -124,7 +130,7 @@ function handleNavClick(e) {
 // Download resume function
 function downloadResume() {
   const link = document.createElement('a');
-  link.href = 'assets/Edward_Silva_Resume.pdf';
+  link.href = 'assets/resume.pdf';
   link.download = 'Edward_Silva_Resume.pdf';
   document.body.appendChild(link);
   link.click();
