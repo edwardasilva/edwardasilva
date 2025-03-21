@@ -10,25 +10,83 @@
     --button-bg: #1a73e8;
     --button-hover: #1558b0;
     --table-header-bg: #f1f1f1;
+    --details-bg: #f8f8f8;
+    --details-border: #e0e0e0;
+    --section-spacing: 2rem;
+    --details-radius: 8px;
+    --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .hidden {
     display: none; /* Hides the element */
 }
 
+/* Common dropdown styles for all collapsible elements */
+.site-details, .cert-category, .cert-subcategory {
+    margin-bottom: 15px;
+    border: 1px solid var(--details-border);
+    border-radius: var(--details-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: box-shadow 0.3s ease;
+}
+
+.site-details:hover, .cert-category:hover, .cert-subcategory:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.site-summary, .cert-summary {
+    padding: 10px 15px;
+    background-color: var(--details-bg);
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease;
+    user-select: none;
+}
+
+.site-summary:hover, .cert-summary:hover {
+    background-color: #f0f0f0;
+}
+
+.site-summary::after, .cert-summary::after {
+    content: '▼';
+    position: absolute;
+    right: 15px;
+    transition: transform 0.3s ease;
+    font-size: 0.8em;
+}
+
+details[open] > .site-summary::after, 
+details[open] > .cert-summary::after {
+    transform: rotate(180deg);
+}
+
+.details-content, .cert-content {
+    padding: 10px 15px;
+    animation: fadeIn 0.3s ease-in-out;
+    background-color: var(--card-bg);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Info box improvements */
 .info-box, .certification-info-box {
     display: none;
     margin-top: 5px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 12px;
+    border: 1px solid var(--details-border);
+    border-radius: var(--details-radius);
     background-color: var(--card-bg);
     color: var(--text-color);
     position: absolute;
     z-index: 1000;
     width: 400px; /* Increase the width of the bounding box */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: opacity 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: opacity 0.3s ease, transform 0.3s ease;
     opacity: 0;
     max-width: 90%; /* Ensure the info-box fits within the viewport on mobile */
 }
@@ -39,6 +97,7 @@ button.info-button.active + .info-box, button.info-button.active + .certificatio
     display: block;
     opacity: 1;
     pointer-events: auto; /* Ensure the info-box is interactive */
+    transform: translateY(0);
 }
 
 /* Buttons Styled as Links */
@@ -180,23 +239,33 @@ button:hover {
     transform: translateY(-3px);
 }
 
-/* Table */
+/* Table styling improvements */
 table {
     width: 100%;
     border-collapse: collapse;
     margin: 1rem 0;
     font-size: 1rem;
-    text-align: left;
+    border-radius: var(--details-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
 }
 
 th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
+    border: 1px solid var(--details-border);
+    padding: 12px;
 }
 
 th {
     background-color: var(--table-header-bg);
     font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
 }
 
 /* Toggle Button for Dark/Light Mode */
@@ -245,5 +314,131 @@ a:hover {
 
     .info-box, .certification-info-box {
         width: auto; /* Allow info-box to adjust width on mobile */
+    }
+
+    .site-summary, .cert-summary {
+        padding: 8px 10px;
+    }
+    
+    .details-content, .cert-content {
+        padding: 8px 10px;
+    }
+    
+    th, td {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    h2 {
+        font-size: 1.4rem;
+    }
+    
+    :root {
+        --section-spacing: 1.5rem;
+    }
+}
+
+/* Section spacing and organization */
+section, .section {
+    margin-bottom: var(--section-spacing);
+}
+
+h2 {
+    margin-top: var(--section-spacing);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--details-border);
+}
+
+hr {
+    margin: var(--section-spacing) 0;
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.1), rgba(0,0,0,0));
+}
+
+/* Course details specific styling */
+.course-details {
+    margin-top: 1rem;
+}
+
+/* Certification styles */
+.cert-category {
+    margin-bottom: 15px;
+    border: 1px solid var(--details-border);
+    border-radius: var(--details-radius);
+    overflow: hidden;
+}
+
+.cert-subcategory {
+    margin: 10px 0;
+    border: 1px solid var(--details-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.cert-summary {
+    padding: 10px 15px;
+    background-color: var(--details-bg);
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+.cert-summary:hover {
+    background-color: #f0f0f0;
+}
+
+.cert-category > .cert-summary {
+    font-size: 1.2rem;
+}
+
+.cert-subcategory > .cert-summary {
+    font-size: 1.1rem;
+    padding: 8px 15px;
+}
+
+.cert-summary::after {
+    content: '▼';
+    position: absolute;
+    right: 15px;
+    transition: transform 0.3s ease;
+    font-size: 0.8em;
+}
+
+details[open] > .cert-summary::after {
+    transform: rotate(180deg);
+}
+
+.cert-content {
+    padding: 0 15px 10px;
+}
+
+details[open] > .cert-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive adjustments for certification sections */
+@media (max-width: 768px) {
+    .cert-summary {
+        padding: 8px 10px;
+    }
+    
+    .cert-content {
+        padding: 0 10px 8px;
+    }
+    
+    .cert-category > .cert-summary {
+        font-size: 1.1rem;
+    }
+    
+    .cert-subcategory > .cert-summary {
+        font-size: 1rem;
     }
 }

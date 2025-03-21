@@ -5,13 +5,16 @@
     <meta charset="UTF-8">
     <!-- Open Graph Tags -->
     <meta property="og:title" content="Edward Silva">
-    <meta name="keywords" content="Edward Silva, Eddie Silva, portfolio, web development, electrical engineering, computer science, projects, skills, renewable energy, STEM education, software development, coding, design, problem-solving, academic honors, scholarships, sustainable engineering, innovation">
-    <meta property="og:description" content="Professional portfolio of Edward Silva, showcasing web development projects and skills">
+    <meta name="keywords"
+        content="Edward Silva, Eddie Silva, portfolio, web development, electrical engineering, computer science, projects, skills, renewable energy, STEM education, software development, coding, design, problem-solving, academic honors, scholarships, sustainable engineering, innovation">
+    <meta property="og:description"
+        content="Professional portfolio of Edward Silva, showcasing web development projects and skills">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ed-silva.com">
     <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="Edward Silva's CV">
-    <meta name="description" content="Explore the professional portfolio of Edward Silva, an electrical engineering student with a minor in computer science, showcasing his projects, skills, and achievements.">
+    <meta property="og:site_name" content="Edward Silva’s CV">
+    <meta name="description"
+        content="Explore the professional portfolio of Edward Silva, an electrical engineering student with a minor in computer science, showcasing his projects, skills, and achievements.">
     <meta name="author" content="Edward Silva">
     <meta name="robots" content="index, follow">
     <meta name="linkedin:profile" content="https://www.linkedin.com/in/edwardsilva04/">
@@ -23,16 +26,16 @@
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Edward Silva",
-        "url": "https://ed-silva.com",
-        "jobTitle": "Student",
-        "description": "Edward Silva is a passionate and driven electrical engineering student at the Colorado School of Mines, with a minor in computer science. With hands-on experience in electrical design, renewable energy research, and STEM education, Edward combines technical expertise with a commitment to innovation. His projects, like solar panel optimization and educational website development, showcase his skills in coding, design, and problem-solving. As a recipient of numerous academic honors and scholarships, Edward excels in applying his knowledge to practical challenges, aiming to create efficient and sustainable engineering solutions.",
-        "sameAs": [
-            "https://www.linkedin.com/in/edwardsilva04/",
-            "https://github.com/easilva04/"
-        ]
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Edward Silva",
+      "url": "https://ed-silva.com",
+      "jobTitle": "Student",
+      "description": "Edward Silva is a passionate and driven electrical engineering student at the Colorado School of Mines, with a minor in computer science. With hands-on experience in electrical design, renewable energy research, and STEM education, Edward combines technical expertise with a commitment to innovation. His projects, like solar panel optimization and educational website development, showcase his skills in coding, design, and problem-solving. As a recipient of numerous academic honors and scholarships, Edward excels in applying his knowledge to practical challenges, aiming to create efficient and sustainable engineering solutions.",
+      "sameAs": [
+        "https://www.linkedin.com/in/edwardsilva04/",
+        "https://github.com/easilva04/"
+      ]
     }
     </script>
 
@@ -49,6 +52,13 @@
         }
     </script>
     <script src="information.js" async defer></script>
+    <script>
+        const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const savedTheme = localStorage.getItem('theme');
+        const currentTheme = savedTheme || (userPrefersDark ? 'dark' : 'light');
+
+        document.documentElement.setAttribute('data-theme', currentTheme);
+    </script>
 </head>
 
 <body>
@@ -59,34 +69,42 @@
     </header>
 
     <main>
-        <details>
-            <summary><strong>Contents</strong></summary>
-            <div style="padding-left: 20px;">
+        <details class="site-details">
+            <summary class="site-summary">Contents</summary>
+            <div class="details-content">
                 <ol>
                     <li><a href="#education" alt="Education section">Education</a></li>
                     <li><a href="#skills" alt="Skills section">Skills</a></li>
                     <li><a href="#certifications" alt="Certifications section">Certifications</a></li>
                     <li><a href="#relevant-courses" alt="Relevant Courses section">Relevant Courses</a></li>
-                    <li><a href="#professional-experience" alt="Professional Experience section">Professional Experience</a>
+                    <li><a href="#professional-experience" alt="Professional Experience section">Professional
+                            Experience</a>
                         <ul>
                             <li><a href="#work-experience" alt="Work Experience section">Work Experience</a></li>
-                            <li><a href="#teaching-experience" alt="Teaching Experience section">Teaching Experience</a></li>
-                            <li><a href="#research-experience" alt="Research Experience section">Research Experience</a></li>
-                            <li><a href="#leadership-volunteer" alt="Leadership Experience section">Leadership Experience</a></li>
+                            <li><a href="#teaching-experience" alt="Teaching Experience section">Teaching Experience</a>
+                            </li>
                         </ul>
                     </li>
+                    <li><a href="#research-experience" alt="Research Experience section">Research Experience</a></li>
                     <li><a href="#projects" alt="Projects section">Projects</a></li>
-                    <li><a href="#future-goals" alt="Future Goals and Aspirations section">Future Goals and Aspirations</a></li>
+                    <li><a href="#future-goals" alt="Future Goals and Aspirations section">Future Goals and
+                            Aspirations</a></li>
                 </ol>
             </div>
         </details>
 
         <div class="container">
-            <p><strong>School Email:</strong> <a href="mailto:easilva@mines.edu" alt="Email Edward Silva at school email">easilva@mines.edu</a></p>
-            <p><strong>Personal Email:</strong> <a href="mailto:eddie@silvaspot.com" alt="Email Edward Silva at personal email">eddie@silvaspot.com</a></p>
-            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/edwardsilva04/" alt="Edward Silva's LinkedIn profile">linkedin.com/in/edwardsilva04</a></p>
-            <p><strong>Github:</strong> <a href="https://github.com/easilva04" alt="Edward Silva's GitHub profile">github.com/easilva04</a></p>
-            <p><strong>Website:</strong> <a href="https://www.eeprep.com" alt="Edward Silva's personal website">eeprep.com</a></p>
+            <p><strong>School Email:</strong> <a href="mailto:easilva@mines.edu"
+                    alt="Email Edward Silva at school email">easilva@mines.edu</a></p>
+            <p><strong>Personal Email:</strong> <a href="mailto:eddie@silvaspot.com"
+                    alt="Email Edward Silva at personal email">eddie@silvaspot.com</a></p>
+            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/edwardsilva04/"
+                    alt="Edward Silva's LinkedIn profile">linkedin.com/in/edwardsilva04</a></p>
+            <p><strong>Github:</strong> <a href="https://github.com/easilva04"
+                    alt="Edward Silva's GitHub profile">github.com/easilva04</a></p>
+            <p><strong>Website:</strong> <a href="https://www.eeprep.com"
+                    alt="Edward Silva's personal website">eeprep.com</a></p>
+
 
             <hr />
 
@@ -144,181 +162,232 @@
 
             <h2 id="skills">Skills</h2>
             <p><strong>Programming Languages:</strong> <a href="#projects" alt="Projects section">Java</a>,
-                <a href="#projects" alt="Projects section">Python</a>, Verilog, <a href="#projects" alt="Projects section">C</a>, <a href="#projects" alt="Projects section">C++</a>, C#, RISC-V Assembly, <a href="#projects" alt="Projects section">Bash</a>, <a href="#projects" alt="Projects section">MATLAB</a>, VBA<br />
+                <a href="#projects" alt="Projects section">Python</a>, Verilog, <a href="#projects"
+                    alt="Projects section">C</a>, <a href="#projects" alt="Projects section">C++</a>, C#, RISC-V
+                Assembly, <a href="#projects" alt="Projects section">Bash</a>, <a href="#projects"
+                    alt="Projects section">MATLAB</a>, VBA<br />
                 <strong>Technology:</strong> SolidWorks, Virtualization software, VS Code, SSH, Linux OS (Ubuntu),
-                <a href="#projects" alt="Projects section">Raspberry Pi</a>, <a href="#projects" alt="Projects section">Arduino</a>, <a href="#projects" alt="Projects section">HTML</a>, <a href="#projects" alt="Projects section">CSS</a>, <a href="#projects" alt="Projects section">JavaScript</a>, <a href="#professional-experience" alt="Professional Experience section">Revit</a><br />
+                <a href="#projects" alt="Projects section">Raspberry Pi</a>, <a href="#projects"
+                    alt="Projects section">Arduino</a>, <a href="#projects" alt="Projects section">HTML</a>, <a
+                    href="#projects" alt="Projects section">CSS</a>, <a href="#projects"
+                    alt="Projects section">JavaScript</a>, <a href="#professional-experience"
+                    alt="Professional Experience section">Revit</a><br />
                 <strong>Other:</strong> Git, GitHub, GitHub Pages, Codespaces
             </p>
 
             <h2 id="certifications">Certifications</h2>
-            <ul>
-                <li>
-                    <button class="info-button" data-info="mta-java">Microsoft Technical Associate -- Java Programming</button>
-                    <div class="certification-info-box hidden">
-                        <p class="info-content"></p>
-                        <a href="https://www.certiport.com/portal/Pages/PrintTranscriptInfo.aspx?action=Cert&id=398&cvid=knERWKvWtBqcNAfeZpIS0w==" target="_blank" rel="noopener">View Certification</a>
-                    </div>
-                </li>
-                <li>
-                    <button class="info-button" data-info="mta-python">Microsoft Technical Associate -- Python Programming</button>
-                    <div class="certification-info-box hidden">
-                        <p class="info-content"></p>
-                        <a href="https://www.certiport.com/portal/Pages/PrintTranscriptInfo.aspx?action=Cert&id=395&cvid=MdCjL/Og7y/qOiIHEAHSBQ==" target="_blank" rel="noopener">View Certification</a>
-                    </div>
-                </li>
-                <li>
-                    <button class="info-button" data-info="matlab-signal">Matlab Signal Processing Onramp</button>
-                    <div class="certification-info-box hidden">
-                        <p class="info-content"></p>
-                        <a href="https://matlabacademy.mathworks.com/progress/share/report.html?id=65d0c62f-26ae-4c90-9a3b-75b66b49bb55" target="_blank" rel="noopener">View Certification</a>
-                    </div>
-                </li>
-                <li>
-                    <button class="info-button" data-info="matlab-fundamentals">Matlab Fundamentals Onramp</button>
-                    <div class="certification-info-box hidden">
-                        <p class="info-content"></p>
-                        <a href="https://matlabacademy.mathworks.com/progress/share/report.html?id=37d91e21-3d9a-401b-bda4-d91b3d066764" target="_blank" rel="noopener">View Certification</a>
-                    </div>
-                </li>
-            </ul>
+            
+            <details open class="cert-category">
+                <summary class="cert-summary">Matlab</summary>
+                <div class="cert-content">
+                    <details open class="cert-subcategory">
+                        <summary class="cert-summary">Onramp</summary>
+                        <ul>
+                            <li>
+                                <button class="info-button" data-info="matlab-machine-learning">Matlab Machine Learning Onramp</button>
+                                <div class="certification-info-box hidden">
+                                    <p class="info-content"></p>
+                                    <a href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=2bce5cbe-5166-495e-a82f-eac52416fe29&"
+                                        target="_blank" rel="noopener">View Certification</a>
+                                </div>
+                            </li>
+                            <li>
+                                <button class="info-button" data-info="matlab-signal">Matlab Signal Processing Onramp</button>
+                                <div class="certification-info-box hidden">
+                                    <p class="info-content"></p>
+                                    <a href="https://matlabacademy.mathworks.com/progress/share/report.html?id=65d0c62f-26ae-4c90-9a3b-75b66b49bb55"
+                                        target="_blank" rel="noopener">View Certification</a>
+                                    </p>
+                                </div>
+                            </li>
+                            <li>
+                                <button class="info-button" data-info="matlab-fundamentals">Matlab Fundamentals Onramp</button>
+                                <div class="certification-info-box hidden">
+                                    <p class="info-content"></p>
+                                    <a href="https://matlabacademy.mathworks.com/progress/share/report.html?id=37d91e21-3d9a-401b-bda4-d91b3d066764"
+                                        target="_blank" rel="noopener">View Certification</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </details>
+                </div>
+            </details>
+            
+            <details open class="cert-category">
+                <summary class="cert-summary">Other</summary>
+                <div class="cert-content">
+                    <ul>
+                        <li>
+                            <button class="info-button" data-info="mta-java">Microsoft Technical Associate -- Java
+                                Programming</button>
+                            <div class="certification-info-box hidden">
+                                <p class="info-content"></p>
+                                <a href="https://www.certiport.com/portal/Pages/PrintTranscriptInfo.aspx?action=Cert&id=398&cvid=knERWKvWtBqcNAfeZpIS0w=="
+                                    target="_blank" rel="noopener">View Certification</a>
+                            </div>
+                        </li>
+                        <li>
+                            <button class="info-button" data-info="mta-python">Microsoft Technical Associate -- Python
+                                Programming</button>
+                            <div class="certification-info-box hidden">
+                                <p class="info-content"></p>
+                                <a href="https://www.certiport.com/portal/Pages/PrintTranscriptInfo.aspx?action=Cert&id=395&cvid=MdCjL/Og7y/qOiIHEAHSBQ=="
+                                    target="_blank" rel="noopener">View Certification</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </details>
 
             <h2 id="relevant-courses">Relevant Courses</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th><strong>Engineering</strong></th>
-                        <th><strong>Elective</strong></th>
-                        <th><strong>Core</strong></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <button class="info-button" data-info="fundamentals-electric-machinery">Fundamentals of Electric Machinery</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="software-engineering">Software Engineering</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="linear-algebra">Linear Algebra</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button class="info-button" data-info="engineering-electromagnetics">Engineering Electromagnetics</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="computer-organization">Computer Organization</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="differential-equations">Differential Equations</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button class="info-button" data-info="embedded-systems">Embedded Systems</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="data-structures-algorithms">Data Structures and Algorithms</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="calculus-1-3">Calculus 1-3</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button class="info-button" data-info="feedback-control-systems">Feedback Control Systems</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="intro-csharp-programming">Intro to C# Programming</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="chemistry-1-2">Chemistry 1 & 2</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button class="info-button" data-info="signals-systems">Signals and Systems</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="intro-linux-os">Intro Linux OS</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="physics-1-2">Physics 1 & 2</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button class="info-button" data-info="electrical-circuits">Electrical Circuits</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="info-button" data-info="programming-challenges-1">Programming Challenges I</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button class="info-button" data-info="digital-logic">Digital Logic</button>
-                            <div class="info-box hidden">
-                                <p class="info-content"></p>
-                            </div>
-                        </td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+            <details open class="site-details course-details">
+                <summary class="site-summary">View Courses</summary>
+                <div class="details-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><strong>Engineering</strong></th>
+                                <th><strong>Elective</strong></th>
+                                <th><strong>Core</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <button class="info-button" data-info="fundamentals-electric-machinery">Fundamentals of
+                                        Electric Machinery</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="software-engineering">Software Engineering</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="linear-algebra">Linear Algebra</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="info-button" data-info="engineering-electromagnetics">Engineering
+                                        Electromagnetics</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="computer-organization">Computer Organization</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="differential-equations">Differential
+                                        Equations</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="info-button" data-info="embedded-systems">Embedded Systems</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="data-structures-algorithms">Data Structures and
+                                        Algorithms</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="calculus-1-3">Calculus 1-3</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="info-button" data-info="feedback-control-systems">Feedback Control
+                                        Systems</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="intro-csharp-programming">Intro to C#
+                                        Programming</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="chemistry-1-2">Chemistry 1 & 2</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="info-button" data-info="signals-systems">Signals and Systems</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="intro-linux-os">Intro Linux OS</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="physics-1-2">Physics 1 & 2</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="info-button" data-info="electrical-circuits">Electrical Circuits</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="info-button" data-info="programming-challenges-1">Programming Challenges
+                                        I</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="info-button" data-info="digital-logic">Digital Logic</button>
+                                    <div class="info-box hidden">
+                                        <p class="info-content"></p>
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </details>
 
             <hr />
 
@@ -328,17 +397,16 @@
             <p><strong>Co-op Intern, Electrical Design</strong><br />
                 Jordan and Skala Engineers, Denver, CO, January 2025 -- Present</p>
             <ul>
-                <li>Assisting in electrical design projects using Revit.</li>
-                <li>Learning and applying ordinance codes in design work to ensure compliance with local regulations.</li>
-                <li>Collaborating with the engineering team to develop efficient and innovative electrical systems for commercial and residential projects.</li>
             </ul>
 
             <p><strong>Office Assistant</strong><br />
                 Fairfax County Public Schools, Fairfax, VA, June -- August 2024</p>
             <ul>
                 <li>Streamlined office operations using Microsoft Excel.</li>
-                <li>Responded to 600+ information requests, maintained and updated records of 300+ students, and prepared documents.</li>
-                <li>Coordinated program setup and close-out, managing supply distribution, collection, and event inventory for 15 classrooms, 300+ participants, and 50+ staff.</li>
+                <li>Responded to 600+ information requests, maintained and updated records of 300+ students, and
+                    prepared documents.</li>
+                <li>Coordinated program setup and close-out, managing supply distribution, collection, and event
+                    inventory for 15 classrooms, 300+ participants, and 50+ staff.</li>
             </ul>
 
             <p><strong>Extern</strong><br />
@@ -347,7 +415,9 @@
                 <li>Participated in a week-long externship program focused on networking and cybersecurity.</li>
                 <li>Gained hands-on experience with Cisco's networking technologies and security solutions.</li>
                 <li>Collaborated with a team to complete a capstone project on network security.</li>
-                <li>The theme of our capstone project was Healthcare, and the theme of our group was Black Widow (From Marvel). Our product was a solution that addressed medication adherence issues among elderly and chronic care patients.</li>
+                <li>The theme of our capstone project was Healthcare, and the theme of our group was Black Widow (From
+                    Marvel). Our product was a solution that addressed medication adherence issues among elderly and
+                    chronic care patients.</li>
             </ul>
 
             <h3 id="teaching-experience">Teaching Experience</h3>
@@ -355,15 +425,19 @@
                 Colorado School of Mines, Golden, CO, January 2024 -- December 2024</p>
             <ul>
                 <li>Graded assignments and exams for MATH 225: Differential Equations and MATH 112: Calculus 2.</li>
-                <li>Provided feedback to students to help them improve their understanding of mathematical concepts.</li>
+                <li>Provided feedback to students to help them improve their understanding of mathematical concepts.
+                </li>
             </ul>
 
             <p><strong>Peer Mentor</strong><br />
                 Colorado School of Mines, Golden, CO, August 2023 -- December 2023</p>
             <ul>
-                <li>Co-taught a 1 credit hour course on strategies to acclimate to the rigor of Mines for the incoming first-year class.</li>
-                <li>Created and executed lesson plans on topics of mental health, emotional well-being, and academic success.</li>
-                <li>Co-led a group for Oredigger Camp and Fall Kickoff, a weeklong event for all first-year students.</li>
+                <li>Co-taught a 1 credit hour course on strategies to acclimate to the rigor of Mines for the incoming
+                    first-year class.</li>
+                <li>Created and executed lesson plans on topics of mental health, emotional well-being, and academic
+                    success.</li>
+                <li>Co-led a group for Oredigger Camp and Fall Kickoff, a weeklong event for all first-year students.
+                </li>
             </ul>
 
             <p><strong>Substitute Teacher</strong><br />
@@ -377,76 +451,73 @@
             <p><strong>Lead Counselor</strong><br />
                 Code Ninjas, Fairfax, VA, May 2023 -- August 2023</p>
             <ul>
-                <li>Supplied individual tutoring and resources for children (ages 6 to 14) in the JavaScript and C# programming languages.</li>
-                <li>Led multiple STEM summer camps for up to twenty-five children at a time, covering topics such as 3D Modeling and 3D Printing, Circuits, Robotics, Python, and C# programming.</li>
+                <li>Supplied individual tutoring and resources for children (ages 6 to 14) in the JavaScript and C#
+                    programming languages.</li>
+                <li>Led multiple STEM summer camps for up to twenty-five children at a time, covering topics such as 3D
+                    Modeling and 3D Printing, Circuits, Robotics, Python, and C# programming.</li>
                 <li>Created a 3D printer server via OctoPi for multiple 3D printer systems.</li>
             </ul>
 
             <p><strong>Coding Instructor</strong><br />
                 Code Ninjas, Fairfax, VA, March -- August 2022</p>
             <ul>
-                <li>Tutored 50+ students in <a href="#skills" alt="Skills section">JavaScript</a> and C#, enhancing their coding skills.</li>
-                <li>Led STEM camps for 100+ students, covering 3D Modeling &amp; Printing, Robotics, and C# development.</li>
+                <li>Tutored 50+ students in <a href="#skills" alt="Skills section">JavaScript</a> and C#, enhancing
+                    their coding skills.</li>
+                <li>Led STEM camps for 100+ students, covering 3D Modeling &amp; Printing, Robotics, and C# development.
+                </li>
                 <li>Deployed and managed a remote 3D printing server via OctoPi.</li>
                 <li>Awarded Instructor of the Month (June 2022 &amp; July 2023) for exceptional teaching methods.</li>
             </ul>
 
-            <p><strong>Highschool Tutor</strong><br />
-                Computer Science Honor Society, August 2020 -- June 2022</p>
-            <ul>
-                <li>Helped teach peers different ways to approach CS problems, enhancing their understanding and problem-solving skills.</li>
-                <li>Collaborated with a team to develop and execute a capstone project aimed at teaching middle school students fundamental CS concepts through interactive lessons and activities.</li>
-                <li>Achieved the highest number of tutoring hours in my local organization, demonstrating a strong commitment to peer education and mentorship.</li>
-                <li>Provided one-on-one and group tutoring sessions, tailoring teaching methods to individual learning styles and needs.</li>
-                <li>Organized and led study groups, fostering a collaborative learning environment among peers.</li>
-                <li>Assisted in the creation of educational materials and resources to support the learning process.</li>
-            </ul>
+            <hr />
 
             <h2 id="research-experience">Research Experience</h2>
 
-            <p><strong>Undergraduate Researcher (MURF Scholar)</strong><br />
+            <p><strong>Undergraduate Researcher</strong><br />
                 ePower Hubs Research Lab, Colorado School of Mines, Golden, CO, June 2024 -- Present</p>
             <ul>
-                <li>Conducted literature review on sensor systems and wind farm level controllers, and analysis of offshore and onshore wind energy systems, focusing on variable voltage, power, and frequency integration with the existing power grid.</li>
+                <li>Devised a neural network model to predict sensor system failure in wind turbine systems.</li>
+                <li>Conducted literature review and analysis of offshore and onshore wind energy systems, focusing on
+                    variable voltage, power, and frequency integration with the existing power grid.</li>
                 <li>Aimed to reduce maintenance, design, and integration costs of complex wind farm grids.</li>
             </ul>
 
-            <p><strong>Undergraduate Research Assistant (FIRST Scholar)</strong><br />
+            <p><strong>Undergraduate Research Assistant</strong><br />
                 Explosives Research Lab, Colorado School of Mines, Golden, CO, August 2022 -- January 2023</p>
             <ul>
-                <li>Assisted in optimization of 3D printer settings to improve precision and output quality.</li>
+                <li>Optimized 3D printer settings to improve precision and output quality.</li>
                 <li>Observed and documented multiple controlled explosive tests in various environments.</li>
-                <li>Supported research activities through manual labor tasks, including site preparation and equipment maintenance.</li>
+                <li>Supported research activities through manual labor tasks, including site preparation and equipment
+                    maintenance.</li>
             </ul>
-            <h2 id="leadership-volunteer">Leadership Experience</h2>
 
-            <p><strong>Advocacy Chair, Residence Life -- Community Council</strong></p>
-            <p>Colorado School of Mines, Golden, CO, September 2022 - May 2023</p>
-            <ul>
-                <li>Elected as the student representative to plan programs relating to social issues or advocacy, collect common resident complaints, and stay current on issues pertinent to my university community</li>
-                <li>Assisted in planning and management of events, including but not limited to movie nights, study halls, and competitions</li>
-                <li>Collaborated with university staff and other council members to develop and implement initiatives promoting diversity, equity, and inclusion</li>
-                <li>Coordinated volunteer opportunities and community service projects to engage residents in giving back to the local community</li>
-            </ul>
             <hr />
 
             <h2 id="projects">Projects</h2>
-            <p><strong><a href="https://www.eeprep.com" target="_blank" rel="noopener" alt="Edward Silva's personal website">eeprep.com</a></strong><br />
+            <p><strong><a href="https://www.eeprep.com" target="_blank" rel="noopener"
+                        alt="Edward Silva's personal website">eeprep.com</a></strong><br />
                 Personal Project, December 2023 -- Present</p>
             <ul>
                 <li>Developed a comprehensive website to summarize the entire Electrical Engineering degree.</li>
-                <li>Utilized <a href="#skills" alt="Skills section">HTML</a>, <a href="#skills" alt="Skills section">CSS</a>, <a href="#skills" alt="Skills section">JavaScript</a> for frontend and backend development.</li>
-                <li>Aimed to demonstrate competency and provide educational resources for aspiring Electrical Engineers.</li>
+                <li>Utilized <a href="#skills" alt="Skills section">HTML</a>, <a href="#skills"
+                        alt="Skills section">CSS</a>, <a href="#skills" alt="Skills section">JavaScript</a> for
+                    frontend and backend development.</li>
+                <li>Aimed to demonstrate competency and provide educational resources for aspiring Electrical Engineers.
+                </li>
                 <li>Included detailed explanations, tutorials, and practical examples to facilitate learning.</li>
             </ul>
 
             <p><strong>Solar Panel Optimization Robot</strong><br />
-                Personal Project, <a href="#skills" alt="Skills section">Python</a>, <a href="#skills" alt="Skills section">Arduino</a>,
-                <a href="https://github.com/easilva04/SolarPanelProject" alt="Solar Panel Optimization Robot project on GitHub">Github</a>, August -- October 2024
+                Personal Project, <a href="#skills" alt="Skills section">Python</a>, <a href="#skills"
+                    alt="Skills section">Arduino</a>,
+                <a href="https://github.com/easilva04/SolarPanelProject"
+                    alt="Solar Panel Optimization Robot project on GitHub">Github</a>, August -- October 2024
             </p>
             <ul>
-                <li>Prototyped and coded controller for optimal solar panel alignment utilizing Arduino microcontroller, light sensors, and motor controllers.</li>
-                <li>Developed a prototype with a servo motor for pitch adjustment and a stepper motor for yaw adjustment.</li>
+                <li>Prototyped and coded controller for optimal solar panel alignment utilizing Arduino microcontroller,
+                    light sensors, and motor controllers.</li>
+                <li>Developed a prototype with a servo motor for pitch adjustment and a stepper motor for yaw
+                    adjustment.</li>
                 <li>Integrated an advanced tracking algorithm into the Arduino microcontroller.</li>
                 <li>Conducted system testing and calibration under various atmospheric conditions.</li>
                 <li>Utilized Raspberry Pi as a brain controller for the Arduino.</li>
@@ -457,28 +528,39 @@
             <p><strong>Clue Game</strong><br />
                 Java, August -- December 2023</p>
             <ul>
-                <li>Collaboratively developed a Java-based Clue game via eclipse on a team of 3, applying SCRUM and Test Driven Development principles.</li>
+                <li>Collaboratively developed a Java-based Clue game via eclipse on a team of 3, applying SCRUM and Test
+                    Driven Development principles.</li>
                 <li>Implemented GitHub for version control, facilitating seamless collaboration.</li>
                 <li>Conducted weekly code reviews and maintained modular code with comprehensive documentation.</li>
-                <li>Developed a user-friendly interface with Java Swing, including a dynamic game board and player status panels.</li>
+                <li>Developed a user-friendly interface with Java Swing, including a dynamic game board and player
+                    status panels.</li>
             </ul>
 
             <p><strong>Hydraulic Ram Pump</strong><br />
                 Engineering Design Cornerstone, August -- December 2022</p>
             <ul>
                 <li>Recognized as Subject Matter Expert (Top 4 of 40 teams).</li>
-                <li>Collaborated with a team of six to design a cost-effective solution for managing acid mine drainage.</li>
+                <li>Collaborated with a team of six to design a cost-effective solution for managing acid mine drainage.
+                </li>
                 <li>Engineered a working prototype under $100 using PVC piping and a PH filtration system.</li>
                 <li>Contributed to a 90-page detailed documentation.</li>
             </ul>
+
             <hr />
             <h2 id="future-goals">Future Goals and Aspirations</h2>
             <p>My objectives in Electrical Engineering are as follows:</p>
             <ul>
-                <li>Obtain the EIT (Engineer in Training) certification to enhance professional qualifications in engineering.</li>
-                <li>Pursue advanced education, including a Master's and PhD, specializing in robotics, controls, and renewable energy sources.</li>
-                <li>Work as an engineer specializing in advanced control systems, contributing to technological advancements and practical solutions for global challenges.</li>
-                <li>Transition to academia as a professor, mentoring future engineers and advancing the field through teaching and research after a full career in engineering, contributing to industry advancements and gaining practical experience.</li>
+                <li>Complete a Bachelor's degree with a focus on sustainable energy, emerging technologies, and building
+                    design.</li>
+                <li>Obtain the FE and LEED Green Associate certifications to enhance professional qualifications in
+                    engineering and sustainability.</li>
+                <li>Pursue advanced education, including a Master's and PhD, specializing in renewable energy systems
+                    and smart grid technologies.</li>
+                <li>Contribute to innovative projects and research that address global challenges in energy efficiency
+                    and sustainability.</li>
+                <li>Transition to academia as a professor, mentoring future engineers and advancing the field through
+                    teaching and research after a full career in engineering, contributing to industry advancements and
+                    gaining practical experience.</li>
             </ul>
         </div>
     </main>

@@ -73,7 +73,8 @@ const infoData = {
   "mta-java": "Microsoft Technical Associate -- Java Programming certification demonstrates proficiency in Java programming, including understanding of Java syntax, object-oriented programming, and basic Java development.",
   "mta-python": "Microsoft Technical Associate -- Python Programming certification validates knowledge of Python programming, including syntax, data structures, and basic programming concepts.",
   "matlab-signal": "Matlab Signal Processing Onramp certification covers the basics of signal processing using Matlab, including filtering, Fourier transforms, and signal analysis.",
-  "matlab-fundamentals": "Matlab Fundamentals Onramp certification provides foundational knowledge of Matlab, including basic operations, programming, and data visualization."
+  "matlab-fundamentals": "Matlab Fundamentals Onramp certification provides foundational knowledge of Matlab, including basic operations, programming, and data visualization.",
+  "matlab-machine-learning": "Matlab Machine Learning Onramp certification covers fundamental concepts of machine learning with MATLAB, including data preparation, feature engineering, supervised learning algorithms, and model evaluation techniques."
 };
 
 // Function to adjust the position of the info-box
@@ -174,5 +175,34 @@ document.addEventListener('click', (event) => {
       button.classList.remove('active');
       infoBox.classList.add('hidden');
     }
+  });
+});
+
+// Enhance collapsible elements behavior
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize all details elements
+  const allDetails = document.querySelectorAll('.site-details, .cert-category, .cert-subcategory');
+  
+  // Add transition effects when opening/closing details
+  allDetails.forEach(detail => {
+      detail.addEventListener('toggle', function() {
+          if (this.open) {
+              const content = this.querySelector('.details-content, .cert-content');
+              if (content) {
+                  content.style.display = 'block';
+                  content.style.animation = 'fadeIn 0.3s ease-in-out';
+              }
+          }
+      });
+  });
+
+  // Clean up any potential layout issues with info boxes
+  window.addEventListener('resize', function() {
+      document.querySelectorAll('.info-box:not(.hidden), .certification-info-box:not(.hidden)').forEach(box => {
+          const button = box.previousElementSibling;
+          if (button && button.classList.contains('info-button')) {
+              adjustInfoBoxPosition(button, box);
+          }
+      });
   });
 });
