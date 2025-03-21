@@ -85,6 +85,30 @@ document.addEventListener('DOMContentLoaded', () => {
   populateAllCourseDescriptions();
   populateCertificationContent();
   initializeEventListeners();
+  setupAnimations();
+  enhanceNavigation();
+  
+  // Add new enhancements
+  enhanceSkillTags();
+  addHeaderParallax();
+  
+  // Add click handler for project cards
+  const projectCards = document.querySelectorAll('.project-card');
+  projectCards.forEach(card => {
+    card.addEventListener('click', function(e) {
+      // Don't trigger if clicking on a link
+      if (e.target.tagName === 'A') return;
+      
+      // Toggle active class for subtle highlight
+      this.classList.toggle('active-project');
+      
+      // Optional: expand card description
+      const description = this.querySelector('ul');
+      if (description) {
+        description.style.maxHeight = description.style.maxHeight ? null : description.scrollHeight + 'px';
+      }
+    });
+  });
 });
 
 // Event listeners initialization - simplified and optimized
@@ -99,10 +123,11 @@ function initializeEventListeners() {
   }
   
   // Add event listener for the resume download button
-  const resumeButton = getElement('download-resume');
-  if (resumeButton) {
-    resumeButton.addEventListener('click', downloadResume);
-  }
+  document.addEventListener('click', event => {
+    if (event.target.classList.contains('resume-button')) {
+      downloadResume();
+    }
+  });
   
   // Delegate course details to body - single event listener
   document.body.addEventListener('click', event => {
@@ -112,9 +137,139 @@ function initializeEventListeners() {
       if (description && !description.textContent.trim()) {
         const courseCode = description.getAttribute('data-course');
         description.textContent = infoContent[courseCode] || 'Course description not available.';
+        
+        // Add subtle animation to newly revealed content
+        description.classList.add('fade-in');
       }
     }
   });
+
+  // Add scroll event listener for revealing elements
+  window.addEventListener('scroll', throttle(revealOnScroll, 100));
+
+  // Add event listener for card hover effects
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.style.transform = 'translateY(-8px)';
+      card.style.boxShadow = 'var(--shadow-lg)';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.boxShadow = '';
+    });
+  });
+}
+
+// Setup animations for page elements
+function setupAnimations() {
+  // Add animation classes to each section
+  const sections = document.querySelectorAll('.section');
+  sections.forEach((section, index) => {
+    section.classList.add('fade-in');
+    section.style.animationDelay = `${index * 0.1}s`;
+    section.style.opacity = '0'; // Start hidden
+  });
+  
+  // Add animation to header elements
+  const header = document.querySelector('header');
+  if (header) {
+    const headerElements = header.querySelectorAll('h1, h2, p, button');
+    headerElements.forEach((el, index) => {
+      el.classList.add('fade-in');
+      el.style.animationDelay = `${0.3 + (index * 0.15)}s`;
+      el.style.opacity = '0'; // Start hidden
+    });
+  }
+  
+  // Add animation to timeline items
+  const timelineItems = document.querySelectorAll('.timeline-item');
+  timelineItems.forEach((item, index) => {
+    item.classList.add('slide-in-left');
+    item.style.animationDelay = `${0.1 + (index * 0.1)}s`;
+    item.style.opacity = '0'; // Start hidden
+  });
+  
+  // Add animation to skill categories
+  const skillItems = document.querySelectorAll('.skill-category');
+  skillItems.forEach((item, index) => {
+    item.classList.add('scale-in');
+    item.style.animationDelay = `${0.2 + (index * 0.1)}s`;
+    item.style.opacity = '0'; // Start hidden
+  });
+
+  // Trigger animation for elements in viewport on page load
+  setTimeout(() => {
+    revealOnScroll();
+  }, 100);
+}
+
+// Reveal elements when they enter the viewport
+function revealOnScroll() {
+  const elements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in');
+  
+  elements.forEach(element => {
+    if (isElementInViewport(element) && element.style.opacity === '0') {
+      element.style.opacity = '1';
+    }
+  });
+}
+
+// Check if element is in viewport
+function isElementInViewport(el) {
+  const rect = el.getBoundingClientRect();
+  return (
+    rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
+    rect.bottom >= 0
+  );
+}
+
+// Throttle function to limit function calls
+function throttle(func, limit) {
+  let inThrottle;
+  return function() {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+// Enhance navigation with active state tracking
+function enhanceNavigation() {
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  
+  // Highlight active section in navigation
+  const highlightActiveSection = throttle(() => {
+    let currentSectionId = '';
+    
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 100;
+      const sectionHeight = section.offsetHeight;
+      const scrollPosition = window.scrollY;
+      
+      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+        currentSectionId = section.id;
+      }
+    });
+    
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === `#${currentSectionId}`) {
+        link.classList.add('active');
+      }
+    });
+  }, 100);
+  
+  // Add scroll event listener
+  window.addEventListener('scroll', highlightActiveSection);
+  
+  // Run once on page load
+  highlightActiveSection();
 }
 
 // Navigation click handler - optimized
@@ -124,23 +279,38 @@ function handleNavClick(e) {
   if (href && href.startsWith('#')) {
     e.preventDefault();
     const targetId = href.substring(1);
-    const targetElement = getElement(targetId);
+    const targetElement = document.getElementById(targetId);
     
     if (targetElement) {
-      // Use cached selector where possible
+      // Update active class
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
       this.classList.add('active');
       
+      // Smooth scroll to target
       window.scrollTo({
-        top: targetElement.offsetTop - 65,
+        top: targetElement.offsetTop - 70,
         behavior: 'smooth'
       });
     }
   }
 }
 
-// Download resume function - unchanged but more efficient
+// Download resume function with feedback
 function downloadResume() {
+  const button = document.querySelector('.resume-button');
+  
+  // Visual feedback
+  if (button) {
+    const originalText = button.textContent;
+    button.textContent = 'Downloading...';
+    button.style.opacity = '0.8';
+    
+    setTimeout(() => {
+      button.textContent = originalText;
+      button.style.opacity = '1';
+    }, 1500);
+  }
+  
   const link = document.createElement('a');
   link.href = 'assets/resume.pdf';
   link.download = 'Edward_Silva_Resume.pdf';
@@ -150,13 +320,17 @@ function downloadResume() {
   document.body.removeChild(link);
 }
 
-// Theme toggle with smooth transition - optimized
+// Theme toggle with smooth transition - enhanced
 function initializeThemeToggle() {
-  const toggle = getElement('theme-toggle');
+  const toggle = document.getElementById('theme-toggle');
   if (!toggle) return;
   
   const updateThemeIcon = (theme) => {
     toggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+    
+    // Add animation
+    toggle.classList.add('rotating');
+    setTimeout(() => toggle.classList.remove('rotating'), 500);
   };
   
   toggle.addEventListener('click', () => {
@@ -171,11 +345,30 @@ function initializeThemeToggle() {
     
     setTimeout(() => {
       document.body.classList.remove('theme-transition');
-    }, 300);
+    }, 500);
   });
   
-  // Set initial icon - retrieved from cache
+  // Set initial icon based on current theme
   updateThemeIcon(document.documentElement.getAttribute('data-theme'));
+  
+  // Add CSS for rotation animation
+  if (!document.getElementById('theme-toggle-style')) {
+    const style = document.createElement('style');
+    style.id = 'theme-toggle-style';
+    style.textContent = `
+      @keyframes rotate {
+        0% { transform: rotate(0); }
+        100% { transform: rotate(360deg); }
+      }
+      .rotating {
+        animation: rotate 0.5s ease-in-out;
+      }
+      .theme-transition {
+        transition: color 0.5s ease, background-color 0.5s ease;
+      }
+    `;
+    document.head.appendChild(style);
+  }
 }
 
 // Populate course descriptions - optimized with batch operation
@@ -236,5 +429,67 @@ function populateCertificationContent() {
         p.textContent = infoContent[key] || `Information about ${text}`;
       }
     });
+  });
+}
+
+// Reveal initial elements with staggered animation - modify to run immediately
+function revealInitialElements() {
+  // Elements to animate in sequence
+  const elementsToAnimate = [
+    'header h1',                    // Name (first)
+    'header h2',                    // Title
+    'header p',                     // Description
+    'header .resume-button',        // Resume button
+    '.contact-info',                // Contact info section
+    '.nav-links',                   // Navigation
+    '#education .section-header'    // First section header
+  ];
+  
+  // Apply staggered animations immediately
+  elementsToAnimate.forEach((selector, index) => {
+    const element = document.querySelector(selector);
+    if (element) {
+      // Show immediately with minimal delay
+      element.style.opacity = '1';
+      element.style.transform = 'translateY(0)';
+      element.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    }
+  });
+}
+
+// Add interactive element for skill tags
+function enhanceSkillTags() {
+  const skillTags = document.querySelectorAll('.skill-tag');
+  
+  skillTags.forEach(tag => {
+    tag.addEventListener('mouseenter', () => {
+      // Create small pop effect
+      tag.style.transform = 'scale(1.1) translateY(-3px)';
+      tag.style.boxShadow = 'var(--shadow-md)';
+    });
+    
+    tag.addEventListener('mouseleave', () => {
+      // Return to normal
+      tag.style.transform = '';
+      tag.style.boxShadow = '';
+    });
+  });
+}
+
+// Add parallax scroll effect to header
+function addHeaderParallax() {
+  window.addEventListener('scroll', () => {
+    const scrollPosition = window.scrollY;
+    const header = document.querySelector('header');
+    
+    if (header && scrollPosition < header.offsetHeight) {
+      // Move background elements at different rates for parallax effect
+      const bgElements = header.querySelectorAll('::before, ::after');
+      const parallaxRate = scrollPosition * 0.4;
+      
+      bgElements.forEach(el => {
+        el.style.transform = `translateY(${parallaxRate}px)`;
+      });
+    }
   });
 }

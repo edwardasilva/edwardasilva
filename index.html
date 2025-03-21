@@ -36,7 +36,7 @@
     <link rel="preload" href="information.js" as="script">
 
     <!-- Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="main.css">
 
     <!-- Favicon -->
@@ -65,6 +65,7 @@
         const savedTheme = localStorage.getItem('theme');
         const currentTheme = savedTheme || (userPrefersDark ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', currentTheme);
+        document.documentElement.style.setProperty('--bg-rgb', currentTheme === 'dark' ? '17, 24, 39' : '255, 255, 255');
     </script>
 
     <!-- Analytics (deferred) -->
@@ -92,7 +93,7 @@
             <h1>Edward A. Silva</h1>
             <h2>Electrical Engineering Student</h2>
             <p>This website was meticulously crafted by hand using JavaScript, HTML, and CSS as a personal project.</p>
-            <button class="resume-button" onclick="downloadResume()">Download Resume</button>
+            <button class="resume-button">Download Resume</button>
         </div>
     </header>
 
@@ -105,7 +106,6 @@
                 <li><a href="#certifications">Certifications</a></li>
                 <li><a href="#courses">Courses</a></li>
                 <li><a href="#experience">Experience</a></li>
-                <li><a href="#research">Research</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#goals">Goals</a></li>
             </ul>
@@ -123,13 +123,13 @@
                 <a href="mailto:eddie@silvaspot.com" class="contact-item">
                     📧 eddie@silvaspot.com
                 </a>
-                <a href="https://www.linkedin.com/in/edwardsilva04/" class="contact-item" target="_blank">
+                <a href="https://www.linkedin.com/in/edwardsilva04/" class="contact-item" target="_blank" rel="noopener">
                     👔 LinkedIn
                 </a>
-                <a href="https://github.com/easilva04" class="contact-item" target="_blank">
+                <a href="https://github.com/easilva04" class="contact-item" target="_blank" rel="noopener">
                     💻 GitHub
                 </a>
-                <a href="https://www.eeprep.com" class="contact-item" target="_blank">
+                <a href="https://www.eeprep.com" class="contact-item" target="_blank" rel="noopener">
                     🌐 eeprep.com
                 </a>
             </section>
@@ -140,14 +140,27 @@
                     <h2>Education</h2>
                 </div>
                 <div class="card">
-                    <h3>Master of Science in Robotics</h3>
-                    <p><strong>Colorado School of Mines</strong> | Expected May 2027</p>
+                    <div class="education-header">
+                        
+                        <div class="education-info">
+                            <h3>Master of Science in Robotics</h3>
+                            <p><strong>Colorado School of Mines</strong> | Expected May 2027</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="card">
-                    <h3>Bachelor of Science in Electrical Engineering</h3>
-                    <p><strong>Colorado School of Mines</strong> | Expected December 2026</p>
-                    <p><strong>Minor:</strong> Computer Science, Software and Algorithm Design</p>
-                    <p><strong>GPA:</strong> 3.435</p>
+                    <div class="education-header">
+                        
+                        <div class="education-info">
+                            <h3>Bachelor of Science in Electrical Engineering</h3>
+                            <p><strong>Colorado School of Mines</strong> | Expected December 2026</p>
+                            <p><strong>Minor:</strong> Computer Science, Software and Algorithm Design</p>
+                            <div class="gpa-indicator">
+                                <div class="gpa-label">GPA</div>
+                                <div class="gpa-value">3.435</div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="achievement-container">
                         <details class="dropdown-item section-dropdown">
@@ -204,8 +217,6 @@
                         </details>
                     </div>
                 </div>
-
-                
             </section>
 
             <!-- Skills -->
@@ -215,23 +226,55 @@
                 </div>
                 <div class="skills-grid">
                     <div class="skill-category">
+                        <span class="skill-icon">💻</span>
                         <h3>Programming</h3>
-                        <p>Java, Python, C/C++, C#, RISC-V Assembly, Bash, MATLAB, VBA, Verilog</p>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">C/C++</span>
+                            <span class="skill-tag">C#</span>
+                            <span class="skill-tag">RISC-V Assembly</span>
+                            <span class="skill-tag">Bash</span>
+                            <span class="skill-tag">MATLAB</span>
+                            <span class="skill-tag">VBA</span>
+                            <span class="skill-tag">Verilog</span>
+                        </div>
                     </div>
 
                     <div class="skill-category">
+                        <span class="skill-icon">🌐</span>
                         <h3>Web Development</h3>
-                        <p>HTML5, CSS3, JavaScript, Responsive Design, Web Accessibility</p>
+                        <div class="skill-tags">
+                            <span class="skill-tag">HTML5</span>
+                            <span class="skill-tag">CSS3</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">Responsive Design</span>
+                            <span class="skill-tag">Web Accessibility</span>
+                        </div>
                     </div>
 
                     <div class="skill-category">
+                        <span class="skill-icon">⚙️</span>
                         <h3>Hardware</h3>
-                        <p>Arduino, Raspberry Pi, Digital Circuit Design, Embedded Systems</p>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Arduino</span>
+                            <span class="skill-tag">Raspberry Pi</span>
+                            <span class="skill-tag">Digital Circuits</span>
+                            <span class="skill-tag">Embedded Systems</span>
+                        </div>
                     </div>
 
                     <div class="skill-category">
+                        <span class="skill-icon">🔧</span>
                         <h3>Software & Tools</h3>
-                        <p>SolidWorks, VS Code, Git/GitHub, Linux (Ubuntu), Virtualization, Revit</p>
+                        <div class="skill-tags">
+                            <span class="skill-tag">SolidWorks</span>
+                            <span class="skill-tag">VS Code</span>
+                            <span class="skill-tag">Git/GitHub</span>
+                            <span class="skill-tag">Linux</span>
+                            <span class="skill-tag">Virtualization</span>
+                            <span class="skill-tag">Revit</span>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -242,8 +285,11 @@
                     <h2>Certifications</h2>
                 </div>
                 <div class="grid">
-                    <div class="card">
-                        <h3>MATLAB Certifications</h3>
+                    <div class="card cert-card">
+                        <div class="cert-header">
+                            <span class="cert-icon">🔬</span>
+                            <h3>MATLAB Certifications</h3>
+                        </div>
                         <ul class="skill-list">
                             <details class="dropdown-item">
                                 <summary>MATLAB Machine Learning Techniques</summary>
@@ -258,10 +304,12 @@
                                             data-share-badge-id="3d740a34-2cfa-4259-ab08-3aeed0e3f03c"
                                             data-share-badge-host="https://www.credly.com"></div>
                                     </div>
-                                    <a href="https://www.credly.com/badges/3d740a34-2cfa-4259-ab08-3aeed0e3f03c/public_url"
-                                        target="_blank" rel="noopener">View Credly Badge</a><br>
-                                    <a href="https://matlabacademy.mathworks.com/progress/share/learningpath/certificate.html?id=66e0197c-ef35-495a-b436-d5b985057975&"
-                                        target="_blank" rel="noopener">View Learning Path Certificate</a>
+                                    <div class="cert-links">
+                                        <a href="https://www.credly.com/badges/3d740a34-2cfa-4259-ab08-3aeed0e3f03c/public_url"
+                                            target="_blank" rel="noopener" class="underline-link">View Credly Badge</a>
+                                        <a href="https://matlabacademy.mathworks.com/progress/share/learningpath/certificate.html?id=66e0197c-ef35-495a-b436-d5b985057975&"
+                                            target="_blank" rel="noopener" class="underline-link">View Learning Path Certificate</a>
+                                    </div>
 
                                     <h5>Courses in this learning path:</h5>
                                     <div class="course-list">
@@ -271,7 +319,7 @@
                                                 <p>Learn and apply different machine learning methods for
                                                     classification.</p>
                                                 <a href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=5ee4b2c0-d6da-4ec6-98c4-4c0dabdbf34d&"
-                                                    target="_blank" rel="noopener">View Certificate</a>
+                                                    target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                             </div>
                                         </details>
 
@@ -281,7 +329,7 @@
                                                 <p>Learn and apply different machine learning methods for
                                                     regression.</p>
                                                 <a href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=de0aaef0-f8a8-4eaf-a956-eb1af04028c9&"
-                                                    target="_blank" rel="noopener">View Certificate</a>
+                                                    target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                             </div>
                                         </details>
 
@@ -290,7 +338,7 @@
                                             <div class="dropdown-content">
                                                 <p>Cluster observations in a data set into groups.</p>
                                                 <a href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=237c1da7-ea80-4b71-baa4-7517de1d7f45&"
-                                                    target="_blank" rel="noopener">View Certificate</a>
+                                                    target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                             </div>
                                         </details>
 
@@ -299,7 +347,7 @@
                                             <div class="dropdown-content">
                                                 <p>Reduce the dimensionality of your dataset.</p>
                                                 <a href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=4a509f9f-7a78-499e-b56a-482263f4a93f&"
-                                                    target="_blank" rel="noopener">View Certificate</a>
+                                                    target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                             </div>
                                         </details>
                                     </div>
@@ -321,7 +369,7 @@
                                                 <p>Introduction to machine learning concepts and techniques using
                                                     MATLAB.</p>
                                                 <a href="https://matlabacademy.mathworks.com/progress/share/certificate.html?id=2bce5cbe-5166-495e-a82f-eac52416fe29&"
-                                                    target="_blank" rel="noopener">View Certificate</a>
+                                                    target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                             </div>
                                         </details>
 
@@ -331,7 +379,7 @@
                                                 <p>Introduction to signal processing principles and techniques using
                                                     MATLAB.</p>
                                                 <a href="https://matlabacademy.mathworks.com/progress/share/report.html?id=65d0c62f-26ae-4c90-9a3b-75b66b49bb55"
-                                                    target="_blank" rel="noopener">View Certificate</a>
+                                                    target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                             </div>
                                         </details>
 
@@ -341,7 +389,7 @@
                                                 <p>Introduction to MATLAB programming and problem-solving
                                                     capabilities.</p>
                                                 <a href="https://matlabacademy.mathworks.com/progress/share/report.html?id=37d91e21-3d9a-401b-bda4-d91b3d066764"
-                                                    target="_blank" rel="noopener">View Certificate</a>
+                                                    target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                             </div>
                                         </details>
                                     </div>
@@ -350,8 +398,11 @@
                         </ul>
                     </div>
 
-                    <div class="card">
-                        <h3>Microsoft Certifications</h3>
+                    <div class="card cert-card">
+                        <div class="cert-header">
+                            <span class="cert-icon">🏆</span>
+                            <h3>Microsoft Certifications</h3>
+                        </div>
                         <ul class="skill-list">
                             <details class="dropdown-item">
                                 <summary>Microsoft Technical Associate - Java Programming</summary>
@@ -360,7 +411,7 @@
                                         validating proficiency in Java syntax, data structures, and object-oriented
                                         programming concepts.</p>
                                     <a href="https://www.certiport.com/portal/Pages/PrintTranscriptInfo.aspx?action=Cert&id=398&cvid=knERWKvWtBqcNAfeZpIS0w=="
-                                        target="_blank" rel="noopener">View Certificate</a>
+                                        target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                 </div>
                             </details>
                             <details class="dropdown-item">
@@ -370,7 +421,7 @@
                                         demonstrating competency in Python syntax, functions, and software
                                         development principles.</p>
                                     <a href="https://www.certiport.com/portal/Pages/PrintTranscriptInfo.aspx?action=Cert&id=395&cvid=MdCjL/Og7y/qOiIHEAHSBQ=="
-                                        target="_blank" rel="noopener">View Certificate</a>
+                                        target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                 </div>
                             </details>
                         </ul>
@@ -384,93 +435,85 @@
                     <h2>Relevant Courses</h2>
                 </div>
                 <div class="card">
-                    <div class="flex" style="justify-content: space-between;">
-                        <div>
-                            <h3>Engineering</h3>
-                            <div class="course-grid">
-                                <details class="dropdown-item">
-                                    <summary>EENG 389: Fundamentals of Electric Machinery</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="EENG 389"></p>
-                                    </div>
-                                </details>
-                                <details class="dropdown-item">
-                                    <summary>EENG 386: Engineering Electromagnetics</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="EENG 386"></p>
-                                    </div>
-                                </details>
-                                <details class="dropdown-item">
-                                    <summary>EENG 383: Embedded Systems</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="EENG 383"></p>
-                                    </div>
-                                </details>
-                                <details class="dropdown-item">
-                                    <summary>EENG 307: Feedback Control Systems</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="EENG 307"></p>
-                                    </div>
-                                </details>
-                                <details class="dropdown-item">
-                                    <summary>EENG 310: Signals and Systems</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="EENG 310"></p>
-                                    </div>
-                                </details>
-                                <details class="dropdown-item">
-                                    <summary>EENG 282: Electrical Circuits</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="EENG 282"></p>
-                                    </div>
-                                </details>
-                                <details class="dropdown-item">
-                                    <summary>EENG 284: Digital Logic</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="EENG 284"></p>
-                                    </div>
-                                </details>
+                    <h3>Engineering Courses</h3>
+                    <div class="course-grid">
+                        <details class="dropdown-item">
+                            <summary>EENG 389: Fundamentals of Electric Machinery</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="EENG 389"></p>
                             </div>
-                        </div>
-
-                        <div>
-                            <h3>Computer Science</h3>
-                            <div class="course-grid">
-                                <details class="dropdown-item">
-                                    <summary>CSCI 306: Software Engineering</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="CSCI 306"></p>
-                                    </div>
-                                </details>
-                                <details class="dropdown-item">
-                                    <summary>CSCI 341: Computer Organization</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="CSCI 341"></p>
-                                    </div>
-                                </details>
-                                <details class="dropdown-item">
-                                    <summary>CSCI 200: Foundational Programming Concepts</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="CSCI 200"></p>
-                                    </div>
-                                </details>
-                                <details class="dropdown-item">
-                                    <summary>CSCI 220: Data Structures and Algorithms</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="CSCI 220"></p>
-                                    </div>
-                                </details>
-                                <details class="dropdown-item">
-                                    <summary>CSCI 274: Intro Linux OS</summary>
-                                    <div class="dropdown-content">
-                                        <p class="course-description" data-course="CSCI 274"></p>
-                                    </div>
-                                </details>
+                        </details>
+                        <details class="dropdown-item">
+                            <summary>EENG 386: Engineering Electromagnetics</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="EENG 386"></p>
                             </div>
-                        </div>
+                        </details>
+                        <details class="dropdown-item">
+                            <summary>EENG 383: Embedded Systems</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="EENG 383"></p>
+                            </div>
+                        </details>
+                        <details class="dropdown-item">
+                            <summary>EENG 307: Feedback Control Systems</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="EENG 307"></p>
+                            </div>
+                        </details>
+                        <details class="dropdown-item">
+                            <summary>EENG 310: Signals and Systems</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="EENG 310"></p>
+                            </div>
+                        </details>
+                        <details class="dropdown-item">
+                            <summary>EENG 282: Electrical Circuits</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="EENG 282"></p>
+                            </div>
+                        </details>
+                        <details class="dropdown-item">
+                            <summary>EENG 284: Digital Logic</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="EENG 284"></p>
+                            </div>
+                        </details>
                     </div>
 
-                    <!-- Removed "View All Courses by Department" section -->
+                    <h3 class="section-subheader">Computer Science Courses</h3>
+                    <div class="course-grid">
+                        <details class="dropdown-item">
+                            <summary>CSCI 306: Software Engineering</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="CSCI 306"></p>
+                            </div>
+                        </details>
+                        <details class="dropdown-item">
+                            <summary>CSCI 341: Computer Organization</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="CSCI 341"></p>
+                            </div>
+                        </details>
+                        <details class="dropdown-item">
+                            <summary>CSCI 200: Foundational Programming Concepts</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="CSCI 200"></p>
+                            </div>
+                        </details>
+                        <details class="dropdown-item">
+                            <summary>CSCI 220: Data Structures and Algorithms</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="CSCI 220"></p>
+                            </div>
+                        </details>
+                        <details class="dropdown-item">
+                            <summary>CSCI 274: Intro Linux OS</summary>
+                            <div class="dropdown-content">
+                                <p class="course-description" data-course="CSCI 274"></p>
+                            </div>
+                        </details>
+                    </div>
                 </div>
             </section>
 
@@ -479,7 +522,8 @@
                 <div class="section-header">
                     <h2>Experience</h2>
                 </div>
-                <h3>Professional Experience</h3>
+                
+                <h3 class="section-subheader">Professional Experience</h3>
                 <div class="timeline">
                     <div class="timeline-item">
                         <div class="timeline-date">January - June 2025</div>
@@ -537,8 +581,8 @@
                         </div>
                     </div>
                 </div>
-
-                <h3>Teaching Experience</h3>
+                
+                <h3 class="section-subheader">Teaching Experience</h3>
                 <div class="timeline">
                     <div class="timeline-item">
                         <div class="timeline-date">January - December 2024</div>
@@ -626,8 +670,13 @@
                     <div class="timeline-item">
                         <div class="timeline-date">June 2024 - Present</div>
                         <div class="card">
-                            <h4>Undergraduate Researcher</h4>
-                            <p><strong>ePower Hubs Research Lab, Colorado School of Mines</strong> | Golden, CO</p>
+                            <div class="research-header">
+                                <div class="research-icon">🔍</div>
+                                <div>
+                                    <h4>Undergraduate Researcher</h4>
+                                    <p><strong>ePower Hubs Research Lab, Colorado School of Mines</strong> | Golden, CO</p>
+                                </div>
+                            </div>
                             <ul>
                                 <li>Devised a neural network model to predict sensor system failure in wind turbine
                                     systems.</li>
@@ -643,8 +692,13 @@
                     <div class="timeline-item">
                         <div class="timeline-date">August 2022 - January 2023</div>
                         <div class="card">
-                            <h4>Undergraduate Research Assistant</h4>
-                            <p><strong>Explosives Research Lab, Colorado School of Mines</strong> | Golden, CO</p>
+                            <div class="research-header">
+                                <div class="research-icon">💥</div>
+                                <div>
+                                    <h4>Undergraduate Research Assistant</h4>
+                                    <p><strong>Explosives Research Lab, Colorado School of Mines</strong> | Golden, CO</p>
+                                </div>
+                            </div>
                             <ul>
                                 <li>Optimized 3D printer settings to improve precision and output quality.</li>
                                 <li>Observed and documented multiple controlled explosive tests in various environments.
@@ -663,10 +717,16 @@
                     <h2>Projects</h2>
                 </div>
                 <div class="grid">
-                    <div class="card">
+                    <div class="card project-card">
+                        <div class="project-badge">Web</div>
                         <h4>Educational Website</h4>
-                        <p><strong><a href="https://www.eeprep.com" target="_blank" rel="noopener">eeprep.com</a></strong> |
+                        <p><strong><a href="https://www.eeprep.com" target="_blank" rel="noopener" class="underline-link">eeprep.com</a></strong> |
                             December 2023 - Present</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">HTML</span>
+                            <span class="tech-tag">CSS</span>
+                            <span class="tech-tag">JavaScript</span>
+                        </div>
                         <ul>
                             <li>Developed a comprehensive website to summarize the entire Electrical Engineering degree.
                             </li>
@@ -676,13 +736,20 @@
                             <li>Included detailed explanations, tutorials, and practical examples to facilitate learning.
                             </li>
                         </ul>
+                        <div class="project-links">
+                            <a href="https://www.eeprep.com" target="_blank" rel="noopener" class="btn-outline">Visit Site</a>
+                        </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card project-card">
+                        <div class="project-badge">Hardware</div>
                         <h4>Solar Panel Optimization Robot</h4>
                         <p><strong>Personal Project</strong> | August - October 2024</p>
-                        <a href="https://github.com/easilva04/SolarPanelProject" target="_blank" rel="noopener">GitHub
-                            Repository</a>
+                        <div class="project-tech">
+                            <span class="tech-tag">Arduino</span>
+                            <span class="tech-tag">Raspberry Pi</span>
+                            <span class="tech-tag">C++</span>
+                        </div>
                         <ul>
                             <li>Prototyped and coded controller for optimal solar panel alignment utilizing Arduino
                                 microcontroller, light sensors, and motor controllers.</li>
@@ -692,11 +759,21 @@
                             <li>Conducted system testing and calibration under various atmospheric conditions.</li>
                             <li>Utilized Raspberry Pi as a brain controller for the Arduino.</li>
                         </ul>
+                        <div class="project-links">
+                            <a href="https://github.com/easilva04/SolarPanelProject" target="_blank" rel="noopener" class="btn-outline">GitHub Repository</a>
+                        </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card project-card">
+                        <div class="project-badge">Software</div>
                         <h4>Clue Game</h4>
                         <p><strong>Java Development</strong> | August - December 2023</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Java</span>
+                            <span class="tech-tag">Swing</span>
+                            <span class="tech-tag">Eclipse</span>
+                            <span class="tech-tag">Git</span>
+                        </div>
                         <ul>
                             <li>Collaboratively developed a Java-based Clue game via eclipse on a team of 3, applying SCRUM
                                 and Test Driven Development principles.</li>
@@ -708,9 +785,15 @@
                         </ul>
                     </div>
 
-                    <div class="card">
+                    <div class="card project-card">
+                        <div class="project-badge">Engineering</div>
                         <h4>Hydraulic Ram Pump</h4>
                         <p><strong>Engineering Design Cornerstone</strong> | August - December 2022</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Mechanical</span>
+                            <span class="tech-tag">SolidWorks</span>
+                            <span class="tech-tag">Chemical</span>
+                        </div>
                         <ul>
                             <li>Recognized as Subject Matter Expert (Top 4 of 40 teams).</li>
                             <li>Collaborated with a team of six to design a cost-effective solution for managing acid mine
@@ -728,16 +811,40 @@
                     <h2>Future Goals and Aspirations</h2>
                 </div>
                 <div class="card">
-                    <h3>Career Objectives</h3>
-                    <p>My objectives in Electrical Engineering are as follows:</p>
-                    <ul>
-                        <li>Complete a Bachelor's degree in Electrical Engineering with a focus on controls and information
-                            sciences.</li>
-                        <li>Obtain the FE certification to enhance professional qualifications in engineering.</li>
-                        <li>Pursue advanced education, including a Master's in Robotics and a PhD in Controls.</li>
-                        <li>Transition into academia as a professor, mentoring future engineers and advancing the field
-                            through teaching and research.</li>
-                    </ul>
+                    <div class="goals-header">
+                        <span class="goals-icon">🎯</span>
+                        <h3>Career Objectives</h3>
+                    </div>
+                    <div class="goals-roadmap">
+                        <div class="roadmap-item">
+                            <div class="roadmap-dot"></div>
+                            <div class="roadmap-content">
+                                <h4>Complete Bachelor's Degree</h4>
+                                <p>Electrical Engineering with a focus on controls and information sciences</p>
+                            </div>
+                        </div>
+                        <div class="roadmap-item">
+                            <div class="roadmap-dot"></div>
+                            <div class="roadmap-content">
+                                <h4>Obtain FE Certification</h4>
+                                <p>Enhance professional qualifications in engineering</p>
+                            </div>
+                        </div>
+                        <div class="roadmap-item">
+                            <div class="roadmap-dot"></div>
+                            <div class="roadmap-content">
+                                <h4>Advanced Education</h4>
+                                <p>Master's in Robotics and PhD in Controls</p>
+                            </div>
+                        </div>
+                        <div class="roadmap-item">
+                            <div class="roadmap-dot"></div>
+                            <div class="roadmap-content">
+                                <h4>Academic Career</h4>
+                                <p>Transition into academia as a professor, mentoring future engineers and advancing the field through teaching and research</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -745,13 +852,35 @@
 
     <footer>
         <div class="container">
-            <p>Last updated: March 21, 2025</p>
-            <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">Back to Top</button>
+            <div class="footer-content">
+                <div class="footer-social">
+                    <a href="https://www.linkedin.com/in/edwardsilva04/" class="social-link" target="_blank" rel="noopener" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M18.335 18.339H15.67v-4.177c0-.996-.02-2.278-1.39-2.278-1.389 0-1.601 1.084-1.601 2.205v4.25h-2.666V9.75h2.56v1.17h.035c.358-.674 1.228-1.387 2.528-1.387 2.7 0 3.2 1.778 3.2 4.091v4.715zM7.003 8.575a1.546 1.546 0 01-1.548-1.549 1.548 1.548 0 111.547 1.549zm1.336 9.764H5.666V9.75H8.34v8.589zM19.67 3H4.329C3.593 3 3 3.58 3 4.297v15.406C3 20.42 3.594 21 4.328 21h15.338C20.4 21 21 20.42 21 19.703V4.297C21 3.58 20.4 3 19.666 3h.003z"/></svg>
+                    </a>
+                    <a href="https://github.com/easilva04" class="social-link" target="_blank" rel="noopener" aria-label="GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                    </a>
+                    <a href="mailto:easilva@mines.edu" class="social-link" aria-label="Email">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </a>
+                </div>
+                <p>Last updated: March 21, 2025</p>
+                <button class="back-to-top">Back to Top</button>
+            </div>
         </div>
     </footer>
 
     <!-- Scripts (defer loading for performance) -->
     <script src="information.js" defer></script>
+    <script src="utils.js" defer></script>
+    <script>
+        // Back to top button only - removed tabs functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.back-to-top').addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
 </body>
 
 </html>
