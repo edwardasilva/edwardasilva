@@ -1,208 +1,119 @@
-// script.js
+// Information content for dynamic loading
+const infoContent = {
+  // Education
+  "deans-list": "Achieved Dean's List status for maintaining a GPA of 3.8 or higher for two semesters.",
+  "honor-roll": "Recognized on the Honor Roll for maintaining a GPA between 3.5 and 3.79 for two semesters.",
+  "provost-scholarship": "Awarded a merit-based scholarship of $9,000 per year for academic excellence throughout undergraduate studies.",
+  "c-mapp": "Selected as a Colorado Mines Advanced Planning Program Scholar receiving $1,000 annually for demonstrating academic potential and leadership qualities.",
+  "abs-scholar": "Recipient of the prestigious American Bureau of Shipping Scholarship valued at $4,000 for excellence in engineering studies related to maritime applications.",
+  
+  // Certifications
+  "matlab-machine-learning": "Completed the MATLAB Machine Learning Onramp certification, demonstrating proficiency in implementing machine learning algorithms using MATLAB.",
+  "matlab-signal": "Earned the MATLAB Signal Processing Onramp certification, validating skills in digital signal processing techniques and algorithms.",
+  "matlab-fundamentals": "Achieved the MATLAB Fundamentals Onramp certification, confirming mastery of essential MATLAB programming and problem-solving capabilities.",
+  "mta-java": "Earned Microsoft Technical Associate certification in Java Programming, validating proficiency in Java syntax, data structures, and object-oriented programming concepts.",
+  "mta-python": "Received Microsoft Technical Associate certification in Python Programming, demonstrating competency in Python syntax, functions, and software development principles.",
+  
+  // Courses
+  "fundamentals-electric-machinery": "Study of electromechanical energy conversion devices including DC, induction, and synchronous machines. Topics include magnetic circuit analysis, machine modeling, and control principles.",
+  "engineering-electromagnetics": "Comprehensive study of electromagnetic field theory, Maxwell's equations, wave propagation, and applications in modern electrical engineering systems.",
+  "embedded-systems": "Design and implementation of microcontroller-based systems, including hardware-software integration, real-time operations, and interfacing with sensors and actuators.",
+  "feedback-control-systems": "Analysis and design of control systems with feedback, including stability analysis, root locus, Bode plots, and PID controller design techniques.",
+  "signals-systems": "Study of continuous and discrete signals and systems, including Fourier analysis, Laplace transforms, filtering, sampling, and digital signal processing fundamentals.",
+  "electrical-circuits": "Analysis of electrical circuits using Kirchhoff's laws, Thevenin/Norton equivalents, and other circuit analysis techniques for both DC and AC circuits.",
+  "digital-logic": "Design and analysis of digital logic circuits, including Boolean algebra, combinational and sequential logic, and introduction to hardware description languages.",
+  "software-engineering": "Application of engineering principles to software development, including requirements analysis, design, testing, and project management methodologies.",
+  "computer-organization": "Study of computer architecture and organization, including instruction set design, processor implementation, memory hierarchy, and I/O systems.",
+  "data-structures-algorithms": "Implementation and analysis of fundamental data structures and algorithms, including lists, trees, graphs, sorting, searching, and algorithm complexity analysis.",
+  "intro-csharp-programming": "Introduction to C# programming language, .NET framework, object-oriented concepts, and Windows application development.",
+  "intro-linux-os": "Introduction to Linux operating system, command-line interface, shell scripting, system administration, and open-source software development.",
+  "programming-challenges-1": "Intensive problem-solving course focused on algorithmic thinking, competitive programming techniques, and efficient implementation strategies.",
+  "linear-algebra": "Study of vector spaces, linear transformations, matrices, determinants, eigenvalues, and applications in engineering and computer science.",
+  "differential-equations": "Solution techniques for ordinary differential equations, systems of differential equations, and applications in engineering systems modeling.",
+  "calculus-1-3": "Comprehensive study of differential and integral calculus, including limits, derivatives, integrals, infinite series, and multivariable calculus with applications.",
+  "chemistry-1-2": "Fundamental principles of chemistry, including atomic structure, chemical bonding, thermodynamics, kinetics, and equilibrium with laboratory experiments.",
+  "physics-1-2": "Study of classical mechanics, electricity, magnetism, thermodynamics, and waves with applications in engineering and problem-solving techniques."
+};
+
+// Optimize performance by using event delegation
+document.addEventListener('DOMContentLoaded', function() {
+  // Theme toggle initialization
+  initializeThemeToggle();
+  
+  // Initialize lazy loading for sections
+  initializeLazyLoading();
+  
+  // Add event delegation for info buttons
+  document.body.addEventListener('click', function(event) {
+    // Handle info buttons
+    if (event.target.classList.contains('info-button')) {
+      handleInfoButtonClick(event.target);
+    }
+  });
+});
+
+// Download resume function
 function downloadResume() {
+  // Create link to resume file
   const link = document.createElement('a');
-  link.href = 'resume.pdf';
-  link.download = 'EDWARD_SILVA_RESUME_2024.pdf';
+  link.href = 'assets/Edward_Silva_Resume.pdf';
+  link.download = 'Edward_Silva_Resume.pdf';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 }
 
-// Updated Data Object with More Catalog-Accurate Descriptions
-const infoData = {
-  "deans-list": "The Dean's List is an academic award that recognizes students who have achieved high academic performance. I was honored to receive this award for my outstanding academic achievements at the Colorado School of Mines for my Freshman and Junior Fall.",
-  "honor-roll": "The Honor Roll is an academic award that recognizes students who have achieved high academic performance. I was honored to receive this award for my outstanding academic achievements at the Colorado School of Mines for my Sophomore Fall and Spring.",
-  "provost-scholarship": "The Provost Scholarship is awarded to students demonstrating outstanding academic performance and leadership potential. It provided $9,000 per year to support my studies at the Colorado School of Mines.",
-  "c-mapp": "As a recipient of the C-MAPP (Computing-Mines Affiliates Partnership Program) Scholarship at the Colorado School of Mines, I was recognized for my academic achievements and involvement in computer science activities. The scholarship supports students who demonstrate excellence in their field, with a focus on fostering connections between academia and industry. This opportunity not only provided financial assistance but also allowed me to engage in professional learning activities and expand my network within the tech industry.",
-  "abs-scholar": "The American Bureau of Shipping Scholar award recognizes students who demonstrate outstanding academic performance and commitment to engineering disciplines. This scholarship supported my academic journey with $4,000 in funding.",
-
-  "fundamentals-electric-machinery":
-    "Principles of rotating electric machines and transformers, including electromagnetic theory, machine construction, and performance characteristics. Focuses on modeling, analysis, and control of DC and AC machines for practical engineering applications.",
-
-  "software-engineering":
-    "Introduces modern software development practices such as agile methodologies, object-oriented design, and project management. Emphasizes teamwork, communication, and continuous integration through practical software projects.",
-
-  "linear-algebra":
-    "Covers matrix theory, vector spaces, linear transformations, eigenvalues, and eigenvectors. Explores applications in engineering and science through analytical and computational methods.",
-
-  "engineering-electromagnetics":
-    "Focuses on electromagnetic theory, including Maxwell's equations, wave propagation, reflection, and transmission. Applies these concepts to antennas, waveguides, and communication systems.",
-
-  "computer-organization":
-    "Studies hardware architecture from a programmer’s perspective, covering memory hierarchies, instruction sets, CPU design, and I/O organization. Emphasizes the hardware-software interface and performance considerations.",
-
-  "differential-equations":
-    "Covers methods for solving ordinary differential equations with an emphasis on engineering applications. Introduces Laplace transforms, numerical methods, and modeling real-world systems.",
-
-  "embedded-systems":
-    "Examines microcontroller-based system design and real-time operations. Topics include hardware interfacing, sensor integration, and embedded C/C++ programming. Emphasizes laboratory-based projects.",
-
-  "data-structures-algorithms":
-    "Covers fundamental data structures (lists, stacks, queues, trees) and algorithms (search, sort, hashing) essential to computer science. Emphasizes algorithm complexity, software design, and implementation.",
-
-  "calculus-1-3":
-    "A three-course sequence exploring limits, derivatives, integrals, and series, culminating in multivariable calculus. Designed to build a solid foundation for advanced engineering and scientific study.",
-
-  "feedback-control-systems":
-    "Introduces feedback control concepts including system modeling, stability analysis, and controller design. Topics include root locus, Bode plots, and frequency response methods in mechanical and electrical applications.",
-
-  "intro-csharp-programming":
-    "Introduces the C# programming language, covering syntax, data types, and object-oriented principles. Emphasizes practical application development and debugging techniques.",
-
-  "chemistry-1-2":
-    "Two-course sequence covering fundamental chemical principles, including atomic structure, bonding, thermodynamics, kinetics, and equilibria. Laboratory work reinforces theoretical and engineering-related concepts.",
-
-  "signals-systems":
-    "Examines continuous and discrete-time signals and systems, convolution, Fourier and Laplace transforms, and filtering. Includes applications to communications, control, and signal processing.",
-
-  "intro-linux-os":
-    "Provides an introduction to the Linux operating system, covering installation, basic administration, command-line usage, and shell scripting. Emphasizes practical skills for engineering and computing tasks.",
-
-  "physics-1-2":
-    "Two-course sequence covering mechanics, electromagnetism, waves, and thermodynamics. Laboratory experiments reinforce core physical concepts and engineering applications.",
-
-  "electrical-circuits":
-    "Covers DC and AC circuit analysis, circuit theorems, operational amplifiers, and transient response. Emphasizes design and testing through laboratory projects and simulations.",
-
-  "programming-challenges-1":
-    "Focuses on algorithmic problem-solving through hands-on programming exercises and competitions. Emphasizes efficiency, correctness, and robust coding practices.",
-
-  "digital-logic":
-    "Covers the principles of digital logic design, including Boolean algebra, logic gates, and combinational/sequential circuits. Explores design and implementation of basic digital systems and hardware.",
-
-  "mta-java": "Microsoft Technical Associate -- Java Programming certification demonstrates proficiency in Java programming, including understanding of Java syntax, object-oriented programming, and basic Java development.",
-  "mta-python": "Microsoft Technical Associate -- Python Programming certification validates knowledge of Python programming, including syntax, data structures, and basic programming concepts.",
-  "matlab-signal": "Matlab Signal Processing Onramp certification covers the basics of signal processing using Matlab, including filtering, Fourier transforms, and signal analysis.",
-  "matlab-fundamentals": "Matlab Fundamentals Onramp certification provides foundational knowledge of Matlab, including basic operations, programming, and data visualization.",
-  "matlab-machine-learning": "Matlab Machine Learning Onramp certification covers fundamental concepts of machine learning with MATLAB, including data preparation, feature engineering, supervised learning algorithms, and model evaluation techniques."
-};
-
-// Function to adjust the position of the info-box
-function adjustInfoBoxPosition(button, infoBox) {
-  const buttonRect = button.getBoundingClientRect();
-  const infoBoxRect = infoBox.getBoundingClientRect();
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-
-  // Align the info-box to the button
-  infoBox.style.left = `${buttonRect.left + buttonRect.width / 2 - infoBoxRect.width / 2}px`;
-  infoBox.style.top = `${buttonRect.bottom + window.scrollY + 5}px`; // Adjusted to point to the link
-
-  // Ensure the info-box does not go off the screen horizontally
-  if (infoBoxRect.right > viewportWidth) {
-    infoBox.style.left = `${viewportWidth - infoBoxRect.width - 10}px`;
-  } else if (infoBoxRect.left < 0) {
-    infoBox.style.left = '10px';
-  }
-
-  // Ensure the info-box does not go off the screen vertically
-  if (infoBoxRect.bottom > viewportHeight) {
-    infoBox.style.top = `${buttonRect.top + window.scrollY - infoBoxRect.height - 5}px`;
-  }
-
-  // Recalculate the position after adjustments
-  const adjustedInfoBoxRect = infoBox.getBoundingClientRect();
-  if (adjustedInfoBoxRect.right > viewportWidth) {
-    infoBox.style.left = `${viewportWidth - adjustedInfoBoxRect.width - 10}px`;
-  } else if (adjustedInfoBoxRect.left < 0) {
-    infoBox.style.left = '10px';
-  }
-  if (adjustedInfoBoxRect.bottom > viewportHeight) {
-    infoBox.style.top = `${buttonRect.top + window.scrollY - adjustedInfoBoxRect.height - 5}px`;
+// Initialize theme toggle
+function initializeThemeToggle() {
+  const toggle = document.getElementById('theme-toggle');
+  if (toggle) {
+    toggle.addEventListener('click', function() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      // Update icon
+      toggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+    });
   }
 }
 
-// Add hover and click event listeners to all buttons
-document.querySelectorAll('.info-button').forEach(button => {
-  button.addEventListener('mouseover', () => {
-    const infoKey = button.getAttribute('data-info'); // Get the data-info attribute
-    const infoBox = button.nextElementSibling; // Get the next sibling info box
-
-    // Update content and show the box
-    infoBox.querySelector('.info-content').textContent = infoData[infoKey];
-    infoBox.classList.remove('hidden');
-
-    // Adjust position to ensure it stays within the viewport
-    adjustInfoBoxPosition(button, infoBox);
-  });
-
-  button.addEventListener('mouseout', (event) => {
-    const infoBox = button.nextElementSibling; // Get the next sibling info box
-
-    // Check if the mouse is moving to the info-box
-    if (!infoBox.contains(event.relatedTarget)) {
-      // Hide the box if not active
-      if (!button.classList.contains('active')) {
-        infoBox.classList.add('hidden');
-      }
-    }
-  });
-
-  button.addEventListener('click', () => {
-    const infoBox = button.nextElementSibling; // Get the next sibling info box
-
-    // Toggle active class
-    button.classList.toggle('active');
-    if (button.classList.contains('active')) {
-      infoBox.classList.remove('hidden');
-    } else {
-      infoBox.classList.add('hidden');
-    }
-  });
-
-  // Add event listeners to the info-box to keep it visible while hovering
+// Handle info button clicks efficiently
+function handleInfoButtonClick(button) {
+  const infoId = button.getAttribute('data-info');
   const infoBox = button.nextElementSibling;
-  infoBox.addEventListener('mouseover', () => {
-    infoBox.classList.remove('hidden');
-  });
-
-  infoBox.addEventListener('mouseout', (event) => {
-    // Check if the mouse is moving to the button
-    if (!button.contains(event.relatedTarget)) {
-      // Hide the box if not active
-      if (!button.classList.contains('active')) {
-        infoBox.classList.add('hidden');
-      }
-    }
-  });
-});
-
-// Hide info-box when clicking outside
-document.addEventListener('click', (event) => {
-  document.querySelectorAll('.info-button').forEach(button => {
-    const infoBox = button.nextElementSibling; // Get the next sibling info box
-    if (!button.contains(event.target) && !infoBox.contains(event.target)) {
-      button.classList.remove('active');
-      infoBox.classList.add('hidden');
-    }
-  });
-});
-
-// Enhance collapsible elements behavior
-document.addEventListener('DOMContentLoaded', function() {
-  // Initialize all details elements
-  const allDetails = document.querySelectorAll('.site-details, .cert-category, .cert-subcategory');
   
-  // Add transition effects when opening/closing details
-  allDetails.forEach(detail => {
-      detail.addEventListener('toggle', function() {
-          if (this.open) {
-              const content = this.querySelector('.details-content, .cert-content');
-              if (content) {
-                  content.style.display = 'block';
-                  content.style.animation = 'fadeIn 0.3s ease-in-out';
-              }
-          }
-      });
-  });
+  if (infoBox) {
+    // Check if content is already loaded
+    if (!infoBox.querySelector('.info-content').textContent) {
+      infoBox.querySelector('.info-content').textContent = infoContent[infoId] || 'Information not available';
+    }
+    
+    // Toggle visibility with class for animation
+    infoBox.classList.toggle('active');
+  }
+}
 
-  // Clean up any potential layout issues with info boxes
-  window.addEventListener('resize', function() {
-      document.querySelectorAll('.info-box:not(.hidden), .certification-info-box:not(.hidden)').forEach(box => {
-          const button = box.previousElementSibling;
-          if (button && button.classList.contains('info-button')) {
-              adjustInfoBoxPosition(button, box);
-          }
-      });
+// Initialize lazy loading for sections
+function initializeLazyLoading() {
+  // Intersection Observer for lazy loading sections
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
   });
-});
+  
+  // Observe all sections
+  document.querySelectorAll('.section').forEach(section => {
+    observer.observe(section);
+  });
+}
