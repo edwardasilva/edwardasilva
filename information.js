@@ -17,41 +17,42 @@ const infoContent = {
   "mta-python": "Received Microsoft Technical Associate certification in Python Programming, demonstrating competency in Python syntax, functions, and software development principles.",
   
   // Courses
-  "CSCI 102": "Introductory course designed to introduce students to the basic principles of computer science. Students will learn programming fundamentals and computational thinking.",
-  "CSCI 128": "Introduces computer science concepts and practice with emphasis on STEM applications: data structures, algorithms, abstraction, and computing concepts in STEM.",
-  "CSCI 200": "Covers programming concepts and methodology for object-oriented design. Topics include recursion, pointers, linked lists, ADTs, and OOP.",
-  "CSCI 220": "Fundamentals of data structures including stacks, queues, trees, and graphs. Emphasis on algorithm analysis and software development.",
-  "CSCI 290": "Programming challenges that promote algorithmic thinking, creative problem solving, and coding competitions.",
-  "CSCI 306": "Introduction to software engineering practices: design, implementation, testing, maintenance, team collaboration, and version control.",
-  "CSCI 341": "Computer organization fundamentals: assembly language, digital logic, CPU design, memory hierarchy, and I/O systems.",
-  "CSCI 358": "Discrete math for CS: logic, set theory, functions, relations, combinatorics, graphs, and formal languages.",
-  "EENG 282": "Covers DC and AC circuits, circuit theorems, transient and steady-state analysis, and practical applications.",
-  "EENG 284": "Covers fundamentals of digital systems: number systems, Boolean algebra, logic gates, Karnaugh maps, flip-flops, and sequential logic.",
-  "EENG 307": "Introduction to classical control systems: Laplace transforms, transfer functions, stability, root locus, and frequency response.",
-  "EENG 310": "Signal and system theory: linear systems, Fourier analysis, sampling, filtering, and applications in communications and signal processing.",
-  "EENG 311": "Information systems science II: probability, random processes, noise, and information theory as applied to EE systems.",
-  "EENG 340": "Cooperative education course with engineering experience. Requires documented employment and approval.",
-  "EENG 350": "Experimental design and project-based exploration of EE systems. Emphasis on teamwork and engineering practice.",
-  "EENG 383": "Design and implementation of embedded systems including microcontrollers, real-time programming, and interfacing.",
-  "EENG 385": "Study of electronic devices and circuits: diodes, BJTs, FETs, op-amps, and analog circuit design.",
-  "EENG 386": "Covers electrostatics, magnetostatics, Maxwell's equations, wave propagation, transmission lines, and waveguides.",
-  "EENG 389": "Study of electric machines: transformers, DC and AC motors, performance characteristics and applications.",
-  "EENG 391": "Preparation for the FE exam focusing on computational methods used in electrical engineering.",
-  "EENG 392": "FE preparation for Information and Systems Sciences. Practice problems and conceptual review.",
-  "EDNS 151": "Team-based introductory design course using creative problem solving, prototyping, and presentation techniques.",
-  "EBGN 201": "Introduction to macroeconomic principles: GDP, inflation, unemployment, monetary and fiscal policy.",
-  "MATH 111": "Differential calculus for science/engineering majors: limits, continuity, derivatives, applications, and intro to integrals.",
-  "MATH 112": "Integral calculus and applications: methods of integration, sequences and series, and polar coordinates.",
-  "MATH 213": "Multivariable calculus: partial derivatives, multiple integrals, vector calculus, and applications.",
-  "MATH 225": "Differential equations: first- and second-order equations, Laplace transforms, and numerical methods.",
-  "MATH 332": "Linear algebra: matrices, vector spaces, eigenvalues, and linear transformations.",
-  "PHGN 100": "Mechanics for scientists and engineers: kinematics, Newton's laws, energy, momentum, rotation, and oscillations.",
-  "PHGN 200": "Electricity, magnetism, and optics: Coulomb's law, electric/magnetic fields, circuits, Maxwell's equations.",
-  "CHGN 121": "Fundamental principles of chemistry: atomic structure, stoichiometry, gas laws, thermochemistry, and bonding.",
-  "CHGN 122": "Continues general chemistry: kinetics, equilibrium, thermodynamics, electrochemistry, and nuclear chemistry.",
-  "HASS 100": "Nature and Human Values explores ethical and cultural dimensions of science, technology, and the environment.",
-  "HASS 200": "Global Studies: explores global interconnections and cultural dynamics through multidisciplinary perspectives.",
-  "HNRS 198": "Research internship course providing practical experience in scholarly inquiry and investigation.",
+  "CSCI 102": "A programming course in Python designed for students with little or no programming experience. Covers designing and programming Python applications, loops, decision statements, lists, tuples, sets, dictionaries, strings, Python functions, file I/O, object-oriented programming, and code tracing.",
+  "CSCI 128": "Introduction to programming with no prior experience needed. Teaches basic programming constructs including data types, conditionals, loops, file I/O, functions, and Python 3 objects. Emphasizes data science, best practices in code development, software ethics, numeric and non-numeric data representation, file systems, debugging, and problem-solving.",
+  "CSCI 200": "Covers programming concepts and methodology for object-oriented design including recursion, pointers, linked lists, abstract data types, and object-oriented programming principles.",
+  "CSCI 220": "Fundamental data structures such as stacks, queues, trees, and graphs with a strong emphasis on algorithm analysis and software development practices.",
+  "CSCI 274": "Comprehensive introduction to Linux OS, covering command-line tools, remote access (ssh), file system management, editing, compilation, execution, shell scripting, processes, permissions, and networking.",
+  "CSCI 290": "Programming challenges promoting algorithmic thinking, creative problem-solving, and participation in coding competitions.",
+  "CSCI 306": "Covers software development lifecycle including design, implementation, testing, maintenance, team collaboration, and version control systems.",
+  "CSCI 341": "Covers foundational computer organization concepts, assembly language, digital logic design, CPU design, memory hierarchy, and I/O systems.",
+  "CSCI 358": "Essential concepts including logic, set theory, functions, relations, combinatorics, graph theory, and formal languages.",
+  "EENG 282": "Detailed coverage of DC and AC circuits, circuit theorems, transient and steady-state analysis, and practical laboratory applications.",
+  "EENG 284": "Introduction to digital systems covering number systems, Boolean algebra, logic gates, Karnaugh maps, flip-flops, and sequential logic circuits.",
+  "EENG 307": "Includes analysis and design using Laplace transforms, transfer functions, stability criteria, root locus, and frequency response.",
+  "EENG 310": "Comprehensive theory of linear systems, Fourier analysis, sampling theory, signal filtering, and applications in communications and signal processing.",
+  "EENG 311": "Advanced study of probability, random processes, noise characterization, and information theory in electrical engineering.",
+  "EENG 340": "Hands-on engineering experience requiring documented employment and formal approval.",
+  "EENG 350": "Emphasis on collaborative experimental design and application of engineering principles in EE systems.",
+  "EENG 383": "Detailed coverage of microcontroller-based system design, real-time programming, and hardware interfacing.",
+  "EENG 385": "Study of semiconductor devices, including diodes, BJTs, FETs, operational amplifiers, and detailed analog circuit design.",
+  "EENG 386": "Comprehensive exploration of electrostatics, magnetostatics, Maxwell's equations, electromagnetic wave propagation, transmission lines, and waveguide analysis.",
+  "EENG 389": "Covers operation, performance characteristics, and applications of transformers, DC motors, and AC machines.",
+  "EENG 391": "In-depth review and preparation focusing on computational methods for electrical engineering.",
+  "EENG 392": "Targeted preparation including conceptual reviews and extensive practice problems.",
+  "EDNS 151": "Team-based design projects focused on creative problem-solving, prototyping skills, and effective presentation techniques.",
+  "EBGN 201": "Overview of macroeconomic concepts such as GDP, inflation, unemployment, monetary, and fiscal policies.",
+  "MATH 111": "In-depth study of limits, continuity, derivatives, their applications, and introduction to integral calculus.",
+  "MATH 112": "Detailed coverage of integration methods, sequences and series, and applications of polar coordinates.",
+  "MATH 213": "Advanced calculus covering partial derivatives, multiple integrals, vector calculus, and their applications.",
+  "MATH 225": "Comprehensive analysis of first and second-order equations, Laplace transforms, and numerical methods.",
+  "MATH 332": "Rigorous exploration of matrices, vector spaces, eigenvalues, eigenvectors, and linear transformations.",
+  "PHGN 100": "Fundamental mechanics including kinematics, Newtonian mechanics, energy, momentum, rotational dynamics, and oscillations.",
+  "PHGN 200": "Comprehensive treatment of electric and magnetic fields, Coulomb's law, circuit theory, and Maxwell's equations.",
+  "CHGN 121": "Fundamental principles including atomic structure, chemical bonding, stoichiometry, gas laws, and thermochemistry.",
+  "CHGN 122": "Advanced chemical concepts including reaction kinetics, equilibrium, thermodynamics, electrochemistry, and nuclear chemistry.",
+  "HASS 100": "Ethical and cultural dimensions of science and technology, emphasizing critical analysis and communication.",
+  "HASS 200": "Examines global cultural dynamics and multidisciplinary perspectives on international issues.",
+  "HNRS 198": "Practical research experience emphasizing scholarly inquiry and investigation methods.",
 };
 
 // Course categories for organizing in the UI
@@ -64,42 +65,64 @@ const courseCategories = {
   "General Studies": ["EBGN 201","EDNS 151","HASS 100", "HASS 200", "HNRS 198"]
 };
 
-// Optimize performance by using event delegation
-document.addEventListener('DOMContentLoaded', function() {
-  // Theme toggle initialization
+// Initialize everything when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  // Core initialization
   initializeThemeToggle();
-  
-  // Initialize lazy loading for sections
-  initializeLazyLoading();
-  
-  // Add event delegation for info buttons and course dropdown
-  document.body.addEventListener('click', function(event) {
-    // Handle info buttons
-    if (event.target.classList.contains('info-button')) {
-      handleInfoButtonClick(event.target);
-    }
-    
-    // Handle view all courses button
-    if (event.target.closest('.view-all-courses-btn')) {
-      toggleAllCourses();
-    }
-    
-    // Handle category headers for collapsing/expanding
-    if (event.target.closest('.category-header')) {
-      toggleCategoryContent(event.target.closest('.category-header'));
-    }
+  populateAllCourseDescriptions();
+  populateCertificationContent();
+  initializeEventListeners();
+});
+
+// Event listeners initialization - simplified
+function initializeEventListeners() {
+  // Navigation smooth scrolling
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', handleNavClick);
   });
   
-  // Initialize the courses wrapper with categorized courses
-  initializeCoursesWrapper();
+  // Delegate other events to body
+  document.body.addEventListener('click', event => {
+    // Details elements
+    const summary = event.target.closest('summary');
+    if (summary) {
+      const details = summary.parentElement;
+      if (details.tagName === 'DETAILS' && details.open) {
+        const description = details.querySelector('.course-description[data-course]');
+        if (description && !description.textContent.trim()) {
+          const courseCode = description.getAttribute('data-course');
+          description.textContent = infoContent[courseCode] || 'Course description not available.';
+        }
+      }
+    }
+  });
+}
+
+// Navigation click handler
+function handleNavClick(e) {
+  const href = this.getAttribute('href');
   
-  // Add transcript reference notice
-  addTranscriptReference();
-});
+  if (href.startsWith('#')) {
+    e.preventDefault();
+    const targetId = href.substring(1);
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      // Add active class to the clicked link
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Scroll to the target element
+      window.scrollTo({
+        top: targetElement.offsetTop - 65,
+        behavior: 'smooth'
+      });
+    }
+  }
+}
 
 // Download resume function
 function downloadResume() {
-  // Create link to resume file
   const link = document.createElement('a');
   link.href = 'assets/Edward_Silva_Resume.pdf';
   link.download = 'Edward_Silva_Resume.pdf';
@@ -108,132 +131,76 @@ function downloadResume() {
   document.body.removeChild(link);
 }
 
-// Initialize theme toggle
+// Theme toggle with smooth transition
 function initializeThemeToggle() {
   const toggle = document.getElementById('theme-toggle');
-  if (toggle) {
-    toggle.addEventListener('click', function() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      
-      // Update icon
-      toggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
-    });
-    
-    // Set initial icon based on current theme
+  if (!toggle) return;
+  
+  toggle.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
-    toggle.innerHTML = currentTheme === 'dark' ? '☀️' : '🌙';
-  }
-}
-
-// Handle info button clicks efficiently
-function handleInfoButtonClick(button) {
-  const infoId = button.getAttribute('data-info');
-  const infoBox = button.nextElementSibling;
-  
-  if (infoBox) {
-    // Check if content is already loaded
-    const infoContent = infoBox.querySelector('.info-content');
-    if (infoContent && !infoContent.textContent) {
-      infoContent.textContent = window.infoContent[infoId] || 'Information not available';
-    }
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     
-    // Toggle visibility with class for animation
-    infoBox.classList.toggle('active');
-  }
-}
-
-// Initialize lazy loading for sections
-function initializeLazyLoading() {
-  // Intersection Observer for lazy loading sections
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('active');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.1
+    // Add transition class for smoother theme change
+    document.body.classList.add('theme-transition');
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    // Update icon
+    toggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+    
+    // Remove transition class after animation completes
+    setTimeout(() => {
+      document.body.classList.remove('theme-transition');
+    }, 300);
   });
   
-  // Observe all sections
-  document.querySelectorAll('.section').forEach(section => {
-    observer.observe(section);
+  // Set initial icon
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  toggle.innerHTML = currentTheme === 'dark' ? '☀️' : '🌙';
+}
+
+// Populate course descriptions immediately for better UX
+function populateAllCourseDescriptions() {
+  document.querySelectorAll('.course-description[data-course]').forEach(description => {
+    const courseCode = description.getAttribute('data-course');
+    description.textContent = infoContent[courseCode] || 'Course description not available.';
   });
 }
 
-// Toggle all courses dropdown
-function toggleAllCourses() {
-  const button = document.querySelector('.view-all-courses-btn');
-  const coursesWrapper = document.querySelector('.all-courses-wrapper');
+// Add transcript reference
+function addTranscriptReference() {
+  const coursesSection = document.getElementById('courses');
+  if (!coursesSection) return;
   
-  button.classList.toggle('active');
-  coursesWrapper.classList.toggle('visible');
+  const allCoursesContainer = coursesSection.querySelector('.all-courses-container');
+  if (!allCoursesContainer) return;
   
-  // Set arrow direction
-  const arrow = button.querySelector('.dropdown-arrow');
-  if (arrow) {
-    arrow.textContent = button.classList.contains('active') ? '▲' : '▼';
-  }
+  const referenceNotice = document.createElement('p');
+  referenceNotice.className = 'transcript-reference';
+  referenceNotice.textContent = 'For complete course details, refer to the Colorado School of Mines course catalog. Please email me for transcript verification.';
+  allCoursesContainer.appendChild(referenceNotice);
 }
 
-// Toggle category content visibility
-function toggleCategoryContent(header) {
-  const content = header.nextElementSibling;
-  const arrow = header.querySelector('.category-arrow');
+// Populate certification content
+function populateCertificationContent() {
+  const certSection = document.getElementById('certifications');
+  if (!certSection) return;
   
-  // Toggle expanded class
-  content.classList.toggle('expanded');
-  
-  // Update arrow direction
-  if (arrow) {
-    arrow.textContent = content.classList.contains('expanded') ? '▲' : '▼';
-  }
-}
-
-// Initialize the courses wrapper with categorized courses
-function initializeCoursesWrapper() {
-  const coursesWrapper = document.getElementById('courses-wrapper');
-  
-  if (coursesWrapper) {
-    let html = '';
+  const dropdowns = certSection.querySelectorAll('.dropdown-item');
+  dropdowns.forEach(dropdown => {
+    const summary = dropdown.querySelector('summary');
+    const content = dropdown.querySelector('.dropdown-content');
     
-    // Generate HTML for each category
-    for (const [category, courses] of Object.entries(courseCategories)) {
-      html += `
-        <div class="course-category">
-          <div class="category-header">
-            <h3>${category}</h3>
-            <span class="category-arrow">▼</span>
-          </div>
-          <div class="category-content">
-      `;
-      
-      // Add each course in the category
-      courses.forEach(courseCode => {
-        if (infoContent[courseCode]) {
-          html += `
-            <div class="course-item">
-              <div class="course-name">${courseCode}</div>
-              <div class="course-description">${infoContent[courseCode]}</div>
-            </div>
-          `;
+    if (summary && content) {
+      // Pre-populate the nested detail elements' content if needed
+      dropdown.querySelectorAll('.nested .dropdown-content p:empty').forEach(p => {
+        const nestedSummary = p.closest('.nested').querySelector('summary');
+        if (nestedSummary) {
+          const text = nestedSummary.textContent.trim();
+          const key = text.toLowerCase().replace(/\s+/g, '-');
+          p.textContent = infoContent[key] || `Information about ${text}`;
         }
       });
-      
-      html += `
-          </div>
-        </div>
-      `;
     }
-    
-    // Set the HTML content
-    coursesWrapper.innerHTML = html;
-  }
+  });
 }
