@@ -416,6 +416,35 @@ header {
   display: block;
 }
 
+/* Credential Badge Styling */
+.credential-badge {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.info-box h5 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: var(--primary);
+}
+
+.info-box ul {
+  list-style: disc;
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.info-box ul li {
+  padding-left: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.info-box ul li:before {
+  display: none;
+}
+
 /* Footer */
 footer {
   background: var(--bg-alt);
@@ -520,4 +549,75 @@ button, .info-button {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Course List Styling */
+.course-list {
+  margin-top: 1rem;
+}
+
+.course-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.75rem;
+  background-color: var(--bg);
+  overflow: hidden;
+}
+
+.course-item summary {
+  padding: 0.75rem;
+  cursor: pointer;
+  position: relative;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.course-item summary:hover {
+  background-color: var(--bg-alt);
+}
+
+.course-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.course-item summary::after {
+  content: '▼';
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.course-item[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.course-details {
+  padding: 0.75rem;
+  background-color: var(--bg-alt);
+  border-top: 1px solid var(--border);
+}
+
+.course-details p {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* Dark mode adjustments for course items */
+[data-theme="dark"] .course-item {
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .course-item summary:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive adjustments for course items */
+@media (max-width: 768px) {
+  .course-item summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 }
