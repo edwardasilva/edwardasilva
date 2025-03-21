@@ -50,6 +50,7 @@ body {
   background: var(--bg);
   transition: var(--transition);
   font-weight: 400;
+  -webkit-overflow-scrolling: touch;
 }
 
 .theme-transition {
@@ -110,6 +111,38 @@ a:hover {
   color: var(--accent);
 }
 
+/* Buttons and interactive elements */
+.button, .resume-button, footer button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  min-height: 44px;
+}
+
+.button:hover, .resume-button:hover, footer button:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+footer button {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+
+input, textarea, button, select, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Layout Components */
 header {
   padding: var(--spacing-lg) 0;
@@ -156,33 +189,6 @@ header p {
   transform: translateY(-2px);
 }
 
-/* Button styles */
-.button, .resume-button, footer button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius);
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: var(--transition);
-  box-shadow: var(--shadow);
-}
-
-.button:hover, .resume-button:hover, footer button:hover {
-  background: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
-}
-
-footer button {
-  background: var(--bg);
-  color: var(--text);
-  border: 1px solid var(--border);
-  font-weight: 500;
-}
-
 /* Navigation */
 .navigation {
   position: sticky;
@@ -190,7 +196,6 @@ footer button {
   background: var(--bg);
   box-shadow: var(--shadow);
   z-index: 10;
-  padding: 0;
   border-bottom: 1px solid var(--border);
   transition: var(--transition);
 }
@@ -241,6 +246,7 @@ footer button {
   transition: var(--transition);
   font-weight: 500;
   font-size: 0.95rem;
+  min-height: 44px;
 }
 
 .contact-item:hover {
@@ -250,7 +256,7 @@ footer button {
   color: white;
 }
 
-/* Sections */
+/* Sections and Cards */
 .section {
   margin: var(--spacing-lg) 0;
   scroll-margin-top: 80px;
@@ -278,7 +284,7 @@ footer button {
   transform: translateY(-3px);
 }
 
-/* Grid and Flex Layouts */
+/* Layout Utilities */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -396,7 +402,6 @@ footer button {
 /* Lists */
 .skill-list {
   list-style: none;
-  margin-left: 0;
   margin-bottom: var(--spacing-sm);
 }
 
@@ -416,7 +421,7 @@ footer button {
   font-size: 1rem;
 }
 
-/* Dropdown styles */
+/* Dropdown components */
 .dropdown-item {
   background: var(--bg);
   border: 1px solid var(--border);
@@ -442,6 +447,7 @@ footer button {
   background: var(--bg-alt);
   transition: var(--transition);
   list-style: none;
+  min-height: 44px;
 }
 
 .dropdown-item summary:hover {
@@ -483,7 +489,7 @@ footer button {
   background-color: transparent;
   padding: 0.6rem 0.75rem;
   font-weight: normal;
-  color: var(--text);
+  color: var (--text);
 }
 
 .dropdown-item.nested summary:hover {
@@ -494,10 +500,9 @@ footer button {
 .dropdown-item.nested .dropdown-content {
   background-color: transparent;
   padding: 0.5rem 1.5rem;
-  border-top: none;
 }
 
-/* Achievement container */
+/* Achievement containers */
 .achievement-container {
   display: flex;
   flex-wrap: wrap;
@@ -522,7 +527,7 @@ footer button {
   background: var(--bg);
 }
 
-/* All Courses Wrapper Styling */
+/* Course components */
 .all-courses-wrapper {
   display: none;
   margin-top: 1.5rem;
@@ -557,7 +562,6 @@ footer button {
   transform: rotate(180deg);
 }
 
-/* Style course categories to match other sections */
 .course-category {
   margin-bottom: 1.5rem;
   border-radius: var(--radius);
@@ -616,15 +620,6 @@ footer button {
   display: block;
 }
 
-/* Match the course dropdown items to other dropdowns */
-.category-content .dropdown-item {
-  margin-bottom: 0.6rem;
-}
-
-.category-content .dropdown-item:last-child {
-  margin-bottom: 0;
-}
-
 .all-courses-container .transcript-reference {
   margin-top: 1rem;
   padding: 0.75rem;
@@ -657,11 +652,9 @@ footer p {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Media queries - consolidated */
+/* Media queries */
 @media (max-width: 768px) {
-  html {
-    font-size: 15px;
-  }
+  html { font-size: 15px; }
   
   :root {
     --card-padding: 1rem;
@@ -688,9 +681,7 @@ footer p {
     justify-content: flex-start;
   }
   
-  .nav-links::-webkit-scrollbar {
-    display: none;
-  }
+  .nav-links::-webkit-scrollbar { display: none; }
   
   .nav-links a {
     font-size: 0.9rem;
@@ -726,48 +717,19 @@ footer p {
   .achievement-container {
     flex-direction: column;
   }
-  
-  .dropdown-item summary,
-  .contact-item,
-  .nav-links a,
-  button {
-    min-height: 44px; /* Better touch targets */
-  }
-
-  body {
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  input, 
-  textarea, 
-  button, 
-  select, 
-  a {
-    -webkit-tap-highlight-color: transparent;
-  }
 }
 
 @media (max-width: 480px) {
-  html {
-    font-size: 14px;
-  }
+  html { font-size: 14px; }
   
   .resume-button,
-  footer button {
-    width: 100%;
-  }
+  footer button { width: 100%; }
   
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
+  .skills-grid { grid-template-columns: 1fr; }
   
-  .section {
-    margin: 2rem 0;
-  }
+  .section { margin: 2rem 0; }
   
-  .card {
-    padding: 0.9rem;
-  }
+  .card { padding: 0.9rem; }
   
   h1 { font-size: 1.7rem; }
   h2 { font-size: 1.4rem; }

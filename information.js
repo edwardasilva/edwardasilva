@@ -130,7 +130,7 @@ function handleNavClick(e) {
 // Download resume function
 function downloadResume() {
   const link = document.createElement('a');
-  link.href = 'assets/resume.pdf';
+  link.href = 'assets/Edward_Silva_Resume.pdf'; // Make sure this path is correct
   link.download = 'Edward_Silva_Resume.pdf';
   document.body.appendChild(link);
   link.click();
