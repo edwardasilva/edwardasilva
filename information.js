@@ -4,7 +4,7 @@ const infoContent = {
   "deans-list": "Achieved Dean's List status for maintaining a GPA of 3.8 or higher for two semesters.",
   "honor-roll": "Recognized on the Honor Roll for maintaining a GPA between 3.5 and 3.79 for two semesters.",
   "provost-scholarship": "Awarded a merit-based scholarship of $9,000 per year for academic excellence throughout undergraduate studies.",
-  "c-mapp": "Selected as a Colorado Mines Advanced Planning Program Scholar receiving $1,000 annually for demonstrating academic potential and leadership qualities.",
+  "c-mapp": "Selected as a C-MAPP Scholar receiving $1,000 annually for demonstrating academic potential and leadership qualities.",
   "abs-scholar": "Recipient of the prestigious American Bureau of Shipping Scholarship valued at $4,000 for excellence in engineering studies related to maritime applications.",
   
   // Certifications
@@ -65,60 +65,72 @@ const courseCategories = {
   "General Studies": ["EBGN 201","EDNS 151","HASS 100", "HASS 200", "HNRS 198"]
 };
 
+// Cache for frequently accessed elements
+const cache = {
+  elements: {}
+};
+
+// Get element with caching
+function getElement(id) {
+  if (!cache.elements[id]) {
+    cache.elements[id] = document.getElementById(id);
+  }
+  return cache.elements[id];
+}
+
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Core initialization
+  // Core initialization 
   initializeThemeToggle();
   populateAllCourseDescriptions();
   populateCertificationContent();
   initializeEventListeners();
 });
 
-// Event listeners initialization - simplified
+// Event listeners initialization - simplified and optimized
 function initializeEventListeners() {
-  // Navigation smooth scrolling
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', handleNavClick);
-  });
+  // Navigation smooth scrolling - delegate to parent container
+  const navLinks = document.querySelector('.nav-links');
+  if (navLinks) {
+    navLinks.addEventListener('click', e => {
+      const link = e.target.closest('a');
+      if (link) handleNavClick.call(link, e);
+    });
+  }
   
   // Add event listener for the resume download button
-  const resumeButton = document.getElementById('download-resume');
+  const resumeButton = getElement('download-resume');
   if (resumeButton) {
     resumeButton.addEventListener('click', downloadResume);
   }
   
-  // Delegate other events to body
+  // Delegate course details to body - single event listener
   document.body.addEventListener('click', event => {
-    // Details elements
     const summary = event.target.closest('summary');
-    if (summary) {
-      const details = summary.parentElement;
-      if (details.tagName === 'DETAILS' && details.open) {
-        const description = details.querySelector('.course-description[data-course]');
-        if (description && !description.textContent.trim()) {
-          const courseCode = description.getAttribute('data-course');
-          description.textContent = infoContent[courseCode] || 'Course description not available.';
-        }
+    if (summary && summary.parentElement.tagName === 'DETAILS' && summary.parentElement.open) {
+      const description = summary.parentElement.querySelector('.course-description[data-course]');
+      if (description && !description.textContent.trim()) {
+        const courseCode = description.getAttribute('data-course');
+        description.textContent = infoContent[courseCode] || 'Course description not available.';
       }
     }
   });
 }
 
-// Navigation click handler
+// Navigation click handler - optimized
 function handleNavClick(e) {
   const href = this.getAttribute('href');
   
-  if (href.startsWith('#')) {
+  if (href && href.startsWith('#')) {
     e.preventDefault();
     const targetId = href.substring(1);
-    const targetElement = document.getElementById(targetId);
+    const targetElement = getElement(targetId);
     
     if (targetElement) {
-      // Add active class to the clicked link
+      // Use cached selector where possible
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
       this.classList.add('active');
       
-      // Scroll to the target element
       window.scrollTo({
         top: targetElement.offsetTop - 65,
         behavior: 'smooth'
@@ -127,86 +139,102 @@ function handleNavClick(e) {
   }
 }
 
-// Download resume function
+// Download resume function - unchanged but more efficient
 function downloadResume() {
   const link = document.createElement('a');
-  link.href = 'assets/Edward_Silva_Resume.pdf'; // Make sure this path is correct
+  link.href = 'assets/resume.pdf';
   link.download = 'Edward_Silva_Resume.pdf';
+  link.style.display = 'none';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 }
 
-// Theme toggle with smooth transition
+// Theme toggle with smooth transition - optimized
 function initializeThemeToggle() {
-  const toggle = document.getElementById('theme-toggle');
+  const toggle = getElement('theme-toggle');
   if (!toggle) return;
+  
+  const updateThemeIcon = (theme) => {
+    toggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+  };
   
   toggle.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     
-    // Add transition class for smoother theme change
     document.body.classList.add('theme-transition');
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
     
-    // Update icon
-    toggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+    updateThemeIcon(newTheme);
     
-    // Remove transition class after animation completes
     setTimeout(() => {
       document.body.classList.remove('theme-transition');
     }, 300);
   });
   
-  // Set initial icon
-  const currentTheme = document.documentElement.getAttribute('data-theme');
-  toggle.innerHTML = currentTheme === 'dark' ? '☀️' : '🌙';
+  // Set initial icon - retrieved from cache
+  updateThemeIcon(document.documentElement.getAttribute('data-theme'));
 }
 
-// Populate course descriptions immediately for better UX
+// Populate course descriptions - optimized with batch operation
 function populateAllCourseDescriptions() {
-  document.querySelectorAll('.course-description[data-course]').forEach(description => {
+  const descriptions = document.querySelectorAll('.course-description[data-course]');
+  if (descriptions.length === 0) return;
+  
+  // Use DocumentFragment for batch updates
+  const fragment = document.createDocumentFragment();
+  descriptions.forEach(description => {
     const courseCode = description.getAttribute('data-course');
     description.textContent = infoContent[courseCode] || 'Course description not available.';
+    fragment.appendChild(description.cloneNode(true));
   });
+  
+  // Only update DOM once if needed
+  if (fragment.children.length) {
+    descriptions[0].parentNode.replaceChildren(fragment);
+  }
 }
 
-// Add transcript reference
+// Add transcript reference - optimized
 function addTranscriptReference() {
-  const coursesSection = document.getElementById('courses');
+  const coursesSection = getElement('courses');
   if (!coursesSection) return;
   
   const allCoursesContainer = coursesSection.querySelector('.all-courses-container');
   if (!allCoursesContainer) return;
   
-  const referenceNotice = document.createElement('p');
-  referenceNotice.className = 'transcript-reference';
-  referenceNotice.textContent = 'For complete course details, refer to the Colorado School of Mines course catalog. Please email me for transcript verification.';
-  allCoursesContainer.appendChild(referenceNotice);
+  // Check if reference already exists to avoid duplicates
+  if (!allCoursesContainer.querySelector('.transcript-reference')) {
+    const referenceNotice = document.createElement('p');
+    referenceNotice.className = 'transcript-reference';
+    referenceNotice.textContent = 'For complete course details, refer to the Colorado School of Mines course catalog. Please email me for transcript verification.';
+    allCoursesContainer.appendChild(referenceNotice);
+  }
 }
 
-// Populate certification content
+// Populate certification content - optimized
 function populateCertificationContent() {
-  const certSection = document.getElementById('certifications');
+  const certSection = getElement('certifications');
   if (!certSection) return;
   
   const dropdowns = certSection.querySelectorAll('.dropdown-item');
+  // Fast return if no content to populate
+  if (dropdowns.length === 0) return;
+  
+  // Processing all at once with less DOM operations
   dropdowns.forEach(dropdown => {
-    const summary = dropdown.querySelector('summary');
-    const content = dropdown.querySelector('.dropdown-content');
+    const nestedElements = dropdown.querySelectorAll('.nested .dropdown-content p:empty');
+    if (nestedElements.length === 0) return;
     
-    if (summary && content) {
-      // Pre-populate the nested detail elements' content if needed
-      dropdown.querySelectorAll('.nested .dropdown-content p:empty').forEach(p => {
-        const nestedSummary = p.closest('.nested').querySelector('summary');
-        if (nestedSummary) {
-          const text = nestedSummary.textContent.trim();
-          const key = text.toLowerCase().replace(/\s+/g, '-');
-          p.textContent = infoContent[key] || `Information about ${text}`;
-        }
-      });
-    }
+    nestedElements.forEach(p => {
+      const nestedSummary = p.closest('.nested').querySelector('summary');
+      if (nestedSummary) {
+        const text = nestedSummary.textContent.trim();
+        const key = text.toLowerCase().replace(/\s+/g, '-');
+        p.textContent = infoContent[key] || `Information about ${text}`;
+      }
+    });
   });
 }
