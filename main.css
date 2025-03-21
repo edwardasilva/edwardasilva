@@ -621,3 +621,248 @@ button, .info-button {
     gap: 0.5rem;
   }
 }
+
+/* All Courses Dropdown */
+.all-courses-container {
+  margin-top: 2rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
+.view-all-courses-btn {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--primary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.view-all-courses-btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+}
+
+.view-all-courses-btn.active .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.all-courses-wrapper {
+  display: none;
+  padding: 1rem 0;
+}
+
+.all-courses-wrapper.visible {
+  display: block;
+}
+
+.course-category {
+  margin-bottom: 1.5rem;
+}
+
+.course-category h3 {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.course-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .course-list-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Course Category Styling */
+.course-category {
+  margin-bottom: 2rem;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--primary);
+  color: white;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 1rem;
+}
+
+.category-header:hover {
+  background: var(--accent);
+}
+
+.category-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.category-content.expanded {
+  max-height: 2000px; /* Large enough to show all content */
+}
+
+.course-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.course-name {
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+}
+
+.course-description {
+  padding: 0.75rem 1rem;
+}
+
+@media (max-width: 768px) {
+  .category-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Category Collapsible Styles */
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 0.5rem;
+}
+
+.category-header:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.category-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.category-arrow {
+  transition: transform 0.3s ease;
+}
+
+.category-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+  padding: 0;
+}
+
+.category-content.expanded {
+  max-height: 2000px; /* Large enough to show all content */
+  padding: 1rem 0;
+}
+
+/* Co-op Button Styles */
+.coop-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  margin: 0.5rem 0;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.coop-button:hover {
+  background: var(--accent);
+}
+
+/* Transcript Reference Styles */
+.transcript-reference {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.transcript-reference a {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .category-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Base button styles for light theme */
+button, 
+.info-button,
+.view-all-courses-btn,
+.category-header,
+.course-item summary {
+  color: var(--text);
+}
+
+/* Dark theme button adjustments */
+[data-theme="dark"] button,
+[data-theme="dark"] .info-button,
+[data-theme="dark"] .resume-button,
+[data-theme="dark"] .view-all-courses-btn,
+[data-theme="dark"] .category-header,
+[data-theme="dark"] .course-item summary {
+  color: var(--text);
+}
+
+/* Buttons with colored backgrounds - ensure proper contrast */
+.resume-button,
+.view-all-courses-btn:hover,
+.category-header:hover,
+footer button:hover {
+  color: white;
+}
+
+/* Info buttons should use primary color for better visibility */
+.info-button {
+  color: var(--primary);
+}
+
+/* Fix for course-related buttons */
+[data-theme="dark"] .coop-button,
+[data-theme="dark"] .view-all-courses-btn:hover,
+[data-theme="dark"] .category-header:hover {
+  color: white;
+}
