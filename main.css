@@ -78,11 +78,10 @@
   --accent: #8ba9e0;          
   --accent-dark: #637db0;     
   
-  /* Improve text visibility in dark mode - all text is now high contrast */
+  /* Ensure all text is white in dark mode */
   --text-main: #ffffff;
-  --text-secondary: #f1f5f9;
-  --text-muted: #e2e8f0;
-  /* Change heading color to white instead of blue for better visibility */
+  --text-secondary: #ffffff;
+  --text-muted: #ffffff;
   --text-heading: #ffffff;
   --text-inverse: #0f172a;
   
@@ -206,7 +205,7 @@ a {
 }
 
 [data-theme="dark"] a {
-  color: #9fccff; /* Brighter blue with better contrast */
+  color: #ffffff; /* White links in dark mode */
 }
 
 a:hover {
@@ -214,7 +213,8 @@ a:hover {
 }
 
 [data-theme="dark"] a:hover {
-  color: #ffffff; /* White on hover for maximum visibility */
+  color: #ffffff; /* Keep links white on hover in dark mode */
+  text-decoration: underline; /* Add underline on hover for better UX */
 }
 
 a.underline-link {
@@ -755,7 +755,7 @@ header p {
 
 [data-theme="dark"] .timeline-date {
   color: #ffffff;
-  border-color: #9fccff;
+  border-color: #ffffff;
 }
 
 .timeline-item .card {
@@ -792,7 +792,7 @@ header p {
 }
 
 [data-theme="dark"] .skill-list li::before {
-  color: #9fccff;
+  color: #ffffff;
 }
 
 ul:not(.skill-list):not(.nav-links) {
@@ -833,6 +833,10 @@ ul:not(.skill-list):not(.nav-links) li {
   min-height: 48px;
   position: relative;
   color: var(--text-main);
+}
+
+[data-theme="dark"] .dropdown-item summary {
+  color: #ffffff;
 }
 
 .dropdown-item summary::-webkit-details-marker {
@@ -896,7 +900,7 @@ ul:not(.skill-list):not(.nav-links) li {
 }
 
 [data-theme="dark"] .skill-icon {
-  color: #9fccff;
+  color: #ffffff;
 }
 
 /* Footer */
@@ -1053,7 +1057,7 @@ footer button:hover::after {
 }
 
 [data-theme="dark"] .section-subheader {
-  color: var(--primary-light);
+  color: #ffffff;
 }
 
 .section-subheader::after {
@@ -1085,8 +1089,8 @@ footer button:hover::after {
 }
 
 [data-theme="dark"] .project-badge {
-  background: #9fccff;
-  color: var(--bg);
+  background: #4c78cc;
+  color: #ffffff;
 }
 
 .project-tech {
@@ -1288,4 +1292,47 @@ footer button:hover::after {
     color: black;
     text-decoration: underline;
   }
+}
+
+/* Override specific elements to ensure white text in dark mode */
+[data-theme="dark"] .dropdown-item summary,
+[data-theme="dark"] .skill-tag,
+[data-theme="dark"] .tech-tag,
+[data-theme="dark"] .timeline-date,
+[data-theme="dark"] .gpa-value,
+[data-theme="dark"] .contact-item,
+[data-theme="dark"] .section-subheader,
+[data-theme="dark"] p,
+[data-theme="dark"] li,
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: #ffffff;
+}
+
+/* Remove individual color declarations that could override white text */
+[data-theme="dark"] .gpa-value {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .timeline-date {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+[data-theme="dark"] .skill-list li::before {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .skill-icon {
+  color: #ffffff;
+}
+
+/* Ensure project badge text is visible against its background */
+[data-theme="dark"] .project-badge {
+  background: #4c78cc;
+  color: #ffffff;
 }
