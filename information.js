@@ -65,228 +65,178 @@ const courseCategories = {
   "General Studies": ["EBGN 201","EDNS 151","HASS 100", "HASS 200", "HNRS 198"]
 };
 
-// Cache for frequently accessed elements
-const cache = {
-  elements: {}
-};
+// Cache implementation for DOM elements
+const elementCache = new Map();
 
 // Get element with caching
 function getElement(id) {
-  if (!cache.elements[id]) {
-    cache.elements[id] = document.getElementById(id);
+  if (!elementCache.has(id)) {
+    elementCache.set(id, document.getElementById(id));
   }
-  return cache.elements[id];
+  return elementCache.get(id);
 }
 
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Core initialization 
-  initializeThemeToggle();
-  populateAllCourseDescriptions();
-  populateCertificationContent();
-  initializeEventListeners();
-  setupAnimations();
-  enhanceNavigation();
-  
-  // Add new enhancements
-  enhanceSkillTags();
-  addHeaderParallax();
-  
-  // Add click handler for project cards
-  const projectCards = document.querySelectorAll('.project-card');
-  projectCards.forEach(card => {
-    card.addEventListener('click', function(e) {
-      // Don't trigger if clicking on a link
-      if (e.target.tagName === 'A') return;
-      
-      // Toggle active class for subtle highlight
-      this.classList.toggle('active-project');
-      
-      // Optional: expand card description
-      const description = this.querySelector('ul');
-      if (description) {
-        description.style.maxHeight = description.style.maxHeight ? null : description.scrollHeight + 'px';
-      }
-    });
-  });
+  // Core initialization in a try-catch for error resilience
+  try {
+    initializeThemeToggle();
+    populateAllCourseDescriptions();
+    populateCertificationContent();
+    initializeEventListeners();
+    setupAnimations();
+    enhanceNavigation();
+    enhanceSkillTags();
+  } catch (error) {
+    console.error('Initialization error:', error);
+  }
 });
 
-// Event listeners initialization - simplified and optimized
+// Event listeners initialization - optimized using event delegation
 function initializeEventListeners() {
-  // Navigation smooth scrolling - delegate to parent container
-  const navLinks = document.querySelector('.nav-links');
-  if (navLinks) {
-    navLinks.addEventListener('click', e => {
-      const link = e.target.closest('a');
-      if (link) handleNavClick.call(link, e);
-    });
-  }
+  // Navigation smooth scrolling with event delegation
+  document.querySelector('.nav-links')?.addEventListener('click', e => {
+    if (e.target.tagName === 'A') {
+      handleNavClick.call(e.target, e);
+    }
+  });
   
-  // Add event listener for the resume download button
+  // Resume download button
   document.addEventListener('click', event => {
-    if (event.target.classList.contains('resume-button')) {
+    if (event.target.matches('.resume-button')) {
       downloadResume();
     }
   });
   
-  // Delegate course details to body - single event listener
+  // Course details with event delegation
   document.body.addEventListener('click', event => {
     const summary = event.target.closest('summary');
-    if (summary && summary.parentElement.tagName === 'DETAILS' && summary.parentElement.open) {
+    if (summary && summary.parentElement.matches('details[open]')) {
       const description = summary.parentElement.querySelector('.course-description[data-course]');
       if (description && !description.textContent.trim()) {
-        const courseCode = description.getAttribute('data-course');
-        description.textContent = infoContent[courseCode] || 'Course description not available.';
-        
-        // Add subtle animation to newly revealed content
-        description.classList.add('fade-in');
+        loadCourseDescription(description);
       }
     }
   });
 
-  // Add scroll event listener for revealing elements
+  // Scroll events for animations with throttling
   window.addEventListener('scroll', throttle(revealOnScroll, 100));
 
-  // Add event listener for card hover effects
-  const cards = document.querySelectorAll('.card');
-  cards.forEach(card => {
-    card.addEventListener('mouseenter', () => {
-      card.style.transform = 'translateY(-8px)';
-      card.style.boxShadow = 'var(--shadow-lg)';
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-      card.style.boxShadow = '';
-    });
+  // Back to top button
+  document.querySelector('.back-to-top')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+}
+
+// Load course description helper
+function loadCourseDescription(element) {
+  const courseCode = element.getAttribute('data-course');
+  element.textContent = infoContent[courseCode] || 'Course description not available.';
+  element.classList.add('fade-in');
 }
 
 // Setup animations for page elements
 function setupAnimations() {
-  // Add animation classes to each section
-  const sections = document.querySelectorAll('.section');
-  sections.forEach((section, index) => {
-    section.classList.add('fade-in');
-    section.style.animationDelay = `${index * 0.1}s`;
-    section.style.opacity = '0'; // Start hidden
-  });
-  
-  // Add animation to header elements
-  const header = document.querySelector('header');
-  if (header) {
-    const headerElements = header.querySelectorAll('h1, h2, p, button');
-    headerElements.forEach((el, index) => {
-      el.classList.add('fade-in');
-      el.style.animationDelay = `${0.3 + (index * 0.15)}s`;
+  // Add animation classes with staggered delays
+  const animateSections = (selector, animationClass, baseDelay = 0, delayIncrement = 0.1) => {
+    document.querySelectorAll(selector).forEach((el, i) => {
+      el.classList.add(animationClass);
+      el.style.animationDelay = `${baseDelay + (i * delayIncrement)}s`;
       el.style.opacity = '0'; // Start hidden
     });
-  }
+  };
   
-  // Add animation to timeline items
-  const timelineItems = document.querySelectorAll('.timeline-item');
-  timelineItems.forEach((item, index) => {
-    item.classList.add('slide-in-left');
-    item.style.animationDelay = `${0.1 + (index * 0.1)}s`;
-    item.style.opacity = '0'; // Start hidden
-  });
+  // Apply animations to various elements
+  animateSections('.section', 'fade-in');
+  animateSections('header h1, header h2, header p, .resume-button', 'fade-in', 0.3, 0.15);
+  animateSections('.timeline-item', 'slide-in-left', 0.1, 0.1);
+  animateSections('.skill-category', 'scale-in', 0.2, 0.1);
   
-  // Add animation to skill categories
-  const skillItems = document.querySelectorAll('.skill-category');
-  skillItems.forEach((item, index) => {
-    item.classList.add('scale-in');
-    item.style.animationDelay = `${0.2 + (index * 0.1)}s`;
-    item.style.opacity = '0'; // Start hidden
-  });
-
-  // Trigger animation for elements in viewport on page load
-  setTimeout(() => {
-    revealOnScroll();
-  }, 100);
+  // Reveal visible elements on page load
+  setTimeout(revealOnScroll, 100);
 }
 
-// Reveal elements when they enter the viewport
+// Reveal elements when they enter the viewport - performance optimized
 function revealOnScroll() {
-  const elements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in');
+  const elements = document.querySelectorAll('[class*="fade-in"], [class*="slide-in"], [class*="scale-in"]');
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
   
   elements.forEach(element => {
-    if (isElementInViewport(element) && element.style.opacity === '0') {
-      element.style.opacity = '1';
+    if (element.style.opacity === '0') {
+      const rect = element.getBoundingClientRect();
+      const isInViewport = rect.top <= viewportHeight * 0.9 && rect.bottom >= 0;
+      
+      if (isInViewport) {
+        element.style.opacity = '1';
+      }
     }
   });
-}
-
-// Check if element is in viewport
-function isElementInViewport(el) {
-  const rect = el.getBoundingClientRect();
-  return (
-    rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
-    rect.bottom >= 0
-  );
 }
 
 // Throttle function to limit function calls
 function throttle(func, limit) {
-  let inThrottle;
+  let lastFunc, lastRan;
   return function() {
-    const args = arguments;
     const context = this;
-    if (!inThrottle) {
+    const args = arguments;
+    
+    if (!lastRan) {
       func.apply(context, args);
-      inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      lastRan = Date.now();
+    } else {
+      clearTimeout(lastFunc);
+      lastFunc = setTimeout(function() {
+        if ((Date.now() - lastRan) >= limit) {
+          func.apply(context, args);
+          lastRan = Date.now();
+        }
+      }, limit - (Date.now() - lastRan));
     }
   };
 }
 
-// Enhance navigation with active state tracking
+// Navigation enhancement
 function enhanceNavigation() {
+  // Implementation for tracking active section
   const sections = document.querySelectorAll('.section');
   const navLinks = document.querySelectorAll('.nav-links a');
   
-  // Highlight active section in navigation
+  if (!sections.length || !navLinks.length) return;
+  
   const highlightActiveSection = throttle(() => {
-    let currentSectionId = '';
+    const scrollPosition = window.scrollY + 100;
     
+    // Find current section
+    let currentSection = sections[0];
     sections.forEach(section => {
-      const sectionTop = section.offsetTop - 100;
-      const sectionHeight = section.offsetHeight;
-      const scrollPosition = window.scrollY;
-      
-      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-        currentSectionId = section.id;
+      if (scrollPosition >= section.offsetTop) {
+        currentSection = section;
       }
     });
     
+    // Update active nav link
+    const currentId = currentSection.id;
     navLinks.forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('href') === `#${currentSectionId}`) {
-        link.classList.add('active');
-      }
+      link.classList.toggle('active', link.getAttribute('href') === `#${currentId}`);
     });
   }, 100);
   
-  // Add scroll event listener
   window.addEventListener('scroll', highlightActiveSection);
-  
-  // Run once on page load
-  highlightActiveSection();
+  highlightActiveSection(); // Run once on init
 }
 
-// Navigation click handler - optimized
+// Navigation click handler
 function handleNavClick(e) {
   const href = this.getAttribute('href');
   
-  if (href && href.startsWith('#')) {
+  if (href?.startsWith('#')) {
     e.preventDefault();
-    const targetId = href.substring(1);
-    const targetElement = document.getElementById(targetId);
+    const targetElement = document.getElementById(href.substring(1));
     
     if (targetElement) {
-      // Update active class
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
       this.classList.add('active');
       
-      // Smooth scroll to target
       window.scrollTo({
         top: targetElement.offsetTop - 70,
         behavior: 'smooth'
@@ -295,11 +245,10 @@ function handleNavClick(e) {
   }
 }
 
-// Download resume function with feedback
+// Resume download with user feedback
 function downloadResume() {
   const button = document.querySelector('.resume-button');
   
-  // Visual feedback
   if (button) {
     const originalText = button.textContent;
     button.textContent = 'Downloading...';
@@ -311,24 +260,22 @@ function downloadResume() {
     }, 1500);
   }
   
+  // Create and trigger download
   const link = document.createElement('a');
   link.href = 'assets/resume.pdf';
   link.download = 'Edward_Silva_Resume.pdf';
-  link.style.display = 'none';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 }
 
-// Theme toggle with smooth transition - enhanced
+// Theme toggle with smooth transition
 function initializeThemeToggle() {
   const toggle = document.getElementById('theme-toggle');
   if (!toggle) return;
   
   const updateThemeIcon = (theme) => {
     toggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-    
-    // Add animation
     toggle.classList.add('rotating');
     setTimeout(() => toggle.classList.remove('rotating'), 500);
   };
@@ -351,7 +298,7 @@ function initializeThemeToggle() {
   // Set initial icon based on current theme
   updateThemeIcon(document.documentElement.getAttribute('data-theme'));
   
-  // Add CSS for rotation animation
+  // Add CSS for rotation animation if not present
   if (!document.getElementById('theme-toggle-style')) {
     const style = document.createElement('style');
     style.id = 'theme-toggle-style';
@@ -371,55 +318,42 @@ function initializeThemeToggle() {
   }
 }
 
-// Populate course descriptions - optimized with batch operation
+// Batch populate course descriptions
 function populateAllCourseDescriptions() {
   const descriptions = document.querySelectorAll('.course-description[data-course]');
-  if (descriptions.length === 0) return;
+  if (!descriptions.length) return;
   
-  // Use DocumentFragment for batch updates
-  const fragment = document.createDocumentFragment();
-  descriptions.forEach(description => {
-    const courseCode = description.getAttribute('data-course');
-    description.textContent = infoContent[courseCode] || 'Course description not available.';
-    fragment.appendChild(description.cloneNode(true));
-  });
+  // Process in chunks for better UI responsiveness
+  const processChunk = (startIndex, chunkSize) => {
+    const endIndex = Math.min(startIndex + chunkSize, descriptions.length);
+    
+    for (let i = startIndex; i < endIndex; i++) {
+      const description = descriptions[i];
+      const courseCode = description.getAttribute('data-course');
+      description.textContent = infoContent[courseCode] || 'Course description not available.';
+    }
+    
+    // Process next chunk if needed
+    if (endIndex < descriptions.length) {
+      setTimeout(() => processChunk(endIndex, chunkSize), 0);
+    }
+  };
   
-  // Only update DOM once if needed
-  if (fragment.children.length) {
-    descriptions[0].parentNode.replaceChildren(fragment);
-  }
+  // Start processing in chunks of 5
+  processChunk(0, 5);
 }
 
-// Add transcript reference - optimized
-function addTranscriptReference() {
-  const coursesSection = getElement('courses');
-  if (!coursesSection) return;
-  
-  const allCoursesContainer = coursesSection.querySelector('.all-courses-container');
-  if (!allCoursesContainer) return;
-  
-  // Check if reference already exists to avoid duplicates
-  if (!allCoursesContainer.querySelector('.transcript-reference')) {
-    const referenceNotice = document.createElement('p');
-    referenceNotice.className = 'transcript-reference';
-    referenceNotice.textContent = 'For complete course details, refer to the Colorado School of Mines course catalog. Please email me for transcript verification.';
-    allCoursesContainer.appendChild(referenceNotice);
-  }
-}
-
-// Populate certification content - optimized
+// Populate certification content
 function populateCertificationContent() {
   const certSection = getElement('certifications');
   if (!certSection) return;
   
   const dropdowns = certSection.querySelectorAll('.dropdown-item');
-  // Fast return if no content to populate
-  if (dropdowns.length === 0) return;
+  if (!dropdowns.length) return;
   
-  // Processing all at once with less DOM operations
+  // Process all certification content
   dropdowns.forEach(dropdown => {
     const nestedElements = dropdown.querySelectorAll('.nested .dropdown-content p:empty');
-    if (nestedElements.length === 0) return;
     
     nestedElements.forEach(p => {
       const nestedSummary = p.closest('.nested').querySelector('summary');
@@ -432,64 +366,19 @@ function populateCertificationContent() {
   });
 }
 
-// Reveal initial elements with staggered animation - modify to run immediately
-function revealInitialElements() {
-  // Elements to animate in sequence
-  const elementsToAnimate = [
-    'header h1',                    // Name (first)
-    'header h2',                    // Title
-    'header p',                     // Description
-    'header .resume-button',        // Resume button
-    '.contact-info',                // Contact info section
-    '.nav-links',                   // Navigation
-    '#education .section-header'    // First section header
-  ];
-  
-  // Apply staggered animations immediately
-  elementsToAnimate.forEach((selector, index) => {
-    const element = document.querySelector(selector);
-    if (element) {
-      // Show immediately with minimal delay
-      element.style.opacity = '1';
-      element.style.transform = 'translateY(0)';
-      element.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-    }
-  });
-}
-
-// Add interactive element for skill tags
+// Add interactive behavior to skill tags
 function enhanceSkillTags() {
   const skillTags = document.querySelectorAll('.skill-tag');
   
   skillTags.forEach(tag => {
     tag.addEventListener('mouseenter', () => {
-      // Create small pop effect
       tag.style.transform = 'scale(1.1) translateY(-3px)';
       tag.style.boxShadow = 'var(--shadow-md)';
     });
     
     tag.addEventListener('mouseleave', () => {
-      // Return to normal
       tag.style.transform = '';
       tag.style.boxShadow = '';
     });
-  });
-}
-
-// Add parallax scroll effect to header
-function addHeaderParallax() {
-  window.addEventListener('scroll', () => {
-    const scrollPosition = window.scrollY;
-    const header = document.querySelector('header');
-    
-    if (header && scrollPosition < header.offsetHeight) {
-      // Move background elements at different rates for parallax effect
-      const bgElements = header.querySelectorAll('::before, ::after');
-      const parallaxRate = scrollPosition * 0.4;
-      
-      bgElements.forEach(el => {
-        el.style.transform = `translateY(${parallaxRate}px)`;
-      });
-    }
   });
 }
