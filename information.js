@@ -286,6 +286,10 @@ function initializeThemeToggle() {
     
     document.body.classList.add('theme-transition');
     document.documentElement.setAttribute('data-theme', newTheme);
+    
+    // Update the --bg-rgb variable based on the new theme
+    document.documentElement.style.setProperty('--bg-rgb', newTheme === 'dark' ? '17, 24, 39' : '255, 255, 255');
+    
     localStorage.setItem('theme', newTheme);
     
     updateThemeIcon(newTheme);
