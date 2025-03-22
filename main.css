@@ -58,13 +58,16 @@
   --primary-light: #6e92d5;    /* Lighter blue for accents and highlights */
   --accent: #8ba9e0;           /* Soft blue-grey accent color */
   --accent-dark: #637db0;      /* Darker version of the accent */
-  --text: #e2e8f0;             /* Softer white for main text */
-  --text-light: #cbd5e1;       /* Light grey for secondary text */
-  --text-lighter: #94a3b8;     /* Medium grey for tertiary text */
+  --text: #f1f5f9;             /* Brighter white for better readability */
+  --text-light: #e2e8f0;       /* Lighter grey with better contrast */
+  --text-lighter: #cbd5e1;     /* Medium grey with improved visibility */
   --bg: #0f172a;               /* Deep navy background */
   --bg-alt: #1e293b;           /* Slightly lighter navy for alternate backgrounds */
   --bg-card: #1e293b;          /* Card background matching alternate background */
   --border: #334155;           /* Subtle border color */
+  --success: #10b981;          /* Keeping success color */
+  --error: #f87171;            /* Slightly lighter error for better visibility */
+  --warning: #fbbf24;          /* Slightly lighter warning for better visibility */
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
   --shadow: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -1px rgba(0,0,0,0.1);
   --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.5), 0 4px 6px -2px rgba(0,0,0,0.2);
@@ -75,6 +78,7 @@
   --accent-rgb: 139, 169, 224;   /* Updated RGB values for accent */
   --bg-rgb: 15, 23, 42;          /* Updated RGB values for background */
   --bg-alt-rgb: 30, 41, 59;      /* Updated RGB values for alternate background */
+  --text-rgb: 241, 245, 249;     /* RGB values for main text */
 }
 
 /* Base styles */
@@ -1652,4 +1656,30 @@ body.loaded {
 /* Adjust timeline spacing */
 .timeline + .section-subheader {
   margin-top: var(--spacing-xl);
+}
+
+/* Dark mode specific overrides */
+[data-theme="dark"] .skill-list li::before {
+  color: var(--primary-light);  /* Brighter marker color in dark mode */
+}
+
+[data-theme="dark"] .timeline-item::before {
+  background: var(--bg-alt);  /* Better contrast for timeline markers */
+  border-color: var(--primary-light);
+}
+
+[data-theme="dark"] .dropdown-item summary {
+  color: var(--text);  /* Ensuring dropdown headers are readable */
+}
+
+[data-theme="dark"] .skill-tag {
+  color: var(--primary-light);  /* Brighter skill tag text */
+}
+
+[data-theme="dark"] .tech-tag {
+  color: var(--text-light);  /* Brighter technology tag text */
+}
+
+[data-theme="dark"] a.underline-link::after {
+  background-color: var(--primary-light);  /* More visible underline */
 }
