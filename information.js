@@ -269,40 +269,63 @@ function downloadResume() {
   document.body.removeChild(link);
 }
 
-// Theme toggle with smooth transition
+// Theme toggle with smooth transition - optimized version
 function initializeThemeToggle() {
   const toggle = document.getElementById('theme-toggle');
   if (!toggle) return;
   
-  const updateThemeIcon = (theme) => {
-    toggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-    toggle.classList.add('rotating');
-    setTimeout(() => toggle.classList.remove('rotating'), 500);
+  // Cache DOM references and values
+  const html = document.documentElement;
+  const body = document.body;
+  const themeTransitionClass = 'theme-transition';
+  
+  // Pre-compute theme values to avoid recalculation
+  const themeValues = {
+    dark: {
+      icon: '☀️',
+      bgRgb: '17, 24, 39'
+    },
+    light: {
+      icon: '🌙',
+      bgRgb: '255, 255, 255'
+    }
   };
   
+  // Combine operations for better performance
+  const updateTheme = (newTheme) => {
+    const values = themeValues[newTheme];
+    
+    // Apply all changes in one batch to reduce reflows
+    requestAnimationFrame(() => {
+      body.classList.add(themeTransitionClass);
+      html.setAttribute('data-theme', newTheme);
+      html.style.setProperty('--bg-rgb', values.bgRgb);
+      toggle.innerHTML = values.icon;
+      toggle.classList.add('rotating');
+      
+      // Store preference
+      localStorage.setItem('theme', newTheme);
+      
+      // Remove transition class after animation completes
+      setTimeout(() => {
+        body.classList.remove(themeTransitionClass);
+        toggle.classList.remove('rotating');
+      }, 500);
+    });
+  };
+  
+  // Single event handler
   toggle.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const currentTheme = html.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.body.classList.add('theme-transition');
-    document.documentElement.setAttribute('data-theme', newTheme);
-    
-    // Update the --bg-rgb variable based on the new theme
-    document.documentElement.style.setProperty('--bg-rgb', newTheme === 'dark' ? '17, 24, 39' : '255, 255, 255');
-    
-    localStorage.setItem('theme', newTheme);
-    
-    updateThemeIcon(newTheme);
-    
-    setTimeout(() => {
-      document.body.classList.remove('theme-transition');
-    }, 500);
+    updateTheme(newTheme);
   });
   
-  // Set initial icon based on current theme
-  updateThemeIcon(document.documentElement.getAttribute('data-theme'));
+  // Set initial icon based on current theme (runs only once)
+  const currentTheme = html.getAttribute('data-theme');
+  toggle.innerHTML = themeValues[currentTheme].icon;
   
-  // Add CSS for rotation animation if not present
+  // Add rotation animation CSS only if needed (once)
   if (!document.getElementById('theme-toggle-style')) {
     const style = document.createElement('style');
     style.id = 'theme-toggle-style';
