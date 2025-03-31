@@ -77,7 +77,7 @@
         gtag('config', 'G-Z3HFSWVGND');
     </script>
 
-    <!-- Credly Badge Script -->
+    <!-- Only include Credly script if you actually have badges on the page -->
     <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 </head>
 
@@ -93,7 +93,7 @@
             <h1>Edward A. Silva</h1>
             <h2>Electrical Engineering Student</h2>
             <p>This website was meticulously crafted by hand using JavaScript, HTML, and CSS as a personal project.</p>
-            <button class="resume-button">Download Resume</button>
+            <a href="/path-to-your-resume.pdf" class="resume-button" download>Download Resume</a>
         </div>
     </header> 
 
@@ -115,7 +115,7 @@
     <!-- Main Content -->
     <main>
         <div class="container">
-            <!-- Contact Information -->
+            <!-- Contact Information - simplified -->
             <section class="contact-info">
                 <a href="mailto:easilva@mines.edu" class="contact-item">
                     📧 easilva@mines.edu
@@ -123,8 +123,7 @@
                 <a href="mailto:eddie@silvaspot.com" class="contact-item">
                     📧 eddie@silvaspot.com
                 </a>
-                <a href="https://www.linkedin.com/in/edwardsilva04/" class="contact-item" target="_blank"
-                    rel="noopener">
+                <a href="https://www.linkedin.com/in/edwardsilva04/" class="contact-item" target="_blank" rel="noopener">
                     👔 LinkedIn
                 </a>
                 <a href="https://github.com/easilva04" class="contact-item" target="_blank" rel="noopener">
@@ -138,14 +137,13 @@
                 </a>
             </section>
 
-            <!-- Education -->
+            <!-- Education - fixed GPA indicator -->
             <section id="education" class="section">
                 <div class="section-header">
                     <h2>Education</h2>
                 </div>
                 <div class="card">
                     <div class="education-header">
-
                         <div class="education-info">
                             <h3>Master of Science in Robotics</h3>
                             <p><strong>Colorado School of Mines</strong> | Expected May 2027</p>
@@ -154,14 +152,13 @@
                 </div>
                 <div class="card">
                     <div class="education-header">
-
                         <div class="education-info">
                             <h3>Bachelor of Science in Electrical Engineering</h3>
                             <p><strong>Colorado School of Mines</strong> | Expected December 2026</p>
                             <p><strong>Minor:</strong> Computer Science, Software and Algorithm Design</p>
-                            <div class="gpa-indicator">
-                                <div class="gpa-label">GPA</div>
-                                <div class="gpa-value">3.435</div>
+                            <div class="gpa-indicator" style="background-color: var(--primary); border-radius: 1rem; padding: 0.25rem 0.5rem; margin-top: 0.5rem; display: inline-flex; align-items: center; box-shadow: var(--shadow-sm);">
+                                <span style="font-weight: 600; font-size: 0.8rem; color: white; margin-right: 0.5rem;">GPA</span>
+                                <span style="font-weight: 700; font-size: 0.9rem; color: white;">3.435</span>
                             </div>
                         </div>
                     </div>
@@ -742,19 +739,13 @@
                             <span class="tech-tag">JavaScript</span>
                         </div>
                         <ul>
-                            <li>Developed a comprehensive website to summarize the entire Electrical Engineering degree.
-                            </li>
+                            <li>Developed a comprehensive website to summarize the entire Electrical Engineering degree.</li>
                             <li>Utilized HTML, CSS, JavaScript for frontend and backend development.</li>
-                            <li>Aimed to demonstrate competency and provide educational resources for aspiring
-                                Electrical
-                                Engineers.</li>
-                            <li>Included detailed explanations, tutorials, and practical examples to facilitate
-                                learning.
-                            </li>
+                            <li>Aimed to demonstrate competency and provide educational resources for aspiring Electrical Engineers.</li>
+                            <li>Included detailed explanations, tutorials, and practical examples to facilitate learning.</li>
                         </ul>
                         <div class="project-links">
-                            <a href="https://www.eeprep.com" target="_blank" rel="noopener" class="btn-outline">Visit
-                                Site</a>
+                            <a href="https://www.eeprep.com" target="_blank" rel="noopener" class="btn btn-primary">Visit Site</a>
                         </div>
                     </div>
 
@@ -768,18 +759,14 @@
                             <span class="tech-tag">C++</span>
                         </div>
                         <ul>
-                            <li>Prototyped and coded controller for optimal solar panel alignment utilizing Arduino
-                                microcontroller, light sensors, and motor controllers.</li>
-                            <li>Developed a prototype with a servo motor for pitch adjustment and a stepper motor for
-                                yaw
-                                adjustment.</li>
+                            <li>Prototyped and coded controller for optimal solar panel alignment utilizing Arduino microcontroller, light sensors, and motor controllers.</li>
+                            <li>Developed a prototype with a servo motor for pitch adjustment and a stepper motor for yaw adjustment.</li>
                             <li>Integrated an advanced tracking algorithm into the Arduino microcontroller.</li>
                             <li>Conducted system testing and calibration under various atmospheric conditions.</li>
                             <li>Utilized Raspberry Pi as a brain controller for the Arduino.</li>
                         </ul>
                         <div class="project-links">
-                            <a href="https://github.com/easilva04/SolarPanelProject" target="_blank" rel="noopener"
-                                class="btn-outline">GitHub Repository</a>
+                            <a href="https://github.com/easilva04/SolarPanelProject" target="_blank" rel="noopener" class="btn btn-primary">GitHub Repository</a>
                         </div>
                     </div>
 
@@ -874,6 +861,7 @@
         </div>
     </main>
 
+    <!-- Footer - simplified -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -905,20 +893,41 @@
         </div>
     </footer>
 
-    <!-- Scripts (defer loading for performance) -->
+    <!-- Scripts -->
     <script src="information.js" defer></script>
     <script>
-        // Back to top button and dropdown fixes
         document.addEventListener('DOMContentLoaded', function () {
             // Back to top functionality
             document.querySelector('.back-to-top')?.addEventListener('click', function () {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
             
-            // Ensure details elements don't all open at once
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle?.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Update text content based on theme
+                this.textContent = newTheme === 'light' ? '🌙' : '☀️';
+                
+                // Update RGB variables for backdrop-filter effects
+                document.documentElement.style.setProperty('--bg-rgb', 
+                    newTheme === 'dark' ? '17, 24, 39' : '255, 255, 255');
+            });
+            
+            // Update theme toggle text based on current theme
+            if (themeToggle) {
+                themeToggle.textContent = 
+                    document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+            }
+            
+            // Dropdown handling
             document.querySelectorAll('details').forEach(details => {
                 details.addEventListener('toggle', function(e) {
-                    // Stop event propagation to prevent parent details from toggling
                     e.stopPropagation();
                 });
             });
