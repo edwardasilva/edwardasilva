@@ -1,0 +1,123 @@
+\documentclass[11pt]{article}       % set main text size
+\usepackage{geometry}
+\geometry{letterpaper,              % set paper size to letter
+top=0.5in,                          % specify top page margin
+bottom=0.5in,                       % specify bottom page margin
+left=0.5in,                         % specify left page margin
+right=0.5in}                        % specify right page margin
+
+\usepackage{XCharter}               % set font
+\usepackage[T1]{fontenc}            % output encoding
+\usepackage[utf8]{inputenc}         % input encoding
+\usepackage{enumitem}               % enable lists for bullet points: itemize and \item
+\usepackage[hidelinks]{hyperref}    % format hyperlinks
+\usepackage{titlesec}               % enable section title customization
+\raggedright                        % disable text justification
+\pagestyle{empty}                   % disable page numbering
+
+% ensure PDF output will be all-Unicode and machine-readable
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+% format section headings: bolding, size, white space above and below
+\titleformat{\section}{\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule\vspace{-10pt}]
+
+% format bullet points: size, white space above and below, white space between bullets
+\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
+\setlist[itemize]{itemsep=-2pt, leftmargin=12pt}
+
+% resume starts here
+\begin{document}
+
+% name
+\centerline{\huge Edward A. Silva}
+\vspace{5pt}
+
+% contact information
+\centerline{
+\href{https://www.linkedin.com/in/edwardsilva04/}{Linkedin.com/in/edwardsilva04}
+| \href{https://ed-silva.com}{ed-silva.com}
+| \href{mailto:easilva@mines.edu}{easilva@mines.edu} 
+| \href{tel:7027207735}{(702) 720-7735}
+}
+
+\vspace{-18pt}
+% education section
+\section*{Education}
+\textbf{\href{https://electrical.mines.edu/undergraduate-program/}{BS, Electrical Engineering}} -- \href{https://www.mines.edu/}{Colorado School of Mines} -- \textbf{GPA:} 3.435 \hfill December 2026 \\
+\textbf{\href{https://cs.mines.edu/csmines-minors-and-areas-of-special-interest/}{Computer Science Minor, Software and Algorithm Design}}\\
+
+\textbf{Honors:} Dean's List, Honor Roll, Provost Scholarship, C-MAPP Scholar, American Bureau of Shipping Scholar \\ 
+\textbf{Courses:} Control Systems, Electric Machines, Electromagnetics, Embedded Systems, Software Engineering
+\vspace{-14pt}
+
+% experience section
+\section*{Experience}
+
+\textbf{Intern, Software Development, }{Kratos Defense \& Security Solutions} -- Colorado Springs, CO \hfill June 2025 -- Present \\
+\vspace{-6.5pt}
+\begin{itemize}
+  \item yd
+  \item yd
+  \item yd
+  \item yd
+  \item yd
+  \item yd
+  \item yd
+  \item yd
+\end{itemize}
+
+
+\textbf{Co-op Intern, Electrical Design, }{Jordan and Skala Engineers} -- Denver, CO \hfill January 2025 -- June 2025 \\
+\vspace{-6.5pt}
+\begin{itemize}
+  \item Developing electrical layouts in Revit for multi-unit residential buildings, ensuring compliance with NEC 210.52 and optimizing receptacle and lighting placement.
+  \item Performing circuit load calculations and voltage drop analysis for branch circuits, ensuring compliance with NEC 310.15(B)(16) and NEC 220 to maintain proper power distribution.
+  \item Conducting panel scheduling and circuiting for residential and commercial projects, coordinating loads across 120V and 208V systems to ensure proper breaker sizing and phase balancing.
+  \item Integrating CAD and Revit workflows with Excel for data automation, improving unit tracking efficiency and reducing manual data entry errors.
+  \item Reviewing and modifying one-line diagrams and riser diagrams, ensuring accurate load calculations, transformer sizing, and proper grounding per NEC 250.
+\end{itemize}
+
+
+\textbf{Undergraduate Researcher, }{\href{https://www.epowerhubs.com/home}{ePower Hubs Research Lab}} -- Golden, CO \hfill June 2024 -- Present \\
+\vspace{-6.5pt}
+\begin{itemize}
+  \item Conducted literature review on sensor systems and wind farm level controllers, analysis of offshore wind energy systems, focusing on variable voltage, power, and frequency integration with the existing power grid.
+  \item Aimed to reduce maintenance, design, and integration costs of complex wind farm grids.
+\end{itemize}
+
+
+\textbf{Coding Instructor, }{Code Ninjas} -- Fairfax, VA \hfill March -- August 2022, May -- August 2023 \\
+\vspace{-6.5pt}
+\begin{itemize}
+  \item Taught 50+ students JavaScript and C\#, leading STEM camps for 100+ students on 3D modeling, robotics, web development (HTML, CSS, JS), and C\# development.
+  \item Deployed and managed a 3D printing server via OctoPi, optimizing operations for 3 printers.
+  \item Recognized as Instructor of the Month (June 2022 \& July 2023) for exemplary teaching methods.
+\end{itemize}
+
+% projects section
+\vspace{-19pt}
+\section*{Projects}
+
+\textbf{Solar Panel Optimization Robot, }{Python, Arduino, \href{https://github.com/easilva04/SolarPanelProject}{Github}} \hfill{August -- October 2024} \\
+\vspace{-6.5pt}
+\begin{itemize}
+  \item Designed and programmed a controller for optimal solar panel alignment using Arduino microcontroller, light sensors, and motor controllers.
+  \item Developed a prototype for pitch and yaw adjustments, enhancing solar panel energy capture through advanced tracking algorithms.
+  \item Conducted testing and calibration under varying atmospheric conditions to ensure optimal performance.
+\end{itemize}
+
+% \textbf{Hydraulic Ram Pump, }{Engineering Design Cornerstone} \hfill{August -- December 2022} \\
+% \vspace{-7pt}
+% \begin{itemize}
+%   \item Recognized as Subject Matter Expert (Top 4 of 40 teams) for presenting an innovative, cost-effective design for managing acid mine drainage.
+%   \item Built a prototype for under \$100 using PVC piping and a pH filtration system, reducing environmental impact at legacy mining sites.
+% \end{itemize}
+% \vspace{-18pt}
+
+% skills section
+\section*{Skills}
+\textbf{Programming Languages:} Java, Python, Verilog, C, C++, C\#, RISC-V Assembly, Bash, MATLAB, VBA \\
+\textbf{Technology:} SolidWorks, Virtualization software, VS Code, SSH, Linux OS (Ubuntu), Raspberry Pi, Arduino \\
+
+\end{document}

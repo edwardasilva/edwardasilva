@@ -95,7 +95,7 @@
             <p>This website was meticulously crafted by hand using JavaScript, HTML, and CSS as a personal project.</p>
             <button class="resume-button">Download Resume</button>
         </div>
-    </header>
+    </header> 
 
     <!-- Navigation -->
     <nav class="navigation">
@@ -132,6 +132,9 @@
                 </a>
                 <a href="https://www.eeprep.com" class="contact-item" target="_blank" rel="noopener">
                     🌐 eeprep.com
+                </a>
+                <a href="https://github.com/easilva04/easilva04" class="contact-item" target="_blank" rel="noopener">
+                    💾 Website Repo
                 </a>
             </section>
 
@@ -904,12 +907,20 @@
 
     <!-- Scripts (defer loading for performance) -->
     <script src="information.js" defer></script>
-    <script src="utils.js" defer></script>
     <script>
-        // Back to top button only - removed tabs functionality
+        // Back to top button and dropdown fixes
         document.addEventListener('DOMContentLoaded', function () {
-            document.querySelector('.back-to-top').addEventListener('click', function () {
+            // Back to top functionality
+            document.querySelector('.back-to-top')?.addEventListener('click', function () {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            // Ensure details elements don't all open at once
+            document.querySelectorAll('details').forEach(details => {
+                details.addEventListener('toggle', function(e) {
+                    // Stop event propagation to prevent parent details from toggling
+                    e.stopPropagation();
+                });
             });
         });
     </script>
