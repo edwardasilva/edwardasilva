@@ -67,7 +67,7 @@ Explosives Research Lab, Colorado School of Mines | Golden, CO | August 2022 - J
 
 ## Projects
 
-- **[eeprep.com](https://www.eeprep.com)**  
+- **[eeprep.com](https://eeprep.com)**  
   Personal Project, December 2024 -- Present
   - Developed a comprehensive website for aspiring engineers preparing for an Electrical Engineering Degree
   - Utilized HTML, CSS, JavaScript for frontend and backend development
