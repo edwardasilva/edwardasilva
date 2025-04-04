@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAnimations();
     enhanceNavigation();
     enhanceSkillTags();
+    fixDropdownBehavior(); // Add this line to call the existing function
   } catch (error) {
     console.error('Initialization error:', error);
   }

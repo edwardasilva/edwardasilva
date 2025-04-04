@@ -37,7 +37,7 @@ Colorado School of Mines, Expected May 2027
 - **Programming Languages:** Java (MTA Certified), Python (MTA Certified), Verilog, C, C++, C#, RISC-V Assembly, Bash, MATLAB, VBA
 - **Web Development:** HTML5, CSS3, JavaScript, Responsive Design, Web Accessibility
 - **Hardware:** Arduino, Raspberry Pi, Digital Circuits, Embedded Systems
-- **Software & Tools:** SolidWorks, VS Code, Git/GitHub, Linux, Virtualization software, Revit
+- **Software & Tools:** SolidWorks, VS Code, Git/GitHub, Linux, Virtualization software, Revit, SSH
 - **Other:** Test Driven Development, SCRUM, Project Management
 
 ## Experience
@@ -54,7 +54,7 @@ Jordan and Skala Engineers | Denver, CO | January - June 2025
 ### Research Experience
 
 **Undergraduate Researcher**  
-ePower Hubs Research Lab, Colorado School of Mines | Golden, CO | June 2024 - Present
+ePower Hubs Research Lab, Colorado School of Mines | Golden, CO | June 2024 - January 2025
 - Devised a neural network model to predict sensor system failure in wind turbine systems
 - Conducted literature review and analysis of offshore and onshore wind energy systems
 - Aimed to reduce maintenance, design, and integration costs of complex wind farm grids
@@ -68,8 +68,8 @@ Explosives Research Lab, Colorado School of Mines | Golden, CO | August 2022 - J
 ## Projects
 
 - **[eeprep.com](https://www.eeprep.com)**  
-  Personal Project, December 2023 -- Present
-  - Developed a comprehensive website to summarize the entire Electrical Engineering degree
+  Personal Project, December 2024 -- Present
+  - Developed a comprehensive website for aspiring engineers preparing for an Electrical Engineering Degree
   - Utilized HTML, CSS, JavaScript for frontend and backend development
   - Aimed to demonstrate competency and provide educational resources for aspiring Electrical Engineers
 
@@ -103,10 +103,10 @@ Explosives Research Lab, Colorado School of Mines | Golden, CO | August 2022 - J
 
 My objectives in Electrical Engineering are as follows:
 
-- Obtain the FE and LEED Green Associate certifications to enhance professional qualifications in engineering and sustainability.
-- Pursue advanced education, including a Master's in Robotics and PhD in Controls, specializing in renewable energy systems and smart grid technologies.
-- Contribute to innovative projects and research that address global challenges in energy efficiency and sustainability.
-- Transition to academia as a professor, mentoring future engineers and advancing the field through teaching and research after a full career in engineering.
+- Complete Bachelor's Degree in Electrical Engineering with a focus on controls and information sciences.
+- Obtain the FE Certification to enhance professional qualifications in engineering.
+- Pursue advanced education, including a Master's in Robotics and PhD.
+- Transition to academia as a professor, mentoring future engineers and advancing the field through teaching and research.
 
 Thanks for visiting my profile! Feel free to explore my repositories and reach out if you share similar interests or have exciting opportunities to collaborate. 🌟
 
