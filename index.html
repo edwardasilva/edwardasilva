@@ -82,11 +82,6 @@
 </head>
 
 <body>
-    <!-- Theme Toggle -->
-    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
-        🌙
-    </button>
-
     <!-- Header -->
     <header>
         <div class="container">
@@ -100,15 +95,20 @@
     <!-- Navigation -->
     <nav class="navigation">
         <div class="container">
-            <ul class="nav-links">
-                <li><a href="#education">Education</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#certifications">Certifications</a></li>
-                <li><a href="#courses">Courses</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#goals">Goals</a></li>
-            </ul>
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li><a href="#education">Education</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#certifications">Certifications</a></li>
+                    <li><a href="#courses">Courses</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#goals">Goals</a></li>
+                </ul>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    🌙
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -129,7 +129,7 @@
                 <a href="https://github.com/easilva04" class="contact-item" target="_blank" rel="noopener">
                     💻 GitHub
                 </a>
-                <a href="https://www.eeprep.com" class="contact-item" target="_blank" rel="noopener">
+                <a href="https://eeprep.com" class="contact-item" target="_blank" rel="noopener">
                     🌐 eeprep.com
                 </a>
                 <a href="https://github.com/easilva04/easilva04" class="contact-item" target="_blank" rel="noopener">
@@ -900,28 +900,7 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
             
-            // Theme toggle functionality
-            const themeToggle = document.getElementById('theme-toggle');
-            themeToggle?.addEventListener('click', function() {
-                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                
-                // Update text content based on theme
-                this.textContent = newTheme === 'light' ? '🌙' : '☀️';
-                
-                // Update RGB variables for backdrop-filter effects
-                document.documentElement.style.setProperty('--bg-rgb', 
-                    newTheme === 'dark' ? '17, 24, 39' : '255, 255, 255');
-            });
-            
-            // Update theme toggle text based on current theme
-            if (themeToggle) {
-                themeToggle.textContent = 
-                    document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
-            }
+            // Theme toggle functionality is now handled in information.js
             
             // Dropdown handling
             document.querySelectorAll('details').forEach(details => {

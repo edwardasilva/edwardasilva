@@ -311,6 +311,8 @@ function initializeThemeToggle() {
       html.setAttribute('data-theme', newTheme);
       html.style.setProperty('--bg-rgb', values.bgRgb);
       toggle.innerHTML = values.icon;
+      
+      // Only add rotating class, not transforming position
       toggle.classList.add('rotating');
       
       // Store preference
@@ -326,13 +328,13 @@ function initializeThemeToggle() {
   
   // Single event handler
   toggle.addEventListener('click', () => {
-    const currentTheme = html.getAttribute('data-theme');
+    const currentTheme = html.getAttribute('data-theme') || 'light';
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     updateTheme(newTheme);
   });
   
   // Set initial icon based on current theme (runs only once)
-  const currentTheme = html.getAttribute('data-theme');
+  const currentTheme = html.getAttribute('data-theme') || 'light';
   toggle.innerHTML = themeValues[currentTheme].icon;
   
   // Add rotation animation CSS only if needed (once)
