@@ -9,7 +9,7 @@ I am currently pursuing a Bachelor of Science in Electrical Engineering at the C
 ## Contact Information
 
 - **School Email:** [easilva@mines.edu](mailto:easilva@mines.edu)
-- **Personal Email:** [eddie@silvaspot.com](mailto:eddie@silvaspot.com)
+- **Personal Email:** [edward@easilva.com](mailto:edward@easilva.com)
 - **LinkedIn:** [Edward Silva](https://www.linkedin.com/in/edwardasilva/)
 - **Personal Website:** [easilva.com](https://easilva.com)
 - **EE Website:** [eeprep.com](https://www.eeprep.com)
