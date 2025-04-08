@@ -74,7 +74,7 @@ Explosives Research Lab, Colorado School of Mines | Golden, CO | August 2022 - J
   - Aimed to demonstrate competency and provide educational resources for aspiring Electrical Engineers
 
 - **Solar Panel Optimization Robot**  
-  Personal Project, Python, Arduino, [Github](https://github.com/easilva04/SolarPanelProject), August -- October 2024
+  Personal Project, Python, Arduino, [Github](https://github.com/edwardasilva/SolarPanelProject), August -- October 2024
   - Prototyped and coded controller for optimal solar panel alignment
   - Developed a prototype with servo and stepper motors for pitch and yaw adjustment
   - Integrated an advanced tracking algorithm into the Arduino microcontroller
