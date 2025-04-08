@@ -15,28 +15,37 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no">
 
     <!-- SEO Tags -->
     <title>Edward Silva | Electrical Engineering Undergraduate</title>
     <meta name="description"
         content="Explore the professional portfolio of Edward Silva, an electrical engineering student with a minor in computer science, showcasing his projects, skills, and achievements.">
     <meta name="author" content="Edward Silva">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="keywords"
+        content="Edward Silva, Eddie Silva, portfolio, electrical engineering, computer science, projects, skills">
 
     <!-- Open Graph Tags -->
     <meta property="og:title" content="Edward Silva | Electrical Engineering Undergraduate">
     <meta property="og:description"
-        content="Professional portfolio of Edward Silva, showcasing web development projects and skills">
+        content="Professional portfolio of Edward Silva, showcasing projects and skills">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://easilva.com">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="Edward Silva's Portfolio">
-    <meta name="keywords"
-        content="Edward Silva, Eddie Silva, portfolio, web development, electrical engineering, computer science, projects, skills, renewable energy, STEM education, software development, coding, design, problem-solving, academic honors, scholarships, sustainable engineering, innovation">
+    <meta property="og:image" content="https://easilva.com/assets/og-image.jpg">
+
+    <!-- Professional Profiles -->
     <meta name="linkedin:profile" content="https://www.linkedin.com/in/edwardasilva/">
+    <meta name="github:profile" content="https://github.com/edwardasilva/">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://easilva.com">
+    <link rel="canonical" href="https://easilva.com/">
+
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//cdn.credly.com">
+    <link rel="dns-prefetch" href="//www.googletagmanager.com">
 
     <!-- Preconnect to external resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -61,8 +70,12 @@
       "@type": "Person",
       "name": "Edward Silva",
       "url": "https://easilva.com",
-      "jobTitle": "Student",
-      "description": "Edward Silva is a passionate and driven electrical engineering student at the Colorado School of Mines, with a minor in computer science. With hands-on experience in electrical design, renewable energy research, and STEM education, Edward combines technical expertise with a commitment to innovation. His projects, like solar panel optimization and educational website development, showcase his skills in coding, design, and problem-solving. As a recipient of numerous academic honors and scholarships, Edward excels in applying his knowledge to practical challenges, aiming to create efficient and sustainable engineering solutions.",
+      "jobTitle": "Electrical Engineering Student",
+      "worksFor": {
+        "@type": "EducationalOrganization",
+        "name": "Colorado School of Mines"
+      },
+      "description": "Electrical engineering student with a minor in computer science, specializing in controls and information sciences.",
       "sameAs": [
         "https://www.linkedin.com/in/edwardasilva/",
         "https://github.com/edwardasilva/"
@@ -79,7 +92,6 @@
         document.documentElement.style.setProperty('--bg-rgb', currentTheme === 'dark' ? '15, 23, 42' : '255, 255, 255');
         document.documentElement.classList.add('theme-transition');
     </script>
-
 
     <!-- Only include Credly script if you actually have badges on the page -->
     <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
