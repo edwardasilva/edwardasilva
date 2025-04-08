@@ -2,6 +2,17 @@
 <html lang="en">
 
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-MT4D57R2');</script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -65,23 +76,21 @@
         const savedTheme = localStorage.getItem('theme');
         const currentTheme = savedTheme || (userPrefersDark ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', currentTheme);
-        document.documentElement.style.setProperty('--bg-rgb', currentTheme === 'dark' ? '17, 24, 39' : '255, 255, 255');
+        document.documentElement.style.setProperty('--bg-rgb', currentTheme === 'dark' ? '15, 23, 42' : '255, 255, 255');
+        document.documentElement.classList.add('theme-transition');
     </script>
 
-    <!-- Analytics (deferred) -->
-    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-Z3HFSWVGND"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-Z3HFSWVGND');
-    </script>
 
     <!-- Only include Credly script if you actually have badges on the page -->
     <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MT4D57R2" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <!-- Header -->
     <header>
         <div class="container">
@@ -115,13 +124,13 @@
     <!-- Main Content -->
     <main>
         <div class="container">
-            <!-- Contact Information - simplified -->
+            <!-- Contact Information -->
             <section class="contact-info">
                 <a href="mailto:easilva@mines.edu" class="contact-item">
                     📧 easilva@mines.edu
                 </a>
-                <a href="mailto:edward@easilva.com" class="contact-item">
-                    📧 edward@easilva.com
+                <a href="mailto:contact@easilva.com" class="contact-item">
+                    📧 contact@easilva.com
                 </a>
                 <a href="https://www.linkedin.com/in/edwardasilva/" class="contact-item" target="_blank" rel="noopener">
                     👔 LinkedIn
@@ -132,12 +141,13 @@
                 <a href="https://eeprep.com" class="contact-item" target="_blank" rel="noopener">
                     🌐 eeprep.com
                 </a>
-                <a href="https://github.com/edwardasilva/edwardasilva" class="contact-item" target="_blank" rel="noopener">
+                <a href="https://github.com/edwardasilva/edwardasilva" class="contact-item" target="_blank"
+                    rel="noopener">
                     🌐 Website Repo
                 </a>
             </section>
 
-            <!-- Education - fixed GPA indicator -->
+            <!-- Education -->
             <section id="education" class="section">
                 <div class="section-header">
                     <h2>Education</h2>
@@ -156,11 +166,9 @@
                             <h3>Bachelor of Science in Electrical Engineering</h3>
                             <p><strong>Colorado School of Mines</strong> | Expected December 2026</p>
                             <p><strong>Minor:</strong> Computer Science, Software and Algorithm Design</p>
-                            <div class="gpa-indicator"
-                                style="background-color: var(--primary); border-radius: 1rem; padding: 0.25rem 0.5rem; margin-top: 0.5rem; display: inline-flex; align-items: center; box-shadow: var(--shadow-sm);">
-                                <span
-                                    style="font-weight: 600; font-size: 0.8rem; color: white; margin-right: 0.5rem;">GPA</span>
-                                <span style="font-weight: 700; font-size: 0.9rem; color: white;">3.435</span>
+                            <div class="gpa-indicator">
+                                <span class="gpa-label">GPA</span>
+                                <span class="gpa-value">3.435</span>
                             </div>
                         </div>
                     </div>
@@ -228,6 +236,7 @@
                     <h2>Skills</h2>
                 </div>
                 <div class="skills-grid">
+                    <!-- Programming Skills -->
                     <div class="skill-category">
                         <span class="skill-icon">💻</span>
                         <h3>Programming</h3>
@@ -244,6 +253,7 @@
                         </div>
                     </div>
 
+                    <!-- Web Development Skills -->
                     <div class="skill-category">
                         <span class="skill-icon">🌐</span>
                         <h3>Web Development</h3>
@@ -256,6 +266,7 @@
                         </div>
                     </div>
 
+                    <!-- Hardware Skills -->
                     <div class="skill-category">
                         <span class="skill-icon">⚙️</span>
                         <h3>Hardware</h3>
@@ -267,6 +278,7 @@
                         </div>
                     </div>
 
+                    <!-- Software & Tools Skills -->
                     <div class="skill-category">
                         <span class="skill-icon">🔧</span>
                         <h3>Software & Tools</h3>
@@ -288,11 +300,13 @@
                     <h2>Certifications</h2>
                 </div>
                 <div class="grid">
+                    <!-- MATLAB Certifications -->
                     <div class="card cert-card">
                         <div class="cert-header">
                             <h3>MATLAB Certifications</h3>
                         </div>
                         <ul class="skill-list">
+                            <!-- MATLAB Machine Learning Techniques -->
                             <details class="dropdown-item">
                                 <summary>MATLAB Machine Learning Techniques</summary>
                                 <div class="dropdown-content">
@@ -316,6 +330,7 @@
 
                                     <h5>Courses in this learning path:</h5>
                                     <div class="course-list">
+                                        <!-- Classification Methods -->
                                         <details class="dropdown-item nested">
                                             <summary>Classification Methods with Machine Learning</summary>
                                             <div class="dropdown-content">
@@ -327,6 +342,7 @@
                                             </div>
                                         </details>
 
+                                        <!-- Regression Methods -->
                                         <details class="dropdown-item nested">
                                             <summary>Regression Methods with Machine Learning</summary>
                                             <div class="dropdown-content">
@@ -338,6 +354,7 @@
                                             </div>
                                         </details>
 
+                                        <!-- Cluster Analysis -->
                                         <details class="dropdown-item nested">
                                             <summary>Cluster Analysis with Machine Learning</summary>
                                             <div class="dropdown-content">
@@ -348,6 +365,7 @@
                                             </div>
                                         </details>
 
+                                        <!-- Dimensionality Reduction -->
                                         <details class="dropdown-item nested">
                                             <summary>Dimensionality Reduction Techniques</summary>
                                             <div class="dropdown-content">
@@ -360,6 +378,7 @@
                                     </div>
                                 </div>
                             </details>
+                            <!-- MATLAB Onramps -->
                             <details class="dropdown-item">
                                 <summary>MATLAB Onramps</summary>
                                 <div class="dropdown-content">
@@ -370,6 +389,7 @@
 
                                     <h5>Completed onramp courses:</h5>
                                     <div class="course-list">
+                                        <!-- Machine Learning Onramp -->
                                         <details class="dropdown-item nested">
                                             <summary>MATLAB Machine Learning Onramp</summary>
                                             <div class="dropdown-content">
@@ -381,6 +401,7 @@
                                             </div>
                                         </details>
 
+                                        <!-- Signal Processing Onramp -->
                                         <details class="dropdown-item nested">
                                             <summary>MATLAB Signal Processing Onramp</summary>
                                             <div class="dropdown-content">
@@ -392,6 +413,7 @@
                                             </div>
                                         </details>
 
+                                        <!-- MATLAB Onramp -->
                                         <details class="dropdown-item nested">
                                             <summary>MATLAB Onramp</summary>
                                             <div class="dropdown-content">
@@ -408,11 +430,13 @@
                         </ul>
                     </div>
 
+                    <!-- Microsoft Certifications -->
                     <div class="card cert-card">
                         <div class="cert-header">
                             <h3>Microsoft Certifications</h3>
                         </div>
                         <ul class="skill-list">
+                            <!-- MTA Java -->
                             <details class="dropdown-item">
                                 <summary>Microsoft Technical Associate - Java Programming</summary>
                                 <div class="dropdown-content">
@@ -423,6 +447,7 @@
                                         target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                 </div>
                             </details>
+                            <!-- MTA Python -->
                             <details class="dropdown-item">
                                 <summary>Microsoft Technical Associate - Python Programming</summary>
                                 <div class="dropdown-content">
@@ -444,44 +469,52 @@
                     <h2>Relevant Courses</h2>
                 </div>
                 <div class="card">
+                    <!-- Engineering Courses -->
                     <h3>Engineering Courses</h3>
                     <div class="course-grid">
+                        <!-- EENG 389 -->
                         <details class="dropdown-item">
                             <summary>EENG 389: Fundamentals of Electric Machinery</summary>
                             <div class="dropdown-content">
                                 <p class="course-description" data-course="EENG 389"></p>
                             </div>
                         </details>
+                        <!-- EENG 386 -->
                         <details class="dropdown-item">
                             <summary>EENG 386: Engineering Electromagnetics</summary>
                             <div class="dropdown-content">
                                 <p class="course-description" data-course="EENG 386"></p>
                             </div>
                         </details>
+                        <!-- EENG 383 -->
                         <details class="dropdown-item">
                             <summary>EENG 383: Embedded Systems</summary>
                             <div class="dropdown-content">
                                 <p class="course-description" data-course="EENG 383"></p>
                             </div>
                         </details>
+                        <!-- EENG 307 -->
                         <details class="dropdown-item">
                             <summary>EENG 307: Feedback Control Systems</summary>
                             <div class="dropdown-content">
                                 <p class="course-description" data-course="EENG 307"></p>
                             </div>
                         </details>
+                        <!-- EENG 310 -->
                         <details class="dropdown-item">
                             <summary>EENG 310: Signals and Systems</summary>
                             <div class="dropdown-content">
                                 <p class="course-description" data-course="EENG 310"></p>
                             </div>
                         </details>
+                        <!-- EENG 282 -->
                         <details class="dropdown-item">
                             <summary>EENG 282: Electrical Circuits</summary>
                             <div class="dropdown-content">
                                 <p class="course-description" data-course="EENG 282"></p>
                             </div>
                         </details>
+                        <!-- EENG 284 -->
                         <details class="dropdown-item">
                             <summary>EENG 284: Digital Logic</summary>
                             <div class="dropdown-content">
@@ -490,32 +523,38 @@
                         </details>
                     </div>
 
+                    <!-- Computer Science Courses -->
                     <h3 class="section-subheader">Computer Science Courses</h3>
                     <div class="course-grid">
+                        <!-- CSCI 306 -->
                         <details class="dropdown-item">
                             <summary>CSCI 306: Software Engineering</summary>
                             <div class="dropdown-content">
                                 <p class="course-description" data-course="CSCI 306"></p>
                             </div>
                         </details>
+                        <!-- CSCI 341 -->
                         <details class="dropdown-item">
                             <summary>CSCI 341: Computer Organization</summary>
                             <div class="dropdown-content">
                                 <p class="course-description" data-course="CSCI 341"></p>
                             </div>
                         </details>
+                        <!-- CSCI 200 -->
                         <details class="dropdown-item">
                             <summary>CSCI 200: Foundational Programming Concepts</summary>
                             <div class="dropdown-content">
                                 <p class="course-description" data-course="CSCI 200"></p>
                             </div>
                         </details>
+                        <!-- CSCI 220 -->
                         <details class="dropdown-item">
                             <summary>CSCI 220: Data Structures and Algorithms</summary>
                             <div class="dropdown-content">
                                 <p class="course-description" data-course="CSCI 220"></p>
                             </div>
                         </details>
+                        <!-- CSCI 274 -->
                         <details class="dropdown-item">
                             <summary>CSCI 274: Intro Linux OS</summary>
                             <div class="dropdown-content">
@@ -532,8 +571,10 @@
                     <h2>Experience</h2>
                 </div>
 
+                <!-- Professional Experience -->
                 <h3 class="section-subheader">Professional Experience</h3>
                 <div class="timeline">
+                    <!-- JSE Co-op -->
                     <div class="timeline-item">
                         <div class="timeline-date">January - June 2025</div>
                         <div class="card">
@@ -564,10 +605,10 @@
                                     standards, resulting in cleaner submissions and faster approvals by senior engineers
                                     and AHJs.</li>
                             </ul>
-
                         </div>
                     </div>
 
+                    <!-- FCPS Office Assistant -->
                     <div class="timeline-item">
                         <div class="timeline-date">June - August 2024</div>
                         <div class="card">
@@ -583,6 +624,7 @@
                         </div>
                     </div>
 
+                    <!-- Cisco Extern -->
                     <div class="timeline-item">
                         <div class="timeline-date">June 2023</div>
                         <div class="card">
@@ -602,8 +644,10 @@
                     </div>
                 </div>
 
+                <!-- Teaching Experience -->
                 <h3 class="section-subheader">Teaching Experience</h3>
                 <div class="timeline">
+                    <!-- Math Assistant -->
                     <div class="timeline-item">
                         <div class="timeline-date">January - December 2024</div>
                         <div class="card">
@@ -618,6 +662,7 @@
                         </div>
                     </div>
 
+                    <!-- Substitute Teacher -->
                     <div class="timeline-item">
                         <div class="timeline-date">September 2023 - June 2024</div>
                         <div class="card">
@@ -631,6 +676,7 @@
                         </div>
                     </div>
 
+                    <!-- Peer Mentor -->
                     <div class="timeline-item">
                         <div class="timeline-date">August - December 2023</div>
                         <div class="card">
@@ -647,6 +693,7 @@
                         </div>
                     </div>
 
+                    <!-- Lead Counselor -->
                     <div class="timeline-item">
                         <div class="timeline-date">May - August 2023</div>
                         <div class="card">
@@ -663,6 +710,7 @@
                         </div>
                     </div>
 
+                    <!-- Coding Instructor -->
                     <div class="timeline-item">
                         <div class="timeline-date">March - August 2022</div>
                         <div class="card">
@@ -687,6 +735,7 @@
                     <h2>Research Experience</h2>
                 </div>
                 <div class="timeline">
+                    <!-- ePower Hubs -->
                     <div class="timeline-item">
                         <div class="timeline-date">June 2024 - January 2025</div>
                         <div class="card">
@@ -710,6 +759,7 @@
                         </div>
                     </div>
 
+                    <!-- Explosives Research -->
                     <div class="timeline-item">
                         <div class="timeline-date">August 2022 - January 2023</div>
                         <div class="card">
@@ -740,6 +790,7 @@
                     <h2>Projects</h2>
                 </div>
                 <div class="grid">
+                    <!-- Educational Website -->
                     <div class="card project-card">
                         <div class="project-badge">Web</div>
                         <h4>Educational Website</h4>
@@ -766,6 +817,7 @@
                         </div>
                     </div>
 
+                    <!-- Solar Panel Optimization -->
                     <div class="card project-card">
                         <div class="project-badge">Hardware</div>
                         <h4>Solar Panel Optimization Robot</h4>
@@ -790,6 +842,7 @@
                         </div>
                     </div>
 
+                    <!-- Clue Game -->
                     <div class="card project-card">
                         <div class="project-badge">Software</div>
                         <h4>Clue Game</h4>
@@ -813,6 +866,7 @@
                         </ul>
                     </div>
 
+                    <!-- Hydraulic Ram Pump -->
                     <div class="card project-card">
                         <div class="project-badge">Engineering</div>
                         <h4>Hydraulic Ram Pump</h4>
@@ -881,7 +935,7 @@
         </div>
     </main>
 
-    <!-- Footer - simplified -->
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
