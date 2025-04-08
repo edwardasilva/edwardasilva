@@ -1,29 +1,19 @@
 # Edward A. Silva
 
-Welcome to my GitHub profile! I'm Edward Silva, an Electrical Engineering student with a minor in Computer Science. My passions lie in renewable energy, robotics, automation and controls, and astronomy.
+Electrical Engineering student at Colorado School of Mines with a minor in Computer Science, focusing on renewable energy, robotics, automation and controls.
 
-## About Me
+## Contact
 
-I am currently pursuing a Bachelor of Science in Electrical Engineering at the Colorado School of Mines, with an expected graduation date of December 2026. I have a strong interest in sustainable energy and emerging technologies.
-
-## Contact Information
-
-- **School Email:** [easilva@mines.edu](mailto:easilva@mines.edu)
-- **Personal Email:** [edward@easilva.com](mailto:edward@easilva.com)
+- **Personal:** [contact@easilva.com](mailto:contact@easilva.com)
 - **LinkedIn:** [Edward Silva](https://www.linkedin.com/in/edwardasilva/)
-- **Personal Website:** [easilva.com](https://easilva.com)
-- **EE Website:** [eeprep.com](https://www.eeprep.com)
+- **Website:** [easilva.com](https://easilva.com) | [eeprep.com](https://www.eeprep.com)
 
 ## Education
 
 **Bachelor of Science in Electrical Engineering**  
 Colorado School of Mines, December 2026  
 GPA: 3.435
-
-- **Minor:** Computer Science, Software and Algorithm Design
-
-**Master of Science in Robotics**  
-Colorado School of Mines, Expected May 2027
+- Minor: Computer Science, Software and Algorithm Design
 
 ### Honors & Scholarships
 - Dean's List (2 semesters)
@@ -34,7 +24,7 @@ Colorado School of Mines, Expected May 2027
   
 ## Skills
 
-- **Programming Languages:** Java (MTA Certified), Python (MTA Certified), Verilog, C, C++, C#, RISC-V Assembly, Bash, MATLAB, VBA
+- **Programming:** Java (MTA Certified), Python (MTA Certified), Verilog, C, C++, C#, RISC-V Assembly, Bash, MATLAB, VBA
 - **Web Development:** HTML5, CSS3, JavaScript, Responsive Design, Web Accessibility
 - **Hardware:** Arduino, Raspberry Pi, Digital Circuits, Embedded Systems
 - **Software & Tools:** SolidWorks, VS Code, Git/GitHub, Linux, Virtualization software, Revit, SSH
@@ -46,52 +36,35 @@ Colorado School of Mines, Expected May 2027
 
 **Co-op Intern, Electrical Design**  
 Jordan and Skala Engineers | Denver, CO | January - June 2025
-- Developing electrical layouts in Revit for multi-unit residential buildings
-- Performing circuit load calculations and voltage drop analysis
-- Conducting panel scheduling and circuiting for residential and commercial projects
-- Integrating CAD and Revit workflows with Excel for data automation
+- Developed electrical layouts in Revit for multi-unit residential buildings
+- Performed circuit load calculations and voltage drop analysis
+- Conducted panel scheduling and circuiting for residential and commercial projects
+- Integrated CAD and Revit workflows with Excel for data automation
 
 ### Research Experience
 
 **Undergraduate Researcher**  
 ePower Hubs Research Lab, Colorado School of Mines | Golden, CO | June 2024 - January 2025
-- Devised a neural network model to predict sensor system failure in wind turbine systems
-- Conducted literature review and analysis of offshore and onshore wind energy systems
-- Aimed to reduce maintenance, design, and integration costs of complex wind farm grids
+- Developed neural network model for predicting sensor system failure in wind turbines
+- Conducted literature review on offshore and onshore wind energy systems
+- Focused on reducing maintenance, design, and integration costs for wind farm grids
 
 **Undergraduate Research Assistant**  
 Explosives Research Lab, Colorado School of Mines | Golden, CO | August 2022 - January 2023
-- Optimized 3D printer settings to improve precision and output quality
-- Observed and documented multiple controlled explosive tests
-- Supported research activities through site preparation and equipment maintenance
+- Optimized 3D printer settings for research equipment
+- Documented controlled explosive tests
+- Supported research through site preparation and equipment maintenance
 
 ## Projects
 
 - **[eeprep.com](https://eeprep.com)**  
-  Personal Project, December 2024 -- Present
-  - Developed a comprehensive website for aspiring engineers preparing for an Electrical Engineering Degree
-  - Utilized HTML, CSS, JavaScript for frontend and backend development
-  - Aimed to demonstrate competency and provide educational resources for aspiring Electrical Engineers
+  Educational website for aspiring Electrical Engineers with comprehensive resources and tutorials.
 
 - **Solar Panel Optimization Robot**  
-  Personal Project, Python, Arduino, [Github](https://github.com/edwardasilva/SolarPanelProject), August -- October 2024
-  - Prototyped and coded controller for optimal solar panel alignment
-  - Developed a prototype with servo and stepper motors for pitch and yaw adjustment
-  - Integrated an advanced tracking algorithm into the Arduino microcontroller
-  - Utilized Raspberry Pi as a brain controller for the Arduino
-
-- **Clue Game**  
-  Java, August -- December 2023
-  - Collaboratively developed a Java-based Clue game on a team of 3
-  - Applied SCRUM and Test Driven Development principles
-  - Implemented GitHub for version control and conducted weekly code reviews
-  - Developed a user-friendly interface with Java Swing
-
-- **Hydraulic Ram Pump**  
-  Engineering Design Cornerstone, August -- December 2022
-  - Recognized as Subject Matter Expert (Top 4 of 40 teams)
-  - Collaborated with a team of six to design a cost-effective solution for managing acid mine drainage
-  - Engineered a working prototype under $100 using PVC piping and a PH filtration system
+  [Github](https://github.com/edwardasilva/SolarPanelProject) | August - October 2024
+  - Designed system with servo and stepper motors for pitch and yaw adjustment
+  - Implemented tracking algorithm on Arduino microcontroller
+  - Utilized Raspberry Pi as central controller
 
 ## Certifications
 
@@ -99,15 +72,11 @@ Explosives Research Lab, Colorado School of Mines | Golden, CO | August 2022 - J
 - **Microsoft Technical Associate - Java Programming**
 - **Microsoft Technical Associate - Python Programming**
 
-## Future Goals and Aspirations
+## Career Goals
 
-My objectives in Electrical Engineering are as follows:
-
-- Complete Bachelor's Degree in Electrical Engineering with a focus on controls and information sciences.
-- Obtain the FE Certification to enhance professional qualifications in engineering.
-- Pursue advanced education, including a Master's in Robotics and PhD.
-- Transition to academia as a professor, mentoring future engineers and advancing the field through teaching and research.
-
-Thanks for visiting my profile! Feel free to explore my repositories and reach out if you share similar interests or have exciting opportunities to collaborate. 🌟
+- Complete BSEE with focus on controls and information sciences
+- Obtain FE Certification for professional practice
+- Complete MS in Robotics and PhD in related field
+- Pursue career in academia, focusing on teaching and research
 
 
