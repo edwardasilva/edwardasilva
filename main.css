@@ -865,3 +865,215 @@ footer {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* 7. Responsive Design */
+/* Base responsive adjustments */
+@media (max-width: 1024px) {
+  :root {
+    --container-width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    /* Adjust spacing for mobile */
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+    --header-height: 60px;
+  }
+
+  /* Typography adjustments */
+  h1 { font-size: calc(var(--font-size-3xl)); }
+  h2 { font-size: calc(var(--font-size-2xl)); }
+  h3 { font-size: calc(var(--font-size-xl)); }
+
+  .container {
+    width: 95%;
+    padding: 0 var(--space-xs);
+  }
+
+  /* Convert multi-column layouts to single column */
+  .grid, .skills-grid, .two-columns {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .section {
+    margin: var(--space-lg) 0;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 576px) {
+  :root {
+    /* Further reduce font sizes on very small screens */
+    --font-size-4xl: 1.75rem;
+    --font-size-3xl: 1.5rem;
+    --font-size-2xl: 1.25rem;
+    --font-size-xl: 1.125rem;
+    --space-md: 1.25rem;
+  }
+
+  /* Adjust cards and components */
+  .card {
+    padding: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .skill-category {
+    padding: var(--space-md);
+  }
+
+  .timeline {
+    padding-left: 20px;
+  }
+
+  .timeline-item::before {
+    left: -19px;
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Adjust contact items to stack better */
+  .contact-info {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .contact-item {
+    justify-content: center;
+  }
+}
+
+/* Navigation responsive styles */
+@media (max-width: 768px) {
+  .nav-container {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-right: 60px; /* Increase space for theme toggle */
+  }
+  
+  .nav-links {
+    justify-content: flex-start;
+    padding: 0.5rem 0;
+    gap: 0.5rem;
+  }
+  
+  .nav-links a {
+    padding: 0.5rem;
+    font-size: calc(var(--font-size-xs) + 0.05rem);
+  }
+  
+  .theme-toggle {
+    right: var(--space-xs);
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* Button responsiveness */
+@media (max-width: 576px) {
+  .btn, .resume-button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.6rem 1rem;
+  }
+}
+
+/* Fix scrolling issues on mobile */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+  }
+  
+  /* Improve touch targets */
+  .nav-links a, .btn, .contact-item, .skill-tag, .tech-tag, summary {
+    min-height: 44px; /* Minimum touch target size */
+    display: flex;
+    align-items: center;
+  }
+  
+  .dropdown-item summary::after {
+    margin-left: 1rem; /* More space for the dropdown arrow on mobile */
+  }
+}
+
+/* Handle long content on small screens */
+@media (max-width: 576px) {
+  /* Handle potential text overflow */
+  p, h1, h2, h3, h4, li {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  /* Adjust timeline for mobile */
+  .timeline-date {
+    font-size: var(--font-size-xs);
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .education-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* 8. Print Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+    font-size: 12pt;
+  }
+  
+  .navigation, .theme-toggle, .back-to-top {
+    display: none;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+  
+  .card, .skill-category {
+    break-inside: avoid;
+  }
+}
+
+/* 9. Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus {
+  outline: 3px solid rgba(var(--primary-rgb), 0.5);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(var(--primary-rgb), 0.5);
+  outline-offset: 2px;
+}
