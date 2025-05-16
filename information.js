@@ -78,19 +78,30 @@ function getElement(id) {
 
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  // Start performance monitoring
+  perfMonitor.start('page-initialization');
+
+  // Apply polyfills first
+  polyfillCustomEvent();
+
   // Core initialization in a try-catch for error resilience
   try {
     initializeThemeToggle();
-    populateAllCourseDescriptions();
-    populateCertificationContent();
-    initializeEventListeners();
-    setupAnimations();
-    enhanceNavigation();
-    enhanceSkillTags();
-    fixDropdownBehavior(); // Add this line to call the existing function
+    populateAllCourseDescriptions(); // Populates course descriptions from infoContent
+    populateCertificationContent(); // Populates certification details from infoContent
+    initializeEventListeners(); // Sets up main event listeners (nav, resume, dropdowns, scroll)
+    setupAnimations(); // Adds animation classes and delays
+    enhanceNavigation(); // Adds active link highlighting on scroll
+    enhanceSkillTags(); // Adds hover effects to skill tags
+    fixDropdownBehavior(); // Ensures only one nested dropdown opens at a time
+    initializeUtilityEventListeners(); // Sets up utility listeners (copy email)
+    lazyLoadImages(); // Initialize lazy loading for images with data-src
   } catch (error) {
     console.error('Initialization error:', error);
   }
+
+  // End performance monitoring
+  perfMonitor.end('page-initialization');
 });
 
 // Event listeners initialization - optimized using event delegation
@@ -632,19 +643,6 @@ function debounce(func, wait) {
   };
 }
 
-// Throttle function implementation
-function throttle(func, limit) {
-  let inThrottle;
-  return function(...args) {
-    const context = this;
-    if (!inThrottle) {
-      func.apply(context, args);
-      inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
-    }
-  };
-}
-
 // Copy text to clipboard with cross-browser support
 function copyToClipboard(text) {
   // Use modern Clipboard API if available
@@ -748,27 +746,19 @@ window.copyToClipboard = copyToClipboard;
 window.browser = browser;
 window.supportsFeature = supportsFeature;
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  // Apply polyfills
-  polyfillCustomEvent();
-  
-  // Start performance monitoring
-  perfMonitor.start('page-initialization');
-  
-  // Fix dropdown behavior to prevent all opening at once
-  fixDropdownBehavior();
-  
-  // Add "copy email" functionality to email links with cross-browser handling
+// Initialize utility-specific event listeners
+function initializeUtilityEventListeners() {
+   // Add "copy email" functionality to email links
   document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
     link.addEventListener('click', function(e) {
       // Don't prevent default - still allow email client to open
       const email = this.getAttribute('href').replace('mailto:', '');
-      
+
       // Create copy button dynamically
       const copyBtn = document.createElement('button');
       copyBtn.textContent = 'Copy';
       copyBtn.className = 'copy-btn';
+      // Apply necessary styles inline or via CSS class
       copyBtn.style.position = 'absolute';
       copyBtn.style.fontSize = '12px';
       copyBtn.style.padding = '2px 8px';
@@ -778,54 +768,37 @@ document.addEventListener('DOMContentLoaded', () => {
       copyBtn.style.border = 'none';
       copyBtn.style.cursor = 'pointer';
       copyBtn.style.zIndex = '100';
-      
-      // Position near the link with proper calculations for all browsers
+
+      // Position near the link
       const rect = this.getBoundingClientRect();
       const scrollX = window.pageXOffset || document.documentElement.scrollLeft || 0;
       const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-      
       copyBtn.style.top = `${rect.bottom + scrollY + 5}px`;
       copyBtn.style.left = `${rect.left + scrollX}px`;
-      
-      // Add to document
+
       document.body.appendChild(copyBtn);
-      
-      // Handle click with proper promise handling
+
+      // Handle click
       copyBtn.addEventListener('click', function() {
-        if (supportsFeature('Promises')) {
-          copyToClipboard(email).then(success => {
-            if (success) {
-              this.textContent = 'Copied!';
-              setTimeout(() => {
-                if (document.body.contains(this)) {
-                  document.body.removeChild(this);
-                }
-              }, 1500);
-            } else {
-              this.textContent = 'Failed!';
-              setTimeout(() => {
-                if (document.body.contains(this)) {
-                  document.body.removeChild(this);
-                }
-              }, 1500);
-            }
-          });
-        } else {
-          // Fallback for browsers without Promise support
-          const success = fallbackCopyToClipboard(email);
-          if (success) {
-            this.textContent = 'Copied!';
-          } else {
-            this.textContent = 'Failed!';
-          }
+        // Use .catch() for better error handling with promises
+        copyToClipboard(email).then(success => {
+          this.textContent = success ? 'Copied!' : 'Failed!';
           setTimeout(() => {
             if (document.body.contains(this)) {
               document.body.removeChild(this);
             }
           }, 1500);
-        }
+        }).catch(err => { // Catch potential errors during copy
+            console.error("Copy failed:", err);
+            this.textContent = 'Failed!';
+             setTimeout(() => {
+                if (document.body.contains(this)) {
+                  document.body.removeChild(this);
+                }
+              }, 1500);
+        });
       });
-      
+
       // Remove after 3 seconds if not clicked
       setTimeout(() => {
         if (document.body.contains(copyBtn)) {
@@ -834,10 +807,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 3000);
     });
   });
-  
-  // Initialize lazy loading
-  lazyLoadImages();
-  
-  // End performance monitoring
-  perfMonitor.end('page-initialization');
-});
+}
