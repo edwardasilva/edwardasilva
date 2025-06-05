@@ -1,6 +1,6 @@
-# Edward A. Silva
+# Edward Silva
 
-Electrical Engineering student at Colorado School of Mines with a minor in Computer Science, focusing on renewable energy, robotics, automation and controls.
+Electrical Engineering student at Colorado School of Mines with a minor in Computer Science, focusing on controls systems and signal processing.
 
 ## Contact
 
@@ -10,10 +10,13 @@ Electrical Engineering student at Colorado School of Mines with a minor in Compu
 
 ## Education
 
-**Bachelor of Science in Electrical Engineering**  
-- Minor: Computer Science, Software and Algorithm Design
+**Colorado School of Mines**, May 2026 | GPA: 3.44
 
-Colorado School of Mines, December 2026 | GPA: 3.435
+**Bachelor of Science in Electrical Engineering**, Controls \& Signal Processing 
+
+**Minor in Computer Science**, Software and Algorithm Design
+
+
 
 ## Skills
 
@@ -31,9 +34,8 @@ Colorado School of Mines, December 2026 | GPA: 3.435
 
 ## Career Goals
 
-- Complete BSEE with focus on controls and information sciences
-- Obtain FE Certification for professional practice
-- Complete MS in Robotics and PhD in related field
-- Pursue career in academia, focusing on teaching and research
-
-
+- Finish Bachelor of Science in Electrical Engineering
+- Obtain Fundamentals of Engineering (FE) certification
+- Pursue Graduate Degree
+- Work in R\&D within robotics and control systems
+- Teach and conduct research as a university professor
