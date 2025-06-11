@@ -283,7 +283,7 @@ function downloadResume() {
   
   // Create and trigger download
   const link = document.createElement('a');
-  link.href = 'assets/resume/resume.pdf';
+  link.href = 'resume/resume.pdf';
   link.download = 'Edward_Silva_Resume.pdf';
   document.body.appendChild(link);
   link.click();
