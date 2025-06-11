@@ -266,30 +266,6 @@ function handleNavClick(e) {
   }
 }
 
-// Resume download with user feedback
-function downloadResume() {
-  const button = document.querySelector('.resume-button');
-  
-  if (button) {
-    const originalText = button.textContent;
-    button.textContent = 'Downloading...';
-    button.style.opacity = '0.8';
-    
-    setTimeout(() => {
-      button.textContent = originalText;
-      button.style.opacity = '1';
-    }, 1500);
-  }
-  
-  // Create and trigger download
-  const link = document.createElement('a');
-  link.href = 'resume/resume.pdf';
-  link.download = 'Edward_Silva_Resume.pdf';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
 // Theme toggle with smooth transition - optimized version
 function initializeThemeToggle() {
   const toggle = document.getElementById('theme-toggle');
