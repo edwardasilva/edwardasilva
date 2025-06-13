@@ -1,0 +1,201 @@
+\documentclass[11pt]{article}       % set main text size
+\usepackage{geometry}
+\geometry{letterpaper,              % set paper size to letter
+top=0.5in,                          % specify top page margin
+bottom=0.5in,                       % specify bottom page margin
+left=0.5in,                         % specify left page margin
+right=0.5in}                        % specify right page margin
+
+\usepackage{XCharter}               % set font
+\usepackage[T1]{fontenc}            % output encoding
+\usepackage[utf8]{inputenc}         % input encoding
+\usepackage{enumitem}               % enable lists for bullet points: itemize and \item
+\usepackage[hidelinks]{hyperref}    % format hyperlinks
+\usepackage{titlesec}               % enable section title customization
+\raggedright                        % disable text justification
+\pagestyle{empty}                   % disable page numbering
+
+% ensure PDF output will be all-Unicode and machine-readable
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+% format section headings: bolding, size, white space above and below
+\titleformat{\section}{\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule\vspace{-8pt}]
+\titleformat{\subsection}{\bfseries\normalsize}{}{0pt}{}[\vspace{1pt}\hrule\vspace{-6pt}]
+
+% format bullet points: size, white space above and below, white space between bullets
+\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
+\setlist[itemize]{itemsep=-2pt, leftmargin=12pt}
+
+% resume starts here
+\begin{document}
+
+% name
+\centerline{\huge Edward Silva}
+\vspace{5pt}
+
+% contact information
+\centerline{
+\href{https://www.linkedin.com/in/edwardasilva/}{Linkedin.com/in/edwardasilva}
+| \href{https://easilva.com}{easilva.com}
+| \href{mailto:easilva@mines.edu}{easilva@mines.edu} 
+| \href{tel:7027207735}{(702) 720-7735}
+}
+
+\vspace{-12pt}
+% experience section
+\section*{Experience}
+\vspace{3pt}
+
+\textbf{Software Engineering Intern}, Kratos Defense -- Colorado Springs, CO \hfill June 2025 -- Present
+\vspace{6pt}
+
+\textbf{Co-op Intern, Electrical Design}, Jordan and Skala Engineers -- Denver, CO \hfill January -- June 2025
+\vspace{-6pt}
+\begin{itemize}
+  \item Supported electrical design for 20+ multi-unit residential developments, taking responsibility for full-cycle project activities from initial takeoffs and unit/corridor layout creation to riser diagrams, NEC code verification, and final quality control.
+  \item Developed proficiency in Autodesk Revit and MEP AutoCAD, strategically placing electrical receptacles, lighting, and circuits to ensure NEC compliance and practical, user-centered functionality.
+  \item Performed circuit loading and voltage drop calculations, balancing panel schedules and selecting appropriate breakers to ensure safety, reliability, and adherence to regulatory standards.
+  \item Utilized existing automation between Revit/CAD layouts and Excel tracking sheets to streamline design documentation processes and reduce manual errors.
+  \item Collaborated closely with supervisors and cross-disciplinary teams (Mechanical, Plumbing), documenting client interactions and team meetings to improve project coordination and team efficiency.
+\end{itemize}
+
+% teaching experience subsection
+\vspace{-6pt}
+\subsection*{Teaching Experience}
+\vspace{3pt}
+
+\textbf{Mathematics Assistant}, Colorado School of Mines -- Golden, CO \hfill January -- December 2024
+\vspace{-6pt}
+\begin{itemize}
+  \item Independently graded assignments and exams for MATH 225 (Differential Equations) and MATH 112 (Calculus II) using Gradescope.
+  \item Provided detailed written feedback to help students improve conceptual understanding and problem-solving accuracy.
+\end{itemize}
+
+\textbf{Substitute Teacher}, Fairfax County Public Schools -- Fairfax, VA \hfill September 2023 -- June 2024
+\vspace{-6pt}
+\begin{itemize}
+  \item Delivered classroom instruction for high school students across various subjects in the absence of regular teachers.
+  \item Maintained classroom order and engagement while ensuring continuity of learning through pre-planned lesson materials.
+  \item Adapted quickly to schedule changes, including same-day coverage for additional classes as needed.
+\end{itemize}
+
+\textbf{Peer Mentor}, Colorado School of Mines -- Golden, CO \hfill August -- December 2023
+\vspace{-6pt}
+\begin{itemize}
+  \item Co-led a semester-long, 1-credit course designed to help first-year students transition to the academic and social rigors of Mines, following a structured curriculum with limited creative input.
+  \item Collaborated weekly with a mentor team to develop and deliver lessons on mental health, emotional resilience, and academic success strategies, reinforcing student support networks and retention.
+  \item Served as a group leader during Oredigger Camp and Fall Kickoff, guiding and supporting a cohort of new students through orientation activities and discussions.
+\end{itemize}
+
+\textbf{Lead Counselor \& Coding Instructor}, Code Ninjas -- Fairfax, VA \hfill March 2022 -- August 2023
+\vspace{-6pt}
+\begin{itemize}
+    \item Provided in-class tutoring and on-demand support to students aged 6–14 in JavaScript and C\#, reinforcing foundational programming concepts in weekly classes and summer camps.
+    \item Led STEM-focused summer camps for up to 100 students, delivering hands-on instruction in 3D modeling/printing, circuits, robotics, and introductory Python and C\# programming.
+    \item Implemented and managed a multi-printer OctoPi server setup to streamline 3D print job management, enabling mass production of student-designed projects across three machines.
+    \item Recognized as Instructor of the Month (June 2022 \& July 2023) based on positive student outcomes, feedback, and teaching effectiveness.
+\end{itemize}
+
+% research experience subsection
+\vspace{-6pt}
+\subsection*{Research Experience}
+\vspace{3pt}
+
+\textbf{Undergraduate Researcher}, \href{https://www.epowerhubs.com/home}{ePower Hubs Research Lab} -- Golden, CO \hfill June 2024 -- January 2025
+\vspace{-6pt}
+\begin{itemize}
+  \item Independently conducted literature reviews on sensor systems and wind farm-level control strategies, focusing on offshore integration with variable voltage, power, and frequency constraints.
+  \item Synthesized findings into multiple internal reports using LaTeX, contributing to cost-reduction strategies in wind farm grid maintenance, design, and power grid integration.
+  \item Provided insights that influenced the direction of ongoing research led by a faculty advisor, shaping the lab's approach to offshore wind system modeling.
+\end{itemize}
+
+\textbf{Undergraduate Research Assistant}, Explosives Research Lab -- Golden, CO \hfill August 2022 -- January 2023
+\vspace{-6pt}
+\begin{itemize}
+  \item Optimized 3D printer settings to improve the dimensional accuracy of explosive housing components, supporting downstream testing reliability.
+  \item Observed controlled explosive tests in varied environments, contributing to data tracking accuracy through detailed field documentation.
+  \item Maintained lab cleanliness and equipment readiness to ensure a safe and organized research environment for high-risk experimental work.
+\end{itemize}
+
+% projects section
+\vspace{-12pt}
+\section*{Projects}
+\vspace{3pt}
+
+\textbf{Dual-Axis Solar Tracker Robot}, Arduino, Raspberry Pi, C++, \href{https://github.com/edwardasilva/SolarPanelProject}{Github} \hfill August -- October 2024
+\vspace{-6pt}
+\begin{itemize}
+  \item Designed and built a dual-axis solar tracking prototype using Arduino-controlled servos and photoresistor-based voltage divider circuits to maximize solar exposure.
+  \item Wrote a custom tracking algorithm from scratch to identify the brightest point in the sky through light intensity sampling, enabling precise pitch and yaw adjustments.
+  \item Utilized a Raspberry Pi as the system's central controller, handling logic flow and interfacing with the Arduino to execute real-time motor positioning.
+  \item Conducted iterative indoor testing to calibrate sensitivity and response thresholds under varying lighting conditions, improving tracking accuracy and stability.
+\end{itemize}
+
+\textbf{Clue Game}, Java, Swing, Eclipse, Git \hfill August -- December 2023
+\vspace{-6pt}
+\begin{itemize}
+  \item Collaborated in a 3-person team to develop a fully functional desktop version of the board game Clue using Java and Swing, applying classroom-adapted SCRUM and Test-Driven Development methodologies.
+  \item Shared responsibilities across the project lifecycle, contributing to backend game logic, UI design, and test coverage using JUnit.
+  \item Leveraged GitHub for version control and coordinated weekly code reviews to maintain code quality and feature integration.
+  \item Built a dynamic graphical interface with Java Swing, including an interactive game board and real-time player status updates.
+\end{itemize}
+
+\textbf{Hydraulic Ram Pump}, SolidWorks, Mechanical Design \hfill August -- December 2022
+\vspace{-6pt}
+\begin{itemize}
+  \item Recognized as a Subject Matter Expert (Top 4 of 40 teams) for in-depth understanding and presentation of technical concepts in a semester-long engineering design competition.
+  \item Collaborated in a team of six to develop a cost-effective hydraulic ram pump system to address acid mine drainage challenges using passive filtration methods.
+  \item Researched and implemented a pH balancing strategy by incorporating sandstone media to neutralize acidic runoff, enhancing water treatment viability.
+  \item Led documentation efforts, contributing to a 90-page technical report and directly interfaced with project stakeholders during client reviews and check-ins.
+  \item Supported prototyping efforts using PVC piping to construct a fully functional system under a \$100 materials budget.
+\end{itemize}
+
+
+% education section
+\vspace{-12pt}
+\section*{Education}
+\vspace{3pt}
+
+\textbf{\href{https://www.mines.edu/}{Colorado School of Mines}} -- Golden, CO \hfill Expected May 2026 \\
+\textbf{\href{https://electrical.mines.edu/undergraduate-program/}{Bachelor of Science in Electrical Engineering}} -- Controls \& Signal Processing \\
+\href{https://cs.mines.edu/csmines-minors-and-areas-of-special-interest/}{Minor, Computer Science} -- Software and Algorithm Design \\
+\textbf{GPA:} 3.435
+
+\textbf{Honors:} Dean's List (2 semesters), Honor Roll (2 semesters) \\
+\textbf{Scholarships:} Provost Scholarship (\$9,000/year), C-MAPP Scholar (\$1,000/year), American Bureau of Shipping Scholar (\$4,000)
+
+% certifications section
+\vspace{-8pt}
+\section*{Certifications}
+\vspace{3pt}
+
+\textbf{MATLAB Certifications:} Machine Learning Techniques \\
+\textbf{Microsoft Certifications:} Technical Associate (MTA) - Java Programming, Python Programming
+
+% relevant courses section
+\vspace{-8pt}
+\section*{Relevant Courses}
+\vspace{3pt}
+\noindent
+\begin{tabular}{@{}p{0.48\textwidth}@{\hspace{1em}}p{0.48\textwidth}@{}}
+\textbf{Engineering:} & \textbf{Computer Science:} \\
+Fundamentals of Electric Machinery (EENG 389),      & Software Engineering (CSCI 306), \\
+Engineering Electromagnetics (EENG 386),             & Computer Organization (CSCI 341), \\
+Embedded Systems (EENG 383),                         & Foundational Programming Concepts (CSCI 200), \\
+Feedback Control Systems (EENG 307),                 & Data Structures and Algorithms (CSCI 220), \\
+Signals and Systems (EENG 310),                      & Intro Linux OS (CSCI 274) \\
+Electrical Circuits (EENG 282),                      &  \\
+Digital Logic (EENG 284)                             & 
+\end{tabular}
+
+% skills section
+\vspace{-8pt}
+\section*{Skills}
+\vspace{3pt}
+
+\textbf{Programming:} Java, Python, C/C++, C\#, RISC-V Assembly, Bash, MATLAB, VBA, Verilog, JavaScript, HTML, CSS \\
+\textbf{Hardware:} Arduino, Raspberry Pi, Digital Circuits, Embedded Systems, Microcontrollers, Circuit Design, PCB Design \\
+\textbf{Software \& Tools:} SolidWorks, VS Code, Git/GitHub, Linux, Virtualization, Autodesk Revit, MEP AutoCAD, Fusion 360, Eclipse, SSH, Excel, Google Sheets, LaTeX
+
+\end{document}

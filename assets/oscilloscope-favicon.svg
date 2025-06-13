@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <style>
+      .oscilloscope { fill: none; stroke: #3b82f6; stroke-width: 2; }
+      .screen { fill: #1e293b; stroke: #3b82f6; stroke-width: 1.5; }
+      .grid { stroke: #64748b; stroke-width: 0.5; opacity: 0.6; }
+      .waveform { stroke: #10b981; stroke-width: 1.5; fill: none; }
+      @media (prefers-color-scheme: dark) {
+        .oscilloscope { stroke: #60a5fa; }
+        .screen { fill: #0f172a; stroke: #60a5fa; }
+        .grid { stroke: #94a3b8; }
+        .waveform { stroke: #34d399; }
+      }
+    </style>
+  </defs>
+  
+  <!-- Oscilloscope screen -->
+  <rect class="screen" x="6" y="6" width="20" height="14" rx="1"/>
+  
+  <!-- Grid lines -->
+  <path class="grid" d="M10 7v12 M14 7v12 M18 7v12 M22 7v12"/>
+  <path class="grid" d="M7 10h18 M7 13h18 M7 16h18"/>
+  
+  <!-- Waveform -->
+  <path class="waveform" d="M7 13 Q10 9 14 13 T21 13 Q23 11 25 13"/>
+  
+  <!-- Control knobs -->
+  <circle class="oscilloscope" cx="8" cy="24" r="2"/>
+  <circle class="oscilloscope" cx="16" cy="24" r="2"/>
+  <circle class="oscilloscope" cx="24" cy="24" r="2"/>
+  
+  <!-- Knob indicators -->
+  <path class="oscilloscope" d="M8 22v1"/>
+  <path class="oscilloscope" d="M16 22v1"/>
+  <path class="oscilloscope" d="M24 22v1"/>
+  
+  <!-- Power LED -->
+  <circle cx="28" cy="8" r="1" fill="#ef4444"/>
+</svg>

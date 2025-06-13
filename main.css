@@ -1,5 +1,5 @@
 /**
- * Main Stylesheet for Ed Silva's Portfolio
+ * Main Stylesheet for Edward Silva's Portfolio
  * 
  * A clean, modern CSS approach using CSS variables and logical organization
  * for maintainability and consistent theming.
@@ -249,6 +249,47 @@ a.underline-link {
   gap: var(--space-md);
 }
 
+/* Course grid layout */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  align-items: start;
+}
+
+/* Ensure dropdown items fill the grid properly and are equally sized */
+.course-grid .dropdown-item {
+  width: 100%;
+  margin-bottom: 0;
+  height: auto;
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Make all summaries the same height and prevent text wrapping issues */
+.course-grid .dropdown-item summary {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+  padding: 1rem 1.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Allow text to wrap on smaller screens */
+@media (max-width: 768px) {
+  .course-grid .dropdown-item summary {
+    white-space: normal;
+    line-height: 1.4;
+  }
+}
+
 /* 4. UI Components */
 button {
   cursor: pointer;
@@ -310,11 +351,25 @@ button {
     outline: none;
     box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.3), var(--shadow);
   }
-  
-  &:disabled {
+    &:disabled {
     opacity: 0.7;
     cursor: not-allowed;
   }
+}
+
+.resume-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.button-spacer {
+  display: none; /* Hidden by default, shown on mobile */
+  width: 100%;
+  height: var(--space-sm);
 }
 
 .btn-primary {
@@ -874,9 +929,46 @@ footer {
     grid-template-columns: 1fr;
     gap: var(--space-md);
   }
-
   .section {
     margin: var(--space-lg) 0;
+  }
+
+  .resume-buttons {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--space-md);
+  }
+
+  .button-spacer {
+    display: none;  }
+}
+
+/* Responsive course grid adjustments */
+@media (max-width: 768px) {
+  .course-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+  
+  .course-grid .dropdown-item {
+    min-height: 56px;
+  }
+  
+  .course-grid .dropdown-item summary {
+    min-height: 56px;
+    padding: 0.875rem 1rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .course-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (min-width: 1025px) {
+  .course-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   }
 }
 
@@ -913,9 +1005,17 @@ footer {
     align-items: stretch;
     gap: 0.5rem;
   }
-
   .contact-item {
     justify-content: center;
+  }
+
+  .resume-buttons {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .button-spacer {
+    display: block;
   }
 }
 
