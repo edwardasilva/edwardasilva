@@ -20,7 +20,7 @@ Electrical Engineering student at Colorado School of Mines with a minor in Compu
 
 ## Skills
 
-- **Programming:** [Java (MTA Certified)](/assets/JavaMTA.pdf), [Python (MTA Certified)](/assets/Python3MTA.pdf), Verilog, C, C++, C#, RISC-V Assembly, Bash, MATLAB, VBA
+- **Programming:** C++, MATLAB, [Java (MTA Certified)](/assets/JavaMTA.pdf), [Python (MTA Certified)](/assets/Python3MTA.pdf), Verilog, C#, RISC-V Assembly, Bash, VBA
 - **Web Development:** HTML5, CSS3, JavaScript, Responsive Design, Web Accessibility
 - **Hardware:** Arduino, Raspberry Pi, Digital Circuits, Embedded Systems
 - **Software & Tools:** SolidWorks, VS Code, Git/GitHub, Linux, Virtualization software, Revit, SSH
@@ -35,7 +35,6 @@ Electrical Engineering student at Colorado School of Mines with a minor in Compu
 ## Career Goals
 
 - Finish Bachelor of Science in Electrical Engineering
-- Obtain Fundamentals of Engineering (FE) certification
 - Pursue Graduate Degree
 - Work in R\&D within robotics and control systems
 - Teach and conduct research as a university professor

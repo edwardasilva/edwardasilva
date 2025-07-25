@@ -784,3 +784,46 @@ function initializeUtilityEventListeners() {
     });
   });
 }
+
+// Custom scrollbar fade effect
+function initScrollbarFadeEffect() {
+  let scrollTimer = null;
+  let isScrolling = false;
+  
+  // Add CSS class to show scrollbar
+  function showScrollbar() {
+    if (!isScrolling) {
+      document.documentElement.style.setProperty('--scrollbar-opacity', '1');
+      isScrolling = true;
+    }
+    
+    // Clear existing timer
+    if (scrollTimer) {
+      clearTimeout(scrollTimer);
+    }
+    
+    // Hide scrollbar after 2 seconds of no scrolling
+    scrollTimer = setTimeout(() => {
+      document.documentElement.style.setProperty('--scrollbar-opacity', '0.3');
+      isScrolling = false;
+    }, 2000);
+  }
+  
+  // Show scrollbar on scroll
+  window.addEventListener('scroll', showScrollbar, { passive: true });
+  
+  // Show scrollbar on mouse move near edge
+  window.addEventListener('mousemove', (e) => {
+    const threshold = 20; // pixels from right edge
+    if (window.innerWidth - e.clientX <= threshold) {
+      showScrollbar();
+    }
+  });
+  
+  // Show scrollbar on touch events (mobile)
+  window.addEventListener('touchstart', showScrollbar, { passive: true });
+  window.addEventListener('touchmove', showScrollbar, { passive: true });
+  
+  // Initialize with low opacity
+  document.documentElement.style.setProperty('--scrollbar-opacity', '0.3');
+}
