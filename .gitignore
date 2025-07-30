@@ -1,32 +1,19 @@
-# Ignore workspace settings files
 *.code-workspace
 
-# Ignore any temporary or system files
 *.tmp
 *.log
 *.DS_Store
 Thumbs.db
 
-# Ignore any auto-generated files or backup files
 *.bak
 *.swp
 
-# Optional: Ignore IDE-specific settings (e.g., VS Code)
 .vscode/
 .idea/
 
-# Optional: Ignore Node.js dependencies if applicable
-node_modules/
-
-# Optional: Ignore build artifacts if you use a build system
-/dist/
-/build/
-
-# Ignore sensitive files
 *.env
 secrets.json
 
-# LaTeX auxiliary files
 *.aux
 *.lof
 *.log

@@ -36,5 +36,5 @@ Electrical Engineering student at Colorado School of Mines with a minor in Compu
 
 - Finish Bachelor of Science in Electrical Engineering
 - Pursue Graduate Degree
-- Work in R\&D within robotics and control systems
+- Work in R\&D within DSP and control systems
 - Teach and conduct research as a university professor
