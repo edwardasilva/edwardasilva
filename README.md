@@ -1,6 +1,6 @@
 # Edward Silva
 
-Electrical Engineering student at Colorado School of Mines with a minor in Computer Science, focusing on controls systems and signal processing.
+BS in Electrical Engineering student at Colorado School of Mines with a Minor in Computer Science, focusing on controls & signal processing.
 
 ## Contact
 
@@ -12,19 +12,15 @@ Electrical Engineering student at Colorado School of Mines with a minor in Compu
 
 **Colorado School of Mines**, May 2026 | GPA: 3.44
 
-**Bachelor of Science in Electrical Engineering**, Controls \& Signal Processing 
+**BS in Electrical Engineering**, Controls & Signal Processing
 
 **Minor in Computer Science**, Software and Algorithm Design
 
-
-
 ## Skills
 
-- **Programming:** C++, MATLAB, [Java (MTA Certified)](/assets/JavaMTA.pdf), [Python (MTA Certified)](/assets/Python3MTA.pdf), Verilog, C#, RISC-V Assembly, Bash, VBA
-- **Web Development:** HTML5, CSS3, JavaScript, Responsive Design, Web Accessibility
-- **Hardware:** Arduino, Raspberry Pi, Digital Circuits, Embedded Systems
-- **Software & Tools:** SolidWorks, VS Code, Git/GitHub, Linux, Virtualization software, Revit, SSH
-- **Other:** Test Driven Development, SCRUM, Project Management
+- **Programming:** C++, MATLAB, Java, Python, Verilog, RISC-V Assembly, Bash
+- **Hardware:** Arduino, Raspberry Pi, Digital Circuits, Embedded Systems, Microcontrollers, Circuit Design
+- **Software & Tools:** SolidWorks, VS Code, Git/GitHub, Linux, Virtualization, Autodesk Revit, MEP AutoCAD, Fusion 360, Eclipse, SSH, LaTeX, Microsoft Office Suite, Google Suite
 
 ## Certifications
 
@@ -36,5 +32,5 @@ Electrical Engineering student at Colorado School of Mines with a minor in Compu
 
 - Finish Bachelor of Science in Electrical Engineering
 - Pursue Graduate Degree
-- Work in R\&D within DSP and control systems
+- Work in R&D within DSP and control systems
 - Teach and conduct research as a university professor

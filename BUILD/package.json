@@ -1,0 +1,32 @@
+{
+  "name": "edward-silva-resume",
+  "version": "1.0.0",
+  "description": "Centralized resume management system for Edward Silva's portfolio",
+  "main": "build-resume.js",
+  "scripts": {
+    "setup": "node setup.js",
+    "build": "node build-resume.js",
+    "watch": "nodemon --watch ../resume-data.json --exec 'node build-resume.js'",
+    "dev": "npm run build && npm run watch",
+    "clean": "rm -rf ../resume/Edward_Silva_Resume.pdf",
+    "compile": "npm run build && cd ../resume && pdflatex Edward_Silva_Resume.tex"
+  },
+  "keywords": [
+    "resume",
+    "latex",
+    "portfolio",
+    "automation"
+  ],
+  "author": "Edward Silva",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edwardasilva/easilva.com"
+  }
+} 

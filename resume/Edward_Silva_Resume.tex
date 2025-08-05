@@ -1,49 +1,63 @@
-\documentclass[11pt]{article}       % set main text size
+\documentclass[11pt]{article}
 \usepackage{geometry}
-\geometry{letterpaper,              % set paper size to letter
-top=0.5in,                          % specify top page margin
-bottom=0.5in,                       % specify bottom page margin
-left=0.5in,                         % specify left page margin
-right=0.5in}                        % specify right page margin
+\geometry{letterpaper,top=0.5in,bottom=0.5in,left=0.5in,right=0.5in}
 
-\usepackage{XCharter}               % set font
-\usepackage[T1]{fontenc}            % output encoding
-\usepackage[utf8]{inputenc}         % input encoding
-\usepackage{enumitem}               % enable lists for bullet points: itemize and \item
-\usepackage[hidelinks]{hyperref}    % format hyperlinks
-\usepackage{titlesec}               % enable section title customization
-\raggedright                        % disable text justification
-\pagestyle{empty}                   % disable page numbering
+\usepackage{XCharter}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
+\usepackage{titlesec}
+\raggedright
+\pagestyle{empty}
 
-% ensure PDF output will be all-Unicode and machine-readable
 \input{glyphtounicode}
 \pdfgentounicode=1
 
-% format section headings: bolding, size, white space above and below
+% Document metadata for PDF viewers
+\title{Edward Silva - Resume}
+\author{Edward Silva}
+
+% PDF viewer section encoding
+\hypersetup{
+    pdftitle={Edward Silva - Resume},
+    pdfauthor={Edward Silva},
+    pdfsubject={Resume},
+    pdfkeywords={Edward Silva, C++, MATLAB, Java, Python, Verilog, RISC-V Assembly, Bash, Colorado School of Mines, BS in Electrical Engineering, Controls & Signal Processing, Minor in Computer Science, Software and Algorithm Design},
+    colorlinks=false,
+    linkcolor=black,
+    urlcolor=black,
+    citecolor=black,
+    filecolor=black
+}
+
 \titleformat{\section}{\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule\vspace{-10pt}]
 
-% format bullet points: size, white space above and below, white space between bullets
 \renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
 \setlist[itemize]{itemsep=-2pt, leftmargin=12pt}
 
-% resume starts here
 \begin{document}
 
-% name
+% Document metadata (invisible for ATS/AI parsing)
+\thispagestyle{empty}
+
+% Main document bookmark
+\pdfbookmark[0]{Edward Silva - Resume}{main}
+
 \centerline{\huge Edward Silva}
 \vspace{5pt}
 
-% contact information
 \centerline{
 \href{https://www.linkedin.com/in/edwardasilva/}{Linkedin.com/in/edwardasilva}
 | \href{https://easilva.com}{easilva.com}
-| \href{mailto:edward@easilva.edu}{edward@easilva.com} 
-| \href{tel:7027207735}{(702) 720-7735}
+| \href{mailto:contact@easilva.com}{contact@easilva.com} 
+| \href{tel:702 720-7735}{(702) 720-7735}
 }
 
 \vspace{-14pt}
-% experience section
 \section*{Experience}
+\pdfbookmark[1]{Experience}{experience}
 \vspace{5pt}
 
 \textbf{Software Engineering Intern, }{Kratos Defense} -- Colorado Springs, CO \hfill June -- August 2025 \\
@@ -66,8 +80,8 @@ right=0.5in}                        % specify right page margin
 \end{itemize}
 
 \vspace{-14pt}
-% Projects section
-\section{Projects}
+\section*{Projects}
+\pdfbookmark[1]{Projects}{projects}
 \vspace{5pt}
 \textbf{Dual-Axis Solar Tracker Robot}, Arduino, Raspberry Pi, C++, \href{https://github.com/edwardasilva/SolarPanelProject}{Github} \hfill August -- October 2024
 \vspace{-5pt}
@@ -78,22 +92,23 @@ right=0.5in}                        % specify right page margin
   \item Conducted iterative indoor testing to calibrate sensitivity and response thresholds under varying lighting conditions, improving tracking accuracy and stability.
 \end{itemize}
 
-% education section
-\vspace{-18 pt}
+\vspace{-18pt}
 \section*{Education}
-\vspace{5pt}
+\pdfbookmark[1]{Education}{education}
+\vspace{1pt}
 
 \textbf{\href{https://www.mines.edu/}{Colorado School of Mines}}, \textbf{GPA:} 3.44  \hfill Expected May 2026\\
-\textbf{\href{https://electrical.mines.edu/undergraduate-program/}{BS, Electrical Engineering}} -- Controls \& Signal Processing  \\
-\href{https://cs.mines.edu/csmines-minors-and-areas-of-special-interest/}{Minor, Computer Science} -- Algorithm Design\\
+\textbf{\href{https://electrical.mines.edu/undergraduate-program/}{BS in Electrical Engineering}} -- Controls \& Signal Processing  \\
+\href{https://cs.mines.edu/csmines-minors-and-areas-of-special-interest/}{Minor in Computer Science} -- Software and Algorithm Design\\
 \textbf{Courses:} Advanced Control Systems, Signals \& Systems, Embedded Systems, Software Engineering
 \textbf{Certifications:} Microsoft Technical Associate (MTA): Python \& Java Programming
 
-% skills section
+\vspace{-14pt}
 \section*{Skills}
+\pdfbookmark[1]{Skills}{skills}
 \vspace{5pt}
 
-\textbf{Programming Languages:} C++, MATLAB, Java, Python, Verilog, C\#, RISC-V Assembly, Bash, JavaScript \\
+\textbf{Programming Languages:} C++, MATLAB, Java, Python, Verilog, RISC-V Assembly, Bash \\
 \textbf{Technology:} SSH, Linux OS (Ubuntu), Raspberry Pi, Arduino \\
 \textbf{Software:} Autodesk Revit, MEP AutoCAD, VS Code, GitHub \\
 
