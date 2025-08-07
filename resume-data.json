@@ -31,79 +31,92 @@
           "code": "EENG 282",
           "name": "Electrical Circuits",
           "description": "This course provides an engineering science analysis of electrical circuits. DC and AC (single-phase and three-phase) networks are presented. Transient analysis of RC and RL circuits is studied as is the analysis of circuits in sinusoidal steady-state using phasor concepts. The following topics are included: DC and AC circuit analysis, current and charge relationships. Ohm's Law, resistors, inductors, capacitors, equivalent resistance and impedance, Kirchhoff's Laws, Thevenin and Norton equivalent circuits, superposition and source transformation, power and energy, maximum power transfer, first order transient response, algebra of complex numbers, phasor representation, time domain and frequency domain concepts, and steady-state analysis of single-phase and three-phase ac power circuits.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "EENG 284",
           "name": "Digital Logic",
           "description": "This course is an introduction to digital logic design. Students will start to learn how to design combinational logic circuit using Kmaps, manipulate these expressions using Boolean algebra and then produce basic building blocks like decoders and adders. Next students will focus on sequential logic circuits with basic memory elements, then design sequential building blocks like counters and registers and then to design finite state machines. Students will then learn how to combine basic building blocks with finite state machines to create complex functionality. Students will implement their design using a hardware description language and download these designs on FPGAs.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "EENG 307",
           "name": "Feedback Control Systems",
           "description": "System modeling through an energy flow approach is presented, with examples from linear electrical, mechanical, fluid and/or thermal systems. Analysis of system response in both the time domain and frequency domain is discussed in detail. Feedback control design techniques, including PID, are analyzed using both analytical and computational methods.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "EENG 310",
-          "name": "Information Systems Science I (Signals and Systems)",
+          "name": "Information Systems Science I",
           "description": "The interpretation, representation and analysis of time-varying phenomena as signals which convey information and noise; applications are drawn from filtering, audio and image processing, and communications. Topics include convolution, Fourier series and transforms, sampling and discrete-time processing of continuous-time signals, modulation, and z-transforms.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "All"
         },
         {
           "code": "EENG 311",
           "name": "Information Systems Science II",
           "description": "This course covers signals and noise in electrical systems. Topics covered include information theory, signal to noise ratio, random variables, probability density functions, statistics, noise, matched filters, coding and entropy, power spectral density, and bit error rate. Applications are taken from radar, communications systems, and signal processing.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "EENG 340",
           "name": "Cooperative Education",
           "description": " Supervised, full-time engineering- related employment for a continuous six-month period in which specific educational objectives are achieved. Employment was at Jordan and Skala Engineers, Inc. in Denver, CO.",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         },
         {
           "code": "EENG 350",
           "name": "Systems Exploration and Engineering Design Lab (SEED Lab)",
           "description": "This laboratory is a semester-long design and build activity centered around a challenge problem that varies from year to year. Solving this problem requires the design and prototyping of a complex system and utilizes concepts from multiple electrical engineering courses. Students work in intra-disciplinary teams to build modular sub-systems and integrate them to a complete system.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "EENG 383",
           "name": "Embedded Systems",
           "description": "The design and implementation of systems consisting of analog and digital components with a microcontroller to perform a dedicated task. Student will implement systems using a variety of microcontroller subsystems including timers, PWM, ADC, serial communication subsystems and interrupts. Students will learn embedded systems programming techniques like, fixed-point math, direct digital synthesis, lookup tables, and row scanning. Student will program the microcontroller using a high-level programming language like C or C++.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "All"
         },
         {
           "code": "EENG 385",
           "name": "Electronic Devices and Circuits",
           "description": "Students will study the large signal and small signal behavior of active components including opamps, diodes, bipolar junction transistors, and field effect transistors. Students will explore the frequency response analysis of standard circuit configurations. Students will engage laboratory exercises to compare how well their theoretical analysis compare to the actual circuit.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "EENG 386",
           "name": "Fundamentals of Engineering Electromagnetics",
           "description": "This course introduces electromagnetic theory with a focus on its practical applications. It begins with a thorough review of vector calculus, coordinate systems, and key theorems. Following this foundation, an inductive approach is employed, commencing with the first principles of electrostatics and magnetostatics (Coulomb's and Biot-Savart laws) progressing to the derivation of Maxwell's equations by incorporating Faraday's Law and the concept of displacement currents. Key topics covered include the principles underlying electric generators, AC and DC motors. This groundwork facilitates the development of circuit theory, including the establishment of conditions for its validity. The course culminates with an introduction to transmission line theory, impedance matching, and the utilization of the Smith Chart.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "EENG 389",
           "name": "Fundamentals of Electric Machinery",
           "description": "This course provides an engineering analysis of electrical machines. The following topics are included: review of three-phase AC circuit analysis, magnetic circuit concepts and materials, transformer analysis and operation, modelling, steady-state analysis of rotating machines, synchronous and poly-phase induction motors, and DC machines and laboratory study of external characteristics of machines and transformers.",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         },
         {
           "code": "EENG 391",
           "name": "FE on Computational Methods for Electrical Engineering",
           "description": "Students will learn computational methods for common tasks in electrical engineering such as creating and plotting signals and data, analyzing and implementing digital filters, numerically computing integrals, solving differential equations, and simulating dynamical systems.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "EENG 417",
           "name": "Modern Control Design",
           "description": "Control system design with an emphasis on observer-based methods, from initial open-loop experiments to final implementation. The course begins with an overview of feedback control design technique from the frequency domain perspective, including sensitivity and fundamental limitations. State space realization theory is introduced, and system identification methods for parameter estimation are introduced. Computerbased methods for control system design are presented.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "All"
         }
       ],
       "Computer Science": [
@@ -111,55 +124,64 @@
           "code": "CSCI 101",
           "name": "Introduction to Computer Science",
           "description": "Introduction to Computer Science is a 3-credit hour **breadth** CS course. We cover several topics in this course to help students understand how computers work, e.g., binary numbers, Boolean logic and gates, circuit design, machine language, computer hardware, assembly, operating systems, networking, the Internet protocols, cybersecurity, data science, machine learning, and robotics.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "CSCI 102",
           "name": "Introduction to Computer Science - Lab",
           "description": "CSCI 102 is our Introduction to Computer Science LAB course. CSCI 102 is a 1-credit hour programming course in Python that is (A) extremely valuable for those who have never programmed and (B) required for some majors (e.g., MechE)",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "CSCI 200",
           "name": "Foundational Programming Concepts & Design",
           "description": "This course teaches students C++, how to manage memory properly & efficiently at run time, the principles of object-oriented programming, and how to create an algorithm using data structures & abstraction to solve a problem. Recursive data structures & algorithms will be constructed & analyzed when solving problems. Initial principal components of software engineering and design will be introduced and used when drafting a solution to a problem. Programs will be developed using a command line interface.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "CSCI 220",
           "name": "Data Structures and Algorithms",
           "description": "This course teaches students the design and construction of data structures such as hash tables, trees, heaps, and graphs, analysis of operations on data structures, and design and analysis of algorithms on data structures such as graph search and minimum spanning tree algorithms. Applications of data structures and algorithms on them are discussed in the context of computer systems. Students will further refine programming skills in C++ by producing software implementations of selected data structures and algorithms.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "CSCI 274",
           "name": "Introduction to the Linux Operating System",
           "description": "Introduction to the Linux Operating System will teach students how to become proficient with using a Linux operating system from the command line. Topics will include: remote login (ssh), file system navigation, file commands, editors, compilation, execution, redirection, output, searching, processes, usage, permissions, compression, parsing, networking, and bash scripting.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "CSCI 290",
           "name": "Programming Challenges",
           "description": "This course is the first of three courses in the Programming Challenges sequence which covers problem solving patterns and paradigms found in technical interviews and programming competitions. The students will learn more advanced data structures and algorithms while focusing on algorithmic complexity to solve problems in a finite amount of time.",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         },
         {
           "code": "CSCI 306",
           "name": "Software Engineering",
           "description": "Introduction to software engineering processes and object-oriented design principles. Topics include the Agile development methodology, test-driven development, UML diagrams, use cases and several object-oriented design patterns. Course work emphasizes good programming practices via version control and code reviews.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "All"
         },
         {
           "code": "CSCI 341",
           "name": "Computer Organization",
           "description": "Covers the basic concepts of computer architecture and organization. Topics include machine level instructions and operating system calls used to write programs in assembly language, computer arithmetics, performance, processor design, and pipelining techniques. This course provides insight into the way computers operate at the machine level.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "CSCI 358",
           "name": "Discrete Mathematics",
           "description": "This course is an introductory course in discrete mathematics and algebraic structures. Topics include: formal logic; proofs, recursion, analysis of algorithms; sets and combinatorics; relations, functions, and matrices; Boolean algebra and computer logic; trees, graphs, finite-state machines, and regular languages.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         }
       ],
       "Mathematics": [
@@ -167,31 +189,36 @@
           "code": "MATH 111",
           "name": "Calculus I",
           "description": "This is the first course in the calculus sequence. Topics include elements of plane geometry, functions, limits, continuity, derivatives and their application, definite and indefinite integrals.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "MATH 112",
           "name": "Calculus II",
           "description": "This is the second course in the calculus sequence. Topics include vectors, applications and techniques of integration, infinite series, and an introduction to multivariate functions and surfaces.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "MATH 213",
           "name": "Calculus III",
           "description": "This is the third course in the calculus sequence, focused on multivariable calculus. Topics include partial derivatives, multiple integrals, and vector calculus.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "MATH 225",
           "name": "Differential Equations",
           "description": "This course is an introduction to ordinary differential equations. Topics include classical techniques for first and higher order equations and systems of equations. Laplace transforms, phase-plane and stability analysis of non-linear equations and systems, applications from physics, mechanics, electrical engineering, and environmental sciences.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         },
         {
           "code": "MATH 332",
           "name": "Linear Algebra",
           "description": "Systems of linear equations, matrices, determinants and eigenvalues. Linear operators. Abstract vector spaces. Applications selected from linear programming, physics, graph theory, and other fields.",
-          "relevancy": "Yes"
+          "relevancy": "Yes",
+          "experienceType": "Site"
         }
       ],
       "Physics": [
@@ -199,13 +226,15 @@
           "code": "PHGN 100",
           "name": "Physics I (Mechanics)",
           "description": "A first course in physics covering the basic principles of mechanics using vectors and calculus. The course consists of a fundamental treatment of the concepts and applications of kinematics and dynamics of particles and systems of particles, including Newton's laws, energy and momentum, rotation, oscillations, and waves.",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         },
         {
           "code": "PHGN 200",
           "name": "Physics II (Electricity and Magnetism)",
           "description": "Introduction to the fundamental laws and concepts of electricity and magnetism, electromagnetic devices, electromagnetic behavior of materials, applications to simple circuits, electromagnetic radiation, and an introduction to optical phenomena.",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         }
       ],
       "Chemistry": [
@@ -213,13 +242,15 @@
           "code": "CHGN 121",
           "name": "Principles of Chemistry I",
           "description": "Study of matter and energy based on atomic structure, correlation of properties of elements with position in periodic chart, chemical bonding, geometry of molecules, phase changes, stoichiometry, solution chemistry, gas laws, and thermochemistry.",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         },
         {
           "code": "CHGN 122",
           "name": "Principles of Chemistry II",
           "description": "Concentrating on chemical kinetics, gas laws, thermodynamics, electrochemistry and chemical equilibrium (acid- base, solubility, complexation, and redox). Laboratory experiments emphasizing quantitative chemical measurements.",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         }
       ],
       "General Studies": [
@@ -227,25 +258,29 @@
           "code": "EBGN 201",
           "name": "Principles of Economics",
           "description": "Introduction to microeconomics and macroeconomics. This course focuses on applying the economic way of thinking and basic tools of economic analysis. Economic effects of public policies. Analysis of markets for goods, services and resources. Tools of cost-benefit analysis. Measures of overall economic activity. Determinants of economic growth. Monetary and fiscal policy",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         },
         {
           "code": "EDNS 151",
           "name": "Cornerstone Design I",
           "description": "Design I teaches students how to solve open-ended problems in a hands-on manner using critical thinking and workplace skills. Students work in multidisciplinary teams to learn through doing, with emphasis on defining and diagnosing the problem through a holistic lens of technology, people and culture. Students follow a user-centered design methodology throughout the process, seeking to understand a problem from multiple perspectives before attempting to solve it. Students learn and apply specific skills throughout the semester, including: communication (written, oral, graphical), project management, concept visualization, critical thinking, effective teamwork, as well as building and iterating solutions.",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         },
         {
           "code": "HASS 100",
           "name": "Nature and Human Values",
           "description": "Nature and Human Values (NHV) is a writing-intensive course, workshop, and discussion seminar that focuses on ethics and inquiry and uses humanities perspectives to examine big questions about the interdependence of human life, society, and the environment. The class links personal, professional, and environmental ethics to engineering, energy, and emerging technologies. Written and oral communication are stressed as a crucial component of professional and civic dialogue, while encouraging critical reading, thinking, and conversation about students' ethical obligations as world citizens with broader moral, social, and environmental responsibilities to stakeholders. The culminating research paper asks that students consider the ethical dimensions of their arguments within science and engineering contexts while engaging different viewpoints, evaluating sources, and supporting an original position.",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         },
         {
           "code": "HASS 200",
           "name": "Global Studies",
           "description": "Modern scientists and engineers operate in an increasingly interconnected world. This course is designed to enhance student capacity to understand, appreciate, and critically analyze the global contexts in which they will live and work. Course material examines the modern world through specific thematic lenses, with an emphasis on the major patterns of cultural, political, and/or environmental change. Students will develop original analysis through comparative empirical research on diverse societies and regions, and will communicate this analysis orally and in writing.",
-          "relevancy": "No"
+          "relevancy": "No",
+          "experienceType": "Site"
         }
       ]
     }
@@ -257,10 +292,10 @@
       "location": "Colorado Springs, CO",
       "duration": "June -- August 2025",
       "description": [
-        "Optimized legacy DSP algorithms in C++ through code refactoring and performance analysis, achieving 1.6x execution speedup and reducing computational overhead for real-time signal processing applications.",
-        "Developed and implemented SIMD-optimized mathematical algorithms using vectorized operations, enabling parallel data processing and improving system throughput for multi-channel signal analysis.",
-        "Designed and deployed a comprehensive logging framework with configurable severity levels and error tracking, reducing debugging time and improving system maintainability for development teams.",
-        "Contributed to agile development practices using Jira for sprint planning, task tracking, and project management, enhancing team collaboration and delivery efficiency."
+        "Achieved 1.6x execution speedup by optimizing legacy DSP algorithms in C++ through code refactoring and performance analysis, reducing computational overhead for real-time signal processing applications.",
+        "Improved system throughput by developing and implementing SIMD-optimized mathematical algorithms using vectorized operations for parallel data processing.",
+        "Researched and demonstrated an improved approach to coding a FIR filter, presenting positive findings and performance gains to the team for adoption in future projects.",
+        "Reduced debugging time and improved system maintainability for development teams by designing and deploying a comprehensive logging framework with configurable severity levels and error tracking."
       ],
       "experienceType": "All"
     },
@@ -412,36 +447,114 @@
   ],
   "skills": {
     "Programming": [
-      "C++",
-      "MATLAB",
-      "Java",
-      "Python",
-      "Verilog",
-      "RISC-V Assembly",
-      "Bash"
+      {
+        "name": "C++",
+        "experienceType": "All"
+      },
+      {
+        "name": "MATLAB",
+        "experienceType": "All"
+      },
+      {
+        "name": "Java",
+        "experienceType": "All"
+      },
+      {
+        "name": "Python",
+        "experienceType": "All"
+      },
+      {
+        "name": "Verilog",
+        "experienceType": "All"
+      },
+      {
+        "name": "RISC-V Assembly",
+        "experienceType": "All"
+      },
+      {
+        "name": "Bash",
+        "experienceType": "All"
+      }
     ],
     "Hardware": [
-      "Arduino",
-      "Raspberry Pi",
-      "Digital Circuits",
-      "Embedded Systems",
-      "Microcontrollers",
-      "Circuit Design"
+      {
+        "name": "Arduino",
+        "experienceType": "All"
+      },
+      {
+        "name": "Raspberry Pi",
+        "experienceType": "All"
+      },
+      {
+        "name": "Digital Circuits",
+        "experienceType": "All"
+      },
+      {
+        "name": "Embedded Systems",
+        "experienceType": "All"
+      },
+      {
+        "name": "Microcontrollers",
+        "experienceType": "All"
+      },
+      {
+        "name": "Circuit Design",
+        "experienceType": "All"
+      }
     ],
     "Software": [
-      "SolidWorks",
-      "VS Code",
-      "Git/GitHub",
-      "Linux",
-      "Virtualization",
-      "Autodesk Revit",
-      "MEP AutoCAD",
-      "Fusion 360",
-      "Eclipse",
-      "SSH",
-      "LaTeX",
-      "Microsoft Office Suite",
-      "Google Suite"
+      {
+        "name": "SolidWorks",
+        "experienceType": "All"
+      },
+      {
+        "name": "VS Code",
+        "experienceType": "All"
+      },
+      {
+        "name": "Git/GitHub",
+        "experienceType": "All"
+      },
+      {
+        "name": "Linux",
+        "experienceType": "All"
+      },
+      {
+        "name": "Virtualization",
+        "experienceType": "All"
+      },
+      {
+        "name": "Autodesk Revit",
+        "experienceType": "All"
+      },
+      {
+        "name": "MEP AutoCAD",
+        "experienceType": "All"
+      },
+      {
+        "name": "Fusion 360",
+        "experienceType": "Site"
+      },
+      {
+        "name": "Eclipse",
+        "experienceType": "Site"
+      },
+      {
+        "name": "SSH",
+        "experienceType": "All"
+      },
+      {
+        "name": "LaTeX",
+        "experienceType": "All"
+      },
+      {
+        "name": "Microsoft Office Suite",
+        "experienceType": "Site"
+      },
+      {
+        "name": "Google Suite",
+        "experienceType": "Site"
+      }
     ]
   },
   "certifications": [
@@ -450,19 +563,22 @@
       "organization": "MathWorks",
       "credly": "https://www.credly.com/badges/3d740a34-2cfa-4259-ab08-3aeed0e3f03c/public_url",
       "link": "https://www.credly.com/badges/3d740a34-2cfa-4259-ab08-3aeed0e3f03c/public_url",
-      "description": "Completed the MATLAB Machine Learning Techniques learning path, demonstrating comprehensive knowledge in machine learning techniques and their implementation in MATLAB. This credential validates proficiency in data preprocessing, feature engineering, supervised and unsupervised learning algorithms, and model evaluation."
+      "description": "Completed the MATLAB Machine Learning Techniques learning path, demonstrating comprehensive knowledge in machine learning techniques and their implementation in MATLAB. This credential validates proficiency in data preprocessing, feature engineering, supervised and unsupervised learning algorithms, and model evaluation.",
+      "experienceType": "Site"
     },
     {
       "name": "Microsoft Technical Associate - Java Programming",
       "organization": "Microsoft",
       "link": "assets/JavaMTA.pdf ",
-      "description": "Earned Microsoft Technical Associate certification in Java Programming, validating proficiency in Java syntax, data structures, and object-oriented programming concepts."
+      "description": "Earned Microsoft Technical Associate certification in Java Programming, validating proficiency in Java syntax, data structures, and object-oriented programming concepts.",
+      "experienceType": "All"
     },
     {
       "name": "Microsoft Technical Associate - Python Programming",
       "organization": "Microsoft",
       "link": "assets/PythonMTA.pdf",
-      "description": "Received Microsoft Technical Associate certification in Python Programming, demonstrating competency in Python syntax, functions, and software development principles."
+      "description": "Received Microsoft Technical Associate certification in Python Programming, demonstrating competency in Python syntax, functions, and software development principles.",
+      "experienceType": "All"
     }
   ],
   "careerGoals": [

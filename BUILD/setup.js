@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Setup script for the centralized resume system
+ * Setup script for the resume system
  */
 
 const fs = require('fs');
@@ -9,7 +9,7 @@ const { execSync } = require('child_process');
 
 console.log('Setting up Edward Silva Resume System...\n');
 
-// Check if Node.js is installed
+// Check Node.js
 try {
     const nodeVersion = process.version;
     console.log(`Node.js ${nodeVersion} detected`);
@@ -19,7 +19,7 @@ try {
     process.exit(1);
 }
 
-// Check if package.json exists
+// Check package.json
 if (!fs.existsSync('package.json')) {
     console.error('package.json not found');
     console.log('Please run this script from the BUILD directory');
@@ -37,7 +37,7 @@ try {
     process.exit(1);
 }
 
-// Check if resume-data.json exists
+// Check resume-data.json
 if (!fs.existsSync('../resume-data.json')) {
     console.error('resume-data.json not found');
     console.log('Please ensure resume-data.json exists in the project root');
@@ -55,7 +55,7 @@ try {
     process.exit(1);
 }
 
-// Check if LaTeX is available
+// Check LaTeX
 console.log('\nChecking LaTeX installation...');
 try {
     execSync('pdflatex --version', { stdio: 'ignore' });

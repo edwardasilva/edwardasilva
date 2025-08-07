@@ -1,15 +1,19 @@
 {
   "name": "edward-silva-resume",
   "version": "1.0.0",
-  "description": "Centralized resume management system for Edward Silva's portfolio",
+  "description": "Resume management system for Edward Silva's portfolio",
   "main": "build-resume.js",
   "scripts": {
     "setup": "node setup.js",
-    "build": "node build-resume.js",
-    "watch": "nodemon --watch ../resume-data.json --exec 'node build-resume.js'",
+    "build": "node build-resume.js && node build-site.js",
+    "build:resume": "node build-resume.js",
+    "build:site": "node build-site.js",
+    "watch": "nodemon --watch ../resume-data.json --exec 'npm run build'",
+    "watch:resume": "nodemon --watch ../resume-data.json --exec 'npm run build:resume'",
+    "watch:site": "nodemon --watch ../resume-data.json --exec 'npm run build:site'",
     "dev": "npm run build && npm run watch",
     "clean": "rm -rf ../resume/Edward_Silva_Resume.pdf",
-    "compile": "npm run build && cd ../resume && pdflatex Edward_Silva_Resume.tex"
+    "compile": "npm run build:resume && cd ../resume && pdflatex Edward_Silva_Resume.tex && pdflatex Edward_Silva_Resume.tex"
   },
   "keywords": [
     "resume",
