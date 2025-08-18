@@ -392,9 +392,9 @@ ${project.github ? `                            <div class="project-links">
                 <div class="certifications-grid">
 ${(() => {
   const groupedCerts = groupCertificationsByOrganization(data.certifications);
-  return Object.entries(groupedCerts).map(([org, certs]) => `                    <div class="card cert-card">
+  return Object.entries(groupedCerts).map(([org, certs]) => `
+                      <div class="card cert-card">
                         <div class="cert-header">
-                            <span class="cert-icon">🏆</span>
                             <h3>${org} Certifications</h3>
                         </div>
                         <div class="cert-content">
@@ -402,11 +402,9 @@ ${(() => {
 ${certs.map(cert => `                                <div class="cert-item">
                                     <h4>${cert.name}</h4>
                                     <p>${cert.description}</p>
-${cert.credly ? `                                    <div class="credential-badge">
-                                        <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="${cert.credly.split('/').pop()}" data-share-badge-host="https://www.credly.com"></div>
-                                    </div>` : ''}
-${cert.link && cert.link.trim() !== '' ? `                                    <div class="cert-links">
-                                        <a href="${cert.link}" target="_blank" rel="noopener" class="underline-link">${cert.credly ? 'View Credly Badge' : 'View Certificate'}</a>
+${cert.link && cert.link.trim() !== '' ? `
+                                        <div class="cert-links">
+                                        <a href="${cert.link}" target="_blank" rel="noopener" class="underline-link">View Certificate</a>
                                     </div>` : ''}
                                 </div>`).join('\n')}
                             </div>
@@ -479,7 +477,6 @@ ${data.careerGoals.map(goal => `                        <li>${goal}</li>`).join(
         const infoContent = ${JSON.stringify(infoContent, null, 2)};
         const courseCategories = ${JSON.stringify(courseCategories, null, 2)};
     </script>
-    <script src="https://www.credly.com/assets/utilities/embed.js" async></script>
 </body>
 </html>`;
 

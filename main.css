@@ -1489,16 +1489,18 @@ footer {
 /* Certification specific styles */
 .cert-card {
   position: relative;
-  height: 100%;
+  height: auto; 
+  min-height: 300px; 
   display: flex;
   flex-direction: column;
+  padding: var(--space-md); 
   transition: var(--transition);
   
   &:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-hover);
   }
-  
+
   & .cert-header {
     border-bottom: 1px solid var(--border);
     padding-bottom: var(--space-sm);
@@ -1508,7 +1510,7 @@ footer {
     gap: var(--space-sm);
     
     & .cert-icon {
-      font-size: 1.5rem;
+      font-size: 2rem; 
       flex-shrink: 0;
     }
     
@@ -1519,54 +1521,18 @@ footer {
       line-height: 1.3;
     }
   }
-  
+
   & .cert-content {
     flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-between; /* Ensure content is spaced evenly */
     
     & p {
       margin-bottom: var(--space-md);
       line-height: 1.6;
       color: var(--text);
     }
-  }
-  
-  & .cert-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-lg);
-  }
-  
-  & .cert-item {
-    padding: var(--space-md);
-    background: var(--bg-alt);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    
-    & h4 {
-      color: var(--primary);
-      font-size: var(--font-size-lg);
-      margin-bottom: var(--space-sm);
-      font-weight: 600;
-    }
-    
-    & p {
-      margin-bottom: var(--space-md);
-      line-height: 1.6;
-      color: var(--text);
-    }
-    
-    &:not(:last-child) {
-      margin-bottom: var(--space-md);
-    }
-  }
-  
-  & .skill-list {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
   }
 }
 

@@ -5,7 +5,9 @@
     "phone": "(702) 720-7735",
     "website": "https://easilva.com",
     "linkedin": "https://www.linkedin.com/in/edwardasilva/",
-    "github": "https://github.com/edwardasilva/"
+    "github": "https://github.com/edwardasilva/",
+    "relocation": "Open to relocation",
+    "citizenship": "US Citizen"
   },
   "education": {
     "institution": "Colorado School of Mines",
@@ -586,5 +588,11 @@
     "Pursue Graduate Degree",
     "Work in R&D within DSP and control systems",
     "Teach and conduct research as a university professor"
+  ],
+  "extracurriculars": [
+    "Astronomy Club",
+    "IEEE",
+    "ACM",
+    "Hiking"
   ]
 }

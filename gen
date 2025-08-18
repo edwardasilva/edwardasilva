@@ -130,6 +130,50 @@ cd "$SCRIPT_DIR"
 
 sleep 1
 
+
+# Compile PDFs for all .tex files in cover letters directory
+log "step" "Compiling all Cover Letter PDFs..."
+cd coverLetters
+if command -v pdflatex >/dev/null 2>&1; then
+    for tex_file in *.tex; do
+        if [[ -f "$tex_file" ]]; then
+            log "info" "Running pdflatex (first pass) for $tex_file..."
+            if pdflatex -interaction=nonstopmode "$tex_file" >/dev/null 2>&1; then
+                sleep 1
+                log "info" "Running pdflatex (second pass) for $tex_file..."
+                if pdflatex -interaction=nonstopmode "$tex_file" >/dev/null 2>&1; then
+                    sleep 1
+                    log "success" "PDF for $tex_file generated successfully"
+                else
+                    log "warning" "Second PDF pass for $tex_file failed"
+                fi
+            else
+                log "warning" "PDF compilation for $tex_file failed"
+            fi
+        fi
+    done
+else
+    log "warning" "pdflatex not found, skipping Cover Letter PDFs"
+fi
+cd "$SCRIPT_DIR"
+
+# Clean up auxiliary files for cover letters
+log "clean" "Cleaning up Cover Letter auxiliary files..."
+cover_letter_files_cleaned=0
+cd coverLetters
+for aux_file in *.aux *.log *.out *.synctex.gz; do
+    if [[ -f "$aux_file" ]]; then
+        if rm -f "$aux_file" 2>/dev/null; then
+            cover_letter_files_cleaned=$((cover_letter_files_cleaned + 1))
+        fi
+    fi
+done
+cd "$SCRIPT_DIR"
+
+log "success" "Cover Letter build complete! Cleaned $cover_letter_files_cleaned files."
+
+sleep 1
+
 # Clean up auxiliary files
 log "clean" "Cleaning up..."
 files_cleaned=0

@@ -24,9 +24,9 @@ BS in Electrical Engineering student at Colorado School of Mines with a Minor in
 
 ## Certifications
 
-- **MATLAB Machine Learning Techniques** - [Credly Badge](https://www.credly.com/badges/3d740a34-2cfa-4259-ab08-3aeed0e3f03c/public_url)
-- **Microsoft Technical Associate - Java Programming**
-- **Microsoft Technical Associate - Python Programming**
+- **MATLAB Machine Learning Techniques** - [Certificate](https://www.credly.com/badges/3d740a34-2cfa-4259-ab08-3aeed0e3f03c/public_url)
+- **Microsoft Technical Associate - Java Programming** - [Certificate](assets/JavaMTA.pdf )
+- **Microsoft Technical Associate - Python Programming** - [Certificate](assets/PythonMTA.pdf)
 
 ## Career Goals
 

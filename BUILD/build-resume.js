@@ -5,14 +5,14 @@
  * Generates LaTeX resume and README from resume-data.json
  */
 
-const { 
-  loadResumeData, 
-  filters, 
-  escapeLatex, 
+const {
+  loadResumeData,
+  filters,
+  escapeLatex,
   extractSkillNames,
   extractCertificationNames,
   extractCourseNames,
-  writeFile 
+  writeFile
 } = require('./utils');
 
 /**
@@ -37,31 +37,41 @@ function generateResume(data) {
   const educationVSpace = calculateVSpace(data.education.honors.length + data.education.scholarships.length);
   const contactInfoLength = 4;
   const nameVSpace = calculateVSpace(contactInfoLength, 5);
+  // Build contact line dynamically so additional items like relocation/citizenship
+  // are counted and displayed. This keeps header sizing consistent with content.
+  const contactParts = [];
+  if (data.personal.linkedin) contactParts.push(`\\href{${data.personal.linkedin}}{LinkedIn}`);
+  if (data.personal.website) contactParts.push(`\\href{${data.personal.website}}{${escapeLatex(data.personal.website.replace('https://', '').replace('http://', ''))}}`);
+  if (data.personal.email) contactParts.push(`\\href{mailto:${data.personal.email}}{${escapeLatex(data.personal.email)}}`);
+  if (data.personal.phone) contactParts.push(`\\href{tel:${data.personal.phone.replace(/[()]/g, '')}}{${escapeLatex(data.personal.phone)}}`);
+  if (data.personal.relocation) contactParts.push(`${escapeLatex(data.personal.relocation)}`);
+  if (data.personal.citizenship) contactParts.push(`${escapeLatex(data.personal.citizenship)}`);
   const skillsCount = Object.values(filters.filterResumeSkills(data.skills)).flat().length;
-  const skillsVSpace = calculateVSpace(skillsCount, 5);
-  
+  const skillsVSpace = calculateVSpace(skillsCount, 6);
+
   const sectionTransitionSpace = (contentLength) => {
     if (contentLength <= 2) return 14;
     if (contentLength <= 4) return 12;
     if (contentLength <= 6) return 10;
     return 8;
   };
-  
+
   const educationTransitionSpace = sectionTransitionSpace(data.education.honors.length + data.education.scholarships.length);
   const experienceTransitionSpace = sectionTransitionSpace(resumeExperience.length);
   const projectsTransitionSpace = sectionTransitionSpace(resumeProjects.length);
-  
+
   const itemSpacing = (contentLength) => {
     if (contentLength <= 2) return 5;
     if (contentLength <= 4) return 3;
     return 2;
   };
-  
+
   const experienceItemSpacing = itemSpacing(resumeExperience.length);
   const projectItemSpacing = itemSpacing(resumeProjects.length);
 
-  const template = 
-`\\documentclass[11pt]{article}
+  const template =
+`
+\\documentclass[11pt]{article}
 \\usepackage{geometry}
 \\geometry{letterpaper,top=0.5in,bottom=0.5in,left=0.5in,right=0.5in}
 
@@ -78,7 +88,6 @@ function generateResume(data) {
 \\input{glyphtounicode}
 \\pdfgentounicode=1
 
-% Document metadata
 \\title{${escapeLatex(data.personal.name)} - Resume}
 \\author{${escapeLatex(data.personal.name)}}
 
@@ -157,7 +166,13 @@ ${project.description.map(item => `  \\item ${escapeLatex(item)}`).join('\n')}
 
 \\vspace{-${Math.max(projectsTransitionSpace, projectsVSpace + 5)}pt}
 
-\\end{document}`;
+\\section*{Extracurriculars}
+\\pdfbookmark[1]{Extracurriculars}{extracurriculars}
+\\vspace{${calculateVSpace((data.extracurriculars || []).length, 3)}pt}
+\\small ${(data.extracurriculars || []).map(e => escapeLatex(e)).join(', ')}
+
+\\end{document}
+`;
 
   return template;
 }
@@ -192,7 +207,7 @@ ${data.education.degree} student at ${data.education.institution} with a ${data.
 
 ## Certifications
 
-${data.certifications.map(cert => `- **${cert.name}**${cert.credly ? ` - [Credly Badge](${cert.credly})` : ''}`).join('\n')}
+${data.certifications.map(cert => `- **${cert.name}**${cert.link ? ` - [Certificate](${cert.link})` : ''}`).join('\n')}
 
 ## Career Goals
 
@@ -207,12 +222,12 @@ ${data.careerGoals.map(goal => `- ${goal}`).join('\n')}
  */
 function buildResume() {
   console.log('Starting resume build...\n');
-  
+
   const data = loadResumeData();
-  
+
   writeFile('../README.md', generateREADME(data));
   writeFile('../resume/Edward_Silva_Resume.tex', generateResume(data));
-  
+
   console.log('\nResume build completed!');
   console.log('\nGenerated files:');
   console.log('- README.md');
