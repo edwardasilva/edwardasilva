@@ -18,9 +18,9 @@ BS in Electrical Engineering student at Colorado School of Mines with a Minor in
 
 ## Skills
 
-- **Programming:** C++, MATLAB, Java, Python, Verilog, RISC-V Assembly, Bash
+- **Programming:** C++, Python, MATLAB, Java, Verilog, RISC-V Assembly, Bash
 - **Hardware:** Arduino, Raspberry Pi, Digital Circuits, Embedded Systems, Microcontrollers, Circuit Design
-- **Software & Tools:** SolidWorks, VS Code, Git/GitHub, Linux, Virtualization, Autodesk Revit, MEP AutoCAD, Fusion 360, Eclipse, SSH, LaTeX, Microsoft Office Suite, Google Suite
+- **Software & Tools:** VS Code, Git/GitHub, Linux, Virtualization, Autodesk Revit, MEP AutoCAD, Eclipse, SSH, LaTeX, Microsoft Office Suite, Google Suite
 
 ## Certifications
 

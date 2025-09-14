@@ -70,7 +70,7 @@ function generateResume(data) {
   const projectItemSpacing = itemSpacing(resumeProjects.length);
 
   const template =
-`
+    `
 \\documentclass[11pt]{article}
 \\usepackage{geometry}
 \\geometry{letterpaper,top=0.5in,bottom=0.5in,left=0.5in,right=0.5in}
@@ -158,7 +158,7 @@ ${exp.description.map(item => `  \\item ${escapeLatex(item)}`).join('\n')}
 \\section*{Projects}
 \\pdfbookmark[1]{Projects}{projects}
 \\vspace{${projectsVSpace}pt}
-${resumeProjects.map(project => `\\textbf{${escapeLatex(project.title)}}, ${project.technologies.map(tech => escapeLatex(tech)).join(', ')}, ${project.github ? `\\href{${project.github}}{Github}` : ''} \\hfill ${escapeLatex(project.duration)}
+${resumeProjects.map(project => `\\textbf{${escapeLatex(project.title)}}, ${project.technologies.map(tech => escapeLatex(tech)).join(', ')} ${project.github ? `\\href{${project.github}}{Github}` : ''} \\hfill ${escapeLatex(project.duration)}
 \\vspace{-${projectItemSpacing}pt}
 \\begin{itemize}
 ${project.description.map(item => `  \\item ${escapeLatex(item)}`).join('\n')}

@@ -310,8 +310,7 @@
         "Contributed to electrical design of 20+ multi-unit residential and specialty building developments, spanning initial takeoffs, layout design, riser diagrams, NEC verification, and QC review.",
         "Developed proficiency in Autodesk Revit and MEP AutoCAD, strategically placing electrical receptacles, lighting, and circuits to ensure NEC compliance and practical, user-centered functionality.",
         "Performed circuit loading and voltage drop calculations, balancing panel schedules and selecting appropriate breakers to ensure safety, reliability, and adherence to regulatory standards.",
-        "Utilized existing automation between Revit/CAD layouts and Excel tracking sheets to streamline design documentation processes and reduce manual errors.",
-        "Collaborated closely with supervisors and cross-disciplinary teams (Mechanical, Plumbing), documenting client interactions and team meetings to improve project coordination and team efficiency."
+        "Utilized existing automation between Revit/CAD layouts and Excel tracking sheets to streamline design documentation processes and reduce manual errors."
       ],
       "experienceType": "All"
     }
@@ -394,6 +393,24 @@
   ],
   "projects": [
     {
+      "title": "Autonomous Path Following Robot",
+      "technologies": [
+        "Arduino",
+        "Raspberry Pi",
+        "Python",
+        "C++"
+      ],
+      "duration": "August 2025 - Present",
+      "description": [
+        "Developing the computer vision system for a semester-long robotics project, working within a four-person team split between vision and controls",
+        "Created a real time object detection program in Python using OpenCV that identifies target shapes from live video streams with bounding boxes and masks, surpassing the original single image requirement",
+        "Building a communication interface between the Raspberry Pi and Arduino to exchange control and sensor data, enabling integration of perception with motion control",
+        "Supporting integration with a PID control system to achieve accurate path following and autonomous navigation"
+      ],
+      "experienceType": "All",
+      "projectType": "School Project"
+    },
+    {
       "title": "Dual-Axis Solar Tracker Robot",
       "technologies": [
         "Arduino",
@@ -408,7 +425,7 @@
         "Utilized a Raspberry Pi as the system's central controller, handling logic flow and interfacing with the Arduino to execute real-time motor positioning.",
         "Conducted iterative indoor testing to calibrate sensitivity and response thresholds under varying lighting conditions, improving tracking accuracy and stability."
       ],
-      "experienceType": "All",
+      "experienceType": "Site",
       "projectType": "Personal Project"
     },
     {
@@ -454,15 +471,15 @@
         "experienceType": "All"
       },
       {
+        "name": "Python",
+        "experienceType": "All"
+      },
+      {
         "name": "MATLAB",
         "experienceType": "All"
       },
       {
         "name": "Java",
-        "experienceType": "All"
-      },
-      {
-        "name": "Python",
         "experienceType": "All"
       },
       {
@@ -506,10 +523,6 @@
     ],
     "Software": [
       {
-        "name": "SolidWorks",
-        "experienceType": "All"
-      },
-      {
         "name": "VS Code",
         "experienceType": "All"
       },
@@ -532,10 +545,6 @@
       {
         "name": "MEP AutoCAD",
         "experienceType": "All"
-      },
-      {
-        "name": "Fusion 360",
-        "experienceType": "Site"
       },
       {
         "name": "Eclipse",
