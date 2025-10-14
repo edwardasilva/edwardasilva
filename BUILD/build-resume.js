@@ -374,23 +374,21 @@ ${degree} student at ${institution} with a ${minor}, focusing on ${specializatio
 
 ## Contact
 
-  - ** Personal:** [${data.personal.email}](mailto:${data.personal.email})
-    - ** LinkedIn:** [${data.personal.name}](${data.personal.linkedin})
-      - ** Website:** [${data.personal.website.replace('https://', '')}](${data.personal.website})
+  - **Personal:** [${data.personal.email}](mailto:${data.personal.email})
+  - **LinkedIn:** [${data.personal.name}](${data.personal.linkedin})
+  - **Website:** [${data.personal.website.replace('https://', '')}](${data.personal.website})
 
 ## Education
 
-  ** ${institution}**, ${expectedGraduation} | GPA: ${gpa}
+**${institution}**, ${expectedGraduation} | GPA: ${gpa}
 
-** ${degree}**, ${prim.specialization || ''}
-
-** ${minor}**, ${minorSpecialization}
+**${degree}**, **${minor}**
 
 ## Skills
 
-  - ** Programming:** ${extractSkillNames(data.skills.Programming).join(', ')}
-- ** Hardware:** ${extractSkillNames(data.skills.Hardware).join(', ')}
-- ** Software & Tools:** ${extractSkillNames(data.skills.Software).join(', ')}
+- **Programming:** ${extractSkillNames(data.skills.Programming).join(', ')}
+- **Hardware:** ${extractSkillNames(data.skills.Hardware).join(', ')}
+- **Software & Tools:** ${extractSkillNames(data.skills.Software).join(', ')}
 
 ## Certifications
 
