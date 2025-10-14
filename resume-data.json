@@ -4,20 +4,34 @@
     "email": "contact@easilva.com",
     "phone": "(702) 720-7735",
     "website": "https://easilva.com",
-    "linkedin": "https://www.linkedin.com/in/edwardasilva/",
+    "linkedin": "https://www.linkedin.com/in/edwardasilva",
     "github": "https://github.com/edwardasilva/",
     "relocation": "Open to relocation",
-    "citizenship": "US Citizen"
+    "citizenship": "US Citizen",
+    "clearance": "DoD Clearable"
   },
-  "education": {
-    "institution": "Colorado School of Mines",
-    "location": "Golden, CO",
-    "degree": "BS in Electrical Engineering",
-    "specialization": "Controls & Signal Processing",
-    "minor": "Minor in Computer Science",
-    "minorSpecialization": "Software and Algorithm Design",
-    "expectedGraduation": "May 2026",
-    "gpa": "3.44",
+  "education": [
+    {
+      "institution": "Colorado School of Mines",
+      "location": "Golden, CO",
+      "degree": "BS Electrical Engineering",
+      "specialization": "Controls and Signal Processing",
+      "minor": "Minor in Computer Science",
+      "expectedGraduation": "May 2026",
+      "gpa": "3.44",
+      "experienceType": "All"
+    },
+    {
+      "institution": "Colorado School of Mines",
+      "location": "Golden, CO",
+      "degree": "MS Electrical Engineering",
+      "specialization": "Controls and Signal Processing",
+      "startDate": "Fall 2026",
+      "expectedGraduation": "Spring 2027",
+      "experienceType": "None"
+    }
+  ],
+  "educationSupplementary": {
     "honors": [
       "Dean's List (2 semesters)",
       "Honor Roll (2 semesters)"
@@ -55,7 +69,7 @@
           "name": "Information Systems Science I",
           "description": "The interpretation, representation and analysis of time-varying phenomena as signals which convey information and noise; applications are drawn from filtering, audio and image processing, and communications. Topics include convolution, Fourier series and transforms, sampling and discrete-time processing of continuous-time signals, modulation, and z-transforms.",
           "relevancy": "Yes",
-          "experienceType": "All"
+          "experienceType": "Site"
         },
         {
           "code": "EENG 311",
@@ -83,7 +97,7 @@
           "name": "Embedded Systems",
           "description": "The design and implementation of systems consisting of analog and digital components with a microcontroller to perform a dedicated task. Student will implement systems using a variety of microcontroller subsystems including timers, PWM, ADC, serial communication subsystems and interrupts. Students will learn embedded systems programming techniques like, fixed-point math, direct digital synthesis, lookup tables, and row scanning. Student will program the microcontroller using a high-level programming language like C or C++.",
           "relevancy": "Yes",
-          "experienceType": "All"
+          "experienceType": "Site"
         },
         {
           "code": "EENG 385",
@@ -118,7 +132,7 @@
           "name": "Modern Control Design",
           "description": "Control system design with an emphasis on observer-based methods, from initial open-loop experiments to final implementation. The course begins with an overview of feedback control design technique from the frequency domain perspective, including sensitivity and fundamental limitations. State space realization theory is introduced, and system identification methods for parameter estimation are introduced. Computerbased methods for control system design are presented.",
           "relevancy": "Yes",
-          "experienceType": "All"
+          "experienceType": "Site"
         }
       ],
       "Computer Science": [
@@ -169,7 +183,7 @@
           "name": "Software Engineering",
           "description": "Introduction to software engineering processes and object-oriented design principles. Topics include the Agile development methodology, test-driven development, UML diagrams, use cases and several object-oriented design patterns. Course work emphasizes good programming practices via version control and code reviews.",
           "relevancy": "Yes",
-          "experienceType": "All"
+          "experienceType": "Site"
         },
         {
           "code": "CSCI 341",
@@ -292,7 +306,7 @@
       "title": "Software Engineering Intern",
       "company": "Kratos Defense",
       "location": "Colorado Springs, CO",
-      "duration": "June -- August 2025",
+      "duration": "June - August 2025",
       "description": [
         "Achieved 1.6x execution speedup by optimizing legacy DSP algorithms in C++ through code refactoring and performance analysis, reducing computational overhead for real-time signal processing applications.",
         "Improved system throughput by developing and implementing SIMD-optimized mathematical algorithms using vectorized operations for parallel data processing.",
@@ -305,14 +319,14 @@
       "title": "Co-op Intern, Electrical Design",
       "company": "Jordan and Skala Engineers",
       "location": "Denver, CO",
-      "duration": "January -- June 2025",
+      "duration": "January - June 2025",
       "description": [
         "Contributed to electrical design of 20+ multi-unit residential and specialty building developments, spanning initial takeoffs, layout design, riser diagrams, NEC verification, and QC review.",
         "Developed proficiency in Autodesk Revit and MEP AutoCAD, strategically placing electrical receptacles, lighting, and circuits to ensure NEC compliance and practical, user-centered functionality.",
         "Performed circuit loading and voltage drop calculations, balancing panel schedules and selecting appropriate breakers to ensure safety, reliability, and adherence to regulatory standards.",
         "Utilized existing automation between Revit/CAD layouts and Excel tracking sheets to streamline design documentation processes and reduce manual errors."
       ],
-      "experienceType": "All"
+      "experienceType": "Site"
     }
   ],
   "teachingExperience": [
@@ -320,7 +334,7 @@
       "title": "Mathematics Assistant",
       "company": "Colorado School of Mines",
       "location": "Golden, CO",
-      "duration": "January -- December 2024",
+      "duration": "January - December 2024",
       "description": [
         "Independently graded assignments and exams for MATH 225 (Differential Equations) and MATH 112 (Calculus II) using Gradescope.",
         "Provided detailed written feedback to help students improve conceptual understanding and problem-solving accuracy."
@@ -331,7 +345,7 @@
       "title": "Substitute Teacher",
       "company": "Fairfax County Public Schools",
       "location": "Fairfax, VA",
-      "duration": "September 2023 -- June 2024, Seasonal",
+      "duration": "September 2023 - June 2024, Seasonal",
       "description": [
         "Delivered classroom instruction for high school students across various subjects in the absence of regular teachers.",
         "Maintained classroom order and engagement while ensuring continuity of learning through pre-planned lesson materials.",
@@ -343,7 +357,7 @@
       "title": "Peer Mentor",
       "company": "Colorado School of Mines",
       "location": "Golden, CO",
-      "duration": "August -- December 2023",
+      "duration": "August - December 2023",
       "description": [
         "Co-led a semester-long, 1-credit course designed to help first-year students transition to the academic and social rigors of Mines, following a structured curriculum with limited creative input.",
         "Collaborated weekly with a mentor team to develop and deliver lessons on mental health, emotional resilience, and academic success strategies, reinforcing student support networks and retention.",
@@ -355,7 +369,7 @@
       "title": "Lead Counselor & Coding Instructor",
       "company": "Code Ninjas",
       "location": "Fairfax, VA",
-      "duration": "March 2022 -- August 2023",
+      "duration": "March 2022 - August 2023",
       "description": [
         "Provided in-class tutoring and on-demand support to students aged 6-14 in JavaScript and C#, reinforcing foundational programming concepts in weekly classes and summer camps.",
         "Led STEM-focused summer camps for up to 100 students, delivering hands-on instruction in 3D modeling/printing, circuits, robotics, and introductory Python and C# programming.",
@@ -370,7 +384,7 @@
       "title": "Undergraduate Researcher",
       "company": "ePower Hubs Research Lab",
       "location": "Golden, CO",
-      "duration": "June 2024 -- January 2025",
+      "duration": "June 2024 - January 2025",
       "description": [
         "Independently conducted literature reviews on sensor systems and wind farm-level control strategies, focusing on offshore integration with variable voltage, power, and frequency constraints.",
         "Synthesized findings into multiple internal reports using LaTeX, contributing to cost-reduction strategies in wind farm grid maintenance, design, and power grid integration.",
@@ -382,7 +396,7 @@
       "title": "Undergraduate Research Assistant",
       "company": "Explosives Research Lab",
       "location": "Golden, CO",
-      "duration": "August 2022 -- January 2023",
+      "duration": "August 2022 - January 2023",
       "description": [
         "Optimized 3D printer settings to improve the dimensional accuracy of explosive housing components, supporting downstream testing reliability.",
         "Observed controlled explosive tests in varied environments, contributing to data tracking accuracy through detailed field documentation.",
@@ -405,7 +419,23 @@
         "Developing the computer vision system for a semester-long robotics project, working within a four-person team split between vision and controls",
         "Created a real time object detection program in Python using OpenCV that identifies target shapes from live video streams with bounding boxes and masks, surpassing the original single image requirement",
         "Building a communication interface between the Raspberry Pi and Arduino to exchange control and sensor data, enabling integration of perception with motion control",
-        "Supporting integration with a PID control system to achieve accurate path following and autonomous navigation"
+        "Supporting integration with a PID control system to achieve path following and autonomous navigation"
+      ],
+      "experienceType": "All",
+      "projectType": "School Project"
+    },
+    {
+      "title": "Crane Gantry Controller",
+      "technologies": [
+        "MATLAB",
+        "Simulink"
+      ],
+      "duration": "August - October 2025",
+      "description": [
+        "Modeled and linearized a nonlinear gantry crane system in MATLAB and Simulink using small-angle approximations, deriving the transfer function and validating results against experimental data",
+        "Identified and tuned the crane's cable length parameter to match empirical position and velocity data with accuracy to three decimal points",
+        "Designed and implemented a discrete-time feedback controller that met overshoot, settling time, and velocity constraints while maximizing gain and phase margins",
+        "Analyzed closed-loop system performance and stability margins through time-domain and frequency-domain plots to confirm robust controller behavior for both linear and nonlinear models"
       ],
       "experienceType": "All",
       "projectType": "School Project"
@@ -418,7 +448,7 @@
         "C++"
       ],
       "github": "https://github.com/edwardasilva/SolarPanelProject",
-      "duration": "August -- October 2024",
+      "duration": "August - October 2024",
       "description": [
         "Designed and built a dual-axis solar tracking prototype using Arduino-controlled servos and photoresistor-based voltage divider circuits to maximize solar exposure.",
         "Wrote a custom tracking algorithm from scratch to identify the brightest point in the sky through light intensity sampling, enabling precise pitch and yaw adjustments.",
@@ -436,7 +466,7 @@
         "Eclipse",
         "Git"
       ],
-      "duration": "August -- December 2023",
+      "duration": "August - December 2023",
       "description": [
         "Collaborated in a 3-person team to develop a fully functional desktop version of the board game Clue using Java and Swing, applying classroom-adapted SCRUM and Test-Driven Development methodologies.",
         "Shared responsibilities across the project lifecycle, contributing to backend game logic, UI design, and test coverage using JUnit.",
@@ -452,7 +482,7 @@
         "SolidWorks",
         "Academic Research"
       ],
-      "duration": "August -- December 2022",
+      "duration": "August - December 2022",
       "description": [
         "Recognized as a Subject Matter Expert (Top 4 of 40 teams) for in-depth understanding and presentation of technical concepts in a semester-long engineering design competition.",
         "Collaborated in a team of six to develop a cost-effective hydraulic ram pump system to address acid mine drainage challenges using passive filtration methods.",
@@ -535,7 +565,7 @@
         "experienceType": "All"
       },
       {
-        "name": "Virtualization",
+        "name": "Simulink",
         "experienceType": "All"
       },
       {

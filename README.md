@@ -1,26 +1,26 @@
 # Edward Silva
 
-BS in Electrical Engineering student at Colorado School of Mines with a Minor in Computer Science, focusing on controls & signal processing.
+BS Electrical Engineering student at Colorado School of Mines with a Minor in Computer Science, focusing on controls and signal processing.
 
 ## Contact
 
-- **Personal:** [contact@easilva.com](mailto:contact@easilva.com)
-- **LinkedIn:** [Edward Silva](https://www.linkedin.com/in/edwardasilva/)
-- **Website:** [easilva.com](https://easilva.com)
+  - ** Personal:** [contact@easilva.com](mailto:contact@easilva.com)
+    - ** LinkedIn:** [Edward Silva](https://www.linkedin.com/in/edwardasilva)
+      - ** Website:** [easilva.com](https://easilva.com)
 
 ## Education
 
-**Colorado School of Mines**, May 2026 | GPA: 3.44
+  ** Colorado School of Mines**, May 2026 | GPA: 3.44
 
-**BS in Electrical Engineering**, Controls & Signal Processing
+** BS Electrical Engineering**, Controls and Signal Processing
 
-**Minor in Computer Science**, Software and Algorithm Design
+** Minor in Computer Science**, 
 
 ## Skills
 
-- **Programming:** C++, Python, MATLAB, Java, Verilog, RISC-V Assembly, Bash
-- **Hardware:** Arduino, Raspberry Pi, Digital Circuits, Embedded Systems, Microcontrollers, Circuit Design
-- **Software & Tools:** VS Code, Git/GitHub, Linux, Virtualization, Autodesk Revit, MEP AutoCAD, Eclipse, SSH, LaTeX, Microsoft Office Suite, Google Suite
+  - ** Programming:** C++, Python, MATLAB, Java, Verilog, RISC-V Assembly, Bash
+- ** Hardware:** Arduino, Raspberry Pi, Digital Circuits, Embedded Systems, Microcontrollers, Circuit Design
+- ** Software & Tools:** VS Code, Git/GitHub, Linux, Simulink, Autodesk Revit, MEP AutoCAD, Eclipse, SSH, LaTeX, Microsoft Office Suite, Google Suite
 
 ## Certifications
 

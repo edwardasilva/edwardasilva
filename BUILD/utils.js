@@ -5,13 +5,17 @@
  */
 
 const fs = require('fs');
+const path = require('path');
 
 /**
  * Load resume data from JSON file
  */
 function loadResumeData() {
   try {
-    const data = fs.readFileSync('../resume-data.json', 'utf8');
+    // Resolve path relative to this utils.js file so the script works
+    // regardless of the current working directory when node is invoked.
+    const resumePath = path.resolve(__dirname, '..', 'resume-data.json');
+    const data = fs.readFileSync(resumePath, 'utf8');
     return JSON.parse(data);
   } catch (error) {
     console.error('Error loading resume data:', error.message);
@@ -69,7 +73,7 @@ const filters = {
   filterResumeSkills(skills) {
     const filtered = {};
     Object.entries(skills).forEach(([category, skillList]) => {
-      filtered[category] = skillList.filter(skill => 
+      filtered[category] = skillList.filter(skill =>
         typeof skill === 'string' || skill.experienceType === "All"
       );
     });
@@ -82,7 +86,7 @@ const filters = {
   filterWebsiteSkills(skills) {
     const filtered = {};
     Object.entries(skills).forEach(([category, skillList]) => {
-      filtered[category] = skillList.filter(skill => 
+      filtered[category] = skillList.filter(skill =>
         typeof skill === 'string' || skill.experienceType === "All" || skill.experienceType === "Site"
       );
     });
@@ -93,7 +97,7 @@ const filters = {
    * Filter certifications for resume (All type only)
    */
   filterResumeCertifications(certifications) {
-    return certifications.filter(cert => 
+    return certifications.filter(cert =>
       typeof cert === 'string' || cert.experienceType === "All" || !cert.experienceType
     );
   },
@@ -102,7 +106,7 @@ const filters = {
    * Filter certifications for website (All and Site types)
    */
   filterWebsiteCertifications(certifications) {
-    return certifications.filter(cert => 
+    return certifications.filter(cert =>
       typeof cert === 'string' || cert.experienceType === "All" || cert.experienceType === "Site" || !cert.experienceType
     );
   },
@@ -112,14 +116,14 @@ const filters = {
    */
   filterResumeCourses(courses) {
     const allCourses = [];
-    
+
     Object.values(courses).forEach(categoryCourses => {
-      const filteredCourses = categoryCourses.filter(course => 
+      const filteredCourses = categoryCourses.filter(course =>
         course.experienceType === "All" || !course.experienceType
       );
       allCourses.push(...filteredCourses);
     });
-    
+
     return allCourses;
   },
 
@@ -128,15 +132,53 @@ const filters = {
    */
   filterWebsiteCourses(courses) {
     const allCourses = [];
-    
+
     Object.values(courses).forEach(categoryCourses => {
-      const filteredCourses = categoryCourses.filter(course => 
+      const filteredCourses = categoryCourses.filter(course =>
         course.experienceType === "All" || course.experienceType === "Site" || !course.experienceType
       );
       allCourses.push(...filteredCourses);
     });
-    
+
     return allCourses;
+  },
+
+  /**
+   * Get education context: choose primary education (first 'All' or first entry)
+   * and return supplementary object as-is. This replaces the old isPrimary flag.
+   */
+  getEducationContext(education, supplementary = {}) {
+    if (!Array.isArray(education) || education.length === 0) return { primaryEducation: null, supplementary };
+
+    // Prefer Master's entry when it's explicitly included for resume (experienceType === 'All').
+    // Otherwise, fall back to the previous behavior of picking the first 'All' or the first entry.
+    const isMasters = (e) => {
+      const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
+      return deg.startsWith('ms') || deg.includes('master');
+    };
+
+    // Among entries marked 'All', try to find a Master's first
+    const allEntries = education.filter(e => e && e.experienceType === 'All');
+    const mastersPrimary = allEntries.find(isMasters);
+    const primary = mastersPrimary || allEntries[0] || education[0];
+    return { primaryEducation: primary, supplementary };
+  },
+
+  /**
+   * Filter education for resume
+   */
+  filterResumeEducation(education) {
+    // Use experienceType consistency: include entries marked as 'All'
+    // or those explicitly marked for resume via 'Site' (if needed later)
+    return education.filter(edu => edu.experienceType === 'All');
+  },
+
+  /**
+   * Filter education for website
+   */
+  filterWebsiteEducation(education) {
+    // Website should include entries marked 'All' or 'Site'
+    return education.filter(edu => edu.experienceType === 'All' || edu.experienceType === 'Site');
   }
 };
 
@@ -166,7 +208,7 @@ function escapeLatex(text) {
  */
 function groupCertificationsByOrganization(certifications) {
   const grouped = {};
-  
+
   certifications.forEach(cert => {
     const org = cert.organization || 'Other';
     if (!grouped[org]) {
@@ -174,7 +216,7 @@ function groupCertificationsByOrganization(certifications) {
     }
     grouped[org].push(cert);
   });
-  
+
   return grouped;
 }
 
@@ -183,7 +225,7 @@ function groupCertificationsByOrganization(certifications) {
  */
 function groupProjectsByType(projects) {
   const grouped = {};
-  
+
   projects.forEach(project => {
     const type = project.projectType || 'Other';
     if (!grouped[type]) {
@@ -191,7 +233,7 @@ function groupProjectsByType(projects) {
     }
     grouped[type].push(project);
   });
-  
+
   return grouped;
 }
 
@@ -207,25 +249,25 @@ function extractSkillNames(skills) {
  * Combines Microsoft Technical Associate certifications for resume display
  */
 function extractCertificationNames(certifications) {
-  const javaCert = certifications.find(cert => 
+  const javaCert = certifications.find(cert =>
     typeof cert === 'object' && cert.name === "Microsoft Technical Associate - Java Programming"
   );
-  const pythonCert = certifications.find(cert => 
+  const pythonCert = certifications.find(cert =>
     typeof cert === 'object' && cert.name === "Microsoft Technical Associate - Python Programming"
   );
-  
+
   // If both certifications exist, combine them for resume
   if (javaCert && pythonCert) {
     return certifications
-      .filter(cert => 
-        typeof cert === 'string' || 
-        (cert.name !== "Microsoft Technical Associate - Java Programming" && 
-         cert.name !== "Microsoft Technical Associate - Python Programming")
+      .filter(cert =>
+        typeof cert === 'string' ||
+        (cert.name !== "Microsoft Technical Associate - Java Programming" &&
+          cert.name !== "Microsoft Technical Associate - Python Programming")
       )
       .map(cert => typeof cert === 'string' ? cert : cert.name)
       .concat(["Microsoft Technical Associate - Java & Python Programming"]);
   }
-  
+
   // Otherwise, return all certifications as normal
   return certifications.map(cert => typeof cert === 'string' ? cert : cert.name);
 }
@@ -242,7 +284,7 @@ function extractCourseNames(courses) {
  */
 function groupSkillsBySubcategory(skills) {
   const grouped = {};
-  
+
   skills.forEach(skill => {
     if (typeof skill === 'object' && skill.subcategory) {
       const subcategory = skill.subcategory;
@@ -257,7 +299,7 @@ function groupSkillsBySubcategory(skills) {
       grouped['Other'].push(skill);
     }
   });
-  
+
   return grouped;
 }
 
@@ -283,5 +325,8 @@ module.exports = {
   extractCertificationNames,
   extractCourseNames,
   groupSkillsBySubcategory,
-  writeFile
+  writeFile,
+  getEducationContext: (education, supplementary) => filters.getEducationContext(education, supplementary),
+  // Backward compatible alias: returns primary education directly
+  getPrimaryEducation: (education) => filters.getEducationContext(education).primaryEducation
 };

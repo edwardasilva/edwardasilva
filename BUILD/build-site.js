@@ -5,67 +5,111 @@
  * Generates website HTML and JavaScript data from resume-data.json
  */
 
-const { 
-  loadResumeData, 
-  filters, 
-  groupCertificationsByOrganization, 
-  groupProjectsByType, 
-  extractSkillNames,
-  writeFile 
+const {
+    loadResumeData,
+    filters,
+    groupCertificationsByOrganization,
+    groupProjectsByType,
+    extractSkillNames,
+    getEducationContext,
+    writeFile
 } = require('./utils');
 
 /**
  * Generate data for HTML embedding
  */
 function generateDataForHTML(data) {
-  const relevantCourses = filters.filterRelevantCourses(data.education.courses);
+    const relevantCourses = filters.filterRelevantCourses(data.educationSupplementary.courses);
+    const { primaryEducation } = getEducationContext(data.education, data.educationSupplementary);
 
-  const infoContent = {
-    // Education
-    "deans-list": "Achieved Dean's List status for maintaining a GPA of 3.8 or higher for two semesters.",
-    "honor-roll": "Recognized on the Honor Roll for maintaining a GPA between 3.5 and 3.79 for two semesters.",
-    "provost-scholarship": "Awarded a merit-based scholarship of $9,000 per year for academic excellence throughout undergraduate studies.",
-    "c-mapp": "Selected as a C-MAPP Scholar receiving $1,000 annually for demonstrating academic potential and leadership qualities.",
-    "abs-scholar": "Recipient of the prestigious American Bureau of Shipping Scholarship valued at $4,000 for excellence in engineering studies related to maritime applications.",
-    
-    // Certifications
-    ...Object.fromEntries(
-      data.certifications.map(cert => {
-        const key = cert.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-        return [key, cert.description];
-      })
-    ),
-    
-    // Courses
-    ...Object.fromEntries(
-      Object.entries(relevantCourses).flatMap(([category, courses]) =>
-        courses.map(course => [course.code, course.description])
-      )
-    ),
-  };
+    const infoContent = {
+        // Education
+        "deans-list": "Achieved Dean's List status for maintaining a GPA of 3.8 or higher for two semesters.",
+        "honor-roll": "Recognized on the Honor Roll for maintaining a GPA between 3.5 and 3.79 for two semesters.",
+        "provost-scholarship": "Awarded a merit-based scholarship of $9,000 per year for academic excellence throughout undergraduate studies.",
+        "c-mapp": "Selected as a C-MAPP Scholar receiving $1,000 annually for demonstrating academic potential and leadership qualities.",
+        "abs-scholar": "Recipient of the prestigious American Bureau of Shipping Scholarship valued at $4,000 for excellence in engineering studies related to maritime applications.",
 
-  const courseCategories = Object.fromEntries(
-    Object.entries(relevantCourses)
-      .filter(([category, courses]) => courses.length > 0)
-      .map(([category, courses]) => [
-        category,
-        courses.map(course => course.code)
-      ])
-  );
+        // Certifications
+        ...Object.fromEntries(
+            data.certifications.map(cert => {
+                const key = cert.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                return [key, cert.description];
+            })
+        ),
 
-  return { infoContent, courseCategories };
+        // Courses
+        ...Object.fromEntries(
+            Object.entries(relevantCourses).flatMap(([category, courses]) =>
+                courses.map(course => [course.code, course.description])
+            )
+        ),
+    };
+
+    const courseCategories = Object.fromEntries(
+        Object.entries(relevantCourses)
+            .filter(([category, courses]) => courses.length > 0)
+            .map(([category, courses]) => [
+                category,
+                courses.map(course => course.code)
+            ])
+    );
+
+    return { infoContent, courseCategories };
 }
 
 /**
  * Generate complete HTML website
  */
 function generateHTML(data) {
-  const websiteExperience = filters.filterWebsiteExperience(data.experience);
-  const websiteProjects = filters.filterWebsiteProjects(data.projects);
-  const relevantCourses = filters.filterRelevantCourses(data.education.courses);
-  const { infoContent, courseCategories } = generateDataForHTML(data);
+    const websiteExperience = filters.filterWebsiteExperience(data.experience);
+    const websiteProjects = filters.filterWebsiteProjects(data.projects);
+    const relevantCourses = filters.filterRelevantCourses(data.educationSupplementary.courses);
+    const { primaryEducation } = getEducationContext(data.education, data.educationSupplementary);
+    const websiteEducations = filters.filterWebsiteEducation(data.education || []);
 
-  const template = `<!DOCTYPE html>
+    // Determine MS/BS presence for cleaner stacked display
+    const isMasters = (e) => {
+        const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
+        return deg.startsWith('ms') || deg.includes('master');
+    };
+    const isBachelors = (e) => {
+        const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
+        return deg.startsWith('bs') || deg.includes('bachelor');
+    };
+    const mastersEntry = websiteEducations.find(isMasters) || null;
+    const bachelorsEntry = websiteEducations.find(isBachelors) || null;
+
+    // Build the Education block HTML based on presence of MS; hide GPA when stacked
+    const educationBlockHTML = (() => {
+        if (mastersEntry) {
+            const inst = mastersEntry.institution || (bachelorsEntry ? bachelorsEntry.institution : primaryEducation.institution);
+            const msSpec = mastersEntry.specialization ? `, ${mastersEntry.specialization}` : '';
+            const msExpected = mastersEntry.expectedGraduation ? ` | Expected ${mastersEntry.expectedGraduation}` : '';
+            const bs = bachelorsEntry || primaryEducation; // fallback if BS not explicitly found
+            const bsDegreeNorm = String(bs.degree || '').replace(/\b[in]\b\s*/i, ' ').replace(/\s{2,}/g, ' ').trim();
+            const bsMinorPart = bs.minor ? `, ${bs.minor}` : '';
+            const bsExpected = bs.expectedGraduation ? ` | Expected ${bs.expectedGraduation}` : '';
+            return `
+                            <h3>${inst}</h3>
+                            <p><strong>${mastersEntry.degree}${msSpec}</strong>${msExpected}</p>
+                            <p><strong>${bsDegreeNorm}</strong>${bsMinorPart}${bsExpected}</p>
+            `;
+        }
+        // Default (BS only) - keep existing layout including GPA
+        return `
+                            <h3>${primaryEducation.degree}, ${primaryEducation.specialization || ''}</h3>
+                            <p><strong>${primaryEducation.institution}</strong> | Expected ${primaryEducation.expectedGraduation || ''}</p>
+                            <p><strong>${primaryEducation.minor || ''}</strong>${primaryEducation.minorSpecialization ? `, ${primaryEducation.minorSpecialization}` : ''}</p>
+                            <div class="gpa-indicator">
+                                <span class="gpa-label">GPA</span>
+                                <span class="gpa-value">${primaryEducation.gpa || ''}</span>
+                            </div>
+        `;
+    })();
+    const { infoContent, courseCategories } = generateDataForHTML(data);
+
+    const template = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -93,7 +137,7 @@ function generateHTML(data) {
     <meta name="occupation" content="Electrical Engineering Student, Software Developer">
     <meta name="skills" content="Electrical Engineering, Software Engineering, Embedded Systems, Control Systems, Machine Learning">
 
-    <meta name="university" content="${data.education.institution}">
+    <meta name="university" content="${primaryEducation.institution}">
     <meta name="education" content="Electrical Engineering, Computer Science">
     <meta name="location" content="Golden, Colorado, Denver, Colorado Springs">
 
@@ -121,7 +165,7 @@ function generateHTML(data) {
         "jobTitle": "Electrical Engineering Student",
         "alumniOf": {
             "@type": "CollegeOrUniversity",
-            "name": "${data.education.institution}"
+            "name": "${primaryEducation.institution}"
         },
         "url": "${data.personal.website}",
         "sameAs": [
@@ -201,7 +245,7 @@ function generateHTML(data) {
                 </div>
                 <div class="card profile-summary">
                     <div class="profile-content">
-                        <p class="profile-lead">Electrical Engineering student at ${data.education.institution} with a strong foundation in software development, embedded systems, and electrical design. Proven track record of delivering innovative solutions through hands-on experience in defense technology, renewable energy research, and educational leadership.</p>
+                        <p class="profile-lead">Electrical Engineering student at ${primaryEducation.institution} with a strong foundation in software development, embedded systems, and electrical design. Proven track record of delivering innovative solutions through hands-on experience in defense technology, renewable energy research, and educational leadership.</p>
 
                         <div class="profile-highlights">
                             <div class="highlight-item">
@@ -240,13 +284,7 @@ function generateHTML(data) {
                 <div class="card">
                     <div class="education-header">
                         <div class="education-info">
-                            <h3>${data.education.degree}, ${data.education.specialization}</h3>
-                            <p><strong>${data.education.institution}</strong> | Expected ${data.education.expectedGraduation}</p>
-                            <p><strong>${data.education.minor}</strong>, ${data.education.minorSpecialization}</p>
-                            <div class="gpa-indicator">
-                                <span class="gpa-label">GPA</span>
-                                <span class="gpa-value">${data.education.gpa}</span>
-                            </div>
+${educationBlockHTML}
                         </div>
                     </div>
 
@@ -255,7 +293,7 @@ function generateHTML(data) {
                             <summary>Honors</summary>
                             <div class="dropdown-content">
                                 <ul class="skill-list">
-${data.education.honors.map(honor => `                                    <details class="dropdown-item nested">
+${data.educationSupplementary.honors.map(honor => `                                    <details class="dropdown-item nested">
                                         <summary>${honor}</summary>
                                         <div class="dropdown-content">
                                             <p>${honor.includes("Dean's List") ? "Achieved Dean's List status for maintaining a GPA of 3.8 or higher for two semesters." : "Recognized on the Honor Roll for maintaining a GPA between 3.5 and 3.79 for two semesters."}</p>
@@ -269,7 +307,7 @@ ${data.education.honors.map(honor => `                                    <detai
                             <summary>Scholarships</summary>
                             <div class="dropdown-content">
                                 <ul class="skill-list">
-${data.education.scholarships.map(scholarship => `                                    <details class="dropdown-item nested">
+${data.educationSupplementary.scholarships.map(scholarship => `                                    <details class="dropdown-item nested">
                                         <summary>${scholarship}</summary>
                                         <div class="dropdown-content">
                                             <p>${scholarship.includes("Provost") ? "Awarded a merit-based scholarship of $9,000 per year for academic excellence throughout undergraduate studies." : scholarship.includes("C-MAPP") ? "Selected as a C-MAPP Scholar receiving $1,000 annually for demonstrating academic potential and leadership qualities." : "Recipient of the prestigious American Bureau of Shipping Scholarship valued at $4,000 for excellence in engineering studies related to maritime applications."}</p>
@@ -288,16 +326,16 @@ ${data.education.scholarships.map(scholarship => `                              
                 </div>
                 <div class="skills-grid">
 ${Object.entries(filters.filterWebsiteSkills(data.skills)).map(([category, skills]) => {
-  const skillNames = extractSkillNames(skills);
-  
-  return `                        <div class="skill-category">
+        const skillNames = extractSkillNames(skills);
+
+        return `                        <div class="skill-category">
                             <span class="skill-icon">${category === 'Programming' ? '💻' : category === 'Hardware' ? '⚙️' : '🔧'}</span>
                             <h3>${category}</h3>
                             <div class="skill-tags">
 ${skillNames.map(skill => `                                <span class="skill-tag">${skill}</span>`).join('\n')}
                             </div>
                         </div>`;
-}).join('\n')}
+    }).join('\n')}
                 </div>
             </section>
 
@@ -365,9 +403,9 @@ ${exp.description.map(item => `                                    <li>${item}</
                 </div>
                 <div class="timeline">
 ${(() => {
-  const groupedProjects = groupProjectsByType(websiteProjects);
-  return Object.entries(groupedProjects).flatMap(([type, projects]) => 
-    projects.map(project => `                    <div class="timeline-item">
+            const groupedProjects = groupProjectsByType(websiteProjects);
+            return Object.entries(groupedProjects).flatMap(([type, projects]) =>
+                projects.map(project => `                    <div class="timeline-item">
                         <div class="timeline-date">${project.duration}</div>
                         <div class="card">
                             <h4>${project.title}</h4>
@@ -380,8 +418,8 @@ ${project.github ? `                            <div class="project-links">
                             </div>` : ''}
                         </div>
                     </div>`
-  ));
-})()}
+                ));
+        })()}
                 </div>
             </section>
 
@@ -391,8 +429,8 @@ ${project.github ? `                            <div class="project-links">
                 </div>
                 <div class="certifications-grid">
 ${(() => {
-  const groupedCerts = groupCertificationsByOrganization(data.certifications);
-  return Object.entries(groupedCerts).map(([org, certs]) => `
+            const groupedCerts = groupCertificationsByOrganization(data.certifications);
+            return Object.entries(groupedCerts).map(([org, certs]) => `
                       <div class="card cert-card">
                         <div class="cert-header">
                             <h3>${org} Certifications</h3>
@@ -410,7 +448,7 @@ ${cert.link && cert.link.trim() !== '' ? `
                             </div>
                         </div>
                     </div>`).join('\n');
-})()}
+        })()}
                 </div>
             </section>
 
@@ -420,8 +458,8 @@ ${cert.link && cert.link.trim() !== '' ? `
                 </div>
                 <div class="card">
 ${Object.entries(relevantCourses)
-  .filter(([category, courses]) => courses.length > 0)
-  .map(([category, courses]) => `                    <h3>${category} Courses</h3>
+            .filter(([category, courses]) => courses.length > 0)
+            .map(([category, courses]) => `                    <h3>${category} Courses</h3>
                     <div class="course-grid">
 ${courses.map(course => `                        <details class="dropdown-item">
                             <summary>${course.name} (${course.code})</summary>
@@ -480,31 +518,31 @@ ${data.careerGoals.map(goal => `                        <li>${goal}</li>`).join(
 </body>
 </html>`;
 
-  return template;
+    return template;
 }
 
 /**
  * Main site build function
  */
 function buildSite() {
-  console.log('Starting site build...\n');
-  
-  const data = loadResumeData();
-  
-  writeFile('../index.html', generateHTML(data));
-  
-  console.log('\nSite build completed!');
-  console.log('\nGenerated files:');
-  console.log('- index.html');
+    console.log('Starting site build...\n');
+
+    const data = loadResumeData();
+
+    writeFile('../index.html', generateHTML(data));
+
+    console.log('\nSite build completed!');
+    console.log('\nGenerated files:');
+    console.log('- index.html');
 }
 
 // Run if called directly
 if (require.main === module) {
-  buildSite();
+    buildSite();
 }
 
 module.exports = {
-  generateHTML,
-  generateDataForHTML,
-  buildSite
+    generateHTML,
+    generateDataForHTML,
+    buildSite
 };

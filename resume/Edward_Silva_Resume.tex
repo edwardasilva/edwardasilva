@@ -10,6 +10,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{bookmark}
 \usepackage{titlesec}
+\usepackage[protrusion=true,expansion=true]{microtype}
 \raggedright
 \pagestyle{empty}
 
@@ -23,18 +24,21 @@
     pdftitle={Edward Silva - Resume},
     pdfauthor={Edward Silva},
     pdfsubject={Resume},
-    pdfkeywords={Edward Silva, C++, Python, MATLAB, Java, Verilog, RISC-V Assembly, Bash, Colorado School of Mines, BS in Electrical Engineering, Controls & Signal Processing, Minor in Computer Science, Software and Algorithm Design},
-    colorlinks=false,
-    linkcolor=black,
-    urlcolor=black,
-    citecolor=black,
-    filecolor=black
+    pdfkeywords={Edward Silva, C++, Python, MATLAB, Java, Verilog, RISC-V Assembly, Bash, Colorado School of Mines, BS Electrical Engineering, Controls and Signal Processing, US Citizen},
+    colorlinks = false,
+    linkcolor = black,
+    urlcolor = black,
+    citecolor = black,
+    filecolor = black
 }
 
-\titleformat{\section}{\bfseries\large}{}{0pt}{}[\vspace{1pt}\titlerule\vspace{-10pt}]
+% Section styling and spacing
+\titleformat{\section}{\bfseries\large}{}{0pt}{}[\vspace{2pt}\titlerule]
+\titlespacing*{\section}{0pt}{0.70\baselineskip}{0.70\baselineskip}
 
+% Consistent list spacing across document
 \renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
-\setlist[itemize]{itemsep=-2pt, leftmargin=12pt}
+\setlist[itemize]{leftmargin=12pt,topsep=3pt,itemsep=3pt,parsep=0pt,partopsep=0pt}
 
 \begin{document}
 
@@ -44,40 +48,27 @@
 \centerline{\huge Edward Silva}
 \vspace{3pt}
 
-\centerline{
-\href{https://www.linkedin.com/in/edwardasilva/}{Linkedin.com/in/edwardasilva}
-| \href{https://easilva.com}{easilva.com}
-| \href{mailto:contact@easilva.com}{contact@easilva.com} 
-| \href{tel:702 720-7735}{(702) 720-7735}
-}
+\centerline{\href{https://www.linkedin.com/in/edwardasilva}{linkedin.com/in/edwardasilva} | \href{https://easilva.com}{easilva.com} | \href{mailto:contact@easilva.com}{contact@easilva.com} | \href{tel:7027207735}{(702) 720-7735}}
 
-\vspace{-10pt}
 \section*{Education}
 \pdfbookmark[1]{Education}{education}
-\vspace{1pt}
 
-\textbf{Colorado School of Mines}, \textbf{GPA:} 3.44  \hfill Expected May 2026\\
-\textbf{BS in Electrical Engineering} -- Controls \& Signal Processing  \\
-Minor in Computer Science -- Software and Algorithm Design\\
-\textbf{Courses:} Information Systems Science I, Embedded Systems, Modern Control Design, Software Engineering\\
-\textbf{Certifications:} Microsoft Technical Associate - Java \& Python Programming
+\textbf{Colorado School of Mines} \hfill Expected May 2026 \\
+\textbf{BS Electrical Engineering} , Minor in Computer Science \\
 
-\vspace{-10pt}
+
+
 \section*{Skills}
 \pdfbookmark[1]{Skills}{skills}
-\vspace{0pt}
 
 \textbf{Programming Languages:} C++, Python, MATLAB, Java, Verilog, RISC-V Assembly, Bash \\
 \textbf{Hardware:} Arduino, Raspberry Pi, Digital Circuits, Embedded Systems, Microcontrollers, Circuit Design \\
-\textbf{Software:} VS Code, Git/GitHub, Linux, Virtualization, Autodesk Revit, MEP AutoCAD, SSH, LaTeX \\
+\textbf{Software:} VS Code, Git/GitHub, Linux, Simulink, Autodesk Revit, MEP AutoCAD, SSH, LaTeX \\
 
-\vspace{-14pt}
 \section*{Experience}
 \pdfbookmark[1]{Experience}{experience}
-\vspace{5pt}
 
-\textbf{Software Engineering Intern, }{Kratos Defense} -- Colorado Springs, CO \hfill June -- August 2025 \\
-\vspace{-5pt}
+\textbf{Software Engineering Intern, }{Kratos Defense} -- Colorado Springs, CO \hfill June - August 2025 \\
 \begin{itemize}
   \item Achieved 1.6x execution speedup by optimizing legacy DSP algorithms in C++ through code refactoring and performance analysis, reducing computational overhead for real-time signal processing applications.
   \item Improved system throughput by developing and implementing SIMD-optimized mathematical algorithms using vectorized operations for parallel data processing.
@@ -85,33 +76,29 @@ Minor in Computer Science -- Software and Algorithm Design\\
   \item Reduced debugging time and improved system maintainability for development teams by designing and deploying a comprehensive logging framework with configurable severity levels and error tracking.
 \end{itemize}
 
-\textbf{Co-op Intern, Electrical Design, }{Jordan and Skala Engineers} -- Denver, CO \hfill January -- June 2025 \\
-\vspace{-5pt}
-\begin{itemize}
-  \item Contributed to electrical design of 20+ multi-unit residential and specialty building developments, spanning initial takeoffs, layout design, riser diagrams, NEC verification, and QC review.
-  \item Developed proficiency in Autodesk Revit and MEP AutoCAD, strategically placing electrical receptacles, lighting, and circuits to ensure NEC compliance and practical, user-centered functionality.
-  \item Performed circuit loading and voltage drop calculations, balancing panel schedules and selecting appropriate breakers to ensure safety, reliability, and adherence to regulatory standards.
-  \item Utilized existing automation between Revit/CAD layouts and Excel tracking sheets to streamline design documentation processes and reduce manual errors.
-\end{itemize}
-
-\vspace{-14pt}
 \section*{Projects}
 \pdfbookmark[1]{Projects}{projects}
-\vspace{5pt}
+
 \textbf{Autonomous Path Following Robot}, Arduino, Raspberry Pi, Python, C++  \hfill August 2025 - Present
-\vspace{-5pt}
 \begin{itemize}
   \item Developing the computer vision system for a semester-long robotics project, working within a four-person team split between vision and controls
   \item Created a real time object detection program in Python using OpenCV that identifies target shapes from live video streams with bounding boxes and masks, surpassing the original single image requirement
   \item Building a communication interface between the Raspberry Pi and Arduino to exchange control and sensor data, enabling integration of perception with motion control
-  \item Supporting integration with a PID control system to achieve accurate path following and autonomous navigation
+  \item Supporting integration with a PID control system to achieve path following and autonomous navigation
 \end{itemize}
 
-\vspace{-14pt}
+\vspace{4pt}
+
+\textbf{Crane Gantry Controller}, MATLAB, Simulink  \hfill August - October 2025
+\begin{itemize}
+  \item Modeled and linearized a nonlinear gantry crane system in MATLAB and Simulink using small-angle approximations, deriving the transfer function and validating results against experimental data
+  \item Identified and tuned the crane's cable length parameter to match empirical position and velocity data with accuracy to three decimal points
+  \item Designed and implemented a discrete-time feedback controller that met overshoot, settling time, and velocity constraints while maximizing gain and phase margins
+  \item Analyzed closed-loop system performance and stability margins through time-domain and frequency-domain plots to confirm robust controller behavior for both linear and nonlinear models
+\end{itemize}
 
 \section*{Extracurriculars}
 \pdfbookmark[1]{Extracurriculars}{extracurriculars}
-\vspace{1pt}
 \small Astronomy Club, IEEE, ACM, Hiking
 
 \end{document}
