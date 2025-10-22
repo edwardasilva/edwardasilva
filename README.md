@@ -1,6 +1,6 @@
 # Edward Silva
 
-BS Electrical Engineering student at Colorado School of Mines with a Minor in Computer Science, focusing on controls and signal processing.
+MS Electrical Engineering student at Colorado School of Mines with a , focusing on controls and signal processing.
 
 ## Contact
 
@@ -10,9 +10,9 @@ BS Electrical Engineering student at Colorado School of Mines with a Minor in Co
 
 ## Education
 
-**Colorado School of Mines**, May 2026 | GPA: 3.44
+**Colorado School of Mines**, May 2027 | GPA: 
 
-**BS Electrical Engineering**, **Minor in Computer Science**
+**MS Electrical Engineering**, ****
 
 ## Skills
 

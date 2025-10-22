@@ -107,41 +107,19 @@ cd "$SCRIPT_DIR"
 log "success" "All builds completed"
 
 # Compile PDF if LaTeX available
-log "step" "Compiling PDF..."
-cd resume
+log "step" "Compiling Resume PDFs..."
+cd resume/tex
 if command -v pdflatex >/dev/null 2>&1; then
-    log "info" "Running pdflatex (first pass)..."
-    if pdflatex -interaction=nonstopmode Edward_Silva_Resume.tex >/dev/null 2>&1; then
-        sleep 1
-        log "info" "Running pdflatex (second pass)..."
-        if pdflatex -interaction=nonstopmode Edward_Silva_Resume.tex >/dev/null 2>&1; then
-            sleep 1
-            log "success" "PDF generated successfully"
-        else
-            log "warning" "Second PDF pass failed"
-        fi
-    else
-        log "warning" "PDF compilation failed"
-    fi
-else
-    log "warning" "pdflatex not found, skipping PDF"
-fi
-cd "$SCRIPT_DIR"
-
-sleep 1
-
-
-# Compile PDFs for all .tex files in cover letters directory
-log "step" "Compiling all Cover Letter PDFs..."
-cd coverLetters
-if command -v pdflatex >/dev/null 2>&1; then
-    for tex_file in *.tex; do
+    # Array of all resume files to compile
+    resume_files=("Edward_Silva_Resume.tex" "Edward_Silva_Resume_P.tex" "Edward_Silva_Resume_MS.tex" "Edward_Silva_Resume_MSP.tex")
+    
+    for tex_file in "${resume_files[@]}"; do
         if [[ -f "$tex_file" ]]; then
             log "info" "Running pdflatex (first pass) for $tex_file..."
-            if pdflatex -interaction=nonstopmode "$tex_file" >/dev/null 2>&1; then
+            if pdflatex -interaction=nonstopmode -output-directory=../pdf "$tex_file" >/dev/null 2>&1; then
                 sleep 1
                 log "info" "Running pdflatex (second pass) for $tex_file..."
-                if pdflatex -interaction=nonstopmode "$tex_file" >/dev/null 2>&1; then
+                if pdflatex -interaction=nonstopmode -output-directory=../pdf "$tex_file" >/dev/null 2>&1; then
                     sleep 1
                     log "success" "PDF for $tex_file generated successfully"
                 else
@@ -150,27 +128,14 @@ if command -v pdflatex >/dev/null 2>&1; then
             else
                 log "warning" "PDF compilation for $tex_file failed"
             fi
+        else
+            log "warning" "$tex_file not found, skipping"
         fi
     done
 else
-    log "warning" "pdflatex not found, skipping Cover Letter PDFs"
+    log "warning" "pdflatex not found, skipping PDF"
 fi
 cd "$SCRIPT_DIR"
-
-# Clean up auxiliary files for cover letters
-log "clean" "Cleaning up Cover Letter auxiliary files..."
-cover_letter_files_cleaned=0
-cd coverLetters
-for aux_file in *.aux *.log *.out *.synctex.gz; do
-    if [[ -f "$aux_file" ]]; then
-        if rm -f "$aux_file" 2>/dev/null; then
-            cover_letter_files_cleaned=$((cover_letter_files_cleaned + 1))
-        fi
-    fi
-done
-cd "$SCRIPT_DIR"
-
-log "success" "Cover Letter build complete! Cleaned $cover_letter_files_cleaned files."
 
 sleep 1
 
@@ -178,26 +143,52 @@ sleep 1
 log "clean" "Cleaning up..."
 files_cleaned=0
 
-if rm -f resume/Edward_Silva_Resume.aux 2>/dev/null; then
-    files_cleaned=$((files_cleaned + 1))
-fi
-if rm -f resume/Edward_Silva_Resume.log 2>/dev/null; then
-    files_cleaned=$((files_cleaned + 1))
-fi
-if rm -f resume/Edward_Silva_Resume.out 2>/dev/null; then
-    files_cleaned=$((files_cleaned + 1))
-fi
-if rm -f resume/Edward_Silva_Resume.synctex.gz 2>/dev/null; then
-    files_cleaned=$((files_cleaned + 1))
-fi
+# Clean auxiliary files for all resume variations from pdf directory
+for base_name in "Edward_Silva_Resume" "Edward_Silva_Resume_P" "Edward_Silva_Resume_MS" "Edward_Silva_Resume_MSP"; do
+    if rm -f "resume/pdf/${base_name}.aux" 2>/dev/null; then
+        files_cleaned=$((files_cleaned + 1))
+    fi
+    if rm -f "resume/pdf/${base_name}.log" 2>/dev/null; then
+        files_cleaned=$((files_cleaned + 1))
+    fi
+    if rm -f "resume/pdf/${base_name}.out" 2>/dev/null; then
+        files_cleaned=$((files_cleaned + 1))
+    fi
+    if rm -f "resume/pdf/${base_name}.synctex.gz" 2>/dev/null; then
+        files_cleaned=$((files_cleaned + 1))
+    fi
+    
+    # Also clean from resume root in case pdflatex put them there
+    if rm -f "resume/${base_name}.aux" 2>/dev/null; then
+        files_cleaned=$((files_cleaned + 1))
+    fi
+    if rm -f "resume/${base_name}.log" 2>/dev/null; then
+        files_cleaned=$((files_cleaned + 1))
+    fi
+    if rm -f "resume/${base_name}.out" 2>/dev/null; then
+        files_cleaned=$((files_cleaned + 1))
+    fi
+    if rm -f "resume/${base_name}.synctex.gz" 2>/dev/null; then
+        files_cleaned=$((files_cleaned + 1))
+    fi
+    
+    # Move any PDFs that ended up in resume root to pdf folder
+    if [[ -f "resume/${base_name}.pdf" ]]; then
+        mv "resume/${base_name}.pdf" "resume/pdf/${base_name}.pdf" 2>/dev/null
+        log "info" "Moved ${base_name}.pdf to pdf folder"
+    fi
+done
 
 log "success" "Build complete! Cleaned $files_cleaned files."
 
 # Print summary
 echo
 log "info" "Build Summary:"
-log "info" "✓ LaTeX Resume: resume/Edward_Silva_Resume.tex"
-log "info" "✓ PDF Resume: resume/Edward_Silva_Resume.pdf"
+log "info" "✓ LaTeX Resume (BS): resume/tex/Edward_Silva_Resume.tex"
+log "info" "✓ LaTeX Resume (BS+Profile): resume/tex/Edward_Silva_Resume_P.tex"
+log "info" "✓ LaTeX Resume (MS+BS): resume/tex/Edward_Silva_Resume_MS.tex"
+log "info" "✓ LaTeX Resume (MS+BS+Profile): resume/tex/Edward_Silva_Resume_MSP.tex"
+log "info" "✓ PDF Resumes: resume/pdf/*.pdf"
 log "info" "✓ Website: index.html"
 log "info" "✓ Documentation: README.md"
 

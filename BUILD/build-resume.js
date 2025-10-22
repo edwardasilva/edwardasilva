@@ -14,11 +14,45 @@ const {
   writeFile
 } = require('./utils');
 
-function generateResume(data) {
+function generateResume(data, options = {}) {
+  const { includeMS = false, includeProfile = false } = options;
+
   const resumeExperience = filters.filterResumeExperience(data.experience);
   const resumeProjects = filters.filterResumeProjects(data.projects);
   const resumeEducations = filters.filterResumeEducation(data.education);
   const { primaryEducation } = getEducationContext(data.education, data.educationSupplementary) || {};
+
+  // Handle profile filtering - override with options
+  const shouldShowProfile = includeProfile || filters.shouldShowResumeProfile(data.profile);
+  const profileText = shouldShowProfile ? filters.getProfileText(data.profile) : null;
+
+  // Filter and format coursework
+  const resumeCourses = filters.filterResumeCourses(data.educationSupplementary?.courses || {});
+
+  // Check if both Signals and Systems I and II are present
+  const hasSS1 = resumeCourses.some(c => c.alias === 'Signals and Systems I');
+  const hasSS2 = resumeCourses.some(c => c.alias === 'Signals and Systems II');
+
+  const courseNames = resumeCourses
+    .map(course => {
+      // Skip individual Signals and Systems courses if both are present (we'll add combined version)
+      if ((course.alias === 'Signals and Systems I' || course.alias === 'Signals and Systems II') && hasSS1 && hasSS2) {
+        return null;
+      }
+      // Use alias if available, otherwise use the full name
+      if (course.alias) {
+        return course.alias;
+      }
+      return course.name || course;
+    })
+    .filter(Boolean);
+
+  // Add combined Signals and Systems I/II if both are present
+  if (hasSS1 && hasSS2) {
+    courseNames.unshift('Signals and Systems I/II');
+  }
+
+  const courseworkLine = courseNames.length > 0 ? courseNames.join(', ') : '';
 
   const isMasters = (e) => {
     const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
@@ -28,11 +62,17 @@ function generateResume(data) {
     const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
     return deg.startsWith('bs') || deg.includes('bachelor');
   };
-  const mastersEntry = resumeEducations.find(isMasters) || null;
-  const bachelorsEntry = resumeEducations.find(isBachelors) || null;
+
+  // Filter education based on includeMS option
+  const filteredEducations = includeMS
+    ? resumeEducations
+    : resumeEducations.filter(e => !isMasters(e));
+
+  const mastersEntry = includeMS ? (resumeEducations.find(isMasters) || null) : null;
+  const bachelorsEntry = filteredEducations.find(isBachelors) || null;
   const shouldStackMsBs = Boolean(mastersEntry);
 
-  const otherEducations = resumeEducations.filter(e => e && e !== mastersEntry && e !== bachelorsEntry && e !== primaryEducation);
+  const otherEducations = filteredEducations.filter(e => e && e !== mastersEntry && e !== bachelorsEntry && e !== primaryEducation);
   const otherEducationBlocks = shouldStackMsBs ? '' : otherEducations.map(ed => {
     const lines = [];
     const inst = ed.institution || '';
@@ -65,15 +105,18 @@ function generateResume(data) {
       return lines.join('\n');
     }
 
-    if (primaryEducation) {
+    // When not including MS, use bachelorsEntry if available, otherwise use primaryEducation
+    const eduToDisplay = !includeMS && bachelorsEntry ? bachelorsEntry : primaryEducation;
+
+    if (eduToDisplay) {
       const lines = [];
-      lines.push(`\\textbf{${escapeLatex(primaryEducation.institution)}} ${primaryEducation.expectedGraduation ? `\\hfill Expected ${escapeLatex(primaryEducation.expectedGraduation)}` : ''} \\\\`);
-      if (primaryEducation.degree && primaryEducation.minor) {
-        lines.push(`\\textbf{${escapeLatex(primaryEducation.degree)}} , ${escapeLatex(primaryEducation.minor)} \\\\`);
+      lines.push(`\\textbf{${escapeLatex(eduToDisplay.institution)}} ${eduToDisplay.expectedGraduation ? `\\hfill Expected ${escapeLatex(eduToDisplay.expectedGraduation)}` : ''} \\\\`);
+      if (eduToDisplay.degree && eduToDisplay.minor) {
+        lines.push(`\\textbf{${escapeLatex(eduToDisplay.degree)}} , ${escapeLatex(eduToDisplay.minor)} \\\\`);
       } else {
-        lines.push(`\\textbf{${escapeLatex(primaryEducation.degree)}}${primaryEducation.specialization ? ` -- ${escapeLatex(primaryEducation.specialization)}` : ''} \\\\`);
-        if (primaryEducation.minor || primaryEducation.minorSpecialization) {
-          lines.push(`${escapeLatex(primaryEducation.minor || '')}${primaryEducation.minorSpecialization ? ` -- ${escapeLatex(primaryEducation.minorSpecialization)}` : ''} \\\\`);
+        lines.push(`\\textbf{${escapeLatex(eduToDisplay.degree)}}${eduToDisplay.specialization ? ` -- ${escapeLatex(eduToDisplay.specialization)}` : ''} \\\\`);
+        if (eduToDisplay.minor || eduToDisplay.minorSpecialization) {
+          lines.push(`${escapeLatex(eduToDisplay.minor || '')}${eduToDisplay.minorSpecialization ? ` -- ${escapeLatex(eduToDisplay.minorSpecialization)}` : ''} \\\\`);
         }
       }
       return lines.join('\n');
@@ -107,11 +150,38 @@ function generateResume(data) {
     // Count actual content lines
     const countBreaks = (s) => (s ? (s.match(/\\\\/g) || []).length : 0);
 
+    // More accurate profile line calculation
+    // Account for line wrapping at ~95 chars per line (accounting for margins)
+    const calculateProfileLines = (profileText) => {
+      if (!profileText) return 0;
+      const charsPerLine = 95;
+      const words = profileText.split(/\s+/);
+      let currentLineLength = 0;
+      let lineCount = 1;
+
+      words.forEach(word => {
+        if (currentLineLength + word.length + 1 > charsPerLine) {
+          lineCount++;
+          currentLineLength = word.length;
+        } else {
+          currentLineLength += word.length + 1;
+        }
+      });
+
+      return lineCount;
+    };
+
+    // Hide extracurriculars when MS is included (saves space)
+    const showExtracurriculars = !shouldStackMsBs;
+
     const contentMetrics = {
       nameAndContact: 2,
-      sectionHeaders: 4,
+      // Section headers: Profile (if shown), Education, Skills, Experience, Projects (+ Extracurriculars if shown)
+      sectionHeaders: (profileText ? 1 : 0) + (showExtracurriculars ? 5 : 4),
+      profileLines: calculateProfileLines(profileText),
       skillsLines: 3,
-      extracurricularLines: (data.extracurriculars || []).length ? 1 : 0,
+      courseworkLines: courseworkLine ? 1 : 0,
+      extracurricularLines: (showExtracurriculars && (data.extracurriculars || []).length) ? 1 : 0,
       eduLines: countBreaks(educationBody) + countBreaks(otherEducationBlocks),
 
       // Experience metrics
@@ -129,8 +199,8 @@ function generateResume(data) {
     const baseContentLines = Object.values(contentMetrics).reduce((sum, val) => sum + val, 0);
 
     // Available space on page (accounting for margins and base font size)
-    // Target comfortable fit - not too tight, not too loose
-    const linesPerPage = 45; // Sweet spot between 47 (too tight) and 50 (too loose)
+    // Conservative target to ensure one-page fit with buffer
+    const linesPerPage = 47; // Slightly increased to allow more content while maintaining density
 
     // Total number of entries (for calculating gap impact)
     const totalEntries = contentMetrics.expEntries + contentMetrics.projEntries;
@@ -139,47 +209,58 @@ function generateResume(data) {
     const totalBullets = contentMetrics.expBulletLines + contentMetrics.projBulletLines;
     const avgBulletsPerEntry = totalEntries > 0 ? totalBullets / totalEntries : 3;
 
+    // Calculate content density to determine compression strategy
+    const contentDensity = baseContentLines / linesPerPage;
+    const isHighDensity = contentDensity > 0.85;
+    const isVeryHighDensity = contentDensity > 0.95;
+
     // Estimate total space consumed by spacing at different levels
-    // This helps us calculate what we can actually afford
     const estimateTotalLines = (spacingParams) => {
       const { sectionBefore, sectionAfter, entryGap, itemsep, topsep } = spacingParams;
 
-      // Section spacing (4 sections: Education, Skills, Experience, Projects)
-      // Convert baselineskip multipliers to line equivalents 
-      // Very conservative: 1 baselineskip ≈ 1.8 lines (was 1.5)
-      const sectionSpacing = 4 * (sectionBefore * 1.8 + sectionAfter * 1.8);
+      // Section spacing - calibrated for denser layout
+      // 1 baselineskip ≈ 1.4 lines (refined for tighter spacing)
+      const numSections = contentMetrics.sectionHeaders;
+      const sectionSpacing = numSections * (sectionBefore * 1.4 + sectionAfter * 1.4);
 
-      // Entry gaps (between entries within sections)
-      // Very conservative conversion: 8pt ≈ 1 line (was 10pt)
-      const entryGaps = (totalEntries - 1) * (entryGap / 8);
+      // Entry gaps - calibrated for denser layout
+      // 11pt ≈ 1 line (refined for accuracy with tighter spacing)
+      const entryGaps = (totalEntries - 1) * (entryGap / 11);
 
       // Topsep (gap between each entry title and its bullets)
-      const topSepLines = totalEntries * (topsep / 8);
+      const topSepLines = totalEntries * (topsep / 11);
 
-      // Itemsep (gaps between bullets)
-      const itemSepLines = Math.max(0, totalBullets - totalEntries) * (itemsep / 8);
+      // Itemsep (gaps between bullets) - more impact with many bullets
+      const itemSepLines = Math.max(0, totalBullets - totalEntries) * (itemsep / 11);
 
-      // Add LaTeX overhead (section rules, titlerule, misc spacing, list environments)
-      const latexOverhead = 5; // Increased from 3
+      // LaTeX overhead adjusted based on content density
+      const latexOverhead = isVeryHighDensity ? 2.5 : 3.5;
 
       return baseContentLines + sectionSpacing + entryGaps + topSepLines + itemSepLines + latexOverhead;
-    };    // Binary search for optimal spacing that fits on one page
+    };
+
     // Start with ideal spacing and compress until it fits
     let bestSpacing = null;
     let attempts = [];
 
-    // Define spacing bounds [min, max] for each parameter
-    // Prioritize section spacing for better visual separation
+    // Adaptive spacing bounds based on content density
+    // When MS/BS stacking is used, education is more compact (saves ~1-2 lines)
+    const eduCompression = shouldStackMsBs ? 0.85 : 1.0; // Factor for education compression bonus
+
+    // More uniformly dense spacing across all systems
+    // Tighter overall to ensure one-page fit while maintaining proportional relationships
     const bounds = {
-      sectionBefore: [0.7, 0.7],  // Increased for more section separation
-      sectionAfter: [0.7, 0.7],   // Increased for more section separation
-      entryGap: [4, 13],
-      itemsep: [2.5, 5.5],           // Slightly increased minimum (was 1.5)
-      topsep: [3, 6.5]
+      sectionBefore: isVeryHighDensity ? [0.35, 0.5] : isHighDensity ? [0.4, 0.55] : [0.45, 0.6],
+      sectionAfter: isVeryHighDensity ? [0.35, 0.5] : isHighDensity ? [0.4, 0.55] : [0.45, 0.6],
+      entryGap: isVeryHighDensity ? [2, 6] : isHighDensity ? [2.5, 7] : [3, 8],
+      itemsep: isVeryHighDensity ? [0.8, 2.5] : isHighDensity ? [1, 3] : [1.2, 3.5],
+      topsep: isVeryHighDensity ? [1.2, 3] : isHighDensity ? [1.5, 3.5] : [1.8, 4]
     };
 
     // Try progressively tighter spacing levels until we fit
-    for (let compressionLevel = 0; compressionLevel <= 1; compressionLevel += 0.1) {
+    const steps = isVeryHighDensity ? 20 : 15; // More granular steps for high density
+    for (let i = 0; i <= steps; i++) {
+      const compressionLevel = i / steps;
       const testSpacing = {
         sectionBefore: bounds.sectionBefore[1] - compressionLevel * (bounds.sectionBefore[1] - bounds.sectionBefore[0]),
         sectionAfter: bounds.sectionAfter[1] - compressionLevel * (bounds.sectionAfter[1] - bounds.sectionAfter[0]),
@@ -188,17 +269,17 @@ function generateResume(data) {
         topsep: bounds.topsep[1] - compressionLevel * (bounds.topsep[1] - bounds.topsep[0])
       };
 
-      const estimatedLines = estimateTotalLines(testSpacing);
-      attempts.push({ compressionLevel: compressionLevel.toFixed(1), estimatedLines: estimatedLines.toFixed(1) });
+      const estimatedLines = estimateTotalLines(testSpacing) * eduCompression;
+      attempts.push({ compressionLevel: compressionLevel.toFixed(2), estimatedLines: estimatedLines.toFixed(1) });
 
-      // Use the first spacing that fits, or keep going if too tight
+      // Use the first spacing that fits with a small buffer
       if (estimatedLines <= linesPerPage && !bestSpacing) {
         bestSpacing = testSpacing;
         break;
       }
     }
 
-    // If nothing fit in the loop, use maximum compression
+    // If nothing fit, use maximum compression
     if (!bestSpacing) {
       bestSpacing = {
         sectionBefore: bounds.sectionBefore[0],
@@ -209,33 +290,51 @@ function generateResume(data) {
       };
     }
 
-    // Apply additional adjustments based on content characteristics
-    // If lots of entries, reduce entry gap further
-    if (totalEntries > 6) {
-      bestSpacing.entryGap = Math.max(3, bestSpacing.entryGap - 1.5);
+    // Apply additional intelligent adjustments - proportionally reduce all spacing
+    if (isVeryHighDensity) {
+      // Aggressive but proportional compression for very dense content
+      const compressionFactor = 0.7; // Reduce all spacing by 30%
+      bestSpacing.sectionBefore = Math.max(0.35, bestSpacing.sectionBefore * compressionFactor);
+      bestSpacing.sectionAfter = Math.max(0.35, bestSpacing.sectionAfter * compressionFactor);
+      bestSpacing.entryGap = Math.max(2, bestSpacing.entryGap * compressionFactor);
+      bestSpacing.itemsep = Math.max(0.8, bestSpacing.itemsep * compressionFactor);
+      bestSpacing.topsep = Math.max(1.2, bestSpacing.topsep * compressionFactor);
+    } else if (totalEntries > 6) {
+      // Moderate proportional compression for many entries
+      const compressionFactor = 0.85; // Reduce all spacing by 15%
+      bestSpacing.entryGap = Math.max(2.5, bestSpacing.entryGap * compressionFactor);
+      bestSpacing.itemsep = Math.max(1, bestSpacing.itemsep * compressionFactor);
+      bestSpacing.topsep = Math.max(1.5, bestSpacing.topsep * compressionFactor);
     }
 
-    // If lots of bullets per entry, reduce itemsep
+    // If lots of bullets per entry, proportionally reduce bullet-related spacing
     if (avgBulletsPerEntry > 4) {
-      bestSpacing.itemsep = Math.max(1.5, bestSpacing.itemsep - 0.5);
+      bestSpacing.itemsep = Math.max(0.8, bestSpacing.itemsep * 0.8);
+      bestSpacing.topsep = Math.max(1.2, bestSpacing.topsep * 0.85);
     }
 
-    const finalEstimate = estimateTotalLines(bestSpacing);
+    const finalEstimate = estimateTotalLines(bestSpacing) * eduCompression;
     const fitsOnOnePage = finalEstimate <= linesPerPage;
 
     return {
       sectionBeforeBs: bestSpacing.sectionBefore.toFixed(2),
       sectionAfterBs: bestSpacing.sectionAfter.toFixed(2),
       entryGap: `${Math.round(bestSpacing.entryGap)}pt`,
-      itemsep: `${Math.round(bestSpacing.itemsep)}pt`,
-      topsep: `${Math.round(bestSpacing.topsep)}pt`,
+      itemsep: `${bestSpacing.itemsep.toFixed(1)}pt`,
+      topsep: `${bestSpacing.topsep.toFixed(1)}pt`,
       // Debug info
       _debug: {
         baseContentLines,
+        contentDensity: contentDensity.toFixed(2),
+        isHighDensity,
+        isVeryHighDensity,
+        msBsStacking: shouldStackMsBs,
+        eduCompressionFactor: eduCompression.toFixed(2),
         finalEstimatedLines: finalEstimate.toFixed(1),
         linesPerPage,
         fitsOnOnePage,
         compressionUsed: attempts.length > 0 ? attempts.find(a => parseFloat(a.estimatedLines) <= linesPerPage) : null,
+        allAttempts: attempts,
         totalEntries,
         avgBulletsPerEntry: avgBulletsPerEntry.toFixed(1),
         metrics: contentMetrics
@@ -249,10 +348,18 @@ function generateResume(data) {
   console.log('\n=== ONE-PAGE RESUME SPACING CALCULATION ===');
   console.log(`\nContent Analysis:`);
   console.log(`  Base content lines: ${SP._debug.baseContentLines}`);
+  console.log(`  Content density: ${SP._debug.contentDensity} (${SP._debug.isVeryHighDensity ? 'VERY HIGH' : SP._debug.isHighDensity ? 'HIGH' : 'NORMAL'})`);
+  console.log(`  MS/BS stacking: ${SP._debug.msBsStacking ? 'YES (extracurriculars hidden)' : 'NO'}`);
+  console.log(`  Edu compression factor: ${SP._debug.eduCompressionFactor}`);
   console.log(`  Estimated total (with spacing): ${SP._debug.finalEstimatedLines} lines`);
   console.log(`  Page capacity: ${SP._debug.linesPerPage} lines`);
-  console.log(`  ✓ Fits on one page: ${SP._debug.fitsOnOnePage ? 'YES' : 'NO - NEEDS MORE COMPRESSION'}`);
+  console.log(`  ✓ Fits on one page: ${SP._debug.fitsOnOnePage ? 'YES ✓' : 'NO - NEEDS MORE COMPRESSION ⚠'}`);
   console.log(`\nContent Breakdown:`);
+  console.log(`  Sections: ${SP._debug.metrics.sectionHeaders}`);
+  console.log(`  Profile: ${SP._debug.metrics.profileLines} lines`);
+  console.log(`  Education: ${SP._debug.metrics.eduLines} lines`);
+  console.log(`  Coursework: ${SP._debug.metrics.courseworkLines} lines`);
+  console.log(`  Extracurriculars: ${SP._debug.metrics.extracurricularLines > 0 ? 'shown' : 'hidden'}`);
   console.log(`  Total entries: ${SP._debug.totalEntries} (avg ${SP._debug.avgBulletsPerEntry} bullets/entry)`);
   console.log(`  Experience: ${SP._debug.metrics.expEntries} entries, ${SP._debug.metrics.expBulletLines} bullets`);
   console.log(`  Projects: ${SP._debug.metrics.projEntries} entries, ${SP._debug.metrics.projBulletLines} bullets`);
@@ -316,12 +423,19 @@ function generateResume(data) {
 
 \\centerline{${contactLine}}
 
-\\section*{Education}
+${profileText ? `\\section*{Profile}
+\\pdfbookmark[1]{Profile}{profile}
+
+${escapeLatex(profileText)}
+
+` : ''}\\section*{Education}
 \\pdfbookmark[1]{Education}{education}
 
 ${educationBody}
 
 ${otherEducationBlocks}
+
+${courseworkLine ? `\\textbf{Relevant Coursework:} ${escapeLatex(courseworkLine)} \\\\` : ''}
 
 \\section*{Skills}
 \\pdfbookmark[1]{Skills}{skills}
@@ -346,9 +460,9 @@ ${resumeProjects.map(project => `\\textbf{${escapeLatex(project.title)}}, ${proj
 ${project.description.map(item => `  \\item ${escapeLatex(item)}`).join('\n')}
 \\end{itemize}`).join(`\n\n\\vspace{${SP.entryGap}}\n\n`)}
 
-\\section*{Extracurriculars}
+${!shouldStackMsBs ? `\\section*{Extracurriculars}
 \\pdfbookmark[1]{Extracurriculars}{extracurriculars}
-\\small ${(data.extracurriculars || []).map(e => escapeLatex(e)).join(', ')}
+\\small ${(data.extracurriculars || []).map(e => escapeLatex(e)).join(', ')}` : ''}
 
 \\end{document}
 `;
@@ -408,23 +522,56 @@ function buildResume() {
   const data = loadResumeData();
 
   const path = require('path');
+  const fs = require('fs');
   const outRoot = path.resolve(__dirname, '..');
 
   writeFile(path.join(outRoot, 'README.md'), generateREADME(data));
+
+  // Create directory structure
   const resumeDir = path.join(outRoot, 'resume');
+  const texDir = path.join(resumeDir, 'tex');
+  const pdfDir = path.join(resumeDir, 'pdf');
+
   try {
-    require('fs').mkdirSync(resumeDir, { recursive: true });
+    fs.mkdirSync(resumeDir, { recursive: true });
+    fs.mkdirSync(texDir, { recursive: true });
+    fs.mkdirSync(pdfDir, { recursive: true });
   } catch (_) { }
-  writeFile(path.join(resumeDir, 'Edward_Silva_Resume.tex'), generateResume(data));
+
+  // Generate 4 resume variations
+  console.log('Generating resume variations...\n');
+
+  // 1. BS only (default)
+  const bsOnlyResume = generateResume(data, { includeMS: false, includeProfile: false });
+  writeFile(path.join(texDir, 'Edward_Silva_Resume.tex'), bsOnlyResume);
+  console.log('✓ Edward_Silva_Resume.tex (BS only)');
+
+  // 2. BS + Profile
+  const bsProfileResume = generateResume(data, { includeMS: false, includeProfile: true });
+  writeFile(path.join(texDir, 'Edward_Silva_Resume_P.tex'), bsProfileResume);
+  console.log('✓ Edward_Silva_Resume_P.tex (BS + Profile)');
+
+  // 3. MS + BS
+  const msResume = generateResume(data, { includeMS: true, includeProfile: false });
+  writeFile(path.join(texDir, 'Edward_Silva_Resume_MS.tex'), msResume);
+  console.log('✓ Edward_Silva_Resume_MS.tex (MS + BS)');
+
+  // 4. MS + BS + Profile
+  const msProfileResume = generateResume(data, { includeMS: true, includeProfile: true });
+  writeFile(path.join(texDir, 'Edward_Silva_Resume_MSP.tex'), msProfileResume);
+  console.log('✓ Edward_Silva_Resume_MSP.tex (MS + BS + Profile)');
 
   console.log('\nResume build completed!');
   console.log('\nGenerated files:');
   console.log('- README.md');
-  console.log('- resume/Edward_Silva_Resume.tex');
+  console.log('- resume/tex/Edward_Silva_Resume.tex (BS only)');
+  console.log('- resume/tex/Edward_Silva_Resume_P.tex (BS + Profile)');
+  console.log('- resume/tex/Edward_Silva_Resume_MS.tex (MS + BS)');
+  console.log('- resume/tex/Edward_Silva_Resume_MSP.tex (MS + BS + Profile)');
   console.log('\nTo update:');
   console.log('1. Edit resume-data.json');
-  console.log('2. Run: node build-resume2.js');
-  console.log('3. For PDF: cd resume && pdflatex Edward_Silva_Resume.tex');
+  console.log('2. Run: node BUILD/build-resume.js or ./gen');
+  console.log('3. PDFs will be in resume/pdf/ after running ./gen');
 }
 
 if (require.main === module) {

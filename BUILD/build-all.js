@@ -13,26 +13,27 @@ const { buildSite } = require('./build-site');
  */
 function buildAll() {
   console.log('🚀 Starting complete build process...\n');
-  
+
   try {
     // Build resume and README
     console.log('📄 Building resume and README...');
     buildResume();
-    
+
     console.log('\n🌐 Building website...');
     // Build website
     buildSite();
-    
+
     console.log('\n✅ Complete build process finished successfully!');
     console.log('\n📋 Summary:');
-    console.log('- Resume (LaTeX): resume/Edward_Silva_Resume.tex');
+    console.log('- Resume (LaTeX): resume/tex/*.tex');
+    console.log('- Resume (PDF): resume/pdf/*.pdf');
     console.log('- README: README.md');
     console.log('- Website: index.html');
-    
+
     console.log('\n🔧 Next steps:');
     console.log('- For PDF: npm run compile');
     console.log('- For development: npm run dev');
-    
+
   } catch (error) {
     console.error('❌ Build process failed:', error.message);
     process.exit(1);

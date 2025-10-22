@@ -10,6 +10,10 @@
     "citizenship": "US Citizen",
     "clearance": "DoD Clearable"
   },
+  "profile": {
+    "text": "Graduating senior at Colorado School of Mines with hands-on experience in software development, control systems, and signal processing. Seeking opportunities focused on software development of Signal Processing applications, Control Systems, and or Embedded Systems.",
+    "experienceType": "None"
+  },
   "education": [
     {
       "institution": "Colorado School of Mines",
@@ -26,9 +30,9 @@
       "location": "Golden, CO",
       "degree": "MS Electrical Engineering",
       "specialization": "Controls and Signal Processing",
-      "startDate": "Fall 2026",
-      "expectedGraduation": "Spring 2027",
-      "experienceType": "None"
+      "startDate": "August 2026",
+      "expectedGraduation": "May 2027",
+      "experienceType": "All"
     }
   ],
   "educationSupplementary": {
@@ -67,16 +71,18 @@
         {
           "code": "EENG 310",
           "name": "Information Systems Science I",
+          "alias": "Signals and Systems I",
           "description": "The interpretation, representation and analysis of time-varying phenomena as signals which convey information and noise; applications are drawn from filtering, audio and image processing, and communications. Topics include convolution, Fourier series and transforms, sampling and discrete-time processing of continuous-time signals, modulation, and z-transforms.",
           "relevancy": "Yes",
-          "experienceType": "Site"
+          "experienceType": "All"
         },
         {
           "code": "EENG 311",
           "name": "Information Systems Science II",
+          "alias": "Signals and Systems II",
           "description": "This course covers signals and noise in electrical systems. Topics covered include information theory, signal to noise ratio, random variables, probability density functions, statistics, noise, matched filters, coding and entropy, power spectral density, and bit error rate. Applications are taken from radar, communications systems, and signal processing.",
           "relevancy": "Yes",
-          "experienceType": "Site"
+          "experienceType": "All"
         },
         {
           "code": "EENG 340",
@@ -97,7 +103,7 @@
           "name": "Embedded Systems",
           "description": "The design and implementation of systems consisting of analog and digital components with a microcontroller to perform a dedicated task. Student will implement systems using a variety of microcontroller subsystems including timers, PWM, ADC, serial communication subsystems and interrupts. Students will learn embedded systems programming techniques like, fixed-point math, direct digital synthesis, lookup tables, and row scanning. Student will program the microcontroller using a high-level programming language like C or C++.",
           "relevancy": "Yes",
-          "experienceType": "Site"
+          "experienceType": "All"
         },
         {
           "code": "EENG 385",
@@ -132,7 +138,7 @@
           "name": "Modern Control Design",
           "description": "Control system design with an emphasis on observer-based methods, from initial open-loop experiments to final implementation. The course begins with an overview of feedback control design technique from the frequency domain perspective, including sensitivity and fundamental limitations. State space realization theory is introduced, and system identification methods for parameter estimation are introduced. Computerbased methods for control system design are presented.",
           "relevancy": "Yes",
-          "experienceType": "Site"
+          "experienceType": "All"
         }
       ],
       "Computer Science": [
@@ -183,7 +189,7 @@
           "name": "Software Engineering",
           "description": "Introduction to software engineering processes and object-oriented design principles. Topics include the Agile development methodology, test-driven development, UML diagrams, use cases and several object-oriented design patterns. Course work emphasizes good programming practices via version control and code reviews.",
           "relevancy": "Yes",
-          "experienceType": "Site"
+          "experienceType": "All"
         },
         {
           "code": "CSCI 341",
@@ -433,7 +439,7 @@
       "duration": "August - October 2025",
       "description": [
         "Modeled and linearized a nonlinear gantry crane system in MATLAB and Simulink using small-angle approximations, deriving the transfer function and validating results against experimental data",
-        "Identified and tuned the crane's cable length parameter to match empirical position and velocity data with high accuracy",
+        "Identified and tuned the crane's cable length parameter to accurately match empirical position and velocity data",
         "Designed and implemented a discrete-time feedback controller that met overshoot, settling time, and velocity constraints while maximizing gain and phase margins",
         "Analyzed closed-loop system performance and stability margins through time-domain and frequency-domain plots to confirm robust controller behavior for both linear and nonlinear models"
       ],
@@ -570,11 +576,11 @@
       },
       {
         "name": "Autodesk Revit",
-        "experienceType": "All"
+        "experienceType": "Site"
       },
       {
         "name": "MEP AutoCAD",
-        "experienceType": "All"
+        "experienceType": "Site"
       },
       {
         "name": "Eclipse",

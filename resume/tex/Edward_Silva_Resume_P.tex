@@ -1,0 +1,111 @@
+
+\documentclass[11pt]{article}
+\usepackage{geometry}
+\geometry{letterpaper,top=0.5in,bottom=0.5in,left=0.5in,right=0.5in}
+
+\usepackage{XCharter}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
+\usepackage{titlesec}
+\usepackage[protrusion=true,expansion=true]{microtype}
+\raggedright
+\pagestyle{empty}
+
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+\title{Edward Silva - Resume}
+\author{Edward Silva}
+
+\hypersetup{
+    pdftitle={Edward Silva - Resume},
+    pdfauthor={Edward Silva},
+    pdfsubject={Resume},
+    pdfkeywords={Edward Silva, C++, Python, MATLAB, Java, Verilog, RISC-V Assembly, Bash, Colorado School of Mines, MS Electrical Engineering, Controls and Signal Processing, US Citizen},
+    colorlinks = false,
+    linkcolor = black,
+    urlcolor = black,
+    citecolor = black,
+    filecolor = black
+}
+
+% Section styling and spacing
+\titleformat{\section}{\bfseries\large}{}{0pt}{}[\vspace{2pt}\titlerule]
+\titlespacing*{\section}{0pt}{0.45\baselineskip}{0.45\baselineskip}
+
+% Consistent list spacing across document
+\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
+\setlist[itemize]{leftmargin=12pt,topsep=1.8pt,itemsep=1.2pt,parsep=0pt,partopsep=0pt}
+
+\begin{document}
+
+\thispagestyle{empty}
+\pdfbookmark[0]{Edward Silva - Resume}{main}
+
+\centerline{\huge Edward Silva}
+\vspace{3pt}
+
+\centerline{\href{https://www.linkedin.com/in/edwardasilva}{linkedin.com/in/edwardasilva} | \href{https://easilva.com}{easilva.com} | \href{mailto:contact@easilva.com}{contact@easilva.com} | \href{tel:7027207735}{(702) 720-7735}}
+
+\section*{Profile}
+\pdfbookmark[1]{Profile}{profile}
+
+Graduating senior at Colorado School of Mines with hands-on experience in software development, control systems, and signal processing. Seeking opportunities focused on software development of Signal Processing applications, Control Systems, and or Embedded Systems.
+
+\section*{Education}
+\pdfbookmark[1]{Education}{education}
+
+\textbf{Colorado School of Mines} \hfill Expected May 2026 \\
+\textbf{BS Electrical Engineering} , Minor in Computer Science \\
+
+
+
+\textbf{Relevant Coursework:} Signals and Systems I/II, Embedded Systems, Modern Control Design, Software Engineering \\
+
+\section*{Skills}
+\pdfbookmark[1]{Skills}{skills}
+
+\textbf{Programming Languages:} C++, Python, MATLAB, Java, Verilog, RISC-V Assembly, Bash \\
+\textbf{Hardware:} Arduino, Raspberry Pi, Digital Circuits, Embedded Systems, Microcontrollers, Circuit Design \\
+\textbf{Software:} VS Code, Git/GitHub, Linux, Simulink, SSH, LaTeX \\
+
+\section*{Experience}
+\pdfbookmark[1]{Experience}{experience}
+
+\textbf{Software Engineering Intern, }{Kratos Defense} -- Colorado Springs, CO \hfill June - August 2025 \\
+\begin{itemize}
+  \item Achieved 1.6x execution speedup by optimizing legacy DSP algorithms in C++ through code refactoring and performance analysis, reducing computational overhead for real-time signal processing applications.
+  \item Improved system throughput by developing and implementing SIMD-optimized mathematical algorithms using vectorized operations for parallel data processing.
+  \item Researched and demonstrated an improved approach to coding a FIR filter, presenting positive findings and performance gains to the team for adoption in future projects.
+  \item Reduced debugging time and improved system maintainability for development teams by designing and deploying a comprehensive logging framework with configurable severity levels and error tracking.
+\end{itemize}
+
+\section*{Projects}
+\pdfbookmark[1]{Projects}{projects}
+
+\textbf{Autonomous Path Following Robot}, Arduino, Raspberry Pi, Python, C++  \hfill August 2025 - Present
+\begin{itemize}
+  \item Developing the computer vision system for a semester-long robotics project, working within a four-person team split between vision and controls
+  \item Created a real time object detection program in Python using OpenCV that identifies target shapes from live video streams with bounding boxes and masks, surpassing the original single image requirement
+  \item Building a communication interface between the Raspberry Pi and Arduino to exchange control and sensor data, enabling integration of perception with motion control
+  \item Supporting integration with a PID control system to achieve path following and autonomous navigation
+\end{itemize}
+
+\vspace{3pt}
+
+\textbf{Crane Gantry Controller}, MATLAB, Simulink  \hfill August - October 2025
+\begin{itemize}
+  \item Modeled and linearized a nonlinear gantry crane system in MATLAB and Simulink using small-angle approximations, deriving the transfer function and validating results against experimental data
+  \item Identified and tuned the crane's cable length parameter to accurately match empirical position and velocity data
+  \item Designed and implemented a discrete-time feedback controller that met overshoot, settling time, and velocity constraints while maximizing gain and phase margins
+  \item Analyzed closed-loop system performance and stability margins through time-domain and frequency-domain plots to confirm robust controller behavior for both linear and nonlinear models
+\end{itemize}
+
+\section*{Extracurriculars}
+\pdfbookmark[1]{Extracurriculars}{extracurriculars}
+\small Astronomy Club, IEEE, ACM, Hiking
+
+\end{document}

@@ -12,8 +12,8 @@
     "watch:resume": "nodemon --watch ../resume-data.json --exec 'npm run build:resume'",
     "watch:site": "nodemon --watch ../resume-data.json --exec 'npm run build:site'",
     "dev": "npm run build && npm run watch",
-    "clean": "rm -rf ../resume/Edward_Silva_Resume.pdf",
-    "compile": "npm run build:resume && cd ../resume && pdflatex Edward_Silva_Resume.tex && pdflatex Edward_Silva_Resume.tex"
+    "clean": "rm -rf ../resume/pdf/*.pdf ../resume/tex/*.tex",
+    "compile": "npm run build:resume && cd ../resume/tex && pdflatex -output-directory=../pdf Edward_Silva_Resume.tex && pdflatex -output-directory=../pdf Edward_Silva_Resume.tex"
   },
   "keywords": [
     "resume",

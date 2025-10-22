@@ -179,6 +179,32 @@ const filters = {
   filterWebsiteEducation(education) {
     // Website should include entries marked 'All' or 'Site'
     return education.filter(edu => edu.experienceType === 'All' || edu.experienceType === 'Site');
+  },
+
+  /**
+   * Check if profile should be shown for resume (All type only)
+   */
+  shouldShowResumeProfile(profile) {
+    if (!profile) return false;
+    if (typeof profile === 'string') return true;
+    return profile.experienceType === 'All';
+  },
+
+  /**
+   * Check if profile should be shown for website (All and Site types)
+   */
+  shouldShowWebsiteProfile(profile) {
+    if (!profile) return false;
+    if (typeof profile === 'string') return true;
+    return profile.experienceType === 'All' || profile.experienceType === 'Site';
+  },
+
+  /**
+   * Get profile text
+   */
+  getProfileText(profile) {
+    if (!profile) return null;
+    return typeof profile === 'string' ? profile : profile.text;
   }
 };
 

@@ -12,7 +12,13 @@
 *.blg
 *.bcf
 *.run.xml
+
+# LaTeX files - ignore everywhere except resume/tex/
 *.tex
+!resume/tex/*.tex
+
+# PDF files - ignore in resume/pdf/ as they're generated
+resume/pdf/*.pdf
 
 # Node.js
 node_modules/
@@ -52,3 +58,4 @@ Thumbs.db
 # History directory
 /History/
 /coverLetters/
+/Other/
