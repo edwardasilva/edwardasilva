@@ -1,6 +1,6 @@
 # Edward Silva
 
-MS Electrical Engineering student at Colorado School of Mines with a , focusing on controls and signal processing.
+Graduating senior at Colorado School of Mines with hands-on experience in software development, control systems, and signal processing. Seeking opportunities focused on software development of Signal Processing applications, Control Systems, and or Embedded Systems.
 
 ## Contact
 
@@ -10,9 +10,11 @@ MS Electrical Engineering student at Colorado School of Mines with a , focusing 
 
 ## Education
 
-**Colorado School of Mines**, May 2027 | GPA: 
+**Colorado School of Mines**
 
-**MS Electrical Engineering**, ****
+**MS Electrical Engineering**, May 2027
+
+**BS Electrical Engineering**, **Minor in Computer Science**, May 2026
 
 ## Skills
 

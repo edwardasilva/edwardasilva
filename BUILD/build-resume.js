@@ -482,9 +482,65 @@ function generateREADME(data) {
   const gpa = prim.gpa || '';
   const minorSpecialization = prim.minorSpecialization || '';
 
+  // Use the profile description from resume-data.json
+  const description = data.profile && data.profile.text ? data.profile.text :
+    `${degree} student at ${institution}${minor ? ` with a ${minor}` : ''}${specialization ? `, focusing on ${specialization}` : ''}.`;
+
+  // For README, get both BS and MS degrees for better representation
+  const websiteEducations = filters.filterWebsiteEducation(data.education || []);
+  const isMasters = (e) => {
+    const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
+    return deg.startsWith('ms') || deg.includes('master');
+  };
+  const isBachelors = (e) => {
+    const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
+    return deg.startsWith('bs') || deg.includes('bachelor');
+  };
+
+  const mastersEntry = websiteEducations.find(isMasters);
+  const bachelorsEntry = websiteEducations.find(isBachelors);
+
+  // Build education display - prefer BS for main info since it has GPA
+  const mainEducation = bachelorsEntry || prim;
+  const mainExpectedGrad = mainEducation.expectedGraduation || '';
+  const mainGpa = mainEducation.gpa || '';
+
+  const educationParts = [`**${institution}**`];
+  const educationLine = educationParts.join(', ');
+
+  // Build degree lines for both degrees if available, with graduation years only
+  const degreeLines = [];
+  if (mastersEntry) {
+    const msParts = [`**${mastersEntry.degree}**`];
+    if (mastersEntry.expectedGraduation) {
+      const year = mastersEntry.expectedGraduation;
+      if (year) {
+        msParts.push(year);
+      }
+    }
+    degreeLines.push(msParts.join(', '));
+  }
+  if (bachelorsEntry) {
+    const bsParts = [`**${bachelorsEntry.degree}**`];
+    if (bachelorsEntry.minor) {
+      bsParts.push(`**${bachelorsEntry.minor}**`);
+    }
+    if (bachelorsEntry.expectedGraduation) {
+      const year = bachelorsEntry.expectedGraduation;
+      if (year) {
+        bsParts.push(year);
+      }
+    }
+    degreeLines.push(bsParts.join(', '));
+  }
+  const degreeLine = degreeLines.join('\n\n');
+
+  // Use website filtering for README to show more content
+  const websiteSkills = filters.filterWebsiteSkills(data.skills);
+
   const template = `# ${data.personal.name}
 
-${degree} student at ${institution} with a ${minor}, focusing on ${specialization}.
+${description}
 
 ## Contact
 
@@ -494,19 +550,19 @@ ${degree} student at ${institution} with a ${minor}, focusing on ${specializatio
 
 ## Education
 
-**${institution}**, ${expectedGraduation} | GPA: ${gpa}
+${educationLine}
 
-**${degree}**, **${minor}**
+${degreeLine}
 
 ## Skills
 
-- **Programming:** ${extractSkillNames(data.skills.Programming).join(', ')}
-- **Hardware:** ${extractSkillNames(data.skills.Hardware).join(', ')}
-- **Software & Tools:** ${extractSkillNames(data.skills.Software).join(', ')}
+- **Programming:** ${extractSkillNames(websiteSkills.Programming).join(', ')}
+- **Hardware:** ${extractSkillNames(websiteSkills.Hardware).join(', ')}
+- **Software & Tools:** ${extractSkillNames(websiteSkills.Software).join(', ')}
 
 ## Certifications
 
-${(data.certifications || []).map(cert => typeof cert === 'string' ? `- **${cert}**` : `- **${cert.name}**${cert.link ? ` - [Certificate](${cert.link})` : ''}`).join('\n')}
+${filters.filterWebsiteCertifications(data.certifications || []).map(cert => typeof cert === 'string' ? `- **${cert}**` : `- **${cert.name}**${cert.link ? ` - [Certificate](${cert.link})` : ''}`).join('\n')}
 
 ## Career Goals
 
