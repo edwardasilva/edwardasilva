@@ -385,7 +385,9 @@ function generateResume(data, options = {}) {
 \\usepackage{titlesec}
 \\usepackage[protrusion=true,expansion=true]{microtype}
 \\raggedright
-\\pagestyle{empty}
+\\pagestyle{plain}
+\\usepackage{lmodern}
+\\urlstyle{same}
 
 \\input{glyphtounicode}
 \\pdfgentounicode=1
