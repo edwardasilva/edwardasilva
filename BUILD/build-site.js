@@ -232,7 +232,7 @@ function generateHTML(data) {
                         </a>
                     </div>
                     <div class="resume-buttons">
-                        <a href="../resume/pdf/Edward_Silva_Resume.pdf" class="resume-button btn btn-primary" target="_blank" rel="noopener">
+                        <a href="/resume/pdf/Edward_Silva_Resume.pdf" class="resume-button btn btn-primary" target="_blank" rel="noopener">
                             📄 View Resume
                         </a>
                     </div>
