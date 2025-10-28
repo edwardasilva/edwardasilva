@@ -17,9 +17,6 @@
 *.tex
 !resume/tex/*.tex
 
-# PDF files - ignore in resume/pdf/ as they're generated
-resume/pdf/*.pdf
-
 # Node.js
 node_modules/
 npm-debug.log*
