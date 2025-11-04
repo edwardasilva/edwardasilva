@@ -17,9 +17,21 @@ const {
 function generateResume(data, options = {}) {
   const { includeMS = false, includeProfile = false } = options;
 
-  const resumeExperience = filters.filterResumeExperience(data.experience);
+  // Use new consolidated experiences array with backward compatibility
+  const allExperiences = data.experiences || [];
+  const resumeExperience = filters.filterResumeExperience(allExperiences);
   const resumeProjects = filters.filterResumeProjects(data.projects);
-  const resumeEducations = filters.filterResumeEducation(data.education);
+
+  // Filter education - when includeMS is true, also include MS degrees even if experienceType is "None"
+  let resumeEducations = filters.filterResumeEducation(data.education);
+  if (includeMS) {
+    const msEducations = data.education.filter(edu => {
+      const degree = (edu.degree || '').toLowerCase();
+      return (degree.startsWith('ms') || degree.includes('master')) && !resumeEducations.includes(edu);
+    });
+    resumeEducations = [...resumeEducations, ...msEducations];
+  }
+
   const { primaryEducation } = getEducationContext(data.education, data.educationSupplementary) || {};
 
   // Handle profile filtering - override with options
@@ -112,7 +124,7 @@ function generateResume(data, options = {}) {
       const lines = [];
       lines.push(`\\textbf{${escapeLatex(eduToDisplay.institution)}} ${eduToDisplay.expectedGraduation ? `\\hfill Expected ${escapeLatex(eduToDisplay.expectedGraduation)}` : ''} \\\\`);
       if (eduToDisplay.degree && eduToDisplay.minor) {
-        lines.push(`\\textbf{${escapeLatex(eduToDisplay.degree)}} , ${escapeLatex(eduToDisplay.minor)} \\\\`);
+        lines.push(`\\textbf{${escapeLatex(eduToDisplay.degree)}}, ${escapeLatex(eduToDisplay.minor)} \\\\`);
       } else {
         lines.push(`\\textbf{${escapeLatex(eduToDisplay.degree)}}${eduToDisplay.specialization ? ` -- ${escapeLatex(eduToDisplay.specialization)}` : ''} \\\\`);
         if (eduToDisplay.minor || eduToDisplay.minorSpecialization) {

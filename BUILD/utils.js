@@ -40,10 +40,17 @@ const filters = {
   },
 
   /**
-   * Filter experience for resume (All type only)
+   * Filter experiences for resume (All type only)
    */
-  filterResumeExperience(experience) {
-    return experience.filter(exp => exp.experienceType === "All");
+  filterResumeExperience(experiences) {
+    return experiences.filter(exp => exp.experienceType === "All");
+  },
+
+  /**
+   * Filter experiences by type for resume (All type only)
+   */
+  filterResumeExperienceByType(experiences, type) {
+    return experiences.filter(exp => exp.experienceType === "All" && exp.type === type);
   },
 
   /**
@@ -54,10 +61,17 @@ const filters = {
   },
 
   /**
-   * Filter experience for website (All and Site types)
+   * Filter experiences for website (All and Site types)
    */
-  filterWebsiteExperience(experience) {
-    return experience.filter(exp => exp.experienceType === "All" || exp.experienceType === "Site");
+  filterWebsiteExperience(experiences) {
+    return experiences.filter(exp => exp.experienceType === "All" || exp.experienceType === "Site");
+  },
+
+  /**
+   * Filter experiences by type for website (All and Site types)
+   */
+  filterWebsiteExperienceByType(experiences, type) {
+    return experiences.filter(exp => (exp.experienceType === "All" || exp.experienceType === "Site") && exp.type === type);
   },
 
   /**
@@ -205,6 +219,69 @@ const filters = {
   getProfileText(profile) {
     if (!profile) return null;
     return typeof profile === 'string' ? profile : profile.text;
+  },
+
+  /**
+   * Sort experiences chronologically (most recent first)
+   */
+  sortExperiencesChronologically(experiences) {
+    return [...experiences].sort((a, b) => {
+      // Sort by startDate (most recent first)
+      const aDate = new Date(a.startDate + '-01');
+      const bDate = new Date(b.startDate + '-01');
+      return bDate - aDate;
+    });
+  },
+
+  /**
+   * Group experiences by type
+   */
+  groupExperiencesByType(experiences) {
+    const grouped = {
+      Professional: [],
+      Research: [],
+      Teaching: [],
+      Other: []
+    };
+
+    experiences.forEach(exp => {
+      const type = exp.type || 'Other';
+      if (grouped[type]) {
+        grouped[type].push(exp);
+      } else {
+        grouped['Other'].push(exp);
+      }
+    });
+
+    return grouped;
+  },
+
+  /**
+   * Backward compatibility: Get professional experience from consolidated experiences
+   */
+  getBackwardCompatibleExperience(experiences) {
+    return experiences.filter(exp => exp.type === 'Professional');
+  },
+
+  /**
+   * Backward compatibility: Get teaching experience from consolidated experiences
+   */
+  getBackwardCompatibleTeachingExperience(experiences) {
+    return experiences.filter(exp => exp.type === 'Teaching');
+  },
+
+  /**
+   * Backward compatibility: Get research experience from consolidated experiences
+   */
+  getBackwardCompatibleResearchExperience(experiences) {
+    return experiences.filter(exp => exp.type === 'Research');
+  },
+
+  /**
+   * Backward compatibility: Get other experience from consolidated experiences
+   */
+  getBackwardCompatibleOtherExperience(experiences) {
+    return experiences.filter(exp => exp.type === 'Other');
   }
 };
 

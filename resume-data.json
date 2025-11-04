@@ -32,7 +32,7 @@
       "specialization": "Controls and Signal Processing",
       "startDate": "August 2026",
       "expectedGraduation": "May 2027",
-      "experienceType": "All"
+      "experienceType": "None"
     }
   ],
   "educationSupplementary": {
@@ -307,12 +307,15 @@
       ]
     }
   },
-  "experience": [
+  "experiences": [
     {
       "title": "Software Engineering Intern",
       "company": "Kratos Defense",
       "location": "Colorado Springs, CO",
       "duration": "June - August 2025",
+      "startDate": "2025-06-02",
+      "endDate": "2025-08-08",
+      "type": "Professional",
       "description": [
         "Achieved 1.6x execution speedup by optimizing legacy DSP algorithms in C++ through code refactoring and performance analysis, reducing computational overhead for real-time signal processing applications.",
         "Improved system throughput by developing and implementing SIMD-optimized mathematical algorithms using vectorized operations for parallel data processing.",
@@ -326,6 +329,9 @@
       "company": "Jordan and Skala Engineers",
       "location": "Denver, CO",
       "duration": "January - June 2025",
+      "startDate": "2025-01-07",
+      "endDate": "2025-06-13",
+      "type": "Professional",
       "description": [
         "Contributed to electrical design of 20+ multi-unit residential and specialty building developments, spanning initial takeoffs, layout design, riser diagrams, NEC verification, and QC review.",
         "Developed proficiency in Autodesk Revit and MEP AutoCAD, strategically placing electrical receptacles, lighting, and circuits to ensure NEC compliance and practical, user-centered functionality.",
@@ -333,29 +339,33 @@
         "Utilized existing automation between Revit/CAD layouts and Excel tracking sheets to streamline design documentation processes and reduce manual errors."
       ],
       "experienceType": "Site"
-    }
-  ],
-  "teachingExperience": [
+    },
+    {
+      "title": "Undergraduate Researcher",
+      "company": "ePower Hubs Research Lab",
+      "location": "Golden, CO",
+      "duration": "June 2024 - January 2025",
+      "startDate": "2024-08-28",
+      "endDate": "2024-12-15",
+      "type": "Research",
+      "description": [
+        "Independently conducted literature reviews on sensor systems and wind farm-level control strategies, focusing on offshore integration with variable voltage, power, and frequency constraints.",
+        "Synthesized findings into multiple internal reports using LaTeX, contributing to cost-reduction strategies in wind farm grid maintenance, design, and power grid integration.",
+        "Provided insights that influenced the direction of ongoing research led by a faculty advisor, shaping the lab's approach to offshore wind system modeling."
+      ],
+      "experienceType": "Site"
+    },
     {
       "title": "Mathematics Assistant",
       "company": "Colorado School of Mines",
       "location": "Golden, CO",
       "duration": "January - December 2024",
+      "startDate": "2024-01",
+      "endDate": "2024-12",
+      "type": "Teaching",
       "description": [
         "Independently graded assignments and exams for MATH 225 (Differential Equations) and MATH 112 (Calculus II) using Gradescope.",
         "Provided detailed written feedback to help students improve conceptual understanding and problem-solving accuracy."
-      ],
-      "experienceType": "Site"
-    },
-    {
-      "title": "Substitute Teacher",
-      "company": "Fairfax County Public Schools",
-      "location": "Fairfax, VA",
-      "duration": "September 2023 - June 2024, Seasonal",
-      "description": [
-        "Delivered classroom instruction for high school students across various subjects in the absence of regular teachers.",
-        "Maintained classroom order and engagement while ensuring continuity of learning through pre-planned lesson materials.",
-        "Adapted quickly to schedule changes, including same-day coverage for additional classes as needed."
       ],
       "experienceType": "Site"
     },
@@ -364,6 +374,9 @@
       "company": "Colorado School of Mines",
       "location": "Golden, CO",
       "duration": "August - December 2023",
+      "startDate": "2023-08",
+      "endDate": "2023-12",
+      "type": "Teaching",
       "description": [
         "Co-led a semester-long, 1-credit course designed to help first-year students transition to the academic and social rigors of Mines, following a structured curriculum with limited creative input.",
         "Collaborated weekly with a mentor team to develop and deliver lessons on mental health, emotional resilience, and academic success strategies, reinforcing student support networks and retention.",
@@ -372,10 +385,29 @@
       "experienceType": "Site"
     },
     {
-      "title": "Lead Counselor & Coding Instructor",
+      "title": "Extern",
+      "company": "Cisco",
+      "location": "Remote",
+      "duration": "June 2023",
+      "startDate": "2023-06",
+      "endDate": "2023-06",
+      "type": "Professional",
+      "description": [
+        "Participated in an intensive two-week externship gaining insights into Cisco's culture and technology, engaging with industry leaders.",
+        "Utilized Cisco NetAcademy to learn about Cybersecurity, IoT, and emerging technologies.",
+        "Collaborated within a 10-person team on a healthcare-focused capstone project.",
+        "As Product Designer, created a 3D model for the proposed solution and assisted in guiding the team through technical specifications."
+      ],
+      "experienceType": "Site"
+    },
+    {
+      "title": "Lead Counselor",
       "company": "Code Ninjas",
       "location": "Fairfax, VA",
-      "duration": "March 2022 - August 2023",
+      "duration": "May - August 2023",
+      "startDate": "2023-05",
+      "endDate": "2023-08",
+      "type": "Teaching",
       "description": [
         "Provided in-class tutoring and on-demand support to students aged 6-14 in JavaScript and C#, reinforcing foundational programming concepts in weekly classes and summer camps.",
         "Led STEM-focused summer camps for up to 100 students, delivering hands-on instruction in 3D modeling/printing, circuits, robotics, and introductory Python and C# programming.",
@@ -383,30 +415,94 @@
         "Recognized as Instructor of the Month (June 2022 & July 2023) based on positive student outcomes, feedback, and teaching effectiveness."
       ],
       "experienceType": "Site"
-    }
-  ],
-  "researchExperience": [
-    {
-      "title": "Undergraduate Researcher",
-      "company": "ePower Hubs Research Lab",
-      "location": "Golden, CO",
-      "duration": "June 2024 - January 2025",
-      "description": [
-        "Independently conducted literature reviews on sensor systems and wind farm-level control strategies, focusing on offshore integration with variable voltage, power, and frequency constraints.",
-        "Synthesized findings into multiple internal reports using LaTeX, contributing to cost-reduction strategies in wind farm grid maintenance, design, and power grid integration.",
-        "Provided insights that influenced the direction of ongoing research led by a faculty advisor, shaping the lab's approach to offshore wind system modeling."
-      ],
-      "experienceType": "All"
     },
     {
       "title": "Undergraduate Research Assistant",
       "company": "Explosives Research Lab",
       "location": "Golden, CO",
-      "duration": "August 2022 - January 2023",
+      "duration": "August 2022 - May 2023",
+      "startDate": "2022-08",
+      "endDate": "2023-05",
+      "type": "Research",
       "description": [
         "Optimized 3D printer settings to improve the dimensional accuracy of explosive housing components, supporting downstream testing reliability.",
         "Observed controlled explosive tests in varied environments, contributing to data tracking accuracy through detailed field documentation.",
         "Maintained lab cleanliness and equipment readiness to ensure a safe and organized research environment for high-risk experimental work."
+      ],
+      "experienceType": "Site"
+    },
+    {
+      "title": "Delivery Driver",
+      "company": "Flowers 'n Ferns",
+      "location": "Burke, VA",
+      "duration": "May - August 2023",
+      "startDate": "2023-05",
+      "endDate": "2023-08",
+      "type": "Other",
+      "description": [],
+      "experienceType": "None"
+    },
+    {
+      "title": "Delivery Driver",
+      "company": "Christopher's Flowers",
+      "location": "Alexandria, VA",
+      "duration": "May - August 2023",
+      "startDate": "2023-05",
+      "endDate": "2023-08",
+      "type": "Other",
+      "description": [],
+      "experienceType": "None"
+    },
+    {
+      "title": "Coding Instructor",
+      "company": "Code Ninjas",
+      "location": "Fairfax, VA",
+      "duration": "March 2022 - August 2022",
+      "startDate": "2022-03",
+      "endDate": "2022-08",
+      "type": "Teaching",
+      "description": [
+        "Provided in-class tutoring and on-demand support to students aged 6-14 in JavaScript and C#, reinforcing foundational programming concepts in weekly classes and summer camps.",
+        "Led STEM-focused summer camps for up to 100 students, delivering hands-on instruction in 3D modeling/printing, circuits, robotics, and introductory Python and C# programming.",
+        "Implemented and managed a multi-printer OctoPi server setup to streamline 3D print job management, enabling mass production of student-designed projects across three machines.",
+        "Recognized as Instructor of the Month (June 2022 & July 2023) based on positive student outcomes, feedback, and teaching effectiveness."
+      ],
+      "experienceType": "Site"
+    },
+    {
+      "title": "Administrative Assistant",
+      "company": "Fairfax County Public Schools",
+      "location": "Fairfax, VA",
+      "duration": "September 2021 - May 2022",
+      "startDate": "2021-09",
+      "endDate": "2022-05",
+      "type": "Other",
+      "description": [],
+      "experienceType": "None"
+    },
+    {
+      "title": "Customer Service Representative",
+      "company": "Dominos",
+      "location": "Burke, VA",
+      "duration": "August 2020 - May 2021",
+      "startDate": "2020-08-03",
+      "endDate": "2021-05-30",
+      "type": "Other",
+      "description": [],
+      "experienceType": "None"
+    },
+    {
+      "title": "Substitute Teacher",
+      "company": "Fairfax County Public Schools",
+      "location": "Fairfax, VA",
+      "duration": "Seasonal",
+      "startDate": "2021-06",
+      "endDate": "Present",
+      "type": "Teaching",
+      "description": [
+        "Delivered classroom instruction for high school students across various subjects in the absence of regular teachers.",
+        "Maintained classroom order and engagement while ensuring continuity of learning through pre-planned lesson materials.",
+        "Adapted quickly to schedule changes, including same-day coverage for additional classes as needed."
       ],
       "experienceType": "Site"
     }

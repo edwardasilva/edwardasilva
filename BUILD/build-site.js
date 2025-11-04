@@ -62,7 +62,9 @@ function generateDataForHTML(data) {
  * Generate complete HTML website
  */
 function generateHTML(data) {
-    const websiteExperience = filters.filterWebsiteExperience(data.experience);
+    // Use new consolidated experiences array with backward compatibility
+    const allExperiences = data.experiences || [];
+    const websiteExperience = filters.filterWebsiteExperience(allExperiences);
     const websiteProjects = filters.filterWebsiteProjects(data.projects);
     const relevantCourses = filters.filterRelevantCourses(data.educationSupplementary.courses);
     const { primaryEducation } = getEducationContext(data.education, data.educationSupplementary);
@@ -361,7 +363,7 @@ ${exp.description.map(item => `                                <li>${item}</li>`
                         <h2>Teaching Experience</h2>
                     </div>
                     <div class="timeline">
-${data.teachingExperience.map(exp => `                        <div class="timeline-item">
+${filters.filterWebsiteExperienceByType(allExperiences, 'Teaching').map(exp => `                        <div class="timeline-item">
                             <div class="timeline-date">${exp.duration}</div>
                             <div class="card">
                                 <h4>${exp.title}</h4>
@@ -379,7 +381,7 @@ ${exp.description.map(item => `                                    <li>${item}</
                         <h2>Research Experience</h2>
                     </div>
                     <div class="timeline">
-${data.researchExperience.map(exp => `                        <div class="timeline-item">
+${filters.filterWebsiteExperienceByType(allExperiences, 'Research').map(exp => `                        <div class="timeline-item">
                             <div class="timeline-date">${exp.duration}</div>
                             <div class="card">
                                 <div class="research-header">

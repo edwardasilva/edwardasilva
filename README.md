@@ -12,8 +12,6 @@ Graduating senior at Colorado School of Mines with hands-on experience in softwa
 
 **Colorado School of Mines**
 
-**MS Electrical Engineering**, May 2027
-
 **BS Electrical Engineering**, **Minor in Computer Science**, May 2026
 
 ## Skills
