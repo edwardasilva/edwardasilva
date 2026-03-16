@@ -1,0 +1,64 @@
+---
+// Base layout - handles meta tags, fonts, and that nice ambient background
+import '../styles/global.css';
+import { resume } from '../data/resume';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = `${resume.personal.name} | Portfolio`,
+	description = resume.profile.text,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://easilva.com');
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content={description} />
+		<meta name="author" content={resume.personal.name} />
+
+		<!-- Open Graph / Social -->
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+
+		<!-- Favicon -->
+		<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+		<!-- Font Preloading -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap"
+			rel="stylesheet"
+		/>
+
+		<meta name="generator" content={Astro.generator} />
+		<link rel="canonical" href={canonicalURL} />
+		<title>{title}</title>
+	</head>
+	<body class="bg-[#fbf7f0] text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased flex flex-col min-h-screen overflow-x-hidden">
+		<!-- Ambient Background -->
+		<div class="fixed inset-0 z-[-1] pointer-events-none" aria-hidden="true">
+			<!-- Light mode ambient -->
+			<div class="absolute inset-0 bg-[radial-gradient(ellipse_900px_500px_at_10%_-5%,rgba(245,158,11,0.12),transparent_50%)] dark:opacity-0"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(ellipse_800px_450px_at_95%_5%,rgba(59,130,246,0.08),transparent_45%)] dark:opacity-0"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(ellipse_1200px_600px_at_50%_110%,rgba(15,23,42,0.04),transparent_55%)] dark:opacity-0"></div>
+
+			<!-- Dark mode ambient -->
+			<div class="absolute inset-0 opacity-0 dark:opacity-100 bg-[radial-gradient(ellipse_900px_500px_at_10%_-5%,rgba(245,158,11,0.08),transparent_50%)]"></div>
+			<div class="absolute inset-0 opacity-0 dark:opacity-100 bg-[radial-gradient(ellipse_800px_450px_at_95%_5%,rgba(59,130,246,0.06),transparent_45%)]"></div>
+			<div class="absolute inset-0 opacity-0 dark:opacity-100 bg-[radial-gradient(ellipse_1200px_600px_at_50%_110%,rgba(255,255,255,0.02),transparent_55%)]"></div>
+		</div>
+
+		<slot />
+	</body>
+</html>

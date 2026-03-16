@@ -1,0 +1,97 @@
+export interface PersonalInfo {
+    name: string;
+    email: string;
+    phone?: string;
+    website: string;
+    linkedin: string;
+    github: string;
+    resumePdfUrl?: string;
+    relocation: string;
+    citizenship: string;
+    clearance: string;
+}
+
+export interface Profile {
+    text: string;
+    experienceType: string;
+}
+
+export interface Education {
+    institution: string;
+    location: string;
+    degree: string;
+    specialization: string;
+    minor?: string;
+    startDate?: string;
+    expectedGraduation: string;
+    gpa?: string;
+    experienceType: string;
+}
+
+export interface Course {
+    code: string;
+    name: string;
+    alias?: string;
+    description: string;
+    relevancy: string;
+    experienceType: string;
+}
+
+export interface EducationSupplementary {
+    honors: string[];
+    scholarships: string[];
+    courses: Record<string, Course[]>;
+}
+
+export interface Experience {
+    title: string;
+    company: string;
+    location: string;
+    duration: string;
+    startDate: string;
+    endDate: string;
+    type: string;
+    description: string[];
+    experienceType: string;
+}
+
+export interface Project {
+    title: string;
+    technologies: string[];
+    github?: string;
+    duration: string;
+    description: string[];
+    experienceType: string;
+    projectType: string;
+}
+
+export interface Skill {
+    name: string;
+    experienceType: string;
+}
+
+export interface Skills {
+    [category: string]: Skill[];
+}
+
+export interface Certification {
+    name: string;
+    organization: string;
+    credly?: string;
+    link?: string;
+    description: string;
+    experienceType: string;
+}
+
+export interface ResumeData {
+    personal: PersonalInfo;
+    profile: Profile;
+    education: Education[];
+    educationSupplementary: EducationSupplementary;
+    experiences: Experience[];
+    projects: Project[];
+    skills: Skills;
+    certifications: Certification[];
+    careerGoals: string[];
+    extracurriculars: string[];
+}

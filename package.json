@@ -1,0 +1,21 @@
+{
+  "name": "easilva.com",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run build:resume && astro build",
+    "build:resume": "node scripts/build-resume.js",
+    "hooks:install": "node scripts/setup-git-hooks.js",
+    "prepare": "npm run hooks:install",
+    "sync:resume-secret": "node scripts/sync-resume-secret.js",
+    "sync:resume-secret:env": "node scripts/sync-resume-secret.js --scope=env --env=github-pages",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.16.6",
+    "tailwindcss": "^4.1.18"
+  }
+}

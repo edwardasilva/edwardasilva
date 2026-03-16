@@ -1,0 +1,245 @@
+---
+// Coursework tabs - EE and CS courses with expandable descriptions
+import Section from './Section.astro';
+import { resume } from '../data/resume';
+import type { Course } from '../data/types';
+
+type SubjectKey = 'Electrical Engineering' | 'Computer Science';
+
+const coursesByCategory = resume.educationSupplementary?.courses ?? {};
+const ALLOWED_CATEGORIES = new Set(['Computer Science', 'Electrical Engineering']);
+const ALLOWED_CODE_PREFIXES = ['CSCI', 'EENG'];
+
+function parseCourseNumber(code: string): number | undefined {
+  const match = code.match(/\b(\d{3,4})\b/);
+  if (!match) return undefined;
+  return Number(match[1]);
+}
+
+// Filter out intro courses (< 300 level) and sort by course number descending
+function getFilteredCourses(category: string): Course[] {
+  const courses = coursesByCategory[category] ?? [];
+  return courses
+    .filter((c) => {
+      if (c.experienceType === 'None') return false;
+      if (String(c.relevancy ?? '').toLowerCase() !== 'yes') return false;
+      const code = (c.code ?? '').trim();
+      const num = parseCourseNumber(code);
+      if (num !== undefined && num < 300) return false;
+      return ALLOWED_CODE_PREFIXES.some((p) => code.startsWith(`${p} `));
+    })
+    .sort((a, b) => {
+      const numA = parseCourseNumber(a.code ?? '') ?? 0;
+      const numB = parseCourseNumber(b.code ?? '') ?? 0;
+      return numB - numA; // Descending order (higher levels first)
+    });
+}
+
+const eeCourses = getFilteredCourses('Electrical Engineering');
+const csCourses = getFilteredCourses('Computer Science');
+
+const tabs: Array<{
+  id: string;
+  label: string;
+  shortLabel: string;
+  courses: Course[];
+  accentColor: string;
+  pillClass: string;
+}> = [
+  {
+    id: 'ee',
+    label: 'Electrical Engineering',
+    shortLabel: 'EE',
+    courses: eeCourses,
+    accentColor: 'amber',
+    pillClass: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
+  },
+  {
+    id: 'cs',
+    label: 'Computer Science',
+    shortLabel: 'CS',
+    courses: csCourses,
+    accentColor: 'sky',
+    pillClass: 'bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-300',
+  },
+];
+
+const totalCourses = eeCourses.length + csCourses.length;
+---
+
+<Section id="coursework" title="Coursework">
+  {totalCourses === 0 ? (
+    <p class="text-sm text-slate-600 dark:text-slate-400">
+      Coursework will appear here once courses are added.
+    </p>
+  ) : (
+    <div class="space-y-6">
+      <!-- Tab Navigation -->
+      <div class="flex items-center gap-2 border-b border-slate-200/70 dark:border-slate-800/70" role="tablist">
+        {tabs.map((tab, index) => (
+          <button
+            role="tab"
+            aria-selected={index === 0 ? 'true' : 'false'}
+            aria-controls={`panel-${tab.id}`}
+            id={`tab-${tab.id}`}
+            data-tab={tab.id}
+            class:list={[
+              "tab-btn relative px-4 py-3 text-sm font-medium transition-colors",
+              "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2",
+              index === 0 && "text-slate-900 dark:text-slate-100"
+            ]}
+          >
+            <span class="hidden sm:inline">{tab.label}</span>
+            <span class="sm:hidden">{tab.shortLabel}</span>
+            <span class="ml-2 text-xs px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+              {tab.courses.length}
+            </span>
+            <!-- Active indicator -->
+            <span
+              class:list={[
+                "tab-indicator absolute bottom-0 left-0 right-0 h-0.5 rounded-full transition-opacity",
+                tab.accentColor === 'amber' ? 'bg-amber-500' : 'bg-sky-500',
+                index === 0 ? 'opacity-100' : 'opacity-0'
+              ]}
+            ></span>
+          </button>
+        ))}
+      </div>
+
+      <!-- Tab Panels -->
+      {tabs.map((tab, index) => (
+        <div
+          role="tabpanel"
+          id={`panel-${tab.id}`}
+          aria-labelledby={`tab-${tab.id}`}
+          data-panel={tab.id}
+          class:list={["tab-panel", index !== 0 && "hidden"]}
+        >
+          {tab.courses.length === 0 ? (
+            <p class="text-sm text-slate-500 dark:text-slate-400 py-4">
+              No courses to display.
+            </p>
+          ) : (
+            <div class="grid gap-2">
+              {tab.courses.map((course) => (
+                <details class="group rounded-lg bg-white/60 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-800/60 hover:border-slate-300/80 dark:hover:border-slate-700/80 transition-all">
+                  <summary class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 cursor-pointer select-none list-none">
+                    <!-- Course Code -->
+                    <span class:list={[
+                      "shrink-0 text-[11px] sm:text-xs font-mono font-medium px-2 py-1 rounded",
+                      tab.pillClass
+                    ]}>
+                      {course.code}
+                    </span>
+
+                    <!-- Course Name -->
+                    <span class="flex-1 min-w-0 text-sm sm:text-base font-medium text-slate-900 dark:text-slate-100 leading-snug">
+                      {course.name}
+                      {course.alias && (
+                        <span class="text-slate-400 dark:text-slate-500 font-normal text-xs ml-2">
+                          ({course.alias})
+                        </span>
+                      )}
+                    </span>
+
+                    <!-- Expand Icon -->
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="shrink-0 text-slate-400 group-open:rotate-180 transition-transform duration-200"
+                    >
+                      <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                  </summary>
+
+                  <!-- Expanded Description -->
+                  <div class="px-3 sm:px-4 pb-3 sm:pb-4 pt-0">
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed pl-[calc(theme(spacing.2)+theme(spacing.3))] sm:pl-[calc(theme(spacing.2)+theme(spacing.4)+theme(spacing.8))]">
+                      {course.description}
+                    </p>
+                  </div>
+                </details>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+
+    </div>
+  )}
+</Section>
+
+<script>
+  // Tab switching (works as accordion without JS)
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+    const tabPanels = document.querySelectorAll<HTMLDivElement>('.tab-panel');
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.tab;
+        if (!targetId) return;
+
+        // Update buttons
+        tabButtons.forEach((b) => {
+          const isActive = b.dataset.tab === targetId;
+          b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          b.classList.toggle('text-slate-900', isActive);
+          b.classList.toggle('dark:text-slate-100', isActive);
+          b.classList.toggle('text-slate-500', !isActive);
+          b.classList.toggle('dark:text-slate-400', !isActive);
+
+          const indicator = b.querySelector('.tab-indicator');
+          if (indicator) {
+            indicator.classList.toggle('opacity-100', isActive);
+            indicator.classList.toggle('opacity-0', !isActive);
+          }
+        });
+
+        // Update panels
+        tabPanels.forEach((panel) => {
+          const isActive = panel.dataset.panel === targetId;
+          panel.classList.toggle('hidden', !isActive);
+        });
+      });
+    });
+
+    // Keyboard navigation
+    const tabList = document.querySelector('[role="tablist"]');
+    tabList?.addEventListener('keydown', (e) => {
+      const event = e as KeyboardEvent;
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+
+      const tabs = Array.from(tabButtons);
+      const currentIndex = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+      let newIndex = currentIndex;
+
+      switch (event.key) {
+        case 'ArrowLeft':
+          newIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
+          break;
+        case 'ArrowRight':
+          newIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
+          break;
+        case 'Home':
+          newIndex = 0;
+          break;
+        case 'End':
+          newIndex = tabs.length - 1;
+          break;
+      }
+
+      tabs[newIndex]?.focus();
+      tabs[newIndex]?.click();
+      event.preventDefault();
+    });
+  });
+</script>

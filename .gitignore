@@ -1,58 +1,50 @@
-# Build artifacts
-*.aux
-*.log
-*.out
+# build output
+dist/
+public/resume/pdf/
+public/resume/debug/
+
+# generated types
+.astro/
+
+# personal info
+src/data/resume-data.json
+legacy_backup/*
+plan.md
+context.md
+setup.md
+*.local
+notes.txt
+TODO.md
+Thumbs.db
+
+# LaTeX / resume build artifacts
 *.synctex.gz
-*.fdb_latexmk
-*.fls
-*.toc
-*.lof
-*.lot
-*.bbl
-*.blg
-*.bcf
-*.run.xml
+resume/tex/
+resume/Archive/
 
-# LaTeX files - ignore everywhere except resume/tex/
-*.tex
-!resume/tex/*.tex
-
-# Node.js
+# dependencies
 node_modules/
+
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# Environment variables
+# backup
+legacy_backup/
+
+# environment variables
 .env
+.env.production
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
-# IDE files
-.vscode/
+# macOS
+.DS_Store
+
+# editors
 .idea/
+.vscode/
+*.code-workspace
 *.swp
 *.swo
-*~
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
-*.backup
-
-# History directory
-/History/
-/coverLetters/
-/Other/

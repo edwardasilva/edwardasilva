@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Experience from '../components/Experience.astro';
+import Projects from '../components/Projects.astro';
+import Coursework from '../components/Coursework.astro';
+import Skills from '../components/Skills.astro';
+import Footer from '../components/Footer.astro';
+import { resume } from '../data/resume';
+---
+
+<Layout title={`${resume.personal.name}`}>
+	<Header />
+	<main>
+		<Hero />
+		<Experience />
+		<Projects />
+		<Coursework />
+		<Skills />
+	</main>
+	<Footer />
+</Layout>

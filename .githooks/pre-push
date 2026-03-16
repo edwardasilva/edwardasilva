@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+set -e
+
+echo "[pre-push] Syncing RESUME_DATA secret from local resume-data.json..."
+npm run --silent sync:resume-secret
+echo "[pre-push] Secret sync complete. Proceeding with push."

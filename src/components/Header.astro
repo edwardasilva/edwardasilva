@@ -1,0 +1,114 @@
+---
+// Sticky header with mobile hamburger menu
+import { getResumePdfUrl, resume } from '../data/resume';
+
+const navItems = ['Experience', 'Projects', 'Coursework', 'Skills', 'Resume'];
+---
+
+<header class="sticky top-0 z-50 bg-[#fbf7f0]/90 dark:bg-slate-950/90 backdrop-blur-lg border-b border-slate-200/80 dark:border-slate-800/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="#" class="text-lg font-semibold font-serif tracking-tight hover:text-amber-700 dark:hover:text-amber-400 transition-colors">
+            {resume.personal.name}
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-1">
+            {navItems.map((item) => (
+                <a
+                    href={item === 'Resume' ? getResumePdfUrl() : `#${item.toLowerCase()}`}
+                    class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/60 dark:hover:bg-slate-800/60 rounded-lg transition-all"
+                    target={item === 'Resume' ? '_blank' : '_self'}
+                >
+                    {item}
+                </a>
+            ))}
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button
+            class="md:hidden p-2.5 -mr-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+            id="mobile-menu-btn"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="menu-icon transition-transform duration-200">
+                <line x1="4" x2="20" y1="12" y2="12"/>
+                <line x1="4" x2="20" y1="6" y2="6"/>
+                <line x1="4" x2="20" y1="18" y2="18"/>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="close-icon hidden transition-transform duration-200">
+                <path d="M18 6 6 18"/>
+                <path d="m6 6 12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Mobile Navigation Panel -->
+    <nav
+        id="mobile-menu"
+        class="md:hidden overflow-hidden transition-all duration-300 ease-out"
+        style="max-height: 0; opacity: 0;"
+    >
+        <div class="px-4 sm:px-6 pb-4 pt-2 space-y-1 border-t border-slate-200/60 dark:border-slate-800/60 bg-[#fbf7f0]/95 dark:bg-slate-950/95">
+            {navItems.map((item, index) => (
+                <a
+                    href={item === 'Resume' ? getResumePdfUrl() : `#${item.toLowerCase()}`}
+                    class="mobile-nav-item block px-4 py-3 text-base font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800/70 rounded-xl transition-all"
+                    target={item === 'Resume' ? '_blank' : '_self'}
+                    style={`transition-delay: ${index * 50}ms;`}
+                >
+                    {item}
+                </a>
+            ))}
+        </div>
+    </nav>
+</header>
+
+<script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = menuBtn?.querySelector('.menu-icon');
+    const closeIcon = menuBtn?.querySelector('.close-icon');
+
+    let isOpen = false;
+
+    function toggleMenu() {
+        isOpen = !isOpen;
+
+        if (mobileMenu && menuIcon && closeIcon && menuBtn) {
+            if (isOpen) {
+                mobileMenu.style.maxHeight = `${mobileMenu.scrollHeight}px`;
+                mobileMenu.style.opacity = '1';
+                menuIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+                menuBtn.setAttribute('aria-expanded', 'true');
+            } else {
+                mobileMenu.style.maxHeight = '0';
+                mobileMenu.style.opacity = '0';
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+                menuBtn.setAttribute('aria-expanded', 'false');
+            }
+        }
+    }
+
+    menuBtn?.addEventListener('click', toggleMenu);
+
+    // Close menu when clicking a link
+    const mobileLinks = mobileMenu?.querySelectorAll('a');
+    mobileLinks?.forEach(link => {
+        link.addEventListener('click', () => {
+            if (isOpen && !link.getAttribute('target')) {
+                toggleMenu();
+            }
+        });
+    });
+
+    // Close menu on resize to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768 && isOpen) {
+            toggleMenu();
+        }
+    });
+</script>
