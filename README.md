@@ -4,8 +4,9 @@ Electrical Engineering senior at Colorado School of Mines, graduating May 2026. 
 
 ## Contact
 
-  - **Personal:** [contact@easilva.com](mailto:contact@easilva.com)
-  - **LinkedIn:** [Edward Silva](https://www.linkedin.com/in/edwardasilva)
+- **Website:** [easilva.com](https://easilva.com)
+- **Personal:** [contact@easilva.com](mailto:contact@easilva.com)
+- **LinkedIn:** [Edward Silva](https://www.linkedin.com/in/edwardasilva)
 
 ## Education
 
