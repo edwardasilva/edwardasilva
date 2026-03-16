@@ -98,13 +98,10 @@ jobs:
             echo "Using ASTRO_BASE from repo variables: ${ASTRO_BASE}"
             exit 0
           fi
-
-          REPO="${GITHUB_REPOSITORY#*/}"
-          if [[ "$REPO" == *.github.io ]]; then
-            echo "ASTRO_BASE=/" >> "$GITHUB_ENV"
-          else
-            echo "ASTRO_BASE=/$REPO" >> "$GITHUB_ENV"
-          fi
+          # This repo is deployed on a custom domain (easilva.com), so assets
+          # must always be emitted from root paths.
+          echo "ASTRO_BASE=/" >> "$GITHUB_ENV"
+          echo "Using ASTRO_BASE=/ for custom-domain deployment"
 
       - name: Build
         run: npm run build
