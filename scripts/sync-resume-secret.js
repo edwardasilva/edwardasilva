@@ -17,6 +17,7 @@ function getArgValue(flagName) {
 const secretName = getArgValue('--name') || process.env.RESUME_SECRET_NAME || 'RESUME_DATA';
 const scope = getArgValue('--scope') || process.env.RESUME_SECRET_SCOPE || 'repo';
 const environment = getArgValue('--env') || process.env.RESUME_SECRET_ENV || 'github-pages';
+const repository = getArgValue('--repo') || process.env.RESUME_SECRET_REPO || 'edwardasilva/edwardasilva';
 
 if (!fs.existsSync(resumePath)) {
 	console.error(`Resume file not found: ${resumePath}`);
@@ -35,8 +36,8 @@ try {
 
 const targetArgs =
 	scope === 'env'
-		? ['secret', 'set', secretName, '--env', environment, '--body', jsonText]
-		: ['secret', 'set', secretName, '--body', jsonText];
+		? ['secret', 'set', secretName, '--repo', repository, '--env', environment]
+		: ['secret', 'set', secretName, '--repo', repository];
 
 const checkGh = spawnSync('gh', ['--version'], {
 	cwd: root,
@@ -60,14 +61,24 @@ if (authCheck.status !== 0) {
 
 const result = spawnSync('gh', targetArgs, {
 	cwd: root,
-	stdio: 'inherit',
-	maxBuffer: 1024 * 1024 * 10
+	input: jsonText,
+	encoding: 'utf8'
 });
 
 if (result.status !== 0) {
+	if (result.stderr) {
+		console.error(result.stderr.trim());
+	}
+	if (result.stdout) {
+		console.error(result.stdout.trim());
+	}
 	console.error('Failed to update GitHub Actions secret.');
 	process.exit(result.status || 1);
 }
 
+if (result.stdout) {
+	console.log(result.stdout.trim());
+}
+
 const scopeLabel = scope === 'env' ? `environment:${environment}` : 'repository';
-console.log(`Updated ${scopeLabel} secret ${secretName} from src/data/resume-data.json`);
+console.log(`Updated ${scopeLabel} secret ${secretName} in ${repository} from src/data/resume-data.json`);
