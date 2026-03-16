@@ -98,10 +98,32 @@ jobs:
             echo "Using ASTRO_BASE from repo variables: ${ASTRO_BASE}"
             exit 0
           fi
-          # This repo is deployed on a custom domain (easilva.com), so assets
-          # must always be emitted from root paths.
-          echo "ASTRO_BASE=/" >> "$GITHUB_ENV"
-          echo "Using ASTRO_BASE=/ for custom-domain deployment"
+
+          # Custom domains should be served from root.
+          if [[ -n "${ASTRO_SITE:-}" ]]; then
+            SITE_HOST="$(python3 - <<'PY'
+          import os
+          from urllib.parse import urlparse
+
+          site = os.environ.get("ASTRO_SITE", "")
+          host = urlparse(site).hostname or ""
+          print(host)
+          PY
+            )"
+
+            if [[ -n "$SITE_HOST" && "$SITE_HOST" != *.github.io ]]; then
+              echo "ASTRO_BASE=/" >> "$GITHUB_ENV"
+              echo "Using ASTRO_BASE=/ for custom domain host: $SITE_HOST"
+              exit 0
+            fi
+          fi
+
+          REPO="${GITHUB_REPOSITORY#*/}"
+          if [[ "$REPO" == *.github.io ]]; then
+            echo "ASTRO_BASE=/" >> "$GITHUB_ENV"
+          else
+            echo "ASTRO_BASE=/$REPO" >> "$GITHUB_ENV"
+          fi
 
       - name: Build
         run: npm run build
