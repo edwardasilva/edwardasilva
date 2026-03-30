@@ -1,12 +1,21 @@
 @import "tailwindcss";
 
-/* Font setup - serif for headings, sans for body, mono for code */
+/* Font setup - unified Calibri for a simple, modern look */
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-  --font-serif: "Fraunces", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  --font-sans: "Calibri", "Candara", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Calibri", "Candara", "Segoe UI", ui-serif, Georgia, serif;
+  --font-mono: "Consolas", "Courier New", ui-monospace, monospace;
+}
+
+:root {
+  --color-bg: #f8f7f2;
+  --color-surface: #f2eee4;
+  --color-surface-soft: #fcfbf7;
+  --color-text: #292b31;
+  --color-text-muted: #5f6578;
+  --color-accent: #8ea2d8;
+  --color-accent-strong: #738bc8;
+  --color-border: #e2dccd;
 }
 
 @layer base {
@@ -17,10 +26,14 @@
     scroll-behavior: smooth;
   }
 
-  body { line-height: 1.6; }
+  body {
+    line-height: 1.6;
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
 
   :focus-visible {
-    outline: 2px solid rgb(245 158 11 / 0.6);
+    outline: 2px solid rgb(142 162 216 / 0.75);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -30,7 +43,7 @@
   }
 
   ::selection {
-    background-color: rgb(245 158 11 / 0.25);
+    background-color: rgb(142 162 216 / 0.28);
     color: inherit;
   }
 }
@@ -49,10 +62,7 @@
     width: 2.5rem;
     border-radius: 9999px;
     transform: rotate(-1.5deg);
-    background: linear-gradient(90deg, rgb(245 158 11 / 0.6), rgb(245 158 11 / 0.3));
-  }
-  .dark .marker-underline::after {
-    background: linear-gradient(90deg, rgb(245 158 11 / 0.5), rgb(245 158 11 / 0.2));
+    background: linear-gradient(90deg, rgb(142 162 216 / 0.62), rgb(142 162 216 / 0.34));
   }
 
   .animate-fade-in {

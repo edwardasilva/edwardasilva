@@ -45,6 +45,7 @@ export interface EducationSupplementary {
 
 export interface Experience {
     title: string;
+    slug?: string;
     company: string;
     location: string;
     duration: string;
@@ -57,12 +58,23 @@ export interface Experience {
 
 export interface Project {
     title: string;
+    slug?: string;
+    summary?: string;
     technologies: string[];
     github?: string;
     duration: string;
     description: string[];
+    proof?: ProjectProof[];
     experienceType: string;
     projectType: string;
+}
+
+export interface ProjectProof {
+    title: string;
+    type: 'pdf' | 'video' | 'image' | 'link' | 'file';
+    url: string;
+    description?: string;
+    embedUrl?: string;
 }
 
 export interface Skill {

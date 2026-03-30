@@ -1,0 +1,19 @@
+---
+const destination = '/#skills';
+const refreshContent = `0;url=${destination}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={refreshContent} />
+    <script is:inline>
+      window.location.replace('/#skills');
+    </script>
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href={destination}>Skills</a>...</p>
+  </body>
+</html>

@@ -2,12 +2,19 @@
 // Sticky header with mobile hamburger menu
 import { getResumePdfUrl, resume } from '../data/resume';
 
-const navItems = ['Experience', 'Projects', 'Coursework', 'Skills', 'Resume'];
+const navItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'Classes', href: '/classes' },
+    { label: 'Experiences', href: '/experiences' },
+    { label: 'Skills', href: '/#skills' },
+    { label: 'Resume', href: getResumePdfUrl(), external: true },
+];
 ---
 
-<header class="sticky top-0 z-50 bg-[#fbf7f0]/90 dark:bg-slate-950/90 backdrop-blur-lg border-b border-slate-200/80 dark:border-slate-800/80">
+<header class="sticky top-0 z-50 bg-[#f8f7f2]/92 backdrop-blur-lg border-b border-[#e2dccd]">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <a href="#" class="text-lg font-semibold font-serif tracking-tight hover:text-amber-700 dark:hover:text-amber-400 transition-colors">
+        <a href="/" class="text-xl sm:text-2xl font-bold font-serif tracking-tight text-[#25272d] hover:text-[#4f6398] transition-colors">
             {resume.personal.name}
         </a>
 
@@ -15,18 +22,18 @@ const navItems = ['Experience', 'Projects', 'Coursework', 'Skills', 'Resume'];
         <nav class="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
                 <a
-                    href={item === 'Resume' ? getResumePdfUrl() : `#${item.toLowerCase()}`}
-                    class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/60 dark:hover:bg-slate-800/60 rounded-lg transition-all"
-                    target={item === 'Resume' ? '_blank' : '_self'}
+                    href={item.href}
+                    class="px-4 py-2 text-sm font-medium text-[#5f6578] hover:text-[#292b31] hover:bg-[#f4e7cb]/64 rounded-lg transition-all"
+                    target={item.external ? '_blank' : '_self'}
                 >
-                    {item}
+                    {item.label}
                 </a>
             ))}
         </nav>
 
         <!-- Mobile Menu Button -->
         <button
-            class="md:hidden p-2.5 -mr-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            class="md:hidden p-2.5 -mr-2 rounded-lg hover:bg-[#f4e7cb] transition-colors"
             aria-label="Toggle menu"
             aria-expanded="false"
             id="mobile-menu-btn"
@@ -49,15 +56,15 @@ const navItems = ['Experience', 'Projects', 'Coursework', 'Skills', 'Resume'];
         class="md:hidden overflow-hidden transition-all duration-300 ease-out"
         style="max-height: 0; opacity: 0;"
     >
-        <div class="px-4 sm:px-6 pb-4 pt-2 space-y-1 border-t border-slate-200/60 dark:border-slate-800/60 bg-[#fbf7f0]/95 dark:bg-slate-950/95">
+        <div class="px-4 sm:px-6 pb-4 pt-2 space-y-1 border-t border-[#e2dccd] bg-[#f8f7f2]/96">
             {navItems.map((item, index) => (
                 <a
-                    href={item === 'Resume' ? getResumePdfUrl() : `#${item.toLowerCase()}`}
-                    class="mobile-nav-item block px-4 py-3 text-base font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800/70 rounded-xl transition-all"
-                    target={item === 'Resume' ? '_blank' : '_self'}
+                    href={item.href}
+                    class="mobile-nav-item block px-4 py-3 text-base font-medium text-[#4d5365] hover:text-[#292b31] hover:bg-[#f4e7cb]/72 rounded-xl transition-all"
+                    target={item.external ? '_blank' : '_self'}
                     style={`transition-delay: ${index * 50}ms;`}
                 >
-                    {item}
+                    {item.label}
                 </a>
             ))}
         </div>

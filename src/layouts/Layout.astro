@@ -1,6 +1,7 @@
 ---
 // Base layout - handles meta tags, fonts, and that nice ambient background
 import '../styles/global.css';
+import faviconUrl from '../styles/favicon.svg?url';
 import { resume } from '../data/resume';
 
 interface Props {
@@ -30,33 +31,21 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://easilva.
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={canonicalURL} />
 
-		<!-- Favicon -->
-		<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
-
-		<!-- Font Preloading -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap"
-			rel="stylesheet"
-		/>
+		<!-- Favicons -->
+		<link rel="icon" href={faviconUrl} sizes="any" type="image/svg+xml" />
+		<link rel="shortcut icon" href={faviconUrl} type="image/svg+xml" />
+		<link rel="apple-touch-icon" href={faviconUrl} />
 
 		<meta name="generator" content={Astro.generator} />
 		<link rel="canonical" href={canonicalURL} />
 		<title>{title}</title>
 	</head>
-	<body class="bg-[#fbf7f0] text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased flex flex-col min-h-screen overflow-x-hidden">
+	<body class="bg-[#f8f7f2] text-[#292b31] font-sans antialiased flex flex-col min-h-screen overflow-x-hidden">
 		<!-- Ambient Background -->
 		<div class="fixed inset-0 z-[-1] pointer-events-none" aria-hidden="true">
-			<!-- Light mode ambient -->
-			<div class="absolute inset-0 bg-[radial-gradient(ellipse_900px_500px_at_10%_-5%,rgba(245,158,11,0.12),transparent_50%)] dark:opacity-0"></div>
-			<div class="absolute inset-0 bg-[radial-gradient(ellipse_800px_450px_at_95%_5%,rgba(59,130,246,0.08),transparent_45%)] dark:opacity-0"></div>
-			<div class="absolute inset-0 bg-[radial-gradient(ellipse_1200px_600px_at_50%_110%,rgba(15,23,42,0.04),transparent_55%)] dark:opacity-0"></div>
-
-			<!-- Dark mode ambient -->
-			<div class="absolute inset-0 opacity-0 dark:opacity-100 bg-[radial-gradient(ellipse_900px_500px_at_10%_-5%,rgba(245,158,11,0.08),transparent_50%)]"></div>
-			<div class="absolute inset-0 opacity-0 dark:opacity-100 bg-[radial-gradient(ellipse_800px_450px_at_95%_5%,rgba(59,130,246,0.06),transparent_45%)]"></div>
-			<div class="absolute inset-0 opacity-0 dark:opacity-100 bg-[radial-gradient(ellipse_1200px_600px_at_50%_110%,rgba(255,255,255,0.02),transparent_55%)]"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(ellipse_950px_520px_at_8%_-8%,rgba(233,226,211,0.45),transparent_52%)]"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(ellipse_860px_480px_at_96%_6%,rgba(122,142,202,0.16),transparent_46%)]"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(ellipse_1220px_620px_at_50%_112%,rgba(41,43,49,0.04),transparent_56%)]"></div>
 		</div>
 
 		<slot />

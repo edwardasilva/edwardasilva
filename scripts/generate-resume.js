@@ -549,7 +549,7 @@ const data = loadResumeData();
 const outRoot = path.resolve(__dirname, '..');
 
 // Generate Resume TeX files
-const texDir = path.join(outRoot, 'resume');
+const texDir = path.join(outRoot, 'public', 'resume');
 
 try {
 	fs.mkdirSync(texDir, { recursive: true });

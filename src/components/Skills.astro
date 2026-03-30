@@ -7,19 +7,19 @@ const skillCategories = Object.entries(resume.skills);
 ---
 
 <Section id="skills" title="Skills">
-    <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/40 divide-y divide-slate-200/60 dark:divide-slate-800/60">
+    <div class="rounded-xl border border-[#dfd3b8] bg-white/60 divide-y divide-[#d2c6ab]/55">
         {skillCategories.map(([category, skills]) => (
             <div class="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6 p-4 sm:p-5">
                 <!-- Category Label -->
-                <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100 sm:w-28 shrink-0 sm:pt-0.5">
+                <h3 class="text-sm font-semibold text-[#292b31] sm:w-28 shrink-0 sm:pt-0.5">
                     {category}
                 </h3>
 
                 <!-- Skills List -->
                 <div class="flex flex-wrap gap-2">
-                    {skills.map((skill) => (
-                        <span class="px-2.5 py-1 text-sm text-slate-600 dark:text-slate-300 bg-slate-100/80 dark:bg-slate-800/60 rounded-md">
-                            {skill.name}
+                    {skills.filter(s => typeof s === 'string' ? true : (s.experienceType === 'All' || s.experienceType === 'Site')).map((skill) => (
+                        <span class="px-2.5 py-1 text-sm text-[#5f6578] bg-[#f4e7cb]/80 rounded-md">
+                            {typeof skill === 'string' ? skill : skill.name}
                         </span>
                     ))}
                 </div>

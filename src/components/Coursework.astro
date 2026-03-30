@@ -21,7 +21,7 @@ function getFilteredCourses(category: string): Course[] {
   const courses = coursesByCategory[category] ?? [];
   return courses
     .filter((c) => {
-      if (c.experienceType === 'None') return false;
+      if (c.experienceType !== 'All' && c.experienceType !== 'Site') return false;
       if (String(c.relevancy ?? '').toLowerCase() !== 'yes') return false;
       const code = (c.code ?? '').trim();
       const num = parseCourseNumber(code);
@@ -52,7 +52,7 @@ const tabs: Array<{
     shortLabel: 'EE',
     courses: eeCourses,
     accentColor: 'amber',
-    pillClass: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
+    pillClass: 'bg-[#f2e2c4]/85 text-[#6f84bb]',
   },
   {
     id: 'cs',
@@ -60,22 +60,22 @@ const tabs: Array<{
     shortLabel: 'CS',
     courses: csCourses,
     accentColor: 'sky',
-    pillClass: 'bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-300',
+    pillClass: 'bg-[#e8edf8] text-[#6f84bb]',
   },
 ];
 
 const totalCourses = eeCourses.length + csCourses.length;
 ---
 
-<Section id="coursework" title="Coursework">
+<Section id="classes" title="Classes">
   {totalCourses === 0 ? (
-    <p class="text-sm text-slate-600 dark:text-slate-400">
+    <p class="text-sm text-[#5f6578]">
       Coursework will appear here once courses are added.
     </p>
   ) : (
     <div class="space-y-6">
       <!-- Tab Navigation -->
-      <div class="flex items-center gap-2 border-b border-slate-200/70 dark:border-slate-800/70" role="tablist">
+      <div class="flex items-center gap-2 border-b border-[#dfd3b8]" role="tablist">
         {tabs.map((tab, index) => (
           <button
             role="tab"
@@ -85,21 +85,21 @@ const totalCourses = eeCourses.length + csCourses.length;
             data-tab={tab.id}
             class:list={[
               "tab-btn relative px-4 py-3 text-sm font-medium transition-colors",
-              "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2",
-              index === 0 && "text-slate-900 dark:text-slate-100"
+              "text-[#6f7588] hover:text-[#292b31]",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8ea2d8] focus-visible:ring-offset-2",
+              index === 0 && "text-[#292b31]"
             ]}
           >
             <span class="hidden sm:inline">{tab.label}</span>
             <span class="sm:hidden">{tab.shortLabel}</span>
-            <span class="ml-2 text-xs px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+            <span class="ml-2 text-xs px-1.5 py-0.5 rounded-full bg-[#f4e7cb] text-[#6f7588]">
               {tab.courses.length}
             </span>
             <!-- Active indicator -->
             <span
               class:list={[
                 "tab-indicator absolute bottom-0 left-0 right-0 h-0.5 rounded-full transition-opacity",
-                tab.accentColor === 'amber' ? 'bg-amber-500' : 'bg-sky-500',
+                tab.accentColor === 'amber' ? 'bg-[#8ea2d8]' : 'bg-[#8ea2d8]',
                 index === 0 ? 'opacity-100' : 'opacity-0'
               ]}
             ></span>
@@ -117,13 +117,13 @@ const totalCourses = eeCourses.length + csCourses.length;
           class:list={["tab-panel", index !== 0 && "hidden"]}
         >
           {tab.courses.length === 0 ? (
-            <p class="text-sm text-slate-500 dark:text-slate-400 py-4">
+            <p class="text-sm text-[#6f7588] py-4">
               No courses to display.
             </p>
           ) : (
             <div class="grid gap-2">
               {tab.courses.map((course) => (
-                <details class="group rounded-lg bg-white/60 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-800/60 hover:border-slate-300/80 dark:hover:border-slate-700/80 transition-all">
+                <details class="group rounded-lg bg-white/60 border border-[#dfd3b8] hover:border-[#d8ccb0]/80 transition-all">
                   <summary class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 cursor-pointer select-none list-none">
                     <!-- Course Code -->
                     <span class:list={[
@@ -134,10 +134,10 @@ const totalCourses = eeCourses.length + csCourses.length;
                     </span>
 
                     <!-- Course Name -->
-                    <span class="flex-1 min-w-0 text-sm sm:text-base font-medium text-slate-900 dark:text-slate-100 leading-snug">
+                    <span class="flex-1 min-w-0 text-sm sm:text-base font-medium text-[#292b31] leading-snug">
                       {course.name}
                       {course.alias && (
-                        <span class="text-slate-400 dark:text-slate-500 font-normal text-xs ml-2">
+                        <span class="text-[#81889c] font-normal text-xs ml-2">
                           ({course.alias})
                         </span>
                       )}
@@ -154,7 +154,7 @@ const totalCourses = eeCourses.length + csCourses.length;
                       stroke-width="2"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      class="shrink-0 text-slate-400 group-open:rotate-180 transition-transform duration-200"
+                      class="shrink-0 text-[#81889c] group-open:rotate-180 transition-transform duration-200"
                     >
                       <polyline points="6 9 12 15 18 9"/>
                     </svg>
@@ -162,7 +162,7 @@ const totalCourses = eeCourses.length + csCourses.length;
 
                   <!-- Expanded Description -->
                   <div class="px-3 sm:px-4 pb-3 sm:pb-4 pt-0">
-                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed pl-[calc(theme(spacing.2)+theme(spacing.3))] sm:pl-[calc(theme(spacing.2)+theme(spacing.4)+theme(spacing.8))]">
+                    <p class="text-sm text-[#5f6578] leading-relaxed pl-[calc(theme(spacing.2)+theme(spacing.3))] sm:pl-[calc(theme(spacing.2)+theme(spacing.4)+theme(spacing.8))]">
                       {course.description}
                     </p>
                   </div>
@@ -192,10 +192,8 @@ const totalCourses = eeCourses.length + csCourses.length;
         tabButtons.forEach((b) => {
           const isActive = b.dataset.tab === targetId;
           b.setAttribute('aria-selected', isActive ? 'true' : 'false');
-          b.classList.toggle('text-slate-900', isActive);
-          b.classList.toggle('dark:text-slate-100', isActive);
-          b.classList.toggle('text-slate-500', !isActive);
-          b.classList.toggle('dark:text-slate-400', !isActive);
+          b.classList.toggle('text-[#292b31]', isActive);
+          b.classList.toggle('text-[#6f7588]', !isActive);
 
           const indicator = b.querySelector('.tab-indicator');
           if (indicator) {

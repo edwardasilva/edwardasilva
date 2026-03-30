@@ -7,12 +7,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const ROOT_DIR = path.resolve(__dirname, '..');
-const RESUME_DIR = path.join(ROOT_DIR, 'resume');
 const OUTPUT_DIR = path.join(ROOT_DIR, 'public', 'resume');
 const GENERATE_SCRIPT = path.join(ROOT_DIR, 'scripts', 'generate-resume.js');
+const ASSET_SOURCE_DIR = path.join(ROOT_DIR, 'src', 'assets');
+const ASSET_OUTPUT_DIR = path.join(ROOT_DIR, 'public', 'assets');
 
-console.log(`Resume Directory: ${RESUME_DIR}`);
+console.log(`Resume Directory: ${OUTPUT_DIR}`);
 console.log(`Output Directory: ${OUTPUT_DIR}`);
+
+if (fs.existsSync(ASSET_SOURCE_DIR)) {
+	console.log(`Syncing assets from ${ASSET_SOURCE_DIR} to ${ASSET_OUTPUT_DIR}...`);
+	fs.rmSync(ASSET_OUTPUT_DIR, { recursive: true, force: true });
+	fs.mkdirSync(path.dirname(ASSET_OUTPUT_DIR), { recursive: true });
+	fs.cpSync(ASSET_SOURCE_DIR, ASSET_OUTPUT_DIR, { recursive: true, force: true });
+} else {
+	console.log(`No src/assets directory found at ${ASSET_SOURCE_DIR}; skipping asset sync.`);
+}
 
 // Only compile these (skip any experimental variants)
 const ALLOWED_TEX_FILES = new Set([
@@ -31,7 +41,7 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 
 try {
 	const files = fs
-		.readdirSync(RESUME_DIR)
+		.readdirSync(OUTPUT_DIR)
 		.filter(f => f.endsWith('.tex') && ALLOWED_TEX_FILES.has(f));
 
 	console.log(`Found ${files.length} resume files to compile.`);
@@ -39,10 +49,10 @@ try {
 	for (const file of files) {
 		console.log(`Step 1: Compiling ${file}...`);
 		try {
-			const cmd = `pdflatex -interaction=nonstopmode -output-directory="${OUTPUT_DIR}" "${file}"`;
+			const cmd = `pdflatex -interaction=nonstopmode "${file}"`;
 			execSync(cmd, {
 				stdio: 'inherit',
-				cwd: RESUME_DIR
+				cwd: OUTPUT_DIR
 			});
 			console.log(`Compiled ${file} successfully.`);
 		} catch (e) {
@@ -51,10 +61,10 @@ try {
 		}
 		console.log(`Step 2: Compiling ${file}...`);
 		try {
-			const cmd = `pdflatex -interaction=nonstopmode -output-directory="${OUTPUT_DIR}" "${file}"`;
+			const cmd = `pdflatex -interaction=nonstopmode "${file}"`;
 			execSync(cmd, {
 				stdio: 'inherit',
-				cwd: RESUME_DIR
+				cwd: OUTPUT_DIR
 			});
 			console.log(`Compiled ${file} successfully.`);
 		} catch (e) {
@@ -75,7 +85,7 @@ try {
 	}
 } catch (err) {
 	if (err.code === 'ENOENT') {
-		console.warn('Resume directory not found. Skipping resume build.');
+		console.warn('Resume output directory not found. Skipping resume build.');
 	} else {
 		console.error('Error during resume build:', err);
 		process.exit(1);

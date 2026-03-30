@@ -1,0 +1,49 @@
+---
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Layout from '../layouts/Layout.astro';
+import { getExperienceSlug, getPublicExperiences } from '../data/resume';
+
+const experiences = getPublicExperiences();
+---
+
+<Layout title="Experiences | Edward Silva" description="Experience list with links to details.">
+  <Header />
+  <main class="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <section class="space-y-3">
+      <p class="text-sm font-medium uppercase tracking-[0.2em] text-[#6f84bb]">Experiences</p>
+      <h1 class="font-serif text-4xl text-[#292b31] sm:text-5xl">Experiences</h1>
+      <p class="max-w-3xl text-base text-[#5f6578]">
+        A quick list of roles with links to full details.
+      </p>
+    </section>
+
+    <section class="mt-8 grid gap-4">
+      {experiences.map((experience) => (
+        <article class="rounded-xl border border-[#dfd3b8] bg-white/80 p-5 transition hover:bg-white hover:shadow-md">
+          {(() => {
+            const experienceHref = `/experiences/${getExperienceSlug(experience)}`;
+            return (
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 class="font-serif text-2xl text-[#292b31]">
+                <a href={experienceHref} class="hover:text-[#3b3f49] hover:underline underline-offset-4">
+                  {experience.title}
+                </a>
+              </h2>
+              <p class="mt-1 text-sm text-[#6f7588]">{experience.company} • {experience.location}</p>
+              <p class="text-sm text-[#6f7588]">{experience.duration}</p>
+            </div>
+            <a href={experienceHref} class="inline-flex items-center rounded-lg bg-[#292b31] px-3 py-2 text-sm font-medium text-white hover:bg-[#3b3f49]">
+              View Experience
+            </a>
+          </div>
+          <p class="mt-3 text-sm text-[#5f6578]">{experience.description[0]}</p>
+            );
+          })()}
+        </article>
+      ))}
+    </section>
+  </main>
+  <Footer />
+</Layout>

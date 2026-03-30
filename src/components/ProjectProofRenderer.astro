@@ -1,0 +1,67 @@
+---
+import type { ProjectProof } from '../data/types';
+
+interface Props {
+  proof: ProjectProof;
+}
+
+const { proof } = Astro.props;
+const isExternal = /^(https?:)?\/\//i.test(proof.url);
+---
+
+<article class="rounded-xl border border-[#dfd3b8] bg-white p-4 sm:p-5">
+  <div class="mb-3">
+    <h3 class="text-base font-semibold text-[#292b31]">{proof.title}</h3>
+    {proof.description && <p class="mt-1 text-sm text-[#5f6578]">{proof.description}</p>}
+  </div>
+
+  {proof.type === 'image' && (
+    <img src={proof.url} alt={proof.title} loading="lazy" class="w-full rounded-lg border border-[#ece5d4]" />
+  )}
+
+  {proof.type === 'pdf' && (
+    <div class="space-y-3">
+      <iframe
+        src={proof.embedUrl ?? proof.url}
+        title={proof.title}
+        class="w-full max-w-[850px] aspect-[8.5/11] rounded-lg border border-[#ece5d4]"
+      ></iframe>
+      <a href={proof.url} target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-[#4f6398] hover:text-[#292b31]">
+        Open PDF in new tab
+      </a>
+    </div>
+  )}
+
+  {proof.type === 'video' && (
+    <div class="space-y-3">
+      {proof.embedUrl ? (
+        <iframe
+          src={proof.embedUrl}
+          title={proof.title}
+          class="h-80 w-full rounded-lg border border-[#ece5d4]"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      ) : (
+        <video controls class="h-80 w-full rounded-lg border border-[#ece5d4] bg-black">
+          <source src={proof.url} />
+          Your browser does not support video playback.
+        </video>
+      )}
+      <a href={proof.url} target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-[#4f6398] hover:text-[#292b31]">
+        Open video in new tab
+      </a>
+    </div>
+  )}
+
+  {(proof.type === 'file' || proof.type === 'link') && (
+    <a
+      href={proof.url}
+      target={isExternal ? '_blank' : '_self'}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+      class="inline-flex items-center rounded-lg bg-[#292b31] px-3 py-2 text-sm font-medium text-white hover:bg-[#3b3f49]"
+    >
+      Open resource
+    </a>
+  )}
+</article>

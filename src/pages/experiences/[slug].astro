@@ -1,0 +1,41 @@
+---
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { getExperienceSlug, getPublicExperiences } from '../../data/resume';
+import type { Experience } from '../../data/types';
+import Layout from '../../layouts/Layout.astro';
+
+export function getStaticPaths() {
+  return getPublicExperiences().map((experience) => ({
+    params: { slug: getExperienceSlug(experience) },
+    props: { experience },
+  }));
+}
+
+const { experience } = Astro.props as { experience: Experience };
+---
+
+<Layout title={`${experience.title} | Experience`} description={experience.description[0] ?? experience.title}>
+  <Header />
+  <main class="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <section class="rounded-2xl border border-[#dfd3b8] bg-white/80 p-6 sm:p-8">
+      <p class="text-sm font-medium uppercase tracking-[0.2em] text-[#6f84bb]">Experience Detail</p>
+      <h1 class="mt-3 font-serif text-3xl text-[#292b31] sm:text-4xl">{experience.title}</h1>
+      <p class="mt-2 text-sm text-[#6f7588]">{experience.company} • {experience.location}</p>
+      <p class="text-sm text-[#6f7588]">{experience.duration}</p>
+    </section>
+
+    <section class="mt-8 rounded-2xl border border-[#dfd3b8] bg-white/80 p-6 sm:p-8">
+      <h2 class="font-serif text-2xl text-[#292b31]">Role Highlights</h2>
+      <ul class="mt-4 space-y-3 text-sm text-[#5f6578] sm:text-base">
+        {experience.description.map((line) => (
+          <li class="flex gap-3">
+            <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#9eb0dc]"></span>
+            <span>{line}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+  <Footer />
+</Layout>

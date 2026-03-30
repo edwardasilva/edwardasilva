@@ -1,0 +1,39 @@
+---
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Layout from '../layouts/Layout.astro';
+import { getPortfolioProjects, getProjectSlug } from '../data/resume';
+
+const projects = getPortfolioProjects();
+---
+
+<Layout title="Projects | Edward Silva" description="Project list with links to details and files.">
+  <Header />
+  <main class="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <section class="space-y-3">
+      <p class="text-sm font-medium uppercase tracking-[0.2em] text-[#6f84bb]">Projects</p>
+      <h1 class="font-serif text-4xl text-[#292b31] sm:text-5xl">Projects</h1>
+      <p class="max-w-3xl text-base text-[#5f6578]">
+        A quick list of projects. Select any title to open the full project page.
+      </p>
+    </section>
+
+    <section class="mt-8 grid gap-4">
+      {projects.map((project) => (
+        <article class="rounded-xl border border-[#dfd3b8] bg-white/80 p-5 transition hover:bg-white hover:shadow-md">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 class="font-serif text-2xl text-[#292b31]"><a href={`/projects/${getProjectSlug(project)}`} class="hover:text-[#4f6398] transition-colors">{project.title}</a></h2>
+              <p class="mt-1 text-sm text-[#6f7588]">{project.duration} • {project.projectType}</p>
+            </div>
+            <a href={`/projects/${getProjectSlug(project)}`} class="inline-flex items-center rounded-lg bg-[#292b31] px-3 py-2 text-sm font-medium text-white hover:bg-[#3b3f49]">
+              View Project
+            </a>
+          </div>
+          <p class="mt-3 text-sm text-[#5f6578]">{project.summary ?? project.description[0]}</p>
+        </article>
+      ))}
+    </section>
+  </main>
+  <Footer />
+</Layout>

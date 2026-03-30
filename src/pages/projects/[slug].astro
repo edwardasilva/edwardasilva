@@ -1,0 +1,65 @@
+---
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import ProjectProofRenderer from '../../components/ProjectProofRenderer.astro';
+import { getPortfolioProjects, getProjectSlug } from '../../data/resume';
+import type { Project } from '../../data/types';
+import Layout from '../../layouts/Layout.astro';
+
+export function getStaticPaths() {
+  return getPortfolioProjects().map((project) => ({
+    params: { slug: getProjectSlug(project) },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props as { project: Project };
+---
+
+<Layout title={`${project.title} | Project`} description={project.summary ?? project.description[0] ?? project.title}>
+  <Header />
+  <main class="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <section class="rounded-2xl border border-[#dfd3b8] bg-white/80 p-6 sm:p-8">
+      <p class="text-sm font-medium uppercase tracking-[0.2em] text-[#6f84bb]">Project</p>
+      <h1 class="mt-3 font-serif text-3xl text-[#292b31] sm:text-4xl">{project.title}</h1>
+      <p class="mt-2 text-sm text-[#6f7588]">{project.duration} • {project.projectType}</p>
+      <p class="mt-4 text-base text-[#5f6578]">{project.summary ?? project.description[0]}</p>
+
+      <div class="mt-5 flex flex-wrap gap-2">
+        {project.technologies.map((tech) => (
+          <span class="rounded-md border border-[#dfd3b8] bg-[#f7f2e4] px-2 py-1 text-xs font-medium text-[#5f6578]">{tech}</span>
+        ))}
+      </div>
+
+      {project.github && (
+        <a href={project.github} target="_blank" rel="noopener noreferrer" class="mt-5 inline-flex items-center rounded-lg bg-[#292b31] px-3 py-2 text-sm font-medium text-white hover:bg-[#3b3f49]">
+          View Source Code
+        </a>
+      )}
+    </section>
+
+    <section class="mt-8 rounded-2xl border border-[#dfd3b8] bg-white/80 p-6 sm:p-8">
+      <h2 class="font-serif text-2xl text-[#292b31]">Details</h2>
+      <ul class="mt-4 space-y-3 text-sm text-[#5f6578] sm:text-base">
+        {project.description.map((line) => (
+          <li class="flex gap-3">
+            <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#9eb0dc]"></span>
+            <span>{line}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {project.proof && project.proof.length > 0 && (
+      <section class="mt-8 space-y-4">
+        <h2 class="font-serif text-2xl text-[#292b31]">Files</h2>
+        <div class="grid gap-4">
+          {project.proof.map((proof) => (
+            <ProjectProofRenderer proof={proof} />
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+  <Footer />
+</Layout>
