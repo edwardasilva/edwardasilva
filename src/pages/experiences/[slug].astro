@@ -13,9 +13,10 @@ export function getStaticPaths() {
 }
 
 const { experience } = Astro.props as { experience: Experience };
+const ogImageUrl = `/og/${getExperienceSlug(experience)}.png`;
 ---
 
-<Layout title={`${experience.title} | Experience`} description={experience.description[0] ?? experience.title}>
+<Layout title={`${experience.title} | Experience`} description={experience.description[0] ?? experience.title} ogImage={ogImageUrl}>
   <Header />
   <main class="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
     <section class="rounded-2xl border border-[#dfd3b8] bg-white/80 p-6 sm:p-8">

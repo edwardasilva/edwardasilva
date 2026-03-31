@@ -14,9 +14,10 @@ export function getStaticPaths() {
 }
 
 const { project } = Astro.props as { project: Project };
+const ogImageUrl = `/og/${getProjectSlug(project)}.png`;
 ---
 
-<Layout title={`${project.title} | Project`} description={project.summary ?? project.description[0] ?? project.title}>
+<Layout title={`${project.title} | Project`} description={project.summary ?? project.description[0] ?? project.title} ogImage={ogImageUrl}>
   <Header />
   <main class="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
     <section class="rounded-2xl border border-[#dfd3b8] bg-white/80 p-6 sm:p-8">

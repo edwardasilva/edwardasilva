@@ -7,14 +7,17 @@ import { resume } from '../data/resume';
 interface Props {
 	title?: string;
 	description?: string;
+	ogImage?: string;
 }
 
 const {
 	title = `${resume.personal.name} | Portfolio`,
 	description = resume.profile.text,
+	ogImage,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://easilva.com');
+const socialImageURL = new URL(ogImage || '/favicon.svg', Astro.site ?? 'https://easilva.com');
 ---
 
 <!doctype html>
@@ -30,6 +33,27 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://easilva.
 		<meta property="og:description" content={description} />
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:image" content={socialImageURL} />
+
+		<!-- Schema.org Profile JSON-LD -->
+		<script type="application/ld+json" set:html={JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": ["Person", "ProfilePage"],
+			"name": resume.personal.name,
+			"url": resume.personal.website,
+			"image": socialImageURL,
+			"alumniOf": {
+				"@type": "CollegeOrUniversity",
+				"name": "Colorado School of Mines",
+				"sameAs": "https://en.wikipedia.org/wiki/Colorado_School_of_Mines"
+			},
+			"jobTitle": "Electrical Engineering Student",
+			"description": resume.profile.text,
+			"sameAs": [
+				resume.personal.linkedin,
+				resume.personal.github
+			]
+		})} />
 
 		<!-- Favicons -->
 		<link rel="icon" href={faviconUrl} sizes="any" type="image/svg+xml" />
