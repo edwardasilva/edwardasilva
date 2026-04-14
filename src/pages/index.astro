@@ -1,4 +1,24 @@
 ---
+/**
+ * src/pages/index.astro
+ * Home Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Composes the portfolio landing page sections in display order.
+ *
+ * File Structure:
+ * - Imports
+ * - Layout composition
+ *
+ * Where this file is used within the repository:
+ * - Primary site route at /
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
@@ -10,12 +30,12 @@ import { resume } from '../data/resume';
 ---
 
 <Layout title={`${resume.personal.name}`}>
-	<Header />
-	<main>
-		<Hero />
-		<Experience />
-		<Projects />
-		<Skills />
-	</main>
-	<Footer />
+  <Header />
+  <main>
+    <Hero />
+    <Experience />
+    <Projects />
+    <Skills />
+  </main>
+  <Footer />
 </Layout>

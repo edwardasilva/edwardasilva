@@ -1,4 +1,24 @@
 ---
+/**
+ * src/pages/experience.astro
+ * Experience Redirect Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 30 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Redirects legacy singular route to canonical plural experiences route.
+ *
+ * File Structure:
+ * - Redirect constants
+ * - HTML fallback redirect markup
+ *
+ * Where this file is used within the repository:
+ * - Legacy route /experience
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 const destination = '/experiences';
 const refreshContent = `0;url=${destination}`;
 ---

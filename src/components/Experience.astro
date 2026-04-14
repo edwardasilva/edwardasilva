@@ -1,4 +1,24 @@
 ---
+/**
+ * src/components/Experience.astro
+ * Experience Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Displays professional work experience in a timeline format. Filters experiences
+ * based on experienceType to show only appropriate entries for portfolio.
+ *
+ * File Structure:
+ * - Data Filtering: Functions to filter and sort experience entries
+ * - Timeline Rendering: Component to display experience with visual layout
+ *
+ * Used in: src/pages/experience.astro, src/pages/experiences/[slug].astro
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 // Work experience timeline - only shows the good stuff (experienceType = 'All' or 'Site')
 import Section from './Section.astro';
 import { resume, getPublicExperiences, getExperienceSlug } from '../data/resume';
@@ -6,80 +26,86 @@ import { resume, getPublicExperiences, getExperienceSlug } from '../data/resume'
 const experience = getPublicExperiences(resume);
 
 function isIncoming(duration: string): boolean {
-    return duration.toLowerCase() === 'incoming' || duration.toLowerCase().includes('starting');
+  return duration.toLowerCase() === 'incoming' || duration.toLowerCase().includes('starting');
 }
 ---
 
 <Section id="experience" title="Experience">
-    <div class="relative border-l-2 border-[#dfd3b8] ml-2 sm:ml-3 space-y-10 sm:space-y-12">
-        {experience.map((job) => {
-            const incoming = isIncoming(job.duration);
-            const experienceHref = `/experiences/${getExperienceSlug(job)}`;
-            return (
-                <article class="relative pl-6 sm:pl-8 md:pl-10 group">
-                    <!-- Timeline Dot -->
-                    <div class:list={[
-                        "absolute -left-[7px] top-1.5 h-3 w-3 rounded-full border-[3px] border-[#fbf7f0] shadow-sm group-hover:scale-110 transition-transform",
-                        incoming ? "bg-emerald-400" : "bg-amber-400"
-                    ]}></div>
+  <div class="relative border-l-2 border-[#dfd3b8] ml-2 sm:ml-3 space-y-10 sm:space-y-12">
+    {
+      experience.map((job) => {
+        const incoming = isIncoming(job.duration);
+        const experienceHref = `/experiences/${getExperienceSlug(job)}`;
+        return (
+          <article class="relative pl-6 sm:pl-8 md:pl-10 group">
+            <div
+              class:list={[
+                'absolute -left-[7px] top-1.5 h-3 w-3 rounded-full border-[3px] border-[#fbf7f0] shadow-sm group-hover:scale-110 transition-transform',
+                incoming ? 'bg-emerald-400' : 'bg-amber-400',
+              ]}
+            />
 
-                    <!-- Header -->
-                    <div class="flex flex-col gap-2 mb-3">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <h3 class="text-lg sm:text-xl font-semibold font-serif text-[#292b31] leading-snug">
-                                <a href={experienceHref} class="hover:text-[#3b3f49] hover:underline underline-offset-4">
-                                    {job.title}
-                                </a>
-                            </h3>
-                            {incoming && (
-                                <span class="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                    Incoming
-                                </span>
-                            )}
-                        </div>
+            <div class="flex flex-col gap-2 mb-3">
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 class="text-lg sm:text-xl font-semibold font-serif text-[#292b31] leading-snug">
+                  <a
+                    href={experienceHref}
+                    class="hover:text-[#3b3f49] hover:underline underline-offset-4"
+                  >
+                    {job.title}
+                  </a>
+                </h3>
+                {incoming && (
+                  <span class="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Incoming
+                  </span>
+                )}
+              </div>
 
-                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-                            <span class="font-medium text-[#4d5365]">{job.company}</span>
-                            {job.location && (
-                                <>
-                                    <span class="text-[#959caf] hidden sm:inline">•</span>
-                                    <span class="text-[#6f7588]">{job.location}</span>
-                                </>
-                            )}
-                            {!incoming && (
-                                <>
-                                    <span class="text-[#959caf] hidden sm:inline">•</span>
-                                    <span class="text-[#6f7588] text-xs sm:text-sm">{job.duration}</span>
-                                </>
-                            )}
-                        </div>
-                        <div>
-                            <a href={experienceHref} class="inline-flex items-center text-sm font-medium text-[#3e5ba9] hover:text-[#2f467f] hover:underline underline-offset-4">
-                                Open Experience
-                            </a>
-                        </div>
-                    </div>
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                <span class="font-medium text-[#4d5365]">{job.company}</span>
+                {job.location && (
+                  <>
+                    <span class="text-[#959caf] hidden sm:inline">•</span>
+                    <span class="text-[#6f7588]">{job.location}</span>
+                  </>
+                )}
+                {!incoming && (
+                  <>
+                    <span class="text-[#959caf] hidden sm:inline">•</span>
+                    <span class="text-[#6f7588] text-xs sm:text-sm">{job.duration}</span>
+                  </>
+                )}
+              </div>
+              <div>
+                <a
+                  href={experienceHref}
+                  class="inline-flex items-center text-sm font-medium text-[#3e5ba9] hover:text-[#2f467f] hover:underline underline-offset-4"
+                >
+                  Open Experience
+                </a>
+              </div>
+            </div>
 
-                    <!-- Description -->
-                    {job.description.length > 0 && (
-                        incoming ? (
-                            <p class="text-[#5f6578] text-sm sm:text-base">
-                                {job.description.join(' · ')}
-                            </p>
-                        ) : (
-                            <ul class="space-y-2 mt-4">
-                                {job.description.map((desc) => (
-                                    <li class="flex items-start gap-3">
-                                        <span class="mt-2 w-1.5 h-1.5 rounded-full bg-[#c8c0aa] shrink-0"></span>
-                                        <span class="text-[#5f6578] leading-relaxed text-sm sm:text-base">{desc}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        )
-                    )}
-                </article>
-            );
-        })}
-    </div>
+            {job.description.length > 0 &&
+              (incoming ? (
+                <p class="text-[#5f6578] text-sm sm:text-base">{job.description.join(' · ')}</p>
+              ) : (
+                <ul class="space-y-2 mt-4">
+                  {job.description.map((desc) => (
+                    <li class="flex items-start gap-3">
+                      <span class="mt-2 w-1.5 h-1.5 rounded-full bg-[#c8c0aa] shrink-0" />
+                      <span class="text-[#5f6578] leading-relaxed text-sm sm:text-base">
+                        {desc}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ))}
+          </article>
+        );
+      })
+    }
+  </div>
 </Section>

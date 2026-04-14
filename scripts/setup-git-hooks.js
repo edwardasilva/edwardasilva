@@ -1,3 +1,25 @@
+/**
+ * scripts/setup-git-hooks.js
+ * Setup Git Hooks Script
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Configures Git hooks for the repository. Sets up pre-commit and pre-push hooks
+ * to automatically run cleanup and secret synchronization before commits and pushes.
+ *
+ * File Structure:
+ * - Global Constants: root, hooksDir, hook paths
+ * - Hook Scripts: preCommitScript, prePushScript
+ * - Setup Logic: File creation, permission configuration, Git hook registration
+ *
+ * Used in: Repository initialization, development environment setup
+ * Invoked via: npm run setup:hooks or setup script
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -32,30 +54,57 @@ npm run --silent sync:resume-secret
 echo "[pre-push] Secret sync complete. Proceeding with push."
 `;
 
-const normalizeLineEndings = (script) => script.replace(/\r\n/g, '\n');
-
-if (!fs.existsSync(hooksDir)) {
-	fs.mkdirSync(hooksDir, { recursive: true });
+/**
+ * @brief Normalizes line endings in shell scripts
+ * @param script The script content to normalize
+ * @return Script with CRLF converted to LF
+ */
+function normalizeLineEndings(script) {
+  return script.replace(/\r\n/g, '\n');
 }
 
-fs.writeFileSync(preCommitPath, normalizeLineEndings(preCommitScript), { encoding: 'utf8', mode: 0o755 });
-fs.writeFileSync(prePushPath, normalizeLineEndings(prePushScript), { encoding: 'utf8', mode: 0o755 });
+/**
+ * @brief Creates git hook files with proper permissions
+ * @details Writes pre-commit and pre-push hook scripts to .githooks directory
+ */
+function createHookFiles() {
+  if (!fs.existsSync(hooksDir)) {
+    fs.mkdirSync(hooksDir, { recursive: true });
+  }
 
-try {
-	fs.chmodSync(preCommitPath, 0o755);
-	fs.chmodSync(prePushPath, 0o755);
-} catch {
-	// Ignore chmod failures on filesystems that do not support POSIX permissions.
+  fs.writeFileSync(preCommitPath, normalizeLineEndings(preCommitScript), {
+    encoding: 'utf8',
+    mode: 0o755,
+  });
+  fs.writeFileSync(prePushPath, normalizeLineEndings(prePushScript), {
+    encoding: 'utf8',
+    mode: 0o755,
+  });
+
+  try {
+    fs.chmodSync(preCommitPath, 0o755);
+    fs.chmodSync(prePushPath, 0o755);
+  } catch {
+    // Ignore chmod failures on filesystems that do not support POSIX permissions.
+  }
 }
 
-const result = spawnSync('git', ['config', 'core.hooksPath', '.githooks'], {
-	cwd: root,
-	stdio: 'inherit'
-});
+/**
+ * @brief Registers git hooks path with repository
+ */
+function registerHooksPath() {
+  const result = spawnSync('git', ['config', 'core.hooksPath', '.githooks'], {
+    cwd: root,
+    stdio: 'inherit',
+  });
 
-if (result.status !== 0) {
-	console.error('Failed to configure git hooks path.');
-	process.exit(result.status || 1);
+  if (result.status !== 0) {
+    console.error('Failed to configure git hooks path.');
+    process.exit(result.status || 1);
+  }
 }
 
+// Main execution
+createHookFiles();
+registerHooksPath();
 console.log('Configured git hooks at .githooks and installed pre-commit and pre-push hooks.');

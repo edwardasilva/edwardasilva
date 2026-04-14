@@ -1,10 +1,10 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Font setup - unified Calibri for a simple, modern look */
 @theme {
-  --font-sans: "Calibri", "Candara", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Calibri", "Candara", "Segoe UI", ui-serif, Georgia, serif;
-  --font-mono: "Consolas", "Courier New", ui-monospace, monospace;
+  --font-sans: 'Calibri', 'Candara', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Calibri', 'Candara', 'Segoe UI', ui-serif, Georgia, serif;
+  --font-mono: 'Consolas', 'Courier New', ui-monospace, monospace;
 }
 
 :root {
@@ -38,8 +38,13 @@
     border-radius: 4px;
   }
 
-  a, button {
-    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  a,
+  button {
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      transform 0.15s ease;
   }
 
   ::selection {
@@ -54,7 +59,7 @@
     position: relative;
   }
   .marker-underline::after {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     bottom: -0.35rem;

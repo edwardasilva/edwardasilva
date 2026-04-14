@@ -1,4 +1,24 @@
 ---
+/**
+ * src/pages/coursework.astro
+ * Coursework Redirect Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 30 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Redirects legacy /coursework route to canonical /classes route.
+ *
+ * File Structure:
+ * - Redirect constants
+ * - HTML fallback redirect markup
+ *
+ * Where this file is used within the repository:
+ * - Legacy route /coursework
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 const destination = '/classes';
 const refreshContent = `0;url=${destination}`;
 ---

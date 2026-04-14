@@ -1,4 +1,25 @@
 ---
+/**
+ * src/components/Skills.astro
+ * Skills Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Renders skill categories with individual skill badges. Organizes skills
+ * by category (Programming, Tools, etc.) for portfolio display.
+ *
+ * File Structure:
+ * - Data Processing: Category organization and sorting
+ * - Skill Rendering: Individual skill badge components
+ * - Template: Category sections with skill grid
+ *
+ * Used in: src/pages/skills.astro
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 // Skills by category - programming, hardware, software
 import Section from './Section.astro';
 import { resume } from '../data/resume';
@@ -7,23 +28,28 @@ const skillCategories = Object.entries(resume.skills);
 ---
 
 <Section id="skills" title="Skills">
-    <div class="rounded-xl border border-[#dfd3b8] bg-white/60 divide-y divide-[#d2c6ab]/55">
-        {skillCategories.map(([category, skills]) => (
-            <div class="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6 p-4 sm:p-5">
-                <!-- Category Label -->
-                <h3 class="text-sm font-semibold text-[#292b31] sm:w-28 shrink-0 sm:pt-0.5">
-                    {category}
-                </h3>
-
-                <!-- Skills List -->
-                <div class="flex flex-wrap gap-2">
-                    {skills.filter(s => typeof s === 'string' ? true : (s.experienceType === 'All' || s.experienceType === 'Site')).map((skill) => (
-                        <span class="px-2.5 py-1 text-sm text-[#5f6578] bg-[#f4e7cb]/80 rounded-md">
-                            {typeof skill === 'string' ? skill : skill.name}
-                        </span>
-                    ))}
-                </div>
-            </div>
-        ))}
-    </div>
+  <div class="rounded-xl border border-[#dfd3b8] bg-white/60 divide-y divide-[#d2c6ab]/55">
+    {
+      skillCategories.map(([category, skills]) => (
+        <div class="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-6 p-4 sm:p-5">
+          <h3 class="text-sm font-semibold text-[#292b31] sm:w-28 shrink-0 sm:pt-0.5">
+            {category}
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            {skills
+              .filter((s) =>
+                typeof s === 'string'
+                  ? true
+                  : s.experienceType === 'All' || s.experienceType === 'Site'
+              )
+              .map((skill) => (
+                <span class="rounded-md bg-[#f4e7cb]/80 px-2.5 py-1 text-sm text-[#5f6578]">
+                  {typeof skill === 'string' ? skill : skill.name}
+                </span>
+              ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
 </Section>

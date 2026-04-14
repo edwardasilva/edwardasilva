@@ -1,50 +1,61 @@
 # dependencies
 node_modules/
+package-lock.json
 
-# Astro / build output
+
+# build outputs - can be regenerated
 .astro/
 dist/
 build/
 out/
 .next/
 
-# resume build artifacts
+
+# resume build artifacts - temporary files only
 resume/
 public/resume/*.tex
 *.synctex.gz
 
-# logs
+
+# logs - never commit
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# environment variables
-.env
-.env.*
-*.local
 
-# secrets
+# environment variables - secrets only
+.env
+.env.*.local
+.env.local
+
+
+# sensitive data files
 src/data/resume-data.json
 
-# project-local notes / setup files
-setup.md
-context.md
-plan.md
-cleanup.sh
-startup.sh
-notes.txt
-TODO.md
-legacy_backup/
+
+# IDE/Editor temporary files
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+
 
 # OS files
 .DS_Store
 Thumbs.db
+.vscode/settings.local.json
 
-# editors
-.idea/
+
+# Project Files
+AGENTS.md
+TODO.md
+startup.sh
+cleanup.sh
 .vscode/
-*.code-workspace
-*.swp
-*.swo
+.editorconfig
+.prettier
+.prettierignore
+.prettierrc

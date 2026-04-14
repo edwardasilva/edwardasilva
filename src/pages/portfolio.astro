@@ -1,4 +1,24 @@
 ---
+/**
+ * src/pages/portfolio.astro
+ * Portfolio Redirect Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 30 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Redirects legacy /portfolio route to canonical /projects route.
+ *
+ * File Structure:
+ * - Redirect constants
+ * - HTML fallback redirect markup
+ *
+ * Where this file is used within the repository:
+ * - Legacy route /portfolio
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 const destination = '/projects';
 const refreshContent = `0;url=${destination}`;
 ---

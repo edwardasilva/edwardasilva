@@ -1,4 +1,24 @@
 ---
+/**
+ * src/pages/experiences.astro
+ * Experiences Index Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 30 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Renders the experiences directory view and links each role to its detail route.
+ *
+ * File Structure:
+ * - Imports and experience selection
+ * - Experiences list template
+ *
+ * Where this file is used within the repository:
+ * - Public route /experiences
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Layout from '../layouts/Layout.astro';
@@ -19,30 +39,38 @@ const experiences = getPublicExperiences();
     </section>
 
     <section class="mt-8 grid gap-4">
-      {experiences.map((experience) => (
-        <article class="rounded-xl border border-[#dfd3b8] bg-white/80 p-5 transition hover:bg-white hover:shadow-md">
-          {(() => {
-            const experienceHref = `/experiences/${getExperienceSlug(experience)}`;
-            return (
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h2 class="font-serif text-2xl text-[#292b31]">
-                <a href={experienceHref} class="hover:text-[#3b3f49] hover:underline underline-offset-4">
-                  {experience.title}
+      {
+        experiences.map((experience) => {
+          const experienceHref = `/experiences/${getExperienceSlug(experience)}`;
+          return (
+            <article class="rounded-xl border border-[#dfd3b8] bg-white/80 p-5 transition hover:bg-white hover:shadow-md">
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2 class="font-serif text-2xl text-[#292b31]">
+                    <a
+                      href={experienceHref}
+                      class="hover:text-[#3b3f49] hover:underline underline-offset-4"
+                    >
+                      {experience.title}
+                    </a>
+                  </h2>
+                  <p class="mt-1 text-sm text-[#6f7588]">
+                    {experience.company} • {experience.location}
+                  </p>
+                  <p class="text-sm text-[#6f7588]">{experience.duration}</p>
+                </div>
+                <a
+                  href={experienceHref}
+                  class="inline-flex items-center rounded-lg bg-[#292b31] px-3 py-2 text-sm font-medium text-white hover:bg-[#3b3f49]"
+                >
+                  View Experience
                 </a>
-              </h2>
-              <p class="mt-1 text-sm text-[#6f7588]">{experience.company} • {experience.location}</p>
-              <p class="text-sm text-[#6f7588]">{experience.duration}</p>
-            </div>
-            <a href={experienceHref} class="inline-flex items-center rounded-lg bg-[#292b31] px-3 py-2 text-sm font-medium text-white hover:bg-[#3b3f49]">
-              View Experience
-            </a>
-          </div>
-          <p class="mt-3 text-sm text-[#5f6578]">{experience.description[0]}</p>
-            );
-          })()}
-        </article>
-      ))}
+              </div>
+              <p class="mt-3 text-sm text-[#5f6578]">{experience.description[0]}</p>
+            </article>
+          );
+        })
+      }
     </section>
   </main>
   <Footer />

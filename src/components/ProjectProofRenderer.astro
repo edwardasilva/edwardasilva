@@ -1,4 +1,24 @@
 ---
+/**
+ * src/components/ProjectProofRenderer.astro
+ * Project Proof Renderer Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 30 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Renders proof materials for projects including images, videos, PDFs, and embedded content.
+ * Handles multiple proof types with appropriate rendering logic for each.
+ *
+ * File Structure:
+ * - Type Handlers: Functions to render different proof material types
+ * - Template: Proof gallery with responsive layout
+ *
+ * Used in: src/pages/projects/[slug].astro
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 import type { ProjectProof } from '../data/types';
 
 interface Props {
@@ -15,53 +35,76 @@ const isExternal = /^(https?:)?\/\//i.test(proof.url);
     {proof.description && <p class="mt-1 text-sm text-[#5f6578]">{proof.description}</p>}
   </div>
 
-  {proof.type === 'image' && (
-    <img src={proof.url} alt={proof.title} loading="lazy" class="w-full rounded-lg border border-[#ece5d4]" />
-  )}
+  {
+    proof.type === 'image' && (
+      <img
+        src={proof.url}
+        alt={proof.title}
+        loading="lazy"
+        class="w-full rounded-lg border border-[#ece5d4]"
+      />
+    )
+  }
 
-  {proof.type === 'pdf' && (
-    <div class="space-y-3">
-      <iframe
-        src={proof.embedUrl ?? proof.url}
-        title={proof.title}
-        class="w-full max-w-[850px] aspect-[8.5/11] rounded-lg border border-[#ece5d4]"
-      ></iframe>
-      <a href={proof.url} target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-[#4f6398] hover:text-[#292b31]">
-        Open PDF in new tab
-      </a>
-    </div>
-  )}
-
-  {proof.type === 'video' && (
-    <div class="space-y-3">
-      {proof.embedUrl ? (
+  {
+    proof.type === 'pdf' && (
+      <div class="space-y-3">
         <iframe
-          src={proof.embedUrl}
+          src={proof.embedUrl ?? proof.url}
           title={proof.title}
-          class="h-80 w-full rounded-lg border border-[#ece5d4]"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      ) : (
-        <video controls class="h-80 w-full rounded-lg border border-[#ece5d4] bg-black">
-          <source src={proof.url} />
-          Your browser does not support video playback.
-        </video>
-      )}
-      <a href={proof.url} target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-[#4f6398] hover:text-[#292b31]">
-        Open video in new tab
-      </a>
-    </div>
-  )}
+          class="w-full max-w-[850px] aspect-[8.5/11] rounded-lg border border-[#ece5d4]"
+        />
+        <a
+          href={proof.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm font-medium text-[#4f6398] hover:text-[#292b31]"
+        >
+          Open PDF in new tab
+        </a>
+      </div>
+    )
+  }
 
-  {(proof.type === 'file' || proof.type === 'link') && (
-    <a
-      href={proof.url}
-      target={isExternal ? '_blank' : '_self'}
-      rel={isExternal ? 'noopener noreferrer' : undefined}
-      class="inline-flex items-center rounded-lg bg-[#292b31] px-3 py-2 text-sm font-medium text-white hover:bg-[#3b3f49]"
-    >
-      Open resource
-    </a>
-  )}
+  {
+    proof.type === 'video' && (
+      <div class="space-y-3">
+        {proof.embedUrl ? (
+          <iframe
+            src={proof.embedUrl}
+            title={proof.title}
+            class="h-80 w-full rounded-lg border border-[#ece5d4]"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          />
+        ) : (
+          <video controls class="h-80 w-full rounded-lg border border-[#ece5d4] bg-black">
+            <source src={proof.url} />
+            Your browser does not support video playback.
+          </video>
+        )}
+        <a
+          href={proof.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm font-medium text-[#4f6398] hover:text-[#292b31]"
+        >
+          Open video in new tab
+        </a>
+      </div>
+    )
+  }
+
+  {
+    (proof.type === 'file' || proof.type === 'link') && (
+      <a
+        href={proof.url}
+        target={isExternal ? '_blank' : '_self'}
+        rel={isExternal ? 'noopener noreferrer' : undefined}
+        class="inline-flex items-center rounded-lg bg-[#292b31] px-3 py-2 text-sm font-medium text-white hover:bg-[#3b3f49]"
+      >
+        Open resource
+      </a>
+    )
+  }
 </article>

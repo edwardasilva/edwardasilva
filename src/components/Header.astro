@@ -1,121 +1,175 @@
 ---
+/**
+ * src/components/Header.astro
+ * Header Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Renders site navigation header with branding, navigation links, and resume download.
+ * Responsive design adapts to mobile and desktop viewports.
+ *
+ * File Structure:
+ * - Navigation Configuration: Menu items and links
+ * - Template: Header layout with responsive navigation
+ *
+ * Used in src/layouts/Layout.astro
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 // Sticky header with mobile hamburger menu
 import { getResumePdfUrl, resume } from '../data/resume';
 
 const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Projects', href: '/projects' },
-    { label: 'Classes', href: '/classes' },
-    { label: 'Experiences', href: '/experiences' },
-    { label: 'Skills', href: '/#skills' },
-    { label: 'Resume', href: getResumePdfUrl(), external: true },
+  { label: 'Home', href: '/' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Classes', href: '/classes' },
+  { label: 'Experiences', href: '/experiences' },
+  { label: 'Skills', href: '/#skills' },
+  { label: 'Resume', href: getResumePdfUrl(), external: true },
 ];
 ---
 
 <header class="sticky top-0 z-50 bg-[#f8f7f2]/92 backdrop-blur-lg border-b border-[#e2dccd]">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <a href="/" class="text-xl sm:text-2xl font-bold font-serif tracking-tight text-[#25272d] hover:text-[#4f6398] transition-colors">
-            {resume.personal.name}
-        </a>
-
-        <!-- Desktop Navigation -->
-        <nav class="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-                <a
-                    href={item.href}
-                    class="px-4 py-2 text-sm font-medium text-[#5f6578] hover:text-[#292b31] hover:bg-[#f4e7cb]/64 rounded-lg transition-all"
-                    target={item.external ? '_blank' : '_self'}
-                >
-                    {item.label}
-                </a>
-            ))}
-        </nav>
-
-        <!-- Mobile Menu Button -->
-        <button
-            class="md:hidden p-2.5 -mr-2 rounded-lg hover:bg-[#f4e7cb] transition-colors"
-            aria-label="Toggle menu"
-            aria-expanded="false"
-            id="mobile-menu-btn"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="menu-icon transition-transform duration-200">
-                <line x1="4" x2="20" y1="12" y2="12"/>
-                <line x1="4" x2="20" y1="6" y2="6"/>
-                <line x1="4" x2="20" y1="18" y2="18"/>
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="close-icon hidden transition-transform duration-200">
-                <path d="M18 6 6 18"/>
-                <path d="m6 6 12 12"/>
-            </svg>
-        </button>
-    </div>
-
-    <!-- Mobile Navigation Panel -->
-    <nav
-        id="mobile-menu"
-        class="md:hidden overflow-hidden transition-all duration-300 ease-out"
-        style="max-height: 0; opacity: 0;"
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <a
+      href="/"
+      class="text-xl sm:text-2xl font-bold font-serif tracking-tight text-[#25272d] hover:text-[#4f6398] transition-colors"
     >
-        <div class="px-4 sm:px-6 pb-4 pt-2 space-y-1 border-t border-[#e2dccd] bg-[#f8f7f2]/96">
-            {navItems.map((item, index) => (
-                <a
-                    href={item.href}
-                    class="mobile-nav-item block px-4 py-3 text-base font-medium text-[#4d5365] hover:text-[#292b31] hover:bg-[#f4e7cb]/72 rounded-xl transition-all"
-                    target={item.external ? '_blank' : '_self'}
-                    style={`transition-delay: ${index * 50}ms;`}
-                >
-                    {item.label}
-                </a>
-            ))}
-        </div>
+      {resume.personal.name}
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:flex items-center gap-1">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class="px-4 py-2 text-sm font-medium text-[#5f6578] hover:text-[#292b31] hover:bg-[#f4e7cb]/64 rounded-lg transition-all"
+            target={item.external ? '_blank' : '_self'}
+          >
+            {item.label}
+          </a>
+        ))
+      }
     </nav>
+
+    <!-- Mobile Menu Button -->
+    <button
+      class="md:hidden p-2.5 -mr-2 rounded-lg hover:bg-[#f4e7cb] transition-colors"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      id="mobile-menu-btn"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="menu-icon transition-transform duration-200"
+      >
+        <line x1="4" x2="20" y1="12" y2="12"></line>
+        <line x1="4" x2="20" y1="6" y2="6"></line>
+        <line x1="4" x2="20" y1="18" y2="18"></line>
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="close-icon hidden transition-transform duration-200"
+      >
+        <path d="M18 6 6 18"></path>
+        <path d="m6 6 12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation Panel -->
+  <nav
+    id="mobile-menu"
+    class="md:hidden overflow-hidden transition-all duration-300 ease-out"
+    style="max-height: 0; opacity: 0;"
+  >
+    <div class="px-4 sm:px-6 pb-4 pt-2 space-y-1 border-t border-[#e2dccd] bg-[#f8f7f2]/96">
+      {
+        navItems.map((item, index) => (
+          <a
+            href={item.href}
+            class="mobile-nav-item block px-4 py-3 text-base font-medium text-[#4d5365] hover:text-[#292b31] hover:bg-[#f4e7cb]/72 rounded-xl transition-all"
+            target={item.external ? '_blank' : '_self'}
+            style={`transition-delay: ${index * 50}ms;`}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
 </header>
 
 <script>
-    // Mobile menu toggle
-    const menuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const menuIcon = menuBtn?.querySelector('.menu-icon');
-    const closeIcon = menuBtn?.querySelector('.close-icon');
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuIcon = menuBtn?.querySelector('.menu-icon');
+  const closeIcon = menuBtn?.querySelector('.close-icon');
 
-    let isOpen = false;
+  let isOpen = false;
 
-    function toggleMenu() {
-        isOpen = !isOpen;
+  /**
+   * @brief Toggles the mobile navigation menu open or closed
+   * @return {void} No return value
+   * @details Updates menu panel visibility, icon state, and aria-expanded for accessibility.
+   */
+  function toggleMenu() {
+    isOpen = !isOpen;
 
-        if (mobileMenu && menuIcon && closeIcon && menuBtn) {
-            if (isOpen) {
-                mobileMenu.style.maxHeight = `${mobileMenu.scrollHeight}px`;
-                mobileMenu.style.opacity = '1';
-                menuIcon.classList.add('hidden');
-                closeIcon.classList.remove('hidden');
-                menuBtn.setAttribute('aria-expanded', 'true');
-            } else {
-                mobileMenu.style.maxHeight = '0';
-                mobileMenu.style.opacity = '0';
-                menuIcon.classList.remove('hidden');
-                closeIcon.classList.add('hidden');
-                menuBtn.setAttribute('aria-expanded', 'false');
-            }
-        }
+    if (mobileMenu && menuIcon && closeIcon && menuBtn) {
+      if (isOpen) {
+        mobileMenu.style.maxHeight = `${mobileMenu.scrollHeight}px`;
+        mobileMenu.style.opacity = '1';
+        menuIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+        menuBtn.setAttribute('aria-expanded', 'true');
+      } else {
+        mobileMenu.style.maxHeight = '0';
+        mobileMenu.style.opacity = '0';
+        menuIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      }
     }
+  }
 
-    menuBtn?.addEventListener('click', toggleMenu);
+  menuBtn?.addEventListener('click', toggleMenu);
 
-    // Close menu when clicking a link
-    const mobileLinks = mobileMenu?.querySelectorAll('a');
-    mobileLinks?.forEach(link => {
-        link.addEventListener('click', () => {
-            if (isOpen && !link.getAttribute('target')) {
-                toggleMenu();
-            }
-        });
+  // Close menu when clicking a link
+  const mobileLinks = mobileMenu?.querySelectorAll('a');
+  mobileLinks?.forEach((link) => {
+    link.addEventListener('click', () => {
+      if (isOpen && !link.getAttribute('target')) {
+        toggleMenu();
+      }
     });
+  });
 
-    // Close menu on resize to desktop
-    window.addEventListener('resize', () => {
-        if (window.innerWidth >= 768 && isOpen) {
-            toggleMenu();
-        }
-    });
+  // Close menu on resize to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768 && isOpen) {
+      toggleMenu();
+    }
+  });
 </script>

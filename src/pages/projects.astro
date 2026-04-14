@@ -1,4 +1,24 @@
 ---
+/**
+ * src/pages/projects.astro
+ * Projects Index Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 30 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Renders the projects directory view and links each project to its detail route.
+ *
+ * File Structure:
+ * - Imports and project selection
+ * - Projects list template
+ *
+ * Where this file is used within the repository:
+ * - Public route /projects
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Layout from '../layouts/Layout.astro';
@@ -19,20 +39,34 @@ const projects = getPortfolioProjects();
     </section>
 
     <section class="mt-8 grid gap-4">
-      {projects.map((project) => (
-        <article class="rounded-xl border border-[#dfd3b8] bg-white/80 p-5 transition hover:bg-white hover:shadow-md">
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h2 class="font-serif text-2xl text-[#292b31]"><a href={`/projects/${getProjectSlug(project)}`} class="hover:text-[#4f6398] transition-colors">{project.title}</a></h2>
-              <p class="mt-1 text-sm text-[#6f7588]">{project.duration} • {project.projectType}</p>
+      {
+        projects.map((project) => (
+          <article class="rounded-xl border border-[#dfd3b8] bg-white/80 p-5 transition hover:bg-white hover:shadow-md">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <h2 class="font-serif text-2xl text-[#292b31]">
+                  <a
+                    href={`/projects/${getProjectSlug(project)}`}
+                    class="hover:text-[#4f6398] transition-colors"
+                  >
+                    {project.title}
+                  </a>
+                </h2>
+                <p class="mt-1 text-sm text-[#6f7588]">
+                  {project.duration} • {project.projectType}
+                </p>
+              </div>
+              <a
+                href={`/projects/${getProjectSlug(project)}`}
+                class="inline-flex items-center rounded-lg bg-[#292b31] px-3 py-2 text-sm font-medium text-white hover:bg-[#3b3f49]"
+              >
+                View Project
+              </a>
             </div>
-            <a href={`/projects/${getProjectSlug(project)}`} class="inline-flex items-center rounded-lg bg-[#292b31] px-3 py-2 text-sm font-medium text-white hover:bg-[#3b3f49]">
-              View Project
-            </a>
-          </div>
-          <p class="mt-3 text-sm text-[#5f6578]">{project.summary ?? project.description[0]}</p>
-        </article>
-      ))}
+            <p class="mt-3 text-sm text-[#5f6578]">{project.summary ?? project.description[0]}</p>
+          </article>
+        ))
+      }
     </section>
   </main>
   <Footer />

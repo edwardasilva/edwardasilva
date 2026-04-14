@@ -1,5 +1,6 @@
 {
   "name": "easilva.com",
+  "license": "MIT",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -22,5 +23,9 @@
     "satori": "^0.26.0",
     "satori-html": "^0.3.2",
     "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.2",
+    "prettier-plugin-astro": "^0.14.1"
   }
 }

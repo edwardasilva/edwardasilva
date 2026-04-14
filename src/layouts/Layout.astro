@@ -1,19 +1,43 @@
 ---
+/**
+ * src/layouts/Layout.astro
+ * Layout Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 14 April, 2026
+ *
+ * Defines the shared HTML structure, metadata, canonical links, and ambient background.
+ *
+ * File Structure:
+ * - Imports and Props
+ * - Canonical/OpenGraph URL composition
+ * - Page template and slot rendering
+ *
+ * Where this file is used within the repository:
+ * - src/pages/index.astro
+ * - src/pages/projects.astro
+ * - src/pages/experiences.astro
+ * - src/pages/classes.astro
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 // Base layout - handles meta tags, fonts, and that nice ambient background
 import '../styles/global.css';
 import faviconUrl from '../styles/favicon.svg?url';
 import { resume } from '../data/resume';
 
 interface Props {
-	title?: string;
-	description?: string;
-	ogImage?: string;
+  title?: string;
+  description?: string;
+  ogImage?: string;
 }
 
 const {
-	title = `${resume.personal.name} | Portfolio`,
-	description = resume.profile.text,
-	ogImage,
+  title = `${resume.personal.name} | Portfolio`,
+  description = resume.profile.text,
+  ogImage,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://easilva.com');
@@ -22,56 +46,71 @@ const socialImageURL = new URL(ogImage || '/favicon.svg', Astro.site ?? 'https:/
 
 <!doctype html>
 <html lang="en" class="scroll-smooth">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="description" content={description} />
-		<meta name="author" content={resume.personal.name} />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="author" content={resume.personal.name} />
+    <meta
+      name="copyright"
+      content={`Copyright © ${new Date().getFullYear()} Edward Silva. All rights reserved.`}
+    />
 
-		<!-- Open Graph / Social -->
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content={canonicalURL} />
-		<meta property="og:image" content={socialImageURL} />
+    <!-- Open Graph / Social -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={socialImageURL} />
 
-		<!-- Schema.org Profile JSON-LD -->
-		<script type="application/ld+json" set:html={JSON.stringify({
-			"@context": "https://schema.org",
-			"@type": ["Person", "ProfilePage"],
-			"name": resume.personal.name,
-			"url": resume.personal.website,
-			"image": socialImageURL,
-			"alumniOf": {
-				"@type": "CollegeOrUniversity",
-				"name": "Colorado School of Mines",
-				"sameAs": "https://en.wikipedia.org/wiki/Colorado_School_of_Mines"
-			},
-			"jobTitle": "Electrical Engineering Student",
-			"description": resume.profile.text,
-			"sameAs": [
-				resume.personal.linkedin,
-				resume.personal.github
-			]
-		})} />
+    <!-- Schema.org Profile JSON-LD -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': ['Person', 'ProfilePage'],
+        name: resume.personal.name,
+        url: resume.personal.website,
+        image: socialImageURL,
+        alumniOf: {
+          '@type': 'CollegeOrUniversity',
+          name: 'Colorado School of Mines',
+          sameAs: 'https://en.wikipedia.org/wiki/Colorado_School_of_Mines',
+        },
+        jobTitle: 'Electrical Engineering Student',
+        description: resume.profile.text,
+        sameAs: [resume.personal.linkedin, resume.personal.github],
+      })}
+    />
 
-		<!-- Favicons -->
-		<link rel="icon" href={faviconUrl} sizes="any" type="image/svg+xml" />
-		<link rel="shortcut icon" href={faviconUrl} type="image/svg+xml" />
-		<link rel="apple-touch-icon" href={faviconUrl} />
+    <!-- Favicons -->
+    <link rel="icon" href={faviconUrl} sizes="any" type="image/svg+xml" />
+    <link rel="shortcut icon" href={faviconUrl} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={faviconUrl} />
 
-		<meta name="generator" content={Astro.generator} />
-		<link rel="canonical" href={canonicalURL} />
-		<title>{title}</title>
-	</head>
-	<body class="bg-[#f8f7f2] text-[#292b31] font-sans antialiased flex flex-col min-h-screen overflow-x-hidden">
-		<!-- Ambient Background -->
-		<div class="fixed inset-0 z-[-1] pointer-events-none" aria-hidden="true">
-			<div class="absolute inset-0 bg-[radial-gradient(ellipse_950px_520px_at_8%_-8%,rgba(233,226,211,0.45),transparent_52%)]"></div>
-			<div class="absolute inset-0 bg-[radial-gradient(ellipse_860px_480px_at_96%_6%,rgba(122,142,202,0.16),transparent_46%)]"></div>
-			<div class="absolute inset-0 bg-[radial-gradient(ellipse_1220px_620px_at_50%_112%,rgba(41,43,49,0.04),transparent_56%)]"></div>
-		</div>
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalURL} />
+    <title>{title}</title>
+  </head>
+  <body
+    class="bg-[#f8f7f2] text-[#292b31] font-sans antialiased flex flex-col min-h-screen overflow-x-hidden"
+  >
+    <!-- Ambient Background -->
+    <div class="fixed inset-0 z-[-1] pointer-events-none" aria-hidden="true">
+      <div
+        class="absolute inset-0 bg-[radial-gradient(ellipse_950px_520px_at_8%_-8%,rgba(233,226,211,0.45),transparent_52%)]"
+      >
+      </div>
+      <div
+        class="absolute inset-0 bg-[radial-gradient(ellipse_860px_480px_at_96%_6%,rgba(122,142,202,0.16),transparent_46%)]"
+      >
+      </div>
+      <div
+        class="absolute inset-0 bg-[radial-gradient(ellipse_1220px_620px_at_50%_112%,rgba(41,43,49,0.04),transparent_56%)]"
+      >
+      </div>
+    </div>
 
-		<slot />
-	</body>
+    <slot />
+  </body>
 </html>
