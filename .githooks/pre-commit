@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -e
+
+echo "[pre-commit] Running cleanup before commit..."
+./cleanup.sh --yes
+
+# Ensure cleanup changes are included in this commit.
+git add -u
+echo "[pre-commit] Cleanup complete. Proceeding with commit."
