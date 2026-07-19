@@ -1,0 +1,73 @@
+---
+/**
+ * src/components/Education.astro
+ * Education Section Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 14 April, 2026
+ * Last Update: 18 July, 2026
+ *
+ * Displays a concise home-page education summary with degree details and
+ * a link to the full education page.
+ *
+ * File Structure:
+ * - Imports and derived data
+ * - Education summary template
+ *
+ * Used in: src/pages/index.astro
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
+import Section from './Section.astro';
+import { getPrimaryEducation } from '../data/resume';
+
+const primaryEducation = getPrimaryEducation();
+---
+
+<Section id="education" title="Education">
+    {
+        primaryEducation ? (
+            <article>
+                <div class="flex flex-col gap-2 mb-3">
+                    <h3 class="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-lg sm:text-xl font-semibold font-serif text-ink leading-snug">
+                        <span>{primaryEducation.degree}</span>
+                        {primaryEducation.minor && (
+                            <span class="flex items-center gap-x-3 text-sm font-sans font-normal text-faint">
+                                <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                                {primaryEducation.minor}
+                            </span>
+                        )}
+                    </h3>
+                    <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-faint">
+                        <a
+                            href="https://www.mines.edu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="font-medium hover:text-accent hover:underline underline-offset-4"
+                        >
+                            {primaryEducation.institution}
+                        </a>
+                        <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                        <span>{primaryEducation.location}</span>
+                        <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                        <span>Graduated {primaryEducation.graduationDate}</span>
+                    </p>
+                </div>
+
+                {primaryEducation.specialization && (
+                    <p class="text-sm text-faint">{primaryEducation.specialization}</p>
+                )}
+
+                <a
+                    href="/education"
+                    class="mt-4 inline-block text-sm font-medium text-accent hover:text-accent-deep hover:underline underline-offset-4"
+                >
+                    Coursework, honors, and scholarships
+                </a>
+            </article>
+        ) : (
+            <p class="text-sm text-faint">Education details are currently unavailable.</p>
+        )
+    }
+</Section>

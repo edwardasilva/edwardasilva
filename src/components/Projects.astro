@@ -1,0 +1,76 @@
+---
+/**
+ * src/components/Projects.astro
+ * Projects Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 18 July, 2026
+ *
+ * Displays portfolio projects as a stacked list matching the Experience
+ * section: the three most recent entries, an expander for the rest, and
+ * a link to the full projects page.
+ *
+ * File Structure:
+ * - Project Processing: Visibility filtering and recency split
+ * - Template: Stacked entry list with expander
+ *
+ * Used in: src/pages/index.astro
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
+import Section from './Section.astro';
+import ProjectEntry from './ProjectEntry.astro';
+import { getPortfolioProjects, resume } from '../data/resume';
+
+const projects = getPortfolioProjects(resume);
+const recentProjects = projects.slice(0, 3);
+const olderProjects = projects.slice(3);
+---
+
+<Section id="projects" title="Projects">
+    <div class="space-y-10">
+        {recentProjects.map((project) => <ProjectEntry project={project} />)}
+    </div>
+
+    {
+        olderProjects.length > 0 && (
+            <details class="group mt-10">
+                <summary class="cursor-pointer select-none list-none text-sm font-medium text-faint hover:text-ink flex items-center gap-1.5">
+                    <span class="group-open:hidden">
+                        Show {olderProjects.length} more{' '}
+                        {olderProjects.length === 1 ? 'project' : 'projects'}
+                    </span>
+                    <span class="hidden group-open:inline">Show fewer projects</span>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="group-open:rotate-180 transition-transform"
+                    >
+                        <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                </summary>
+                <div class="mt-10 space-y-10">
+                    {olderProjects.map((project) => (
+                        <ProjectEntry project={project} />
+                    ))}
+                </div>
+            </details>
+        )
+    }
+
+    <a
+        href="/projects"
+        class="mt-10 inline-block text-sm font-medium text-accent hover:text-accent-deep hover:underline underline-offset-4"
+    >
+        All projects
+    </a>
+</Section>

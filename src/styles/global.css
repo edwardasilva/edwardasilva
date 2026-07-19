@@ -1,0 +1,122 @@
+@import 'tailwindcss';
+@import '@fontsource/carlito/400.css';
+@import '@fontsource/carlito/700.css';
+
+/*
+ * One palette for the whole site. Components use these named colors
+ * (text-ink, border-line, bg-wash, ...) instead of raw hex values.
+ * Calibri renders natively on Windows; Carlito is its metric-compatible
+ * webfont fallback for every other platform.
+ */
+@theme {
+    --font-sans: 'Calibri', 'Carlito', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    /* font-serif is only used on headings and the site brand, which always
+       carry the semibold emphasis face */
+    --font-serif: 'Carlito Semi', 'Calibri', 'Carlito', 'Segoe UI', ui-sans-serif, system-ui,
+        sans-serif;
+    --font-mono: 'Consolas', 'Courier New', ui-monospace, monospace;
+
+    /* Calibri's real bold (700) is too heavy and it has no semibold face.
+       Emphasized text instead uses the generated Carlito Semi face (see
+       scripts/generate-semibold-font.py) at its native weight, so the
+       weight tokens stay at 400 to prevent synthetic bolding on top. */
+    --font-weight-semibold: 400;
+    --font-weight-bold: 400;
+
+    --color-paper: #f3f5f7;
+    --color-wash: #edf3fb;
+    --color-ink: #1f2937;
+    --color-ink-soft: #2b3d54;
+    --color-faint: #64748b;
+    --color-dim: #7a8aa0;
+    --color-line: #d8e0ea;
+    --color-accent: #4c78a8;
+    --color-accent-deep: #365f8f;
+    --color-accent-soft: #8db6e2;
+}
+
+/*
+ * True semibold built from Carlito Regular (metric-compatible with Calibri)
+ * by scripts/generate-semibold-font.py. The wide weight range keeps the
+ * browser from synthesizing bold on top of it.
+ */
+@font-face {
+    font-family: 'Carlito Semi';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url('/fonts/carlito-semibold.woff2') format('woff2');
+}
+
+@utility font-semibold {
+    font-family: 'Carlito Semi', var(--font-sans);
+    font-weight: var(--font-weight-normal);
+}
+
+@utility font-bold {
+    font-family: 'Carlito Semi', var(--font-sans);
+    font-weight: var(--font-weight-normal);
+}
+
+@layer base {
+    /* Headings share the semibold face used by font-semibold */
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: 'Carlito Semi', var(--font-sans);
+        font-weight: var(--font-weight-normal);
+    }
+
+    html {
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        line-height: 1.6;
+        background: var(--color-paper);
+        color: var(--color-ink);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-accent-soft);
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+
+    a,
+    button {
+        transition:
+            color 0.15s ease,
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+    }
+
+    ::selection {
+        background-color: rgb(141 182 226 / 0.28);
+        color: inherit;
+    }
+}
+
+@layer utilities {
+    /* Quiet dash list markers with a hanging indent */
+    .list-dash > li {
+        position: relative;
+        padding-left: 1.25rem;
+    }
+    .list-dash > li::before {
+        content: '-';
+        position: absolute;
+        left: 0;
+        color: var(--color-dim);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+    }
+}

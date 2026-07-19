@@ -1,0 +1,65 @@
+---
+/**
+ * src/components/Skills.astro
+ * Skills Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 18 July, 2026
+ *
+ * Renders skill categories as labeled rows of comma-separated skills,
+ * organized by category (Programming, Tools, etc.) for portfolio display.
+ *
+ * File Structure:
+ * - Data Processing: Category organization and sorting
+ * - Template: Category rows with skill lists
+ *
+ * Used in: src/pages/index.astro
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
+// Skills by category - programming, hardware, software
+import Section from './Section.astro';
+import { isVisibleOnSite, resume } from '../data/resume';
+
+const skillCategories = Object.entries(resume.skills)
+    .map(([category, skills]) => ({
+        category,
+        names: skills.filter((skill) => isVisibleOnSite(skill.Visibility)).map((s) => s.name),
+    }))
+    .filter((entry) => entry.names.length > 0);
+
+// Tailwind needs literal class names, so pick the column class from a map
+const columnClasses: Record<number, string> = {
+    1: '',
+    2: 'sm:grid-cols-2',
+    3: 'sm:grid-cols-3',
+    4: 'sm:grid-cols-4',
+};
+const columnClass = columnClasses[Math.min(skillCategories.length, 4)];
+---
+
+<Section id="skills" title="Skills">
+    <div
+        class:list={[
+            'grid grid-cols-1 divide-y divide-line sm:divide-y-0 sm:divide-x',
+            columnClass,
+        ]}
+    >
+        {
+            skillCategories.map(({ category, names }) => (
+                <div class="py-6 first:pt-0 last:pb-0 sm:py-0 sm:px-8 sm:first:pl-0 sm:last:pr-0">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-dim">
+                        {category}
+                    </h3>
+                    <ul class="mt-4 space-y-2 text-sm text-ink-soft">
+                        {names.map((name) => (
+                            <li>{name}</li>
+                        ))}
+                    </ul>
+                </div>
+            ))
+        }
+    </div>
+</Section>

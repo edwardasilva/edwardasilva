@@ -1,0 +1,141 @@
+name: Deploy to GitHub Pages
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+concurrency:
+    group: pages
+    cancel-in-progress: true
+
+env:
+    # Opt in now to the GitHub Actions Node 24 JavaScript runtime.
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        # Optional: set this to use environment-scoped secrets/variables too.
+        # If omitted, repository-level secrets/variables still work.
+        environment: github-pages
+        env:
+            # Optional repo-level Variables you can set in GitHub:
+            # - ASTRO_SITE (e.g. https://easilva.com)
+            # - ASTRO_BASE (e.g. /, or /your-repo for project pages)
+            ASTRO_SITE: ${{ vars.ASTRO_SITE || 'https://easilva.com' }}
+            ASTRO_BASE: ${{ vars.ASTRO_BASE }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            # resume-data.json is gitignored; create it from raw JSON secret.
+            # Add Actions secret RESUME_DATA in either:
+            # - Repository secrets, or
+            # - Environment secrets for environment "github-pages".
+            - name: Create and validate resume data from secret
+              shell: bash
+              env:
+                  RESUME_DATA: ${{ secrets.RESUME_DATA }}
+              run: |
+                  set -euo pipefail
+
+                  if [[ -z "${RESUME_DATA:-}" ]]; then
+                    echo "::error::RESUME_DATA secret is not set. Save raw JSON from resume-data.json as Actions secret RESUME_DATA."
+                    exit 1
+                  fi
+
+                  printf '%s' "$RESUME_DATA" > resume-data.json
+
+                  python3 - <<'PY'
+                  import json
+                  import sys
+
+                  path = "resume-data.json"
+                  try:
+                    with open(path, "r", encoding="utf-8") as f:
+                      data = json.load(f)
+                  except Exception as exc:
+                    print(f"::error::{path} is not valid JSON in RESUME_DATA: {exc}")
+                    sys.exit(1)
+
+                  required_keys = ["personal", "education", "experiences", "projects", "skills"]
+                  missing = [key for key in required_keys if key not in data]
+                  if missing:
+                    print(f"::error::{path} is missing required top-level keys: {', '.join(missing)}")
+                    sys.exit(1)
+
+                  print("resume-data.json secret written and validated.")
+                  PY
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Configure Astro base path (auto for GitHub Pages)
+              shell: bash
+              run: |
+                  if [[ -n "${ASTRO_BASE:-}" ]]; then
+                    echo "Using ASTRO_BASE from repo variables: ${ASTRO_BASE}"
+                    exit 0
+                  fi
+
+                  # Custom domains should be served from root.
+                  if [[ -n "${ASTRO_SITE:-}" ]]; then
+                    SITE_HOST="$(python3 - <<'PY'
+                  import os
+                  from urllib.parse import urlparse
+
+                  site = os.environ.get("ASTRO_SITE", "")
+                  host = urlparse(site).hostname or ""
+                  print(host)
+                  PY
+                    )"
+
+                    if [[ -n "$SITE_HOST" && "$SITE_HOST" != *.github.io ]]; then
+                      echo "ASTRO_BASE=/" >> "$GITHUB_ENV"
+                      echo "Using ASTRO_BASE=/ for custom domain host: $SITE_HOST"
+                      exit 0
+                    fi
+                  fi
+
+                  REPO="${GITHUB_REPOSITORY#*/}"
+                  if [[ "$REPO" == *.github.io ]]; then
+                    echo "ASTRO_BASE=/" >> "$GITHUB_ENV"
+                  else
+                    echo "ASTRO_BASE=/$REPO" >> "$GITHUB_ENV"
+                  fi
+
+            - name: Build
+              env:
+                  SKIP_RESUME_PDF_BUILD: '1'
+              run: npm run build
+
+            - name: Setup Pages
+              uses: actions/configure-pages@v5
+
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v4
+              with:
+                  path: dist
+
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - id: deployment
+              name: Deploy to GitHub Pages
+              uses: actions/deploy-pages@v4

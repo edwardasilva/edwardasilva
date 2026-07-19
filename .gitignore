@@ -1,0 +1,67 @@
+# dependencies
+node_modules/
+package-lock.json
+
+# build outputs - can be regenerated
+.astro/
+dist/
+build/
+out/
+.next/
+
+# resume and local content artifacts
+resume/
+public/resume/*.tex
+public/assets/
+*.synctex.gz
+
+# logs - never commit
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# sensitive data files
+resume-data.json
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.asc
+
+# local databases and caches
+*.sqlite
+*.sqlite3
+*.db
+.cache/
+.tmp/
+tmp/
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# local repo-only docs/scripts
+AGENTS.md
+TODO.md
+RESUME.md
+docs/**
+startup.sh
+
+# local editor settings
+.editorconfig

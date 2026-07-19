@@ -1,0 +1,91 @@
+---
+/**
+ * src/components/Experience.astro
+ * Experience Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 18 July, 2026
+ *
+ * Displays professional work experience as a stacked list using Resume bullets
+ * on site list surfaces.
+ *
+ * File Structure:
+ * - Data Filtering: Functions to filter and sort experience entries
+ * - List Rendering: Component to display experience entries
+ *
+ * Used in: src/pages/index.astro
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
+// Work experience list - only shows entries visible on the website.
+import Section from './Section.astro';
+import {
+    getExperienceHighlights,
+    getExperienceSkills,
+    getExperienceSlug,
+    getPublicExperiences,
+    resume,
+} from '../data/resume';
+
+const experience = getPublicExperiences(resume);
+
+---
+
+<Section id="experience" title="Experience">
+    <div class="space-y-10">
+        {
+            experience.map((job) => {
+                const experienceHref = `/experiences/${getExperienceSlug(job)}`;
+                const summary = job.summary ?? getExperienceHighlights(job)[0];
+                const relatedSkills = getExperienceSkills(job);
+                return (
+                    <article>
+                        <div class="flex flex-col gap-2 mb-3">
+                            <h3 class="text-lg sm:text-xl font-semibold font-serif text-ink leading-snug">
+                                <a
+                                    href={experienceHref}
+                                    class="hover:text-accent hover:underline underline-offset-4"
+                                >
+                                    {job.title}
+                                </a>
+                            </h3>
+
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                                {job.companyUrl ? (
+                                    <a
+                                        href={job.companyUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="font-medium text-faint hover:text-accent hover:underline underline-offset-4"
+                                    >
+                                        {job.company}
+                                    </a>
+                                ) : (
+                                    <span class="font-medium text-faint">{job.company}</span>
+                                )}
+                                {job.location && (
+                                    <>
+                                        <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                                        <span class="text-faint">{job.location}</span>
+                                    </>
+                                )}
+                                <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                                <span class="text-faint">{job.duration}</span>
+                            </div>
+                        </div>
+
+                        {summary && (
+                            <p class="text-faint leading-relaxed text-sm sm:text-base">{summary}</p>
+                        )}
+
+                        {relatedSkills.length > 0 && (
+                            <p class="mt-3 text-xs text-dim">{relatedSkills.join(', ')}</p>
+                        )}
+                    </article>
+                );
+            })
+        }
+    </div>
+</Section>

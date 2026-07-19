@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.astro/
+public/resume/
+public/assets/
+resume-data.json
+docs/

@@ -1,0 +1,40 @@
+---
+/**
+ * src/components/Section.astro
+ * Section Container Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 18 July, 2026
+ *
+ * Reusable section container that provides consistent width, spacing, and a
+ * stacked heading so every section shares the same left edge as the hero.
+ *
+ * File Structure:
+ * - Props: Configuration for section ID, title, and content
+ * - Template: Semantic section markup with standardized styling
+ *
+ * Used in: All page components requiring section containers
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
+interface Props {
+    id?: string;
+    title: string;
+    class?: string;
+}
+
+const { id, title, class: className } = Astro.props;
+---
+
+<section id={id} class:list={['py-12 sm:py-16 border-b border-line last:border-0', className]}>
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <h2 class="text-xl sm:text-2xl font-semibold font-serif text-ink tracking-tight">
+            {title}
+        </h2>
+        <div class="mt-6 sm:mt-8">
+            <slot />
+        </div>
+    </div>
+</section>
