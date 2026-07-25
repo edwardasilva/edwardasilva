@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 18 July, 2026
+ * Last Update: 25 July, 2026
  *
  * Defines site, base path, output mode, redirects, and integrations for the Astro portfolio.
  *
@@ -36,7 +36,6 @@ export default defineConfig({
         '/classes': '/education',
         '/coursework': '/education',
         '/portfolio': '/projects',
-        '/skills': '/#skills',
         '/profile': '/',
     },
     vite: {

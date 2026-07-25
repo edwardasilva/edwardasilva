@@ -1,29 +1,30 @@
 ---
 /**
- * src/components/ProjectProofRenderer.astro
- * Project Proof Renderer Component
+ * src/components/ProofRenderer.astro
+ * Proof Renderer Component
  *
  * Author: Edward Silva
  * Creation Date: 30 March, 2026
- * Last Update: 18 July, 2026
+ * Last Update: 25 July, 2026
  *
- * Renders proof materials for projects. Images and videos display inline,
- * PDFs show a first-page preview image linking to the full document, and
- * files/links render as compact document cards.
+ * Renders proof materials for projects, experiences, and volunteer entries.
+ * Images and videos display inline, PDFs show a first-page preview image
+ * linking to the full document, and files/links render as compact document cards.
  *
  * File Structure:
  * - Type Handlers: Inline media, PDF preview, and document card branches
  * - Template: Proof layout per type
  *
- * Used in: src/pages/projects/[slug].astro
+ * Used in: src/pages/projects/[slug].astro, src/pages/experiences/[slug].astro,
+ * src/pages/volunteer/[slug].astro
  *
  * Licence/Copyright: Licensed under MIT License
  */
 
-import type { ProjectProof } from '../data/types';
+import type { Proof } from '../data/types';
 
 interface Props {
-    proof: ProjectProof;
+    proof: Proof;
 }
 
 const { proof } = Astro.props;

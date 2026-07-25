@@ -1,0 +1,119 @@
+---
+/**
+ * src/pages/about.astro
+ * About Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 25 July, 2026
+ * Last Update: 25 July, 2026
+ *
+ * Renders the long-form background: the work that came before engineering, the path
+ * into embedded software, and the intended direction after industry. Every block is
+ * driven by the about section of resume-data.json and is omitted while unwritten.
+ *
+ * File Structure:
+ * - Imports and derived data
+ * - About page template
+ *
+ * Where this file is used within the repository:
+ * - Public route /about, linked from the header and footer
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Layout from '../layouts/Layout.astro';
+import { getProfileHighlightText, resume } from '../data/resume';
+
+const about = resume.about;
+const earlyRoles = about.earlyWork.roles;
+const description = about.Summary ?? getProfileHighlightText(resume.about);
+---
+
+<Layout title="About | Edward Silva" description={description}>
+    <Header />
+    <main class="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+        <section class="border-b border-line pb-8 sm:pb-10">
+            <h1 class="font-serif text-3xl text-ink sm:text-4xl">About</h1>
+            {
+                about.intro.map((paragraph) => (
+                    <p class="mt-4 max-w-2xl text-base text-faint leading-relaxed">{paragraph}</p>
+                ))
+            }
+        </section>
+
+        {
+            (about.earlyWork.Summary || earlyRoles.length > 0) && (
+                <section class="border-b border-line py-8 sm:py-10">
+                    <h2 class="font-serif text-xl text-ink sm:text-2xl">Before engineering</h2>
+
+                    {about.earlyWork.Summary && (
+                        <p class="mt-4 max-w-2xl text-sm text-faint leading-relaxed sm:text-base">
+                            {about.earlyWork.Summary}
+                        </p>
+                    )}
+
+                    {earlyRoles.length > 0 && (
+                        <div class="mt-6 divide-y divide-line">
+                            {earlyRoles.map((role) => (
+                                <article class="py-5 first:pt-0 last:pb-0">
+                                    <h3 class="text-base font-semibold text-ink sm:text-lg">
+                                        {role.title}
+                                    </h3>
+                                    <p class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-faint">
+                                        <span class="font-medium">{role.employer}</span>
+                                        {role.location && (
+                                            <>
+                                                <span aria-hidden="true" class="h-3 w-px bg-line" />
+                                                <span>{role.location}</span>
+                                            </>
+                                        )}
+                                        {role.duration && (
+                                            <>
+                                                <span aria-hidden="true" class="h-3 w-px bg-line" />
+                                                <span>{role.duration}</span>
+                                            </>
+                                        )}
+                                    </p>
+                                    {role.Summary && (
+                                        <p class="mt-2 text-sm text-faint leading-relaxed">
+                                            {role.Summary}
+                                        </p>
+                                    )}
+                                </article>
+                            ))}
+                        </div>
+                    )}
+                </section>
+            )
+        }
+
+        {
+            about.path.length > 0 && (
+                <section class="border-b border-line py-8 sm:py-10">
+                    <h2 class="font-serif text-xl text-ink sm:text-2xl">How I got here</h2>
+                    <div class="mt-4 max-w-2xl space-y-4 text-sm text-faint leading-relaxed sm:text-base">
+                        {about.path.map((paragraph) => (
+                            <p>{paragraph}</p>
+                        ))}
+                    </div>
+                </section>
+            )
+        }
+
+        {
+            about.future.length > 0 && (
+                <section class="py-8 sm:py-10">
+                    <h2 class="font-serif text-xl text-ink sm:text-2xl">Where it goes</h2>
+                    <div class="mt-4 max-w-2xl space-y-4 text-sm text-faint leading-relaxed sm:text-base">
+                        {about.future.map((paragraph) => (
+                            <p>{paragraph}</p>
+                        ))}
+                    </div>
+                </section>
+            )
+        }
+    </main>
+    <Footer />
+</Layout>

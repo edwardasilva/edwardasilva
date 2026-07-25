@@ -33,9 +33,9 @@ const education = getPrimaryEducation();
 const currentRole = getPublicExperiences()[0];
 // Display title for the hero; the resume data keeps the official role title
 const heroRoleTitle = 'Embedded Software Engineer';
-const showProfile = isVisibleOnSite(resume.profile.Visibility);
-const bio = showProfile ? getProfileHighlightText(resume.profile) : '';
-const interests = showProfile ? resume.profile.extracurriculars : [];
+const showProfile = isVisibleOnSite(resume.about.Visibility);
+const bio = showProfile ? getProfileHighlightText(resume.about) : '';
+const interests = showProfile ? resume.about.extracurriculars : [];
 ---
 
 <section class="pt-14 pb-12 sm:pt-20 sm:pb-16 border-b border-line">
@@ -64,13 +64,7 @@ const interests = showProfile ? resume.profile.extracurriculars : [];
         }
 
         <!-- Short bio -->
-        {
-            bio && (
-                <p class="max-w-2xl text-base sm:text-lg text-faint mb-8">
-                    {bio}
-                </p>
-            )
-        }
+        {bio && <p class="max-w-2xl text-base sm:text-lg text-faint mb-8">{bio}</p>}
 
         <!-- CTA Buttons -->
         <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -190,9 +184,7 @@ const interests = showProfile ? resume.profile.extracurriculars : [];
 
         {
             interests.length > 0 && (
-                <p class="mt-4 text-sm text-dim">
-                    Outside of work: {interests.join(', ')}
-                </p>
+                <p class="mt-4 text-sm text-dim">Outside of work: {interests.join(', ')}</p>
             )
         }
     </div>

@@ -12,8 +12,8 @@
     --font-sans: 'Calibri', 'Carlito', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
     /* font-serif is only used on headings and the site brand, which always
        carry the semibold emphasis face */
-    --font-serif: 'Carlito Semi', 'Calibri', 'Carlito', 'Segoe UI', ui-sans-serif, system-ui,
-        sans-serif;
+    --font-serif:
+        'Carlito Semi', 'Calibri', 'Carlito', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'Consolas', 'Courier New', ui-monospace, monospace;
 
     /* Calibri's real bold (700) is too heavy and it has no semibold face.
@@ -112,6 +112,12 @@
         position: absolute;
         left: 0;
         color: var(--color-dim);
+    }
+
+    /* Marks the skill a link from an entry just jumped to */
+    .skill:target {
+        border-left: 2px solid var(--color-accent);
+        padding-left: 0.75rem;
     }
 
     @media (prefers-reduced-motion: reduce) {

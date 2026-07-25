@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 18 July, 2026
- * Last Update: 18 July, 2026
+ * Last Update: 25 July, 2026
  *
  * Renders a single project entry for the home page list, matching the
  * Experience entry layout: title link, meta row, summary, and skills.
@@ -19,7 +19,8 @@
  * Licence/Copyright: Licensed under MIT License
  */
 
-import { getProjectSkills, getProjectSlug } from '../data/resume';
+import SkillLinks from './SkillLinks.astro';
+import { getCourseHref, getProjectSkills, getProjectSlug } from '../data/resume';
 import type { Project } from '../data/types';
 
 interface Props {
@@ -28,6 +29,7 @@ interface Props {
 
 const { project } = Astro.props;
 const relatedSkills = getProjectSkills(project);
+const courseHref = getCourseHref(project.course);
 ---
 
 <article>
@@ -44,25 +46,30 @@ const relatedSkills = getProjectSkills(project);
         <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-faint">
             <span>{project.duration}</span>
             {
-                project.projectType && (
-                    <>
-                        <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
-                        <span>{project.projectType}</span>
-                    </>
-                )
-            }
-            {
                 project.course && (
                     <>
                         <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
-                        <span>{project.course}</span>
+                        {courseHref ? (
+                            <a
+                                href={courseHref}
+                                class="hover:text-accent hover:underline underline-offset-4"
+                            >
+                                {project.course}
+                            </a>
+                        ) : (
+                            <span>{project.course}</span>
+                        )}
                     </>
                 )
             }
         </div>
+
+        <SkillLinks skills={relatedSkills} />
     </div>
 
-    {project.summary && <p class="text-faint leading-relaxed text-sm sm:text-base">{project.summary}</p>}
-
-    {relatedSkills.length > 0 && <p class="mt-3 text-xs text-dim">{relatedSkills.join(', ')}</p>}
+    {
+        project.Summary && (
+            <p class="text-faint leading-relaxed text-sm sm:text-base">{project.Summary}</p>
+        )
+    }
 </article>

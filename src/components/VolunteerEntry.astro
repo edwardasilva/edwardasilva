@@ -1,0 +1,83 @@
+---
+/**
+ * src/components/VolunteerEntry.astro
+ * Volunteer Entry Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 25 July, 2026
+ * Last Update: 25 July, 2026
+ *
+ * Renders a single volunteer entry in the same layout as an experience entry:
+ * title link, organization meta row, summary, and linked skills.
+ *
+ * File Structure:
+ * - Props: volunteer payload and anchor scope
+ * - Template: Entry layout
+ *
+ * Used in: src/components/Volunteer.astro, src/pages/volunteer/[...slug].astro
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
+import SkillLinks from './SkillLinks.astro';
+import { getVolunteerHighlights, getVolunteerSkills, getVolunteerSlug } from '../data/resume';
+import type { Volunteer } from '../data/types';
+
+interface Props {
+    volunteer: Volunteer;
+}
+
+const { volunteer } = Astro.props;
+const summary = volunteer.Summary ?? getVolunteerHighlights(volunteer)[0];
+const relatedSkills = getVolunteerSkills(volunteer);
+---
+
+<article>
+    <div class="flex flex-col gap-2 mb-3">
+        <h3 class="text-lg sm:text-xl font-semibold font-serif text-ink leading-snug">
+            <a
+                href={`/volunteer/${getVolunteerSlug(volunteer)}`}
+                class="hover:text-accent hover:underline underline-offset-4"
+            >
+                {volunteer.title}
+            </a>
+        </h3>
+
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-faint">
+            {
+                volunteer.organizationUrl ? (
+                    <a
+                        href={volunteer.organizationUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="font-medium hover:text-accent hover:underline underline-offset-4"
+                    >
+                        {volunteer.organization}
+                    </a>
+                ) : (
+                    <span class="font-medium">{volunteer.organization}</span>
+                )
+            }
+            {
+                volunteer.location && (
+                    <>
+                        <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                        <span>{volunteer.location}</span>
+                    </>
+                )
+            }
+            {
+                volunteer.duration && (
+                    <>
+                        <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                        <span>{volunteer.duration}</span>
+                    </>
+                )
+            }
+        </div>
+
+        <SkillLinks skills={relatedSkills} />
+    </div>
+
+    {summary && <p class="text-faint leading-relaxed text-sm sm:text-base">{summary}</p>}
+</article>

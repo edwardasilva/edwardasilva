@@ -50,16 +50,22 @@ function thumbNameFor(url) {
  * @brief Collects unique PDF proof URLs from resume data
  * @param data Parsed resume-data.json contents
  * @return Array of /assets/... PDF URLs
+ * @details Covers every section that can carry proof: projects, experiences, and volunteer work
  */
 function collectPdfUrls(data) {
     const urls = new Set();
-    for (const project of data.projects ?? []) {
-        for (const proof of project.proof ?? []) {
-            if (proof.type === 'pdf' && proof.url?.startsWith('/assets/')) {
-                urls.add(proof.url);
+    const sections = [data.projects, data.experiences, data.volunteer];
+
+    for (const section of sections) {
+        for (const entry of section ?? []) {
+            for (const proof of entry.proof ?? []) {
+                if (proof.type === 'pdf' && proof.url?.startsWith('/assets/')) {
+                    urls.add(proof.url);
+                }
             }
         }
     }
+
     return [...urls];
 }
 

@@ -4,15 +4,16 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 18 July, 2026
+ * Last Update: 25 July, 2026
  *
  * Central registry for resume data with utilities to normalize, filter, and access data.
  * Imports root-level JSON and provides typed exports with asset URL normalization.
  *
  * File Structure:
  * - Asset Normalization: Functions to rewrite asset paths to /assets/ URLs
+ * - Placeholder Handling: Drops unfilled [INSERT ...] content before it reaches a page
  * - Resume Export: Processed resume data with normalized assets
- * - Utility Functions: Slug generation, filtering, lookups, and coursework ordering
+ * - Utility Functions: Slug generation, filtering, lookups, coursework and skill indexing
  *
  * Used in: All components, pages, and API routes needing resume data
  *
@@ -21,22 +22,54 @@
 
 import rawResumeData from '../../resume-data.json';
 import type {
+    About,
+    AboutRole,
     Certification,
     Course,
     Education,
     Experience,
     Project,
-    ProjectProof,
-    Profile,
+    Proof,
     ProfileEvidence,
     ProfilePhoto,
     ResumeData,
-    Skill,
+    SkillEntry,
+    SkillReference,
     VisibilityScope,
+    Volunteer,
 } from './types';
 
 const VALID_VISIBILITY_SCOPES: ReadonlySet<VisibilityScope> = new Set(['All', 'Site', 'Hide']);
 const SITE_COURSE_PREFIXES = new Set(['CSCI', 'EENG']);
+const PLACEHOLDER_PATTERN = /\[INSERT[^\]]*\]/i;
+
+/**
+ * @brief Checks whether text is an unfilled authoring placeholder
+ * @param value Text to evaluate
+ * @return True when the text still contains an [INSERT ...] marker
+ * @details Placeholders live in resume-data.json as authoring notes and never render on the site.
+ */
+export function isPlaceholderText(value: unknown): boolean {
+    return typeof value === 'string' && PLACEHOLDER_PATTERN.test(value);
+}
+
+/**
+ * @brief Returns text only when it holds real content
+ * @param value Text to evaluate
+ * @return Trimmed text, or undefined when empty or still a placeholder
+ */
+function filledText(value: unknown): string | undefined {
+    if (typeof value !== 'string') {
+        return undefined;
+    }
+
+    const trimmed = value.trim();
+    if (trimmed.length === 0 || isPlaceholderText(trimmed)) {
+        return undefined;
+    }
+
+    return trimmed;
+}
 
 /**
  * @brief Normalizes visibility scope values to supported states
@@ -54,25 +87,25 @@ function normalizeVisibilityScope(value: unknown): VisibilityScope {
 /**
  * @brief Normalizes unknown values into a clean string array
  * @param value Unknown value from content
- * @return Array of non-empty strings
+ * @return Array of non-empty strings with placeholders removed
  */
 function normalizeStringArray(value: unknown): string[] {
     if (!Array.isArray(value)) {
         return [];
     }
 
-    return value.filter((entry): entry is string => typeof entry === 'string' && entry.length > 0);
+    return value
+        .map((entry) => filledText(entry))
+        .filter((entry): entry is string => entry !== undefined);
 }
 
 /**
- * @brief Normalizes technologies/tags arrays for consistent rendering
+ * @brief Normalizes the skill labels declared on an entry
  * @param value Unknown value from content
- * @return Deduplicated list of non-empty technology labels
+ * @return Deduplicated list of non-empty skill labels
  */
-function normalizeTechnologiesArray(value: unknown): string[] {
-    return Array.from(new Set(normalizeStringArray(value).map((entry) => entry.trim()))).filter(
-        (entry) => entry.length > 0
-    );
+function normalizeSkillArray(value: unknown): string[] {
+    return Array.from(new Set(normalizeStringArray(value)));
 }
 
 /**
@@ -118,17 +151,69 @@ function normalizeAssetUrl(url: string): string {
     return normalized;
 }
 
+// Every file under src/assets, keyed by the /assets/ URL it is served from. Lazy glob, so
+// nothing is bundled; this only answers whether a referenced file is actually in the repo.
+const AVAILABLE_ASSETS = new Set(
+    Object.keys(import.meta.glob('../assets/**/*')).map((assetPath) =>
+        assetPath.replace(/^\.\.\/assets\//, '/assets/')
+    )
+);
+
 /**
- * @brief Normalizes asset URLs in project proof objects
+ * @brief Checks whether a referenced asset is present in the repository
+ * @param url Asset URL to check
+ * @return True for external links, or when the file exists under src/assets
+ * @details Keeps links to files that were never added from shipping as dead links.
+ */
+function assetExists(url: string): boolean {
+    if (/^(?:https?:|mailto:|tel:)/i.test(url)) {
+        return true;
+    }
+
+    try {
+        return AVAILABLE_ASSETS.has(decodeURI(url));
+    } catch {
+        return AVAILABLE_ASSETS.has(url);
+    }
+}
+
+/**
+ * @brief Normalizes asset URLs in a proof object
  * @param proof The proof object to normalize
  * @return Proof with normalized URLs
  */
-function normalizeProjectProof(proof: ProjectProof): ProjectProof {
+function normalizeProof(proof: Proof): Proof {
     return {
         ...proof,
         url: normalizeAssetUrl(proof.url),
         embedUrl: proof.embedUrl ? normalizeAssetUrl(proof.embedUrl) : proof.embedUrl,
     };
+}
+
+/**
+ * @brief Normalizes a proof list, dropping entries without a usable target
+ * @param value Raw proof array from content
+ * @return Proof entries ready to render
+ * @details Keeps proof sections invisible until they are actually filled out.
+ */
+function normalizeProofList(value: unknown): Proof[] {
+    if (!Array.isArray(value)) {
+        return [];
+    }
+
+    return value
+        .filter((entry): entry is Proof => {
+            if (!entry || typeof entry !== 'object') {
+                return false;
+            }
+
+            const candidate = entry as Partial<Proof>;
+            const url = filledText(candidate.url);
+            return Boolean(
+                filledText(candidate.title) && url && assetExists(normalizeAssetUrl(url))
+            );
+        })
+        .map((entry) => normalizeProof(entry));
 }
 
 /**
@@ -139,8 +224,29 @@ function normalizeProjectProof(proof: ProjectProof): ProjectProof {
 function normalizeCourse(course: Course): Course {
     return {
         ...course,
+        skills: normalizeSkillArray(course.skills),
         Priority: normalizePriority(course.Priority),
         Visibility: normalizeVisibilityScope(course.Visibility),
+    };
+}
+
+/**
+ * @brief Normalizes an education entry along with its honors, scholarships, and coursework
+ * @param education The education object to normalize
+ * @return Education with normalized visibility and supplementary lists
+ */
+function normalizeEducation(education: Education): Education {
+    return {
+        ...education,
+        honors: normalizeStringArray(education.honors),
+        scholarships: normalizeStringArray(education.scholarships),
+        courses: Object.fromEntries(
+            Object.entries(education.courses ?? {}).map(([category, courses]) => [
+                category,
+                (courses ?? []).map((course) => normalizeCourse(course)),
+            ])
+        ),
+        Visibility: normalizeVisibilityScope(education.Visibility),
     };
 }
 
@@ -152,39 +258,62 @@ function normalizeCourse(course: Course): Course {
 function normalizeProject(project: Project): Project {
     return {
         ...project,
-        technologies: normalizeTechnologiesArray(project.technologies),
+        Summary: filledText(project.Summary),
+        skills: normalizeSkillArray(project.skills),
         Resume: normalizeStringArray(project.Resume),
         Highlights: normalizeStringArray(project.Highlights),
         Visibility: normalizeVisibilityScope(project.Visibility),
-        proof: project.proof?.map(normalizeProjectProof),
+        proof: normalizeProofList(project.proof),
     };
 }
 
 /**
  * @brief Normalizes an experience entry
  * @param experience The experience object to normalize
- * @return Experience with normalized bullets and visibility
+ * @return Experience with normalized bullets, visibility, and proof URLs
  */
 function normalizeExperience(experience: Experience): Experience {
     return {
         ...experience,
-        technologies: normalizeTechnologiesArray(experience.technologies),
+        Summary: filledText(experience.Summary),
+        skills: normalizeSkillArray(experience.skills),
         Resume: normalizeStringArray(experience.Resume),
         Highlights: normalizeStringArray(experience.Highlights),
         Visibility: normalizeVisibilityScope(experience.Visibility),
+        proof: normalizeProofList(experience.proof),
     };
 }
 
 /**
- * @brief Normalizes asset URLs and visibility for a certification
+ * @brief Normalizes a volunteer entry
+ * @param volunteer The volunteer object to normalize
+ * @return Volunteer with normalized bullets, visibility, and proof URLs
+ */
+function normalizeVolunteer(volunteer: Volunteer): Volunteer {
+    return {
+        ...volunteer,
+        Summary: filledText(volunteer.Summary),
+        skills: normalizeSkillArray(volunteer.skills),
+        Resume: normalizeStringArray(volunteer.Resume),
+        Highlights: normalizeStringArray(volunteer.Highlights),
+        Visibility: normalizeVisibilityScope(volunteer.Visibility),
+        proof: normalizeProofList(volunteer.proof),
+    };
+}
+
+/**
+ * @brief Normalizes asset URLs, skills, and visibility for a certification
  * @param certification The certification object to normalize
- * @return Certification with normalized fields
+ * @return Certification with normalized fields and any dead link dropped
  */
 function normalizeCertification(certification: Certification): Certification {
+    const link = certification.link ? normalizeAssetUrl(certification.link) : undefined;
+
     return {
         ...certification,
+        skills: normalizeSkillArray(certification.skills),
         Visibility: normalizeVisibilityScope(certification.Visibility),
-        link: certification.link ? normalizeAssetUrl(certification.link) : certification.link,
+        link: link && assetExists(link) ? link : undefined,
     };
 }
 
@@ -243,50 +372,95 @@ function normalizeProfileEvidence(evidence: unknown): ProfileEvidence | null {
 }
 
 /**
- * @brief Normalizes the profile section
- * @param profile The profile object to normalize
- * @return Profile with normalized visibility and string arrays
+ * @brief Normalizes an early-career role listed on the about page
+ * @param role Raw role entry
+ * @return Role with placeholder fields removed, or null when the role is unfilled
  */
-function normalizeProfile(profile: Profile): Profile {
-    const normalizedPhotos = Array.isArray(profile.photos)
-        ? profile.photos
+function normalizeAboutRole(role: unknown): AboutRole | null {
+    if (!role || typeof role !== 'object') {
+        return null;
+    }
+
+    const candidate = role as Partial<AboutRole>;
+    const title = filledText(candidate.title);
+    const employer = filledText(candidate.employer);
+
+    if (!title || !employer) {
+        return null;
+    }
+
+    return {
+        title,
+        employer,
+        location: filledText(candidate.location),
+        duration: filledText(candidate.duration),
+        Summary: filledText(candidate.Summary),
+    };
+}
+
+/**
+ * @brief Normalizes the about section, which also carries the profile text
+ * @param about Raw about object from content
+ * @return About with placeholders stripped from every narrative block
+ * @details Blocks that are still placeholders drop out entirely, so the page stays clean
+ *          until the underlying content is written.
+ */
+function normalizeAbout(about: About): About {
+    const rawRoles = Array.isArray(about?.earlyWork?.roles) ? about.earlyWork.roles : [];
+
+    const normalizedPhotos = Array.isArray(about?.photos)
+        ? about.photos
               .map((photo) => normalizeProfilePhoto(photo))
               .filter((photo): photo is ProfilePhoto => photo !== null)
         : [];
 
-    const normalizedEvidence = Array.isArray(profile.evidence)
-        ? profile.evidence
+    const normalizedEvidence = Array.isArray(about?.evidence)
+        ? about.evidence
               .map((evidence) => normalizeProfileEvidence(evidence))
               .filter((evidence): evidence is ProfileEvidence => evidence !== null)
         : [];
 
     const normalizedResumeText =
-        typeof profile.Resume === 'string'
-            ? profile.Resume
-            : typeof profile.text === 'string'
-              ? profile.text
+        typeof about?.Resume === 'string'
+            ? about.Resume
+            : typeof about?.text === 'string'
+              ? about.text
               : '';
 
     const normalizedHighlightsText =
-        typeof profile.Highlights === 'string' ? profile.Highlights : normalizedResumeText;
+        typeof about?.Highlights === 'string' ? about.Highlights : normalizedResumeText;
 
     return {
-        ...profile,
+        ...about,
         Resume: normalizedResumeText,
         Highlights: normalizedHighlightsText,
-        careerGoals: normalizeStringArray(profile.careerGoals),
-        extracurriculars: normalizeStringArray(profile.extracurriculars),
+        Summary: filledText(about?.Summary),
+        intro: normalizeStringArray(about?.intro),
+        earlyWork: {
+            Summary: filledText(about?.earlyWork?.Summary),
+            roles: rawRoles
+                .map((role) => normalizeAboutRole(role))
+                .filter((role): role is AboutRole => role !== null),
+        },
+        path: normalizeStringArray(about?.path),
+        future: normalizeStringArray(about?.future),
+        careerGoals: normalizeStringArray(about?.careerGoals),
+        extracurriculars: normalizeStringArray(about?.extracurriculars),
         photos: normalizedPhotos,
         evidence: normalizedEvidence,
-        Visibility: normalizeVisibilityScope(profile.Visibility),
+        Visibility: normalizeVisibilityScope(about?.Visibility),
     };
 }
 
 const typedRawData = rawResumeData as unknown as ResumeData;
 
-const rawProfile = typedRawData.profile ?? {
+const rawAbout = typedRawData.about ?? {
     Resume: '',
     Highlights: '',
+    intro: [],
+    earlyWork: { roles: [] },
+    path: [],
+    future: [],
     careerGoals: [],
     extracurriculars: [],
     photos: [],
@@ -296,41 +470,19 @@ const rawProfile = typedRawData.profile ?? {
 
 export const resume: ResumeData = {
     ...typedRawData,
-    profile: normalizeProfile(rawProfile),
-    education: (typedRawData.education ?? []).map((entry) => ({
-        ...entry,
-        Visibility: normalizeVisibilityScope(entry.Visibility),
-    })),
-    educationSupplementary: {
-        ...typedRawData.educationSupplementary,
-        honors: normalizeStringArray(typedRawData.educationSupplementary?.honors),
-        scholarships: normalizeStringArray(typedRawData.educationSupplementary?.scholarships),
-        courses: Object.fromEntries(
-            Object.entries(typedRawData.educationSupplementary?.courses ?? {}).map(
-                ([category, courses]) => [
-                    category,
-                    courses.map((course) => normalizeCourse(course)),
-                ]
-            )
-        ),
-    },
+    about: normalizeAbout(rawAbout),
+    education: (typedRawData.education ?? []).map((entry) => normalizeEducation(entry)),
     experiences: (typedRawData.experiences ?? []).map((entry) => normalizeExperience(entry)),
+    volunteer: (typedRawData.volunteer ?? []).map((entry) => normalizeVolunteer(entry)),
     projects: (typedRawData.projects ?? []).map((entry) => normalizeProject(entry)),
-    skills: Object.fromEntries(
-        Object.entries(typedRawData.skills ?? {}).map(([category, skillItems]) => [
-            category,
-            skillItems
-                .map((skillItem) => ({
-                    name: skillItem.name,
-                    Visibility: normalizeVisibilityScope(skillItem.Visibility),
-                }))
-                .filter((skillItem): skillItem is Skill => typeof skillItem.name === 'string'),
-        ])
-    ),
     certifications: (typedRawData.certifications ?? []).map((entry) =>
         normalizeCertification(entry)
     ),
+    skillPriority: normalizeStringArray(typedRawData.skillPriority),
 };
+
+// Rank lookup for the curated skill order in resume-data.json
+const SKILL_RANKS = new Map(resume.skillPriority.map((name, index) => [name.toLowerCase(), index]));
 
 /**
  * @brief Gets the primary education entry
@@ -342,12 +494,12 @@ export function getPrimaryEducation(data: ResumeData = resume): Education | unde
 }
 
 /**
- * @brief Gets profile summary text for highlight/website surfaces
- * @param profile Optional profile object; defaults to global resume profile
- * @return Profile highlights text
+ * @brief Gets the short profile line used on website surfaces
+ * @param about Optional about object; defaults to the global resume about section
+ * @return Highlights text, falling back to the resume profile line
  */
-export function getProfileHighlightText(profile: Profile = resume.profile): string {
-    return profile.Highlights || profile.Resume;
+export function getProfileHighlightText(about: About = resume.about): string {
+    return about.Highlights || about.Resume;
 }
 
 /**
@@ -466,6 +618,58 @@ export function getExperienceBySlug(
 }
 
 /**
+ * @brief Gets all volunteer entries visible on site
+ * @param data Optional resume data; defaults to global resume
+ * @return Volunteer entries with Visibility All or Site
+ */
+export function getPublicVolunteer(data: ResumeData = resume): Volunteer[] {
+    return (data.volunteer ?? []).filter((entry) => isVisibleOnSite(entry.Visibility));
+}
+
+/**
+ * @brief Gets slug for a volunteer entry
+ * @param volunteer The volunteer entry to slugify
+ * @return Explicit slug or one generated from title and organization
+ */
+export function getVolunteerSlug(
+    volunteer: Pick<Volunteer, 'title' | 'organization' | 'slug'>
+): string {
+    return volunteer.slug?.trim() || slugify(`${volunteer.title}-${volunteer.organization}`);
+}
+
+/**
+ * @brief Gets highlight bullets for volunteer detail surfaces
+ * @param volunteer The volunteer entry
+ * @return Volunteer highlight bullets, or resume bullets when highlights are empty
+ */
+export function getVolunteerHighlights(
+    volunteer: Pick<Volunteer, 'Resume' | 'Highlights'>
+): string[] {
+    return volunteer.Highlights.length > 0 ? volunteer.Highlights : volunteer.Resume;
+}
+
+/**
+ * @brief Reports whether the about page has any content worth publishing
+ * @param data Optional resume data; defaults to global resume
+ * @return True when the about section is visible and at least one block is filled in
+ */
+export function hasAboutContent(data: ResumeData = resume): boolean {
+    const about = data.about;
+
+    if (!about || !isVisibleOnSite(about.Visibility)) {
+        return false;
+    }
+
+    return (
+        about.intro.length > 0 ||
+        about.path.length > 0 ||
+        about.future.length > 0 ||
+        about.earlyWork.roles.length > 0 ||
+        Boolean(about.earlyWork.Summary)
+    );
+}
+
+/**
  * @brief Parses a numeric course level from a course code
  * @param code Course code string
  * @return Parsed level number, or undefined if not found
@@ -493,28 +697,21 @@ function compareCoursesByNumber(left: Course, right: Course): number {
 
 /**
  * @brief Returns visible coursework grouped by category for site pages
- * @param data Optional resume data; defaults to global resume
+ * @param education Optional education entry; defaults to the primary entry
  * @return Category and course pairs after filtering and sorting
  */
 export function getVisibleCourseCategories(
-    data: ResumeData = resume
+    education: Education | undefined = getPrimaryEducation()
 ): Array<{ category: string; courses: Course[] }> {
-    return Object.entries(data.educationSupplementary?.courses ?? {})
+    return Object.entries(education?.courses ?? {})
         .map(([category, courses]) => ({
             category,
             courses: courses
                 .filter((course) => isVisibleOnSite(course.Visibility))
                 .filter((course) => String(course.relevancy ?? '').toLowerCase() === 'yes')
                 .filter((course) => {
-                    const code = (course.code ?? '').trim();
-                    const prefix = code.split(' ')[0] ?? '';
-                    const level = parseCourseNumber(code);
-
-                    if (!SITE_COURSE_PREFIXES.has(prefix)) {
-                        return false;
-                    }
-
-                    return level === undefined || level >= 300;
+                    const prefix = (course.code ?? '').trim().split(' ')[0] ?? '';
+                    return SITE_COURSE_PREFIXES.has(prefix);
                 })
                 .sort((left, right) => compareCoursesByNumber(left, right)),
         }))
@@ -522,38 +719,254 @@ export function getVisibleCourseCategories(
 }
 
 /**
- * @brief Gets all visible skill names from resume skills data
+ * @brief Looks up a course by its code among the courses the education page renders
+ * @param code Course code such as EENG 411
  * @param data Optional resume data; defaults to global resume
- * @return Ordered, unique list of skill names visible on site
+ * @return Matching course, or undefined when the code is unknown or the course is not shown
  */
-export function getVisibleSkillNames(data: ResumeData = resume): string[] {
-    const orderedVisibleSkills: string[] = [];
+export function getVisibleCourseByCode(
+    code: string | undefined,
+    data: ResumeData = resume
+): Course | undefined {
+    if (!code) {
+        return undefined;
+    }
 
-    for (const categorySkills of Object.values(data.skills ?? {})) {
-        for (const skillItem of categorySkills as Skill[]) {
-            if (isVisibleOnSite(skillItem.Visibility)) {
-                orderedVisibleSkills.push(skillItem.name);
+    const wanted = code.trim().toLowerCase();
+
+    for (const { courses } of getVisibleCourseCategories(getPrimaryEducation(data))) {
+        for (const course of courses) {
+            if (course.code.trim().toLowerCase() === wanted) {
+                return course;
             }
         }
     }
 
-    return Array.from(new Set(orderedVisibleSkills));
+    return undefined;
 }
 
 /**
- * @brief Gets explicit technologies associated with a single experience item
- * @param experience Experience item with technologies field
- * @return Ordered list of technologies for the experience
+ * @brief Builds the link to a course on the education page
+ * @param code Course code named on a project
+ * @param data Optional resume data; defaults to global resume
+ * @return Href to the course entry, or undefined when that course is not on the site
  */
-export function getExperienceSkills(experience: Pick<Experience, 'technologies'>): string[] {
-    return normalizeTechnologiesArray(experience.technologies);
+export function getCourseHref(
+    code: string | undefined,
+    data: ResumeData = resume
+): string | undefined {
+    const course = getVisibleCourseByCode(code, data);
+    return course ? `/education#${getCourseSlug(course)}` : undefined;
 }
 
 /**
- * @brief Gets explicit technologies associated with a single project item
- * @param project Project item with technologies field
- * @return Ordered list of technologies associated with the project
+ * @brief Gets the visible projects that came out of a given course
+ * @param course Course to match against each project's course field
+ * @param data Optional resume data; defaults to global resume
+ * @return Projects whose course field names this course
  */
-export function getProjectSkills(project: Pick<Project, 'technologies'>): string[] {
-    return normalizeTechnologiesArray(project.technologies);
+export function getProjectsForCourse(
+    course: Pick<Course, 'code'>,
+    data: ResumeData = resume
+): Project[] {
+    const wanted = course.code.trim().toLowerCase();
+
+    return getPortfolioProjects(data).filter(
+        (project) => (project.course ?? '').trim().toLowerCase() === wanted
+    );
+}
+
+/**
+ * @brief Gets certifications visible on the site
+ * @param data Optional resume data; defaults to global resume
+ * @return Certifications with Visibility All or Site
+ */
+export function getPublicCertifications(data: ResumeData = resume): Certification[] {
+    return (data.certifications ?? []).filter((entry) => isVisibleOnSite(entry.Visibility));
+}
+
+/**
+ * @brief Builds the anchor id used by the education page for a certification
+ * @param certification Certification entry
+ * @return Anchor slug such as certification-matlab-machine-learning-techniques
+ */
+export function getCertificationSlug(certification: Pick<Certification, 'name'>): string {
+    return `certification-${slugify(certification.name)}`;
+}
+
+/**
+ * @brief Builds the anchor id used by the education page for a course
+ * @param course Course entry
+ * @return Anchor slug such as course-eeng-383
+ */
+export function getCourseSlug(course: Pick<Course, 'code'>): string {
+    return `course-${slugify(course.code)}`;
+}
+
+/**
+ * @brief Gets the skills declared on a single experience item
+ * @param experience Experience item with a skills field
+ * @return Ordered list of skills for the experience
+ */
+export function getExperienceSkills(experience: Pick<Experience, 'skills'>): string[] {
+    return sortSkillsByPriority(normalizeSkillArray(experience.skills));
+}
+
+/**
+ * @brief Gets the skills declared on a single project item
+ * @param project Project item with a skills field
+ * @return Ordered list of skills for the project
+ */
+export function getProjectSkills(project: Pick<Project, 'skills'>): string[] {
+    return sortSkillsByPriority(normalizeSkillArray(project.skills));
+}
+
+/**
+ * @brief Gets the skills declared on a single volunteer item
+ * @param volunteer Volunteer item with a skills field
+ * @return Ordered list of skills for the volunteer entry
+ */
+export function getVolunteerSkills(volunteer: Pick<Volunteer, 'skills'>): string[] {
+    return sortSkillsByPriority(normalizeSkillArray(volunteer.skills));
+}
+
+/**
+ * @brief Gets a skill's position in the curated priority order
+ * @param name Skill label
+ * @return Rank index, or a value past the end for skills that are not ranked
+ */
+function getSkillRank(name: string): number {
+    return SKILL_RANKS.get(name.toLowerCase()) ?? Number.MAX_SAFE_INTEGER;
+}
+
+/**
+ * @brief Orders skill labels by the curated priority in resume-data.json
+ * @param names Skill labels to order
+ * @return Labels sorted by priority, with unranked ones alphabetical at the end
+ */
+export function sortSkillsByPriority(names: string[]): string[] {
+    return [...names].sort((left, right) => {
+        const rankDelta = getSkillRank(left) - getSkillRank(right);
+        return rankDelta !== 0
+            ? rankDelta
+            : left.localeCompare(right, 'en', { sensitivity: 'base' });
+    });
+}
+
+/**
+ * @brief Builds the anchor id used by the skills index for a skill name
+ * @param name Skill or technology label
+ * @return Anchor slug such as skill-c-plus-plus
+ * @details Spells out the symbols that carry meaning in language names so that C and C++
+ *          do not collapse onto the same anchor.
+ */
+export function getSkillSlug(name: string): string {
+    const spelled = name.toLowerCase().replace(/\+/g, ' plus ').replace(/#/g, ' sharp ');
+
+    return `skill-${slugify(spelled)}`;
+}
+
+/**
+ * @brief Builds the skills index from the work each skill was gained on
+ * @param data Optional resume data; defaults to global resume
+ * @return Skill entries in curated priority order, each with every source that names it
+ * @details Skills are declared on experiences, projects, volunteer entries, coursework, and
+ *          certifications rather than in a list of their own, so every skill on the index
+ *          carries at least one source and the index needs no categories.
+ */
+export function getSkillIndex(data: ResumeData = resume): SkillEntry[] {
+    const referencesBySkill = new Map<string, SkillReference[]>();
+    const labelsBySkill = new Map<string, string>();
+
+    /**
+     * @brief Records a source under the lowercase form of a skill name
+     * @param names Skill labels declared on the item
+     * @param reference Link back to the item that names them
+     * @return Nothing
+     */
+    const addReferences = (names: string[], reference: SkillReference): void => {
+        for (const name of names) {
+            const key = name.toLowerCase();
+            const existing = referencesBySkill.get(key);
+
+            if (!labelsBySkill.has(key)) {
+                labelsBySkill.set(key, name);
+            }
+
+            if (existing) {
+                existing.push(reference);
+            } else {
+                referencesBySkill.set(key, [reference]);
+            }
+        }
+    };
+
+    for (const experience of getPublicExperiences(data)) {
+        addReferences(getExperienceSkills(experience), {
+            label: `${experience.title}, ${experience.company}`,
+            href: `/experiences/${getExperienceSlug(experience)}`,
+            kind: 'Experience',
+        });
+    }
+
+    for (const project of getPortfolioProjects(data)) {
+        addReferences(getProjectSkills(project), {
+            label: project.title,
+            href: `/projects/${getProjectSlug(project)}`,
+            kind: 'Project',
+        });
+    }
+
+    for (const volunteer of getPublicVolunteer(data)) {
+        addReferences(getVolunteerSkills(volunteer), {
+            label: `${volunteer.title}, ${volunteer.organization}`,
+            href: `/volunteer/${getVolunteerSlug(volunteer)}`,
+            kind: 'Volunteer',
+        });
+    }
+
+    // Only courses the education page renders, so every course link has a target
+    for (const { courses } of getVisibleCourseCategories(getPrimaryEducation(data))) {
+        for (const course of courses) {
+            addReferences(course.skills ?? [], {
+                label: `${course.code} ${course.alias ?? course.name}`,
+                href: `/education#${getCourseSlug(course)}`,
+                kind: 'Course',
+            });
+        }
+    }
+
+    for (const certification of getPublicCertifications(data)) {
+        addReferences(certification.skills ?? [], {
+            label: certification.name,
+            href: `/education#${getCertificationSlug(certification)}`,
+            kind: 'Certification',
+        });
+    }
+
+    return [...referencesBySkill.entries()]
+        .map(([key, references]) => {
+            const label = labelsBySkill.get(key) ?? key;
+
+            return {
+                name: label,
+                slug: getSkillSlug(label),
+                references,
+            };
+        })
+        .sort((left, right) => {
+            const rankDelta = getSkillRank(left.name) - getSkillRank(right.name);
+            return rankDelta !== 0
+                ? rankDelta
+                : left.name.localeCompare(right.name, 'en', { sensitivity: 'base' });
+        });
+}
+
+/**
+ * @brief Builds the link target for a skill named on an experience, project, or volunteer entry
+ * @param name Technology label shown on the entry
+ * @return Href pointing at that skill's row on the skills page
+ */
+export function getSkillHref(name: string): string {
+    return `/skills#${getSkillSlug(name)}`;
 }

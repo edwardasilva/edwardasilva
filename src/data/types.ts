@@ -4,14 +4,14 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 18 July, 2026
+ * Last Update: 25 July, 2026
  *
  * Central type definitions for all resume data structures. Used throughout the portfolio
  * to ensure type safety and consistent data modeling across components and pages.
  *
  * File Structure:
- * - Interfaces: PersonalInfo, Profile, Education, Course, Experience, Project, etc.
- * - Complex Types: EducationSupplementary, Skills, ResumeData
+ * - Interfaces: PersonalInfo, About, Education, Course, Experience, Volunteer, Project
+ * - Complex Types: Proof, SkillEntry, SkillReference, ResumeData
  *
  * Used in: src/data/resume.ts, all components that display resume data
  *
@@ -31,17 +31,6 @@ export interface PersonalInfo {
     clearance: string;
 }
 
-export interface Profile {
-    Resume: string;
-    Highlights: string;
-    text?: string;
-    careerGoals: string[];
-    extracurriculars: string[];
-    photos: ProfilePhoto[];
-    evidence: ProfileEvidence[];
-    Visibility: VisibilityScope;
-}
-
 export interface ProfilePhoto {
     title: string;
     url: string;
@@ -59,6 +48,35 @@ export interface ProfileEvidence {
 
 export type VisibilityScope = 'All' | 'Site' | 'Hide';
 
+export interface AboutRole {
+    title: string;
+    employer: string;
+    location?: string;
+    duration?: string;
+    Summary?: string;
+}
+
+export interface AboutEarlyWork {
+    Summary?: string;
+    roles: AboutRole[];
+}
+
+export interface About {
+    Resume: string;
+    Highlights: string;
+    text?: string;
+    Summary?: string;
+    intro: string[];
+    earlyWork: AboutEarlyWork;
+    path: string[];
+    future: string[];
+    careerGoals: string[];
+    extracurriculars: string[];
+    photos: ProfilePhoto[];
+    evidence: ProfileEvidence[];
+    Visibility: VisibilityScope;
+}
+
 export interface Education {
     institution: string;
     location: string;
@@ -68,6 +86,9 @@ export interface Education {
     startDate?: string;
     graduationDate: string;
     gpa?: string;
+    honors: string[];
+    scholarships: string[];
+    courses: Record<string, Course[]>;
     Visibility: VisibilityScope;
 }
 
@@ -77,20 +98,15 @@ export interface Course {
     alias?: string;
     description: string;
     relevancy: string;
+    skills?: string[];
     Priority: number;
     Visibility: VisibilityScope;
-}
-
-export interface EducationSupplementary {
-    honors: string[];
-    scholarships: string[];
-    courses: Record<string, Course[]>;
 }
 
 export interface Experience {
     title: string;
     slug?: string;
-    summary?: string;
+    Summary?: string;
     company: string;
     companyUrl?: string;
     location: string;
@@ -98,7 +114,25 @@ export interface Experience {
     startDate: string;
     endDate: string;
     type: string;
-    technologies?: string[];
+    skills?: string[];
+    proof?: Proof[];
+    Resume: string[];
+    Highlights: string[];
+    Visibility: VisibilityScope;
+}
+
+export interface Volunteer {
+    title: string;
+    slug?: string;
+    Summary?: string;
+    organization: string;
+    organizationUrl?: string;
+    location: string;
+    duration: string;
+    startDate?: string;
+    endDate?: string;
+    skills?: string[];
+    proof?: Proof[];
     Resume: string[];
     Highlights: string[];
     Visibility: VisibilityScope;
@@ -107,19 +141,18 @@ export interface Experience {
 export interface Project {
     title: string;
     slug?: string;
-    summary?: string;
-    technologies: string[];
+    Summary?: string;
+    skills: string[];
     github?: string;
     duration: string;
     course?: string;
     Resume: string[];
     Highlights: string[];
-    proof?: ProjectProof[];
+    proof?: Proof[];
     Visibility: VisibilityScope;
-    projectType: string;
 }
 
-export interface ProjectProof {
+export interface Proof {
     title: string;
     type: 'pdf' | 'video' | 'image' | 'link' | 'file';
     url: string;
@@ -127,13 +160,16 @@ export interface ProjectProof {
     embedUrl?: string;
 }
 
-export interface Skill {
-    name: string;
-    Visibility: VisibilityScope;
+export interface SkillReference {
+    label: string;
+    href: string;
+    kind: 'Experience' | 'Project' | 'Volunteer' | 'Course' | 'Certification';
 }
 
-export interface Skills {
-    [category: string]: Skill[];
+export interface SkillEntry {
+    name: string;
+    slug: string;
+    references: SkillReference[];
 }
 
 export interface Certification {
@@ -142,16 +178,17 @@ export interface Certification {
     credly?: string;
     link?: string;
     description: string;
+    skills?: string[];
     Visibility: VisibilityScope;
 }
 
 export interface ResumeData {
     personal: PersonalInfo;
-    profile: Profile;
+    skillPriority: string[];
+    about: About;
     education: Education[];
-    educationSupplementary: EducationSupplementary;
     experiences: Experience[];
+    volunteer: Volunteer[];
     projects: Project[];
-    skills: Skills;
     certifications: Certification[];
 }

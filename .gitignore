@@ -28,7 +28,6 @@ pnpm-debug.log*
 !.env.example
 
 # sensitive data files
-resume-data.json
 *.pem
 *.key
 *.crt
@@ -58,10 +57,11 @@ Thumbs.db
 
 # local repo-only docs/scripts
 AGENTS.md
+CLAUDE.md
 TODO.md
 RESUME.md
 docs/**
-startup.sh
+resume-data.json
 
 # local editor settings
 .editorconfig

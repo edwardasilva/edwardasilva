@@ -4,9 +4,10 @@
  *
  * Author: Edward Silva
  * Creation Date: 31 March, 2026
- * Last Update: 18 July, 2026
+ * Last Update: 25 July, 2026
  *
- * Generates static Open Graph PNG images for project and experience detail pages.
+ * Generates static Open Graph PNG images for project, experience, and volunteer
+ * detail pages.
  *
  * File Structure:
  * - Imports
@@ -29,17 +30,20 @@ import {
     getProjectSlug,
     getExperienceSlug,
     getPublicExperiences,
+    getPublicVolunteer,
+    getVolunteerSlug,
 } from '../../data/resume';
 import type { APIRoute } from 'astro';
 
 /**
  * @brief Generates static parameters for all OG image variants
- * @return Array of route params and rendering props for projects and experiences
+ * @return Array of route params and rendering props for projects, experiences, and volunteer work
  * @details Pulls canonical slugs from shared resume data helpers used by dynamic routes.
  */
 export async function getStaticPaths() {
     const projects = getPortfolioProjects();
     const experiences = getPublicExperiences();
+    const volunteer = getPublicVolunteer();
 
     const paths = [
         ...projects.map((project) => ({
@@ -47,12 +51,20 @@ export async function getStaticPaths() {
             props: {
                 type: 'Project',
                 title: project.title,
-                tags: project.technologies.slice(0, 4),
+                tags: (project.skills ?? []).slice(0, 4),
             },
         })),
         ...experiences.map((exp) => ({
             params: { slug: getExperienceSlug(exp) },
             props: { type: 'Experience', title: exp.title, tags: [exp.company, exp.duration] },
+        })),
+        ...volunteer.map((entry) => ({
+            params: { slug: getVolunteerSlug(entry) },
+            props: {
+                type: 'Volunteer',
+                title: entry.title,
+                tags: [entry.organization, entry.duration].filter(Boolean),
+            },
         })),
     ];
 

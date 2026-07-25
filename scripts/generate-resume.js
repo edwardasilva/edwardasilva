@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 6 July, 2026
+ * Last Update: 25 July, 2026
  *
  * Generates LaTeX resume files from resume-data.json. Includes filtering, formatting,
  * and auto-spacing algorithms for ATS-friendly one-page PDF output.
@@ -138,12 +138,55 @@ const filters = {
     filterResumeEducation(education) {
         return education.filter((edu) => edu.Visibility === 'All');
     },
-    filterResumeSkills(skills) {
-        const filtered = {};
-        Object.entries(skills).forEach(([category, skillList]) => {
-            filtered[category] = skillList.filter((skill) => skill.Visibility === 'All');
+    collectResumeSkills(data) {
+        const names = [];
+        const push = (list) => (list || []).forEach((name) => names.push(name));
+
+        this.filterResumeExperience(data.experiences || []).forEach((exp) => push(exp.skills));
+        this.filterResumeProjects(data.projects || []).forEach((project) => push(project.skills));
+        (data.volunteer || [])
+            .filter((entry) => entry.Visibility === 'All')
+            .forEach((entry) => push(entry.skills));
+        this.filterResumeCourses(this.collectCourses(data.education)).forEach((course) =>
+            push(course.skills)
+        );
+        (data.certifications || [])
+            .filter((cert) => cert.Visibility === 'All')
+            .forEach((cert) => push(cert.skills));
+
+        const seen = new Set();
+        const unique = names.filter((name) => {
+            const key = String(name).toLowerCase();
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
         });
-        return filtered;
+
+        const ranks = new Map(
+            (data.skillPriority || []).map((name, index) => [String(name).toLowerCase(), index])
+        );
+
+        const rankOf = (name) => {
+            const rank = ranks.get(String(name).toLowerCase());
+            return rank === undefined ? Number.MAX_SAFE_INTEGER : rank;
+        };
+
+        return unique.sort((left, right) => {
+            const delta = rankOf(left) - rankOf(right);
+            return delta !== 0 ? delta : String(left).localeCompare(String(right));
+        });
+    },
+    collectCourses(education) {
+        if (!Array.isArray(education)) return {};
+
+        const merged = {};
+        education.forEach((entry) => {
+            Object.entries(entry?.courses || {}).forEach(([category, categoryCourses]) => {
+                merged[category] = [...(merged[category] || []), ...(categoryCourses || [])];
+            });
+        });
+
+        return merged;
     },
     filterResumeCourses(courses) {
         const allCourses = [];
@@ -181,9 +224,8 @@ const filters = {
 
         return mode === 'Resume' ? resumeText : highlightsText;
     },
-    getEducationContext(education, supplementary = {}) {
-        if (!Array.isArray(education) || education.length === 0)
-            return { primaryEducation: null, supplementary };
+    getEducationContext(education) {
+        if (!Array.isArray(education) || education.length === 0) return { primaryEducation: null };
         const isMasters = (e) => {
             const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
             return deg.startsWith('ms') || deg.includes('master');
@@ -191,7 +233,7 @@ const filters = {
         const allEntries = education.filter((e) => e && e.Visibility === 'All');
         const mastersPrimary = allEntries.find(isMasters);
         const primary = mastersPrimary || allEntries[0] || education[0];
-        return { primaryEducation: primary, supplementary };
+        return { primaryEducation: primary };
     },
     filterWebsiteEducation(education) {
         return education.filter((edu) => edu.Visibility === 'All' || edu.Visibility === 'Site');
@@ -211,15 +253,6 @@ const filters = {
         );
     },
 };
-
-/**
- * @brief Extracts skill names from skill objects
- * @param skills Array of skill objects or strings
- * @return Array of skill name strings
- */
-function extractSkillNames(skills) {
-    return skills.map((skill) => (typeof skill === 'string' ? skill : skill.name));
-}
 
 // ============ LaTeX Generation ============
 
@@ -262,8 +295,7 @@ function calculateSpacingProfile({
 
     const resumeExperience = filters.filterResumeExperience(data.experiences || []);
     const resumeProjects = filters.filterResumeProjects(data.projects || []);
-    const resumeCourses = filters.filterResumeCourses(data.educationSupplementary?.courses || {});
-    const filteredSkills = filters.filterResumeSkills(data.skills || {});
+    const resumeCourses = filters.filterResumeCourses(filters.collectCourses(data.education));
 
     const courseworkLine = (resumeCourses || [])
         .map((c) => c?.alias || c?.name || c)
@@ -309,7 +341,7 @@ function calculateSpacingProfile({
         lines += (sp.afterHeaderPt || 0) / BASELINE_PTS;
 
         if (includeProfile) {
-            const profileText = filters.getProfileText(data.profile, 'Resume') || '';
+            const profileText = filters.getProfileText(data.about, 'Resume') || '';
             if (profileText) {
                 lines += 1 + sp.sectionBeforeBs + sp.sectionAfterBs;
                 lines += estimateWrappedLines(profileText, CHARS_PER_LINE);
@@ -327,12 +359,10 @@ function calculateSpacingProfile({
 
         // Skills section: 3 lines that may wrap.
         lines += 1 + sp.sectionBeforeBs + sp.sectionAfterBs;
-        const skillLines = [
-            `Programming Languages: ${extractSkillNames(filteredSkills.Programming || []).join(', ')}`,
-            `Hardware: ${extractSkillNames(filteredSkills.Hardware || []).join(', ')}`,
-            `Software: ${extractSkillNames(filteredSkills.Software || []).join(', ')}`,
-        ];
-        lines += skillLines.reduce((sum, s) => sum + estimateWrappedLines(s, CHARS_PER_LINE), 0);
+        lines += estimateWrappedLines(
+            `Skills: ${filters.collectResumeSkills(data).join(', ')}`,
+            CHARS_PER_LINE
+        );
 
         // Experience section.
         lines += 1 + sp.sectionBeforeBs + sp.sectionAfterBs;
@@ -359,7 +389,7 @@ function calculateSpacingProfile({
         lines += 1 + sp.sectionBeforeBs + sp.sectionAfterBs;
         resumeProjects.forEach((project, idx) => {
             lines += estimateWrappedLines(
-                `${project.title}, ${(project.technologies || []).join(', ')} ${project.github ? 'Github' : ''}`,
+                `${project.title}, ${(project.skills || []).join(', ')} ${project.github ? 'Github' : ''}`,
                 CHARS_PER_LINE
             ); // project header can wrap
 
@@ -488,13 +518,12 @@ function generateResume(data, options = {}) {
         resumeEducations = [...resumeEducations, ...msEducations];
     }
 
-    const { primaryEducation } =
-        filters.getEducationContext(data.education, data.educationSupplementary) || {};
+    const { primaryEducation } = filters.getEducationContext(data.education) || {};
 
-    const shouldShowProfile = includeProfile && filters.shouldShowResumeProfile(data.profile);
-    const profileText = shouldShowProfile ? filters.getProfileText(data.profile, 'Resume') : null;
+    const shouldShowProfile = includeProfile && filters.shouldShowResumeProfile(data.about);
+    const profileText = shouldShowProfile ? filters.getProfileText(data.about, 'Resume') : null;
 
-    const resumeCourses = filters.filterResumeCourses(data.educationSupplementary?.courses || {});
+    const resumeCourses = filters.filterResumeCourses(filters.collectCourses(data.education));
     const hasSS1 = resumeCourses.some((c) => c.alias === 'Signals and Systems I');
     const hasSS2 = resumeCourses.some((c) => c.alias === 'Signals and Systems II');
 
@@ -648,11 +677,7 @@ function generateResume(data, options = {}) {
 
     const pdfKeywordParts = [];
     pdfKeywordParts.push(escapeLatex(data.personal.name));
-    pdfKeywordParts.push(
-        ...extractSkillNames(filters.filterResumeSkills(data.skills).Programming).map((s) =>
-            escapeLatex(s)
-        )
-    );
+    pdfKeywordParts.push(...filters.collectResumeSkills(data).map((skill) => escapeLatex(skill)));
     if (primaryEducation && primaryEducation.institution)
         pdfKeywordParts.push(escapeLatex(primaryEducation.institution));
     if (primaryEducation && primaryEducation.degree)
@@ -687,7 +712,7 @@ ${exp.Resume.map((item) => `  \\item ${escapeLatex(item)}`).join('\n')}
     const projectsSection = resumeProjects
         .map(
             (project) =>
-                `\\textbf{${escapeLatex(project.title)}}, ${project.technologies.map((tech) => escapeLatex(tech)).join(', ')} ${project.github ? `\\href{${project.github}}{Github}` : ''} \\hfill ${escapeLatex(formatDateRange(project.duration))}
+                `\\textbf{${escapeLatex(project.title)}}, ${(project.skills || []).map((skill) => escapeLatex(skill)).join(', ')} ${project.github ? `\\href{${project.github}}{Github}` : ''} \\hfill ${escapeLatex(formatDateRange(project.duration))}
 \\begin{itemize}
 ${project.Resume.map((item) => `  \\item ${escapeLatex(item)}`).join('\n')}
 \\end{itemize}`
@@ -703,20 +728,11 @@ ${project.Resume.map((item) => `  \\item ${escapeLatex(item)}`).join('\n')}
         .filter(Boolean)
         .join('\n');
 
-    // Build Skills section
-    const skillsSection = [
-        `\\textbf{Programming Languages:} ${extractSkillNames(
-            filters.filterResumeSkills(data.skills).Programming
-        )
-            .map((skill) => escapeLatex(skill))
-            .join(', ')} \\\\`,
-        `\\textbf{Hardware:} ${extractSkillNames(filters.filterResumeSkills(data.skills).Hardware)
-            .map((skill) => escapeLatex(skill))
-            .join(', ')} \\\\`,
-        `\\textbf{Software:} ${extractSkillNames(filters.filterResumeSkills(data.skills).Software)
-            .map((skill) => escapeLatex(skill))
-            .join(', ')}`,
-    ].join('\n');
+    // Build Skills section from the skills named on resume-visible work
+    const skillsSection = `\\textbf{Skills:} ${filters
+        .collectResumeSkills(data)
+        .map((skill) => escapeLatex(skill))
+        .join(', ')}`;
 
     // Profile section (optional)
     const profileSection = profileText

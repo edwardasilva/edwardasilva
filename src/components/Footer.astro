@@ -5,10 +5,11 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 18 July, 2026
+ * Last Update: 25 July, 2026
  *
  * Renders the site footer with contact information, links, and copyright notice.
- * Displays dynamic year from system date for copyright.
+ * Displays dynamic year from system date for copyright. About and Volunteer only
+ * appear once their content exists in resume-data.json.
  *
  * File Structure:
  * - Data Imports: Resume data access
@@ -19,8 +20,18 @@
  * Licence/Copyright: Licensed under MIT License
  */
 
-import { resume } from '../data/resume';
+import { getPublicVolunteer, hasAboutContent, resume } from '../data/resume';
+
 const year = new Date().getFullYear();
+
+const footerLinks = [
+    ...(hasAboutContent() ? [{ label: 'About', href: '/about' }] : []),
+    { label: 'Experience', href: '/experiences' },
+    { label: 'Projects', href: '/projects' },
+    ...(getPublicVolunteer().length > 0 ? [{ label: 'Volunteer', href: '/volunteer' }] : []),
+    { label: 'Education', href: '/education' },
+    { label: 'Skills', href: '/skills' },
+];
 ---
 
 <footer class="bg-paper border-t border-line py-10 sm:py-12 mt-auto">
@@ -105,30 +116,16 @@ const year = new Date().getFullYear();
             </div>
 
             <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-sm">
-                <a
-                    href="/experiences"
-                    class="text-faint hover:text-ink hover:underline underline-offset-4"
-                >
-                    Experience
-                </a>
-                <a
-                    href="/projects"
-                    class="text-faint hover:text-ink hover:underline underline-offset-4"
-                >
-                    Projects
-                </a>
-                <a
-                    href="/education"
-                    class="text-faint hover:text-ink hover:underline underline-offset-4"
-                >
-                    Education
-                </a>
-                <a
-                    href="/#skills"
-                    class="text-faint hover:text-ink hover:underline underline-offset-4"
-                >
-                    Skills
-                </a>
+                {
+                    footerLinks.map((link) => (
+                        <a
+                            href={link.href}
+                            class="text-faint hover:text-ink hover:underline underline-offset-4"
+                        >
+                            {link.label}
+                        </a>
+                    ))
+                }
             </div>
         </div>
 

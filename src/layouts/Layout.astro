@@ -33,7 +33,7 @@ interface Props {
 
 const {
     title = `${resume.personal.name} | Portfolio`,
-    description = getProfileHighlightText(resume.profile),
+    description = getProfileHighlightText(resume.about),
     ogImage,
 } = Astro.props;
 
@@ -80,7 +80,7 @@ const socialImageURL = new URL(ogImage || '/favicon.svg', Astro.site ?? 'https:/
                     sameAs: 'https://en.wikipedia.org/wiki/Colorado_School_of_Mines',
                 },
                 jobTitle: 'Embedded Software Engineer',
-                description: getProfileHighlightText(resume.profile),
+                description: getProfileHighlightText(resume.about),
                 sameAs: [resume.personal.linkedin, resume.personal.github],
             })}
         />
