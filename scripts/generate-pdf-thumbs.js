@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 18 July, 2026
- * Last Update: 18 July, 2026
+ * Last Update: 27 July, 2026
  *
  * Renders the first page of every PDF referenced in resume-data.json proof
  * entries to a PNG in src/assets/thumbs, so project pages can show a real
@@ -18,7 +18,13 @@
  * Used in: npm run build (before build:resume asset sync)
  * Invoked via: npm run build:thumbs
  *
- * Licence/Copyright: Licensed under MIT License
+ * Usage:
+ * $ `npm run build:thumbs` : Generates PNG thumbnails for all PDF proof assets
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
  */
 
 import fs from 'fs';
@@ -50,11 +56,11 @@ function thumbNameFor(url) {
  * @brief Collects unique PDF proof URLs from resume data
  * @param data Parsed resume-data.json contents
  * @return Array of /assets/... PDF URLs
- * @details Covers every section that can carry proof: projects, experiences, and volunteer work
+ * @details Covers every section that can carry proof: projects and experiences
  */
 function collectPdfUrls(data) {
     const urls = new Set();
-    const sections = [data.projects, data.experiences, data.volunteer];
+    const sections = [data.projects, data.experiences];
 
     for (const section of sections) {
         for (const entry of section ?? []) {

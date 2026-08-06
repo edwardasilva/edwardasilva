@@ -1,19 +1,46 @@
 # dependencies
 node_modules/
-package-lock.json
 
-# build outputs - can be regenerated
+# build outputs & framework caches - can be regenerated
 .astro/
 dist/
 build/
 out/
 .next/
+.nuxt/
+.vite/
+.turbo/
+.vercel/
+.netlify/
+.parcel-cache/
 
 # resume and local content artifacts
 resume/
 public/resume/*.tex
 public/assets/
+previousjobs/
+
+# LaTeX compilation artifacts (from resume generation)
+*.aux
+*.fls
+*.fdb_latexmk
 *.synctex.gz
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.xdv
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+env/
+ENV/
 
 # logs - never commit
 *.log
@@ -24,42 +51,83 @@ pnpm-debug.log*
 
 # environment variables and secrets
 .env
-.env.*
+.env*
 !.env.example
+*.env
 
-# sensitive data files
+# credentials, tokens, SSH keys, and certificates
 *.pem
 *.key
 *.crt
 *.p12
 *.pfx
 *.asc
+*.p8
+*.keystore
+*.jks
+*.kdbx
+credentials.json
+secrets.json
+service-account*.json
+gcp-key*.json
+aws-credentials*
+id_rsa
+id_ed25519
+id_ecdsa
+id_dsa
+*.id_rsa
+.netrc
 
-# local databases and caches
+# local databases, temporary files, and caches
 *.sqlite
 *.sqlite3
 *.db
 .cache/
 .tmp/
 tmp/
+temp/
+coverage/
+.nyc_output/
+*.lcov
 
-# IDE/Editor files
+# IDE and editor files
 .vscode/
 .idea/
 *.code-workspace
 *.swp
 *.swo
+*.swn
 *~
+*.bak
+*.tmp
+*.temp
+*.orig
+*.rej
 
 # OS files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# AI agent & local assistant directories / state
+.agents/
+.gemini/
+.claude/
+.copilot/
+.cursor/
 
 # local repo-only docs/scripts
 AGENTS.md
-CLAUDE.md
 TODO.md
-RESUME.md
 docs/**
 resume-data.json
 

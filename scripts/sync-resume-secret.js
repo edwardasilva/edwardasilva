@@ -17,7 +17,14 @@
  * Used in: GitHub Actions workflow, pre-push hooks
  * Invoked via: npm run sync:resume-secret
  *
- * Licence/Copyright: Licensed under MIT License
+ * Usage:
+ * $ `npm run sync:resume-secret` : Syncs resume-data.json to repo-level GitHub Actions secrets
+ * $ `npm run sync:resume-secret:env` : Syncs resume-data.json to environment-level GitHub Actions secrets
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
  */
 
 import fs from 'fs';

@@ -17,6 +17,8 @@
         "prepare": "npm run hooks:install",
         "sync:resume-secret": "node scripts/sync-resume-secret.js",
         "sync:resume-secret:env": "node scripts/sync-resume-secret.js --scope=env --env=github-pages",
+        "sync:ai-configs": "node scripts/configs.js",
+        "all": "node scripts/run-all.js",
         "preview": "astro preview",
         "astro": "astro"
     },

@@ -4,10 +4,9 @@
  *
  * Author: Edward Silva
  * Creation Date: 31 March, 2026
- * Last Update: 25 July, 2026
+ * Last Update: 27 July, 2026
  *
- * Generates static Open Graph PNG images for project, experience, and volunteer
- * detail pages.
+ * Generates static Open Graph PNG images for project and experience detail pages.
  *
  * File Structure:
  * - Imports
@@ -17,7 +16,13 @@
  * Where this file is used within the repository:
  * - Dynamic OG image endpoint /og/[slug].png
  *
- * Licence/Copyright: Licensed under MIT License
+ * Usage:
+ * $ `npm run build` : Built statically by Astro during build to output /og/[slug].png preview images
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
  */
 
 import { html } from 'satori-html';
@@ -30,20 +35,17 @@ import {
     getProjectSlug,
     getExperienceSlug,
     getPublicExperiences,
-    getPublicVolunteer,
-    getVolunteerSlug,
 } from '../../data/resume';
 import type { APIRoute } from 'astro';
 
 /**
  * @brief Generates static parameters for all OG image variants
- * @return Array of route params and rendering props for projects, experiences, and volunteer work
+ * @return Array of route params and rendering props for projects and experiences
  * @details Pulls canonical slugs from shared resume data helpers used by dynamic routes.
  */
 export async function getStaticPaths() {
     const projects = getPortfolioProjects();
     const experiences = getPublicExperiences();
-    const volunteer = getPublicVolunteer();
 
     const paths = [
         ...projects.map((project) => ({
@@ -57,14 +59,6 @@ export async function getStaticPaths() {
         ...experiences.map((exp) => ({
             params: { slug: getExperienceSlug(exp) },
             props: { type: 'Experience', title: exp.title, tags: [exp.company, exp.duration] },
-        })),
-        ...volunteer.map((entry) => ({
-            params: { slug: getVolunteerSlug(entry) },
-            props: {
-                type: 'Volunteer',
-                title: entry.title,
-                tags: [entry.organization, entry.duration].filter(Boolean),
-            },
         })),
     ];
 

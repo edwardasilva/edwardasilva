@@ -1,3 +1,25 @@
+/*
+ * src/styles/global.css
+ * Global Stylesheet
+ *
+ * Author: Edward Silva
+ * Creation Date: 19 July, 2026
+ * Last Update: 27 July, 2026
+ *
+ * Single source for the site's palette, typography, and the handful of element styles
+ * that Tailwind utilities do not cover, so components name colors instead of hex values.
+ *
+ * File Structure:
+ * - Imports: Tailwind and the Carlito webfont faces
+ * - Theme: font stacks and named colors
+ * - Font face and weight utilities for the generated Carlito Semi face
+ * - Base and utility layers
+ *
+ * Used in: src/layouts/Layout.astro, which loads it for every page
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
 @import 'tailwindcss';
 @import '@fontsource/carlito/400.css';
 @import '@fontsource/carlito/700.css';

@@ -1,19 +1,34 @@
-# scripts/generate-semibold-font.py
-#
-# Author: Edward Silva
-# Creation Date: 19 July, 2026
-# Last Update: 19 July, 2026
-#
-# Calibri (and its metric-compatible open clone Carlito) ships only regular
-# and bold faces, so semibold text on the site would otherwise snap to the
-# heavy 700 weight. This script builds a true semibold face by expanding
-# Carlito Regular's outlines halfway toward bold (stroke + union on every
-# simple glyph), renames the family to "Carlito Semi", and writes a woff2
-# the site serves for emphasized text. Carlito is licensed under the SIL
-# OFL, which permits modification. Run once; the output is committed.
-#
-# Usage: python scripts/generate-semibold-font.py
-# Requires: pip install fonttools skia-pathops brotli
+"""
+scripts/generate-semibold-font.py
+Generate Semibold Font Script
+
+Author: Edward Silva
+Creation Date: 19 July, 2026
+Last Update: 06 August, 2026
+
+Calibri (and its metric-compatible open clone Carlito) ships only regular
+and bold faces, so semibold text on the site would otherwise snap to the
+heavy 700 weight. This script builds a true semibold face by expanding
+Carlito Regular's outlines halfway toward bold (stroke + union on every
+simple glyph), renames the family to "Carlito Semi", and writes a woff2
+the site serves for emphasized text. Carlito is licensed under the SIL
+OFL, which permits modification. Run once; the output is committed.
+
+File Structure:
+- Global Constants: ROOT, SOURCE, OUT_DIR, OUT_PATH, EMBOLDEN, FAMILY, PS_NAME
+- Functions: embolden_glyph, rename, main
+
+Where this file is used within the repository:
+- Run once manually to generate public/fonts/carlito-semibold.woff2
+
+Usage:
+$ `python scripts/generate-semibold-font.py` : Generates Carlito SemiBold woff2 font file
+
+Copyright (c) 2026 Edward Silva. All rights reserved.
+NOTICE: This file contains personal biographical data.
+It is strictly excluded from the repository's MIT License and
+may not be reproduced, distributed, or modified without permission.
+"""
 
 import pathlib
 
@@ -35,6 +50,13 @@ PS_NAME = "CarlitoSemi-Regular"
 
 
 def embolden_glyph(glyf, name):
+    """
+    @brief Thickens a simple glyph's outlines toward semibold weight
+    @param glyf Font glyf table object
+    @param name Name of the glyph to modify
+    @return None
+    @details Applies a pathops stroke and union operation to simple glyphs
+    """
     glyph = glyf[name]
     if glyph.isComposite() or glyph.numberOfContours <= 0:
         return
@@ -57,6 +79,12 @@ def embolden_glyph(glyf, name):
 
 
 def rename(font):
+    """
+    @brief Renames font family and subfamily entries to Carlito Semi Regular
+    @param font TTFont object being edited
+    @return None
+    @details Updates name table platform records and removes specific name IDs
+    """
     name = font["name"]
     for platform in ((3, 1, 0x409), (1, 0, 0)):
         name.setName(FAMILY, 1, *platform)
@@ -69,6 +97,11 @@ def rename(font):
 
 
 def main():
+    """
+    @brief Entry point for generating the semibold font file
+    @return None
+    @details Processes glyphs, recalculates bounds, renames, and saves woff2
+    """
     font = TTFont(SOURCE)
     glyf = font["glyf"]
     hmtx = font["hmtx"]

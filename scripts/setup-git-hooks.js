@@ -17,7 +17,13 @@
  * Used in: Repository initialization, development environment setup
  * Invoked via: npm run setup:hooks or setup script
  *
- * Licence/Copyright: Licensed under MIT License
+ * Usage:
+ * $ `npm run prepare` : Configures pre-commit and pre-push Git hooks for local repo
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
  */
 
 import fs from 'fs';

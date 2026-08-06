@@ -1,18 +1,21 @@
 ---
 /**
- * src/pages/about.astro
- * About Page
+ * src/pages/about/[...slug].astro
+ * About Route
  *
  * Author: Edward Silva
  * Creation Date: 25 July, 2026
- * Last Update: 25 July, 2026
+ * Last Update: 27 July, 2026
  *
  * Renders the long-form background: the work that came before engineering, the path
  * into embedded software, and the intended direction after industry. Every block is
  * driven by the about section of resume-data.json and is omitted while unwritten.
+ * Built from a rest route so the page does not exist at all while the about section
+ * is held back, matching how the header and footer gate their links to it.
  *
  * File Structure:
- * - Imports and derived data
+ * - Imports and static path generation
+ * - Route props and derived data
  * - About page template
  *
  * Where this file is used within the repository:
@@ -21,10 +24,22 @@
  * Licence/Copyright: Licensed under MIT License
  */
 
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import Layout from '../layouts/Layout.astro';
-import { getProfileHighlightText, resume } from '../data/resume';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getProfileHighlightText, hasAboutContent, resume } from '../../data/resume';
+
+/**
+ * @brief Returns the static route params for the about page
+ * @return A single path for /about, or an empty list while the about section is held back
+ */
+export function getStaticPaths() {
+    if (!hasAboutContent()) {
+        return [];
+    }
+
+    return [{ params: { slug: undefined } }];
+}
 
 const about = resume.about;
 const earlyRoles = about.earlyWork.roles;

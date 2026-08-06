@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 25 July, 2026
+ * Last Update: 27 July, 2026
  *
  * Central registry for resume data with utilities to normalize, filter, and access data.
  * Imports root-level JSON and provides typed exports with asset URL normalization.
@@ -17,7 +17,13 @@
  *
  * Used in: All components, pages, and API routes needing resume data
  *
- * Licence/Copyright: Licensed under MIT License
+ * Usage:
+ * $ `import { resume } from './data/resume'` : Imported by Astro pages and components to access typed, normalized resume data
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
  */
 
 import rawResumeData from '../../resume-data.json';
@@ -36,12 +42,15 @@ import type {
     SkillEntry,
     SkillReference,
     VisibilityScope,
-    Volunteer,
 } from './types';
 
 const VALID_VISIBILITY_SCOPES: ReadonlySet<VisibilityScope> = new Set(['All', 'Site', 'Hide']);
 const SITE_COURSE_PREFIXES = new Set(['CSCI', 'EENG']);
 const PLACEHOLDER_PATTERN = /\[INSERT[^\]]*\]/i;
+
+// The about page is held back until its narrative is written; resume-data.json keeps the content
+// so turning this back on restores the page, its route, and its header and footer links.
+const C_ABOUT_PAGE_PUBLISHED = false;
 
 /**
  * @brief Checks whether text is an unfilled authoring placeholder
@@ -285,23 +294,6 @@ function normalizeExperience(experience: Experience): Experience {
 }
 
 /**
- * @brief Normalizes a volunteer entry
- * @param volunteer The volunteer object to normalize
- * @return Volunteer with normalized bullets, visibility, and proof URLs
- */
-function normalizeVolunteer(volunteer: Volunteer): Volunteer {
-    return {
-        ...volunteer,
-        Summary: filledText(volunteer.Summary),
-        skills: normalizeSkillArray(volunteer.skills),
-        Resume: normalizeStringArray(volunteer.Resume),
-        Highlights: normalizeStringArray(volunteer.Highlights),
-        Visibility: normalizeVisibilityScope(volunteer.Visibility),
-        proof: normalizeProofList(volunteer.proof),
-    };
-}
-
-/**
  * @brief Normalizes asset URLs, skills, and visibility for a certification
  * @param certification The certification object to normalize
  * @return Certification with normalized fields and any dead link dropped
@@ -473,16 +465,24 @@ export const resume: ResumeData = {
     about: normalizeAbout(rawAbout),
     education: (typedRawData.education ?? []).map((entry) => normalizeEducation(entry)),
     experiences: (typedRawData.experiences ?? []).map((entry) => normalizeExperience(entry)),
-    volunteer: (typedRawData.volunteer ?? []).map((entry) => normalizeVolunteer(entry)),
     projects: (typedRawData.projects ?? []).map((entry) => normalizeProject(entry)),
     certifications: (typedRawData.certifications ?? []).map((entry) =>
         normalizeCertification(entry)
     ),
-    skillPriority: normalizeStringArray(typedRawData.skillPriority),
+    TopSkills: normalizeStringArray(typedRawData.TopSkills),
+    ResumeSkills: normalizeStringArray(
+        typedRawData.ResumeSkills ?? (typedRawData as Record<string, unknown>).OtherSkills
+    ),
+    OtherSkills: normalizeStringArray((typedRawData as Record<string, unknown>).OtherSkills),
 };
 
-// Rank lookup for the curated skill order in resume-data.json
-const SKILL_RANKS = new Map(resume.skillPriority.map((name, index) => [name.toLowerCase(), index]));
+// Rank lookup for the skill order in resume-data.json: the curated TopSkills run first in the
+// order they are written, then ResumeSkills in stored order.
+const SKILL_RANKS = new Map(
+    [...resume.TopSkills, ...(resume.ResumeSkills || resume.OtherSkills || [])].map(
+        (name, index) => [name.toLowerCase(), index]
+    )
+);
 
 /**
  * @brief Gets the primary education entry
@@ -618,45 +618,15 @@ export function getExperienceBySlug(
 }
 
 /**
- * @brief Gets all volunteer entries visible on site
- * @param data Optional resume data; defaults to global resume
- * @return Volunteer entries with Visibility All or Site
- */
-export function getPublicVolunteer(data: ResumeData = resume): Volunteer[] {
-    return (data.volunteer ?? []).filter((entry) => isVisibleOnSite(entry.Visibility));
-}
-
-/**
- * @brief Gets slug for a volunteer entry
- * @param volunteer The volunteer entry to slugify
- * @return Explicit slug or one generated from title and organization
- */
-export function getVolunteerSlug(
-    volunteer: Pick<Volunteer, 'title' | 'organization' | 'slug'>
-): string {
-    return volunteer.slug?.trim() || slugify(`${volunteer.title}-${volunteer.organization}`);
-}
-
-/**
- * @brief Gets highlight bullets for volunteer detail surfaces
- * @param volunteer The volunteer entry
- * @return Volunteer highlight bullets, or resume bullets when highlights are empty
- */
-export function getVolunteerHighlights(
-    volunteer: Pick<Volunteer, 'Resume' | 'Highlights'>
-): string[] {
-    return volunteer.Highlights.length > 0 ? volunteer.Highlights : volunteer.Resume;
-}
-
-/**
  * @brief Reports whether the about page has any content worth publishing
  * @param data Optional resume data; defaults to global resume
- * @return True when the about section is visible and at least one block is filled in
+ * @return True when the page is published, the about section is visible, and a block is filled in
+ * @details Gates the /about route along with the header and footer links into it.
  */
 export function hasAboutContent(data: ResumeData = resume): boolean {
     const about = data.about;
 
-    if (!about || !isVisibleOnSite(about.Visibility)) {
+    if (!C_ABOUT_PAGE_PUBLISHED || !about || !isVisibleOnSite(about.Visibility)) {
         return false;
     }
 
@@ -822,15 +792,6 @@ export function getProjectSkills(project: Pick<Project, 'skills'>): string[] {
 }
 
 /**
- * @brief Gets the skills declared on a single volunteer item
- * @param volunteer Volunteer item with a skills field
- * @return Ordered list of skills for the volunteer entry
- */
-export function getVolunteerSkills(volunteer: Pick<Volunteer, 'skills'>): string[] {
-    return sortSkillsByPriority(normalizeSkillArray(volunteer.skills));
-}
-
-/**
  * @brief Gets a skill's position in the curated priority order
  * @param name Skill label
  * @return Rank index, or a value past the end for skills that are not ranked
@@ -870,9 +831,9 @@ export function getSkillSlug(name: string): string {
  * @brief Builds the skills index from the work each skill was gained on
  * @param data Optional resume data; defaults to global resume
  * @return Skill entries in curated priority order, each with every source that names it
- * @details Skills are declared on experiences, projects, volunteer entries, coursework, and
- *          certifications rather than in a list of their own, so every skill on the index
- *          carries at least one source and the index needs no categories.
+ * @details Skills are declared on experiences, projects, coursework, and certifications rather
+ *          than in a list of their own, so every skill on the index carries at least one source
+ *          and the index needs no categories.
  */
 export function getSkillIndex(data: ResumeData = resume): SkillEntry[] {
     const referencesBySkill = new Map<string, SkillReference[]>();
@@ -917,14 +878,6 @@ export function getSkillIndex(data: ResumeData = resume): SkillEntry[] {
         });
     }
 
-    for (const volunteer of getPublicVolunteer(data)) {
-        addReferences(getVolunteerSkills(volunteer), {
-            label: `${volunteer.title}, ${volunteer.organization}`,
-            href: `/volunteer/${getVolunteerSlug(volunteer)}`,
-            kind: 'Volunteer',
-        });
-    }
-
     // Only courses the education page renders, so every course link has a target
     for (const { courses } of getVisibleCourseCategories(getPrimaryEducation(data))) {
         for (const course of courses) {
@@ -963,7 +916,7 @@ export function getSkillIndex(data: ResumeData = resume): SkillEntry[] {
 }
 
 /**
- * @brief Builds the link target for a skill named on an experience, project, or volunteer entry
+ * @brief Builds the link target for a skill named on an experience or project
  * @param name Technology label shown on the entry
  * @return Href pointing at that skill's row on the skills page
  */

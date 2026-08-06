@@ -4,18 +4,24 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 25 July, 2026
+ * Last Update: 27 July, 2026
  *
  * Central type definitions for all resume data structures. Used throughout the portfolio
  * to ensure type safety and consistent data modeling across components and pages.
  *
  * File Structure:
- * - Interfaces: PersonalInfo, About, Education, Course, Experience, Volunteer, Project
+ * - Interfaces: PersonalInfo, About, Education, Course, Experience, Project
  * - Complex Types: Proof, SkillEntry, SkillReference, ResumeData
  *
  * Used in: src/data/resume.ts, all components that display resume data
  *
- * Licence/Copyright: Licensed under MIT License
+ * Usage:
+ * $ `import type { ResumeData } from './data/types'` : Imported by TypeScript modules, Astro pages, and components for resume data type safety
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
  */
 
 export interface PersonalInfo {
@@ -121,23 +127,6 @@ export interface Experience {
     Visibility: VisibilityScope;
 }
 
-export interface Volunteer {
-    title: string;
-    slug?: string;
-    Summary?: string;
-    organization: string;
-    organizationUrl?: string;
-    location: string;
-    duration: string;
-    startDate?: string;
-    endDate?: string;
-    skills?: string[];
-    proof?: Proof[];
-    Resume: string[];
-    Highlights: string[];
-    Visibility: VisibilityScope;
-}
-
 export interface Project {
     title: string;
     slug?: string;
@@ -163,7 +152,7 @@ export interface Proof {
 export interface SkillReference {
     label: string;
     href: string;
-    kind: 'Experience' | 'Project' | 'Volunteer' | 'Course' | 'Certification';
+    kind: 'Experience' | 'Project' | 'Course' | 'Certification';
 }
 
 export interface SkillEntry {
@@ -184,11 +173,12 @@ export interface Certification {
 
 export interface ResumeData {
     personal: PersonalInfo;
-    skillPriority: string[];
     about: About;
     education: Education[];
     experiences: Experience[];
-    volunteer: Volunteer[];
     projects: Project[];
     certifications: Certification[];
+    TopSkills: string[];
+    ResumeSkills: string[];
+    OtherSkills?: string[];
 }

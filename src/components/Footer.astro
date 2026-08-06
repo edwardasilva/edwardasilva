@@ -5,11 +5,11 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 25 July, 2026
+ * Last Update: 27 July, 2026
  *
  * Renders the site footer with contact information, links, and copyright notice.
- * Displays dynamic year from system date for copyright. About and Volunteer only
- * appear once their content exists in resume-data.json.
+ * Displays dynamic year from system date for copyright. About only appears once its
+ * content exists in resume-data.json.
  *
  * File Structure:
  * - Data Imports: Resume data access
@@ -20,7 +20,7 @@
  * Licence/Copyright: Licensed under MIT License
  */
 
-import { getPublicVolunteer, hasAboutContent, resume } from '../data/resume';
+import { hasAboutContent, resume } from '../data/resume';
 
 const year = new Date().getFullYear();
 
@@ -28,7 +28,6 @@ const footerLinks = [
     ...(hasAboutContent() ? [{ label: 'About', href: '/about' }] : []),
     { label: 'Experience', href: '/experiences' },
     { label: 'Projects', href: '/projects' },
-    ...(getPublicVolunteer().length > 0 ? [{ label: 'Volunteer', href: '/volunteer' }] : []),
     { label: 'Education', href: '/education' },
     { label: 'Skills', href: '/skills' },
 ];

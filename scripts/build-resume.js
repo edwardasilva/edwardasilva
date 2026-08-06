@@ -16,7 +16,13 @@
  * Used in: GitHub Actions workflow, local development builds
  * Invoked via: npm run build:resume or build script
  *
- * Licence/Copyright: Licensed under MIT License
+ * Usage:
+ * $ `npm run build:resume` : Compiles TeX resume files into Edward_Silva_Resume.pdf and syncs assets
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
  */
 
 import { execSync } from 'child_process';

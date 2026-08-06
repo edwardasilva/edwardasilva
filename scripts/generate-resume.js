@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 25 July, 2026
+ * Last Update: 27 July, 2026
  *
  * Generates LaTeX resume files from resume-data.json. Includes filtering, formatting,
  * and auto-spacing algorithms for ATS-friendly one-page PDF output.
@@ -19,7 +19,13 @@
  * Used in: Build process, GitHub Actions CI/CD
  * Invoked via: node scripts/generate-resume.js or npm run build:resume
  *
- * Licence/Copyright: Licensed under MIT License
+ * Usage:
+ * $ `node scripts/generate-resume.js` : Generates TeX resume files from resume-data.json
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
  */
 
 import fs from 'fs';
@@ -139,41 +145,14 @@ const filters = {
         return education.filter((edu) => edu.Visibility === 'All');
     },
     collectResumeSkills(data) {
-        const names = [];
-        const push = (list) => (list || []).forEach((name) => names.push(name));
-
-        this.filterResumeExperience(data.experiences || []).forEach((exp) => push(exp.skills));
-        this.filterResumeProjects(data.projects || []).forEach((project) => push(project.skills));
-        (data.volunteer || [])
-            .filter((entry) => entry.Visibility === 'All')
-            .forEach((entry) => push(entry.skills));
-        this.filterResumeCourses(this.collectCourses(data.education)).forEach((course) =>
-            push(course.skills)
-        );
-        (data.certifications || [])
-            .filter((cert) => cert.Visibility === 'All')
-            .forEach((cert) => push(cert.skills));
-
+        const resumeSkillsList = data.ResumeSkills || data.OtherSkills || [];
+        const names = [...(data.TopSkills || []), ...resumeSkillsList];
         const seen = new Set();
-        const unique = names.filter((name) => {
+        return names.filter((name) => {
             const key = String(name).toLowerCase();
             if (seen.has(key)) return false;
             seen.add(key);
             return true;
-        });
-
-        const ranks = new Map(
-            (data.skillPriority || []).map((name, index) => [String(name).toLowerCase(), index])
-        );
-
-        const rankOf = (name) => {
-            const rank = ranks.get(String(name).toLowerCase());
-            return rank === undefined ? Number.MAX_SAFE_INTEGER : rank;
-        };
-
-        return unique.sort((left, right) => {
-            const delta = rankOf(left) - rankOf(right);
-            return delta !== 0 ? delta : String(left).localeCompare(String(right));
         });
     },
     collectCourses(education) {
@@ -367,7 +346,9 @@ function calculateSpacingProfile({
         // Experience section.
         lines += 1 + sp.sectionBeforeBs + sp.sectionAfterBs;
         resumeExperience.forEach((exp, idx) => {
-            lines += 1; // title/company/location/dates line
+            const skillsStr = (exp.skills || []).join(', ');
+            lines += estimateWrappedLines(`${exp.title}, ${exp.company}`, CHARS_PER_LINE);
+            lines += estimateWrappedLines(`${skillsStr} ${exp.location || ''}`, CHARS_PER_LINE);
 
             const items = Array.isArray(exp.Resume) ? exp.Resume : [];
             const bulletLines = items.reduce(
@@ -699,13 +680,15 @@ function generateResume(data, options = {}) {
 
     // Build Experience section
     const experienceSection = resumeExperience
-        .map(
-            (exp) =>
-                `\\textbf{${escapeLatex(exp.title)}, }{${escapeLatex(exp.company)}} -- ${escapeLatex(exp.location)} \\hfill ${escapeLatex(formatDateRange(exp.duration))} \\\\
-\\begin{itemize}
-${exp.Resume.map((item) => `  \\item ${escapeLatex(item)}`).join('\n')}
-\\end{itemize}`
-        )
+        .map((exp) => {
+            const skillsStr = (exp.skills || []).map((skill) => escapeLatex(skill)).join(', ');
+            const line1 = `\\textbf{${escapeLatex(exp.title)}}, ${escapeLatex(exp.company)} \\hfill ${escapeLatex(formatDateRange(exp.duration))}`;
+            const line2 =
+                skillsStr && exp.location
+                    ? `${skillsStr} \\hfill ${escapeLatex(exp.location)}`
+                    : skillsStr || (exp.location ? `\\hfill ${escapeLatex(exp.location)}` : '');
+            return `${line1} \\\\\n${line2}\n\\begin{itemize}\n${exp.Resume.map((item) => `  \\item ${escapeLatex(item)}`).join('\n')}\n\\end{itemize}`;
+        })
         .join(`\\vspace{${SP.entryGap}}\n`);
 
     // Build Projects section

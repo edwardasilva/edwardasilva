@@ -5,11 +5,11 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 25 July, 2026
+ * Last Update: 27 July, 2026
  *
  * Renders site navigation header with branding, navigation links, and resume download.
- * Responsive design adapts to mobile and desktop viewports. About and Volunteer only
- * appear once their content exists in resume-data.json.
+ * Responsive design adapts to mobile and desktop viewports. About only appears once
+ * its content exists in resume-data.json.
  *
  * File Structure:
  * - Navigation Configuration: Menu items and links
@@ -21,13 +21,12 @@
  */
 
 // Sticky header with mobile hamburger menu
-import { getPublicVolunteer, getResumePdfUrl, hasAboutContent, resume } from '../data/resume';
+import { getResumePdfUrl, hasAboutContent, resume } from '../data/resume';
 
 const navItems = [
     ...(hasAboutContent() ? [{ label: 'About', href: '/about' }] : []),
     { label: 'Experience', href: '/experiences' },
     { label: 'Projects', href: '/projects' },
-    ...(getPublicVolunteer().length > 0 ? [{ label: 'Volunteer', href: '/volunteer' }] : []),
     { label: 'Education', href: '/education' },
     { label: 'Skills', href: '/skills' },
     { label: 'Resume', href: getResumePdfUrl(), external: true },

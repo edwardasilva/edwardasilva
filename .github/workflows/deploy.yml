@@ -64,7 +64,7 @@ jobs:
                     print(f"::error::{path} is not valid JSON in RESUME_DATA: {exc}")
                     sys.exit(1)
 
-                  required_keys = ["personal", "education", "experiences", "projects", "skills"]
+                  required_keys = ["personal", "education", "experiences", "projects"]
                   missing = [key for key in required_keys if key not in data]
                   if missing:
                     print(f"::error::{path} is missing required top-level keys: {', '.join(missing)}")
@@ -119,6 +119,7 @@ jobs:
             - name: Build
               env:
                   SKIP_RESUME_PDF_BUILD: '1'
+                  SKIP_RESUME_GENERATE: '1'
               run: npm run build
 
             - name: Setup Pages
