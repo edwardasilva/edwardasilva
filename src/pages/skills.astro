@@ -1,0 +1,98 @@
+---
+/**
+ * src/pages/skills.astro
+ * Skills Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 25 July, 2026
+ * Last Update: 25 August, 2026
+ *
+ * Renders the skills index. Skills are declared on the work that produced them rather than
+ * in a list of their own, so every entry here names at least one role, project, course, or
+ * certification behind it.
+ *
+ * File Structure:
+ * - Imports and skill index lookup
+ * - Skills page template with accessibility landmarks
+ *
+ * Where this file is used within the repository:
+ * - Public route /skills, linked from the header and footer
+ *
+ * Usage:
+ * $ `npm run dev` : Serves skills index page at http://localhost:4321/skills
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Layout from '../layouts/Layout.astro';
+import { getSkillIndex } from '../data/resume';
+
+const skillIndex = getSkillIndex();
+
+const skillsJsonLd = {
+    '@type': 'ItemList',
+    name: 'Technical Skills Directory',
+    itemListElement: skillIndex.map((skill, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: skill.name,
+        url: `https://edwardasilva.com/skills#${skill.slug}`,
+    })),
+};
+---
+
+<Layout
+    title="Skills | Edward Silva"
+    description="Skills and tools, with the work and coursework behind each one."
+    jsonLd={skillsJsonLd}
+>
+    <Header />
+    <main
+        id="main-content"
+        tabindex="-1"
+        class="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 lg:px-8"
+    >
+        <section class="border-b border-line pb-8 sm:pb-10">
+            <h1 class="font-serif text-3xl text-ink sm:text-4xl">Skills</h1>
+            <p class="mt-3 max-w-2xl text-sm text-faint leading-relaxed sm:text-base">
+                Everything here is listed under the work it came from: a role, a project, a course,
+                or a certification. Follow any of them for the details.
+            </p>
+        </section>
+
+        <section class="py-8 sm:py-10" role="region" aria-label="Skills Inventory">
+            <ul class="content-visibility-auto grid grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2">
+                {
+                    skillIndex.map((skill) => (
+                        <li id={skill.slug} class="skill scroll-mt-24">
+                            <p class="text-sm font-medium text-ink">{skill.name}</p>
+
+                            <ul
+                                class="mt-1 space-y-0.5"
+                                aria-label={`References for ${skill.name}`}
+                            >
+                                {skill.references.map((reference) => (
+                                    <li class="text-xs text-dim leading-relaxed">
+                                        <a
+                                            href={reference.href}
+                                            class="hover:text-accent hover:underline underline-offset-4"
+                                            aria-label={`View ${reference.label} for ${skill.name}`}
+                                        >
+                                            {reference.label}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </li>
+                    ))
+                }
+            </ul>
+        </section>
+    </main>
+    <Footer />
+</Layout>

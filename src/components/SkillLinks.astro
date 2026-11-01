@@ -1,0 +1,56 @@
+---
+/**
+ * src/components/SkillLinks.astro
+ * Skill Links Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 25 July, 2026
+ * Last Update: 23 August, 2026
+ *
+ * Renders the skills attached to an experience or project as a comma-separated row of
+ * links into the matching row on the skills page.
+ *
+ * File Structure:
+ * - Props: skill labels and optional class overrides
+ * - Template: Inline list of anchor links
+ *
+ * Where this file is used within the repository:
+ * - Used in src/components/Experience.astro, src/components/ProjectEntry.astro, and detail pages
+ *
+ * Usage:
+ * $ `npm run dev` : Rendered as child component for linked skill lists
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import { getSkillHref } from '../data/resume';
+
+interface Props {
+    skills: string[];
+    class?: string;
+}
+
+const { skills, class: className } = Astro.props;
+---
+
+{
+    skills.length > 0 && (
+        <p class:list={['text-xs text-dim', className]}>
+            <span class="font-medium text-faint">Skills: </span>
+            {skills.map((skill, index) => (
+                <>
+                    {index > 0 && ', '}
+                    <a
+                        href={getSkillHref(skill)}
+                        class="hover:text-accent hover:underline underline-offset-4"
+                    >
+                        {skill}
+                    </a>
+                </>
+            ))}
+        </p>
+    )
+}

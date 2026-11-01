@@ -1,0 +1,309 @@
+---
+/**
+ * src/pages/education.astro
+ * Education Detail Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 15 April, 2026
+ * Last Update: 01 November, 2026
+ *
+ * Renders the education page: school, honors, scholarships, coursework, and
+ * certifications. Each course lists the skills it taught, visible without expanding
+ * the entry.
+ *
+ * File Structure:
+ * - Imports and derived data
+ * - Education detail page template with accessible landmarks
+ * - Coursework and certifications sections
+ *
+ * Where this file is used within the repository:
+ * - Public route /education
+ *
+ * Usage:
+ * $ `npm run dev` : Serves education page at http://localhost:4321/education
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Layout from '../layouts/Layout.astro';
+import SkillLinks from '../components/SkillLinks.astro';
+import {
+    getCertificationSlug,
+    getCourseSlug,
+    getPrimaryEducation,
+    getProjectSlug,
+    getProjectsForCourse,
+    getPublicCertifications,
+    getVisibleCourseCategories,
+} from '../data/resume';
+
+const primaryEducation = getPrimaryEducation();
+const honors = primaryEducation?.honors ?? [];
+const scholarships = primaryEducation?.scholarships ?? [];
+
+const coursesByCategory = getVisibleCourseCategories(primaryEducation);
+const certifications = getPublicCertifications();
+
+const description = primaryEducation
+    ? `${primaryEducation.degree} at ${primaryEducation.institution}, graduated ${primaryEducation.graduationDate}.`
+    : 'Education details.';
+
+const educationJsonLd = primaryEducation
+    ? {
+          '@type': 'EducationalOccupationalCredential',
+          name: primaryEducation.degree,
+          credentialCategory: 'degree',
+          recognizedBy: {
+              '@type': 'CollegeOrUniversity',
+              name: primaryEducation.institution,
+              sameAs: 'https://www.mines.edu',
+          },
+      }
+    : undefined;
+---
+
+<Layout title="Education | Edward Silva" description={description} jsonLd={educationJsonLd}>
+    <Header />
+    <main
+        id="main-content"
+        tabindex="-1"
+        class="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 lg:px-8"
+    >
+        <section class="border-b border-line pb-8 sm:pb-10">
+            <h1 class="font-serif text-3xl text-ink sm:text-4xl">Education</h1>
+        </section>
+
+        {
+            primaryEducation && (
+                <section
+                    class="border-b border-line py-8 sm:py-10"
+                    role="region"
+                    aria-label="Degree and Institution"
+                >
+                    <h2 class="flex flex-wrap items-baseline gap-x-3 gap-y-1 font-serif text-xl text-ink sm:text-2xl">
+                        <span>{primaryEducation.degree}</span>
+                        {primaryEducation.minor && (
+                            <span class="flex items-center gap-x-3 text-sm font-sans font-normal text-faint">
+                                <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                                {primaryEducation.minor}
+                            </span>
+                        )}
+                    </h2>
+                    <p class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-faint">
+                        <a
+                            href="https://www.mines.edu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="font-medium hover:text-accent hover:underline underline-offset-4"
+                            aria-label={`${primaryEducation.institution} website (opens in a new tab)`}
+                        >
+                            {primaryEducation.institution}
+                            <span class="sr-only"> (opens in a new tab)</span>
+                        </a>
+                        <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                        <span>{primaryEducation.location}</span>
+                        <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                        <span>Graduated {primaryEducation.graduationDate}</span>
+                        {primaryEducation.gpa && (
+                            <>
+                                <span aria-hidden="true" class="hidden h-3 w-px bg-line sm:block" />
+                                <span>{primaryEducation.gpa} GPA</span>
+                            </>
+                        )}
+                    </p>
+                    {primaryEducation.specialization && (
+                        <p class="mt-3 text-sm text-faint">{primaryEducation.specialization}</p>
+                    )}
+                </section>
+            )
+        }
+
+        {
+            (honors.length > 0 || scholarships.length > 0) && (
+                <section
+                    class="grid grid-cols-1 gap-8 border-b border-line py-8 sm:grid-cols-2 sm:py-10"
+                    role="region"
+                    aria-label="Honors and Scholarships"
+                >
+                    {honors.length > 0 && (
+                        <article>
+                            <h2 class="font-serif text-xl text-ink sm:text-2xl">Honors</h2>
+                            <ul class="list-dash mt-4 space-y-2 text-sm text-faint">
+                                {honors.map((item) => (
+                                    <li>{item}</li>
+                                ))}
+                            </ul>
+                        </article>
+                    )}
+
+                    {scholarships.length > 0 && (
+                        <article>
+                            <h2 class="font-serif text-xl text-ink sm:text-2xl">Scholarships</h2>
+                            <ul class="list-dash mt-4 space-y-2 text-sm text-faint">
+                                {scholarships.map((item) => (
+                                    <li>{item}</li>
+                                ))}
+                            </ul>
+                        </article>
+                    )}
+                </section>
+            )
+        }
+
+        <section class="pt-8 sm:pt-10" role="region" aria-label="Coursework">
+            <h2 class="font-serif text-xl text-ink sm:text-2xl">Coursework</h2>
+
+            {
+                coursesByCategory.length > 0 && (
+                    <div class="content-visibility-auto mt-5 space-y-6">
+                        {coursesByCategory.map((entry) => (
+                            <article>
+                                <h3 class="text-base font-semibold text-ink sm:text-lg">
+                                    {entry.category}
+                                </h3>
+                                <div class="mt-2 divide-y divide-line">
+                                    {entry.courses.map((course) => {
+                                        const courseSkills = course.skills ?? [];
+                                        const previewSkills = courseSkills.slice(0, 3);
+                                        const courseProjects = getProjectsForCourse(course);
+
+                                        return (
+                                            <details
+                                                id={getCourseSlug(course)}
+                                                class="group scroll-mt-24"
+                                            >
+                                                <summary
+                                                    class="flex cursor-pointer items-start gap-3 py-2.5 select-none list-none"
+                                                    aria-label={`Toggle description and skills for ${course.code} ${course.name}`}
+                                                >
+                                                    <span class="w-20 shrink-0 pt-px font-mono text-xs text-dim">
+                                                        {course.code}
+                                                    </span>
+                                                    <span class="flex flex-1 flex-wrap items-baseline gap-x-3 gap-y-1">
+                                                        <span class="text-sm font-medium text-ink">
+                                                            {course.name}
+                                                            {course.alias && (
+                                                                <span class="ml-2 text-xs font-normal text-dim">
+                                                                    ({course.alias})
+                                                                </span>
+                                                            )}
+                                                        </span>
+                                                        {previewSkills.length > 0 && (
+                                                            <>
+                                                                <span
+                                                                    aria-hidden="true"
+                                                                    class="hidden h-3 w-px bg-line sm:block"
+                                                                />
+                                                                <span class="text-xs text-dim">
+                                                                    {previewSkills.join(', ')}
+                                                                </span>
+                                                            </>
+                                                        )}
+                                                    </span>
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="16"
+                                                        height="16"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        class="mt-0.5 shrink-0 text-dim group-open:rotate-180 transition-transform"
+                                                        aria-hidden="true"
+                                                    >
+                                                        <polyline points="6 9 12 15 18 9" />
+                                                    </svg>
+                                                </summary>
+                                                <div class="pb-3 sm:pl-[5.75rem]">
+                                                    <p class="text-sm leading-relaxed text-faint">
+                                                        {course.description}
+                                                    </p>
+                                                    <SkillLinks
+                                                        skills={courseSkills}
+                                                        class="mt-3"
+                                                    />
+
+                                                    {courseProjects.length > 0 && (
+                                                        <p class="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs text-dim">
+                                                            <span>
+                                                                {courseProjects.length === 1
+                                                                    ? 'Project'
+                                                                    : 'Projects'}
+                                                            </span>
+                                                            {courseProjects.map((project) => (
+                                                                <a
+                                                                    href={`/projects/${getProjectSlug(project)}`}
+                                                                    class="hover:text-accent hover:underline underline-offset-4"
+                                                                >
+                                                                    {project.title}
+                                                                </a>
+                                                            ))}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </details>
+                                        );
+                                    })}
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                )
+            }
+        </section>
+
+        {
+            certifications.length > 0 && (
+                <section
+                    class="border-t border-line pt-8 sm:pt-10"
+                    role="region"
+                    aria-label="Certifications"
+                >
+                    <h2 class="font-serif text-xl text-ink sm:text-2xl">Certifications</h2>
+
+                    <div class="content-visibility-auto mt-5 divide-y divide-line">
+                        {certifications.map((certification) => (
+                            <article
+                                id={getCertificationSlug(certification)}
+                                class="py-5 scroll-mt-24 first:pt-0 last:pb-0"
+                            >
+                                <h3 class="text-sm font-medium text-ink sm:text-base">
+                                    {certification.link ? (
+                                        <a
+                                            href={certification.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="hover:text-accent hover:underline underline-offset-4"
+                                            aria-label={`${certification.name} certificate (opens in a new tab)`}
+                                        >
+                                            {certification.name}
+                                            <span class="sr-only"> (opens in a new tab)</span>
+                                        </a>
+                                    ) : (
+                                        certification.name
+                                    )}
+                                </h3>
+                                <p class="mt-1 text-sm text-faint">{certification.organization}</p>
+                                {certification.description && (
+                                    <p class="mt-2 text-sm leading-relaxed text-faint">
+                                        {certification.description}
+                                    </p>
+                                )}
+
+                                <SkillLinks skills={certification.skills ?? []} class="mt-3" />
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )
+        }
+    </main>
+    <Footer />
+</Layout>

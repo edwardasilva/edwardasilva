@@ -1,0 +1,238 @@
+/*
+ * src/styles/global.css
+ * Global Stylesheet
+ *
+ * Author: Edward Silva
+ * Creation Date: 19 July, 2026
+ * Last Update: 24 August, 2026
+ *
+ * Single source for the site's palette, typography, accessibility states,
+ * and high-contrast / forced-colors adaptations.
+ *
+ * File Structure:
+ * - Imports: Tailwind and Carlito webfont faces
+ * - Theme: font stacks and named colors
+ * - Font face and weight utilities for Carlito Semi
+ * - Base layer: typography, text-wrap balancing, focus states
+ * - Accessibility: sr-only, high-contrast, forced-colors, reduced-motion
+ *
+ * Used in: src/layouts/Layout.astro, which loads it for every page
+ *
+ * Licence/Copyright: Licensed under MIT License
+ */
+
+@import 'tailwindcss';
+@import '@fontsource/carlito/400.css';
+@import '@fontsource/carlito/700.css';
+
+/*
+ * One palette for the whole site. Components use these named colors
+ * (text-ink, border-line, bg-wash, ...) instead of raw hex values.
+ * Calibri renders natively on Windows; Carlito is its metric-compatible
+ * webfont fallback for every other platform.
+ */
+@theme {
+    --font-sans: 'Calibri', 'Carlito', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    --font-serif:
+        'Carlito Semi', 'Calibri', 'Carlito', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'Consolas', 'Courier New', ui-monospace, monospace;
+
+    --font-weight-semibold: 400;
+    --font-weight-bold: 400;
+
+    --color-paper: #f3f5f7;
+    --color-wash: #edf3fb;
+    --color-ink: #1f2937;
+    --color-ink-soft: #2b3d54;
+    --color-faint: #64748b;
+    --color-dim: #7a8aa0;
+    --color-line: #d8e0ea;
+    --color-accent: #4c78a8;
+    --color-accent-deep: #365f8f;
+    --color-accent-soft: #8db6e2;
+}
+
+/*
+ * True semibold built from Carlito Regular (metric-compatible with Calibri)
+ * by scripts/generate-semibold-font.py.
+ */
+@font-face {
+    font-family: 'Carlito Semi';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url('/fonts/carlito-semibold.woff2') format('woff2');
+}
+
+@utility font-semibold {
+    font-family: 'Carlito Semi', var(--font-sans);
+    font-weight: var(--font-weight-normal);
+}
+
+@utility font-bold {
+    font-family: 'Carlito Semi', var(--font-sans);
+    font-weight: var(--font-weight-normal);
+}
+
+@layer base {
+    /* Headings: semibold face and balanced line wraps to prevent awkward wraps */
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: 'Carlito Semi', var(--font-sans);
+        font-weight: var(--font-weight-normal);
+        text-wrap: balance;
+    }
+
+    /* Paragraphs and list items: pretty wrapping to eliminate orphaned single words */
+    p,
+    li,
+    blockquote {
+        text-wrap: pretty;
+    }
+
+    html {
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        line-height: 1.6;
+        background: var(--color-paper);
+        color: var(--color-ink);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-accent-soft);
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+
+    a,
+    button {
+        transition:
+            color 0.15s ease,
+            background-color 0.15s ease,
+            border-color 0.15s ease;
+    }
+
+    ::selection {
+        background-color: rgb(141 182 226 / 0.28);
+        color: inherit;
+    }
+}
+
+/* Accessible hidden class (WCAG 2.1 compliant) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Keyboard-focused skip link style */
+.sr-only:focus,
+.focus\:not-sr-only:focus {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    z-index: 100;
+    background-color: var(--color-ink);
+    color: #ffffff;
+    border-radius: 0.375rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    outline: 2px solid var(--color-accent-soft);
+    outline-offset: 2px;
+}
+
+/* Quiet dash list markers with a hanging indent */
+.list-dash > li {
+    position: relative;
+    padding-left: 1.25rem;
+}
+.list-dash > li::before {
+    content: '-';
+    position: absolute;
+    left: 0;
+    color: var(--color-dim);
+}
+
+/* Marks the skill a link from an entry just jumped to */
+.skill:target {
+    border-left: 2px solid var(--color-accent);
+    padding-left: 0.75rem;
+}
+
+/* Rendering performance optimization for long lists */
+.content-visibility-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 350px;
+}
+
+/* Browser Accessibility Mode: High Contrast Preference */
+@media (prefers-contrast: more) {
+    :root {
+        --color-faint: #1e293b;
+        --color-dim: #334155;
+        --color-line: #94a3b8;
+        --color-accent: #1e40af;
+        --color-accent-deep: #172554;
+    }
+
+    :focus-visible {
+        outline: 3px solid #000000;
+        outline-offset: 3px;
+    }
+
+    .list-dash > li::before {
+        color: #000000;
+        font-weight: bold;
+    }
+}
+
+/* Browser Accessibility Mode: Windows High Contrast / Forced Colors */
+@media (forced-colors: active) {
+    :focus-visible {
+        outline: 2px solid Highlight;
+        outline-offset: 2px;
+    }
+
+    .list-dash > li::before {
+        color: CanvasText;
+    }
+
+    .skill:target {
+        border-left: 2px solid Highlight;
+    }
+}
+
+/* Browser Accessibility Mode: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

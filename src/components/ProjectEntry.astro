@@ -1,0 +1,83 @@
+---
+/**
+ * src/components/ProjectEntry.astro
+ * Project Entry Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 18 July, 2026
+ * Last Update: 24 August, 2026
+ *
+ * Renders a single project entry for the home page list, ordered by:
+ * Title, Place and Time, Skills, then One-liner summary.
+ *
+ * File Structure:
+ * - Props: project payload
+ * - Template: Entry layout with accessible links
+ *
+ * Where this file is used within the repository:
+ * - Used in src/components/Projects.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Rendered as child component of Projects section
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import SkillLinks from './SkillLinks.astro';
+import { getCourseHref, getProjectSkills, getProjectSlug } from '../data/resume';
+import type { Project } from '../data/types';
+
+interface Props {
+    project: Project;
+}
+
+const { project } = Astro.props;
+const relatedSkills = getProjectSkills(project);
+const courseHref = getCourseHref(project.course);
+---
+
+<article class="project-entry">
+    <header>
+        <h3 class="text-lg sm:text-xl font-semibold font-serif text-ink leading-snug">
+            <a
+                href={`/projects/${getProjectSlug(project)}`}
+                class="hover:text-accent hover:underline underline-offset-4"
+            >
+                {project.title}
+            </a>
+        </h3>
+
+        <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-faint mt-1">
+            <span>{project.duration}</span>
+            {
+                project.course && (
+                    <>
+                        <span class="text-dim">·</span>
+                        {courseHref ? (
+                            <a
+                                href={courseHref}
+                                class="hover:text-accent hover:underline underline-offset-4"
+                                aria-label={`View coursework details for ${project.course}`}
+                            >
+                                {project.course}
+                            </a>
+                        ) : (
+                            <span>{project.course}</span>
+                        )}
+                    </>
+                )
+            }
+        </p>
+    </header>
+
+    <SkillLinks skills={relatedSkills} class="mt-2" />
+
+    {
+        project.Summary && (
+            <p class="text-faint leading-relaxed text-sm sm:text-base mt-2">{project.Summary}</p>
+        )
+    }
+</article>

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+public/resume/
+public/assets/
+public/vendor/
+resume-data.json
+.agents/
+.gemini/
+.claude/
+.copilot/
+.cursor/

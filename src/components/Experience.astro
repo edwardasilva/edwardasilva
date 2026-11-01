@@ -1,0 +1,100 @@
+---
+/**
+ * src/components/Experience.astro
+ * Experience Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 24 August, 2026
+ *
+ * Displays professional work experience as a stacked list using Summary text
+ * on site list surfaces, with skills linked into the page's skills index.
+ *
+ * File Structure:
+ * - Data Filtering: Functions to filter and sort experience entries
+ * - List Rendering: Component to display experience entries with accessible markup
+ *
+ * Where this file is used within the repository:
+ * - Rendered on home page in src/pages/index.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Rendered as part of index page template
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+// Work experience list - only shows entries visible on the website.
+import Section from './Section.astro';
+import SkillLinks from './SkillLinks.astro';
+import {
+    getExperienceHighlights,
+    getExperienceSkills,
+    getExperienceSlug,
+    getPublicExperiences,
+    resume,
+} from '../data/resume';
+
+const experience = getPublicExperiences(resume);
+---
+
+<Section id="experience" title="Experience">
+    <div class="space-y-10">
+        {
+            experience.map((job) => {
+                const experienceHref = `/experiences/${getExperienceSlug(job)}`;
+                const summary = job.Summary ?? getExperienceHighlights(job)[0];
+                const relatedSkills = getExperienceSkills(job);
+                return (
+                    <article class="experience-entry">
+                        <header class="mb-3">
+                            <h3 class="text-lg sm:text-xl font-semibold font-serif text-ink leading-snug">
+                                <a
+                                    href={experienceHref}
+                                    class="hover:text-accent hover:underline underline-offset-4"
+                                >
+                                    {job.title}
+                                </a>
+                            </h3>
+
+                            <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-faint mt-1">
+                                {job.companyUrl ? (
+                                    <a
+                                        href={job.companyUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="font-medium text-ink hover:text-accent hover:underline underline-offset-4"
+                                        aria-label={`${job.company} website (opens in a new tab)`}
+                                    >
+                                        {job.company}
+                                        <span class="sr-only"> (opens in a new tab)</span>
+                                    </a>
+                                ) : (
+                                    <span class="font-medium text-ink">{job.company}</span>
+                                )}
+                                {job.location && (
+                                    <>
+                                        <span class="text-dim">·</span>
+                                        <span>{job.location}</span>
+                                    </>
+                                )}
+                                <span class="text-dim">·</span>
+                                <span>{job.duration}</span>
+                            </p>
+                        </header>
+
+                        <SkillLinks skills={relatedSkills} class="mt-2" />
+
+                        {summary && (
+                            <p class="text-faint leading-relaxed text-sm sm:text-base mt-2">
+                                {summary}
+                            </p>
+                        )}
+                    </article>
+                );
+            })
+        }
+    </div>
+</Section>

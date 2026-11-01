@@ -1,0 +1,56 @@
+---
+/**
+ * src/components/Section.astro
+ * Section Container Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 24 August, 2026
+ *
+ * Reusable section container that provides consistent width, spacing, semantic ARIA
+ * landmark regions, and a stacked heading so every section shares the same left edge.
+ *
+ * File Structure:
+ * - Props: Configuration for section ID, title, and content
+ * - Template: Semantic section markup with standardized styling and ARIA attributes
+ *
+ * Where this file is used within the repository:
+ * - Used in src/components/Education.astro, src/components/Experience.astro, src/components/Projects.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Container component for sections on index page
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+interface Props {
+    id?: string;
+    title: string;
+    class?: string;
+}
+
+const { id, title, class: className } = Astro.props;
+const headingId = id ? `${id}-heading` : undefined;
+---
+
+<section
+    id={id}
+    role="region"
+    aria-labelledby={headingId}
+    class:list={['py-12 sm:py-16 border-b border-line last:border-0', className]}
+>
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <h2
+            id={headingId}
+            class="text-xl sm:text-2xl font-semibold font-serif text-ink tracking-tight"
+        >
+            {title}
+        </h2>
+        <div class="mt-6 sm:mt-8">
+            <slot />
+        </div>
+    </div>
+</section>

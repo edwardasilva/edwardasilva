@@ -1,0 +1,82 @@
+---
+/**
+ * src/components/Education.astro
+ * Education Section Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 14 April, 2026
+ * Last Update: 25 August, 2026
+ *
+ * Displays a concise home-page education summary with degree details, accessible
+ * links, and a reference to the full education page.
+ *
+ * File Structure:
+ * - Imports and derived data
+ * - Education summary template with accessible attributes
+ *
+ * Where this file is used within the repository:
+ * - Rendered on home page in src/pages/index.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Rendered as part of index page template
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import Section from './Section.astro';
+import { getPrimaryEducation } from '../data/resume';
+
+const primaryEducation = getPrimaryEducation();
+---
+
+<Section id="education" title="Education">
+    {
+        primaryEducation ? (
+            <article class="education-entry">
+                <header class="mb-3">
+                    <h3 class="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-lg sm:text-xl font-semibold font-serif text-ink leading-snug">
+                        <a
+                            href="/education"
+                            class="hover:text-accent hover:underline underline-offset-4"
+                        >
+                            {primaryEducation.degree}
+                        </a>
+                        {primaryEducation.minor && (
+                            <span class="flex items-center gap-x-3 text-sm font-sans font-normal text-faint">
+                                <span class="text-dim">·</span>
+                                {primaryEducation.minor}
+                            </span>
+                        )}
+                    </h3>
+                    <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-faint mt-1">
+                        <a
+                            href="https://www.mines.edu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="font-medium text-ink hover:text-accent hover:underline underline-offset-4"
+                            aria-label={`${primaryEducation.institution} website (opens in a new tab)`}
+                        >
+                            {primaryEducation.institution}
+                            <span class="sr-only"> (opens in a new tab)</span>
+                        </a>
+                        <span class="text-dim">·</span>
+                        <span>{primaryEducation.location}</span>
+                        <span class="text-dim">·</span>
+                        <span>Graduated {primaryEducation.graduationDate}</span>
+                    </p>
+                </header>
+
+                {primaryEducation.specialization && (
+                    <p class="text-sm text-faint leading-relaxed mb-3">
+                        Specialization: {primaryEducation.specialization}
+                    </p>
+                )}
+            </article>
+        ) : (
+            <p class="text-sm text-faint">Education details are currently unavailable.</p>
+        )
+    }
+</Section>

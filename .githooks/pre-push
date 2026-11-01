@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+set -e
+
+node scripts/scrub-private.js push
+echo "[pre-push] Syncing RESUME_DATA and TODO_MD to the github-pages environment..."
+npm run --silent sync:resume-secret
+echo "[pre-push] Secret sync complete. Proceeding with push."

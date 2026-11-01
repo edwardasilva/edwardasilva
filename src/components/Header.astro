@@ -1,0 +1,222 @@
+---
+/**
+ * src/components/Header.astro
+ * Header Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 19 October, 2026
+ *
+ * Renders site navigation header with branding, navigation links,
+ * and resume download. Responsive design adapts to mobile and desktop viewports.
+ * About only appears once its content exists in resume-data.json.
+ *
+ * File Structure:
+ * - Navigation Configuration: Menu items and links
+ * - Template: Header layout with responsive navigation
+ *
+ * Where this file is used within the repository:
+ * - Rendered in layout across all pages in src/layouts/Layout.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Rendered as part of Layout.astro across all site pages
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+// Sticky header with mobile hamburger menu
+import { hasAboutContent, resume } from '../data/resume';
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const navItems = [
+    ...(hasAboutContent() ? [{ label: 'About', href: '/about' }] : []),
+    { label: 'Experience', href: '/experiences' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'Education', href: '/education' },
+    { label: 'Skills', href: '/skills' },
+    { label: 'Resume', href: '/resume/viewer', external: true },
+];
+---
+
+<header class="sticky top-0 z-50 bg-paper border-b border-line">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a
+            href="/"
+            class="text-xl sm:text-2xl font-bold font-serif tracking-tight text-ink hover:text-accent transition-colors"
+        >
+            {resume.personal.name}
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav aria-label="Main Navigation" class="hidden md:flex items-center gap-6">
+            {
+                navItems.map((item) => {
+                    const isActive =
+                        currentPath === item.href ||
+                        (item.href !== '/' && currentPath.startsWith(item.href));
+                    return (
+                        <a
+                            href={item.href}
+                            class:list={[
+                                'text-sm font-medium hover:text-ink hover:underline underline-offset-8',
+                                isActive
+                                    ? 'text-ink font-semibold underline underline-offset-8'
+                                    : 'text-faint',
+                            ]}
+                            target={item.external ? '_blank' : '_self'}
+                            rel={item.external ? 'noopener noreferrer' : undefined}
+                            aria-current={isActive ? 'page' : undefined}
+                        >
+                            {item.label}
+                            {item.external && <span class="sr-only"> (opens in a new tab)</span>}
+                        </a>
+                    );
+                })
+            }
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button
+            class="md:hidden p-2.5 -mr-2 rounded hover:bg-wash transition-colors cursor-pointer"
+            aria-label="Toggle navigation menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            id="mobile-menu-btn"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="menu-icon transition-transform duration-200"
+                aria-hidden="true"
+            >
+                <line x1="4" x2="20" y1="12" y2="12"></line>
+                <line x1="4" x2="20" y1="6" y2="6"></line>
+                <line x1="4" x2="20" y1="18" y2="18"></line>
+            </svg>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="close-icon hidden transition-transform duration-200"
+                aria-hidden="true"
+            >
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Mobile Navigation Panel -->
+    <nav
+        id="mobile-menu"
+        aria-label="Mobile Navigation"
+        class="md:hidden overflow-hidden transition-all duration-300 ease-out"
+        style="max-height: 0; opacity: 0;"
+    >
+        <div class="px-4 sm:px-6 pb-4 pt-2 space-y-1 border-t border-line bg-paper">
+            {
+                navItems.map((item) => {
+                    const isActive =
+                        currentPath === item.href ||
+                        (item.href !== '/' && currentPath.startsWith(item.href));
+                    return (
+                        <a
+                            href={item.href}
+                            class:list={[
+                                'mobile-nav-item block px-4 py-3 text-base font-medium rounded',
+                                isActive
+                                    ? 'text-ink bg-wash font-semibold'
+                                    : 'text-faint hover:text-ink hover:bg-wash',
+                            ]}
+                            target={item.external ? '_blank' : '_self'}
+                            rel={item.external ? 'noopener noreferrer' : undefined}
+                            aria-current={isActive ? 'page' : undefined}
+                        >
+                            {item.label}
+                            {item.external && <span class="sr-only"> (opens in a new tab)</span>}
+                        </a>
+                    );
+                })
+            }
+        </div>
+    </nav>
+</header>
+
+<script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = menuBtn?.querySelector('.menu-icon');
+    const closeIcon = menuBtn?.querySelector('.close-icon');
+
+    let isOpen = false;
+
+    /**
+     * @brief Toggles the mobile navigation menu open or closed
+     * @return {void} No return value
+     * @details Updates menu panel visibility, icon state, and aria-expanded for accessibility.
+     */
+    function toggleMenu() {
+        isOpen = !isOpen;
+
+        if (mobileMenu && menuIcon && closeIcon && menuBtn) {
+            if (isOpen) {
+                mobileMenu.style.maxHeight = `${mobileMenu.scrollHeight}px`;
+                mobileMenu.style.opacity = '1';
+                menuIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+                menuBtn.setAttribute('aria-expanded', 'true');
+            } else {
+                mobileMenu.style.maxHeight = '0';
+                mobileMenu.style.opacity = '0';
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+                menuBtn.setAttribute('aria-expanded', 'false');
+            }
+        }
+    }
+
+    menuBtn?.addEventListener('click', toggleMenu);
+
+    // Keyboard support: Escape closes mobile menu
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && isOpen) {
+            toggleMenu();
+            menuBtn?.focus();
+        }
+    });
+
+    // Close menu when clicking a link
+    const mobileLinks = mobileMenu?.querySelectorAll('a');
+    mobileLinks?.forEach((link) => {
+        link.addEventListener('click', () => {
+            if (isOpen && !link.getAttribute('target')) {
+                toggleMenu();
+            }
+        });
+    });
+
+    // Close menu on resize to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768 && isOpen) {
+            toggleMenu();
+        }
+    });
+</script>

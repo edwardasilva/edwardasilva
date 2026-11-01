@@ -1,0 +1,125 @@
+---
+/**
+ * src/pages/resume/viewer.astro
+ * Resume Viewer Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 19 October, 2026
+ * Last Update: 19 October, 2026
+ *
+ * Site page that draws the resume PDF in the content area.
+ * The header and footer stay on the page. This browser's built-in PDF view
+ * loads the file and then leaves the page blank, so the document is drawn here.
+ *
+ * File Structure:
+ * - PDF URL from resume data
+ * - Page template inside the shared layout
+ * - Client script that paints the PDF
+ *
+ * Where this file is used within the repository:
+ * - Public route /resume/viewer, linked from the header and home page
+ *
+ * Usage:
+ * $ `npm run dev` : Serves the viewer at http://localhost:4321/resume/viewer
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getResumePdfUrl, resume } from '../../data/resume';
+
+const pdfUrl = getResumePdfUrl();
+---
+
+<Layout
+    title={`Resume | ${resume.personal.name}`}
+    description={`Resume for ${resume.personal.name}`}
+>
+    <Header />
+    <main
+        id="main-content"
+        tabindex="-1"
+        class="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 lg:px-8"
+    >
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <h1 class="font-serif text-3xl text-ink sm:text-4xl">Resume</h1>
+            <a
+                href={pdfUrl}
+                download="Edward_Silva_Resume.pdf"
+                class="inline-flex items-center justify-center gap-2 rounded-md bg-ink px-4 py-2.5 text-sm font-semibold text-white hover:bg-ink-soft"
+            >
+                Download PDF
+            </a>
+        </div>
+
+        <p id="resume-status" class="mb-4 text-sm text-faint">Loading resume...</p>
+        <div id="resume-pages" data-pdf-url={pdfUrl} class="space-y-4"></div>
+    </main>
+    <Footer />
+</Layout>
+
+<script is:inline type="module">
+    import { getDocument, GlobalWorkerOptions } from '/vendor/pdf.min.mjs';
+
+    const status = document.getElementById('resume-status');
+    const host = document.getElementById('resume-pages');
+    const pdfUrl = host?.dataset.pdfUrl;
+
+    GlobalWorkerOptions.workerSrc = '/vendor/pdf.worker.min.mjs';
+
+    /**
+     * @brief Draws each page of the resume PDF into the page
+     * @return {Promise<void>} Resolves when every page has been painted
+     * @details Scales each page to the content column and the screen pixel ratio.
+     */
+    async function renderResume() {
+        if (!host || !pdfUrl || !status) {
+            return;
+        }
+
+        const pdf = await getDocument({ url: pdfUrl }).promise;
+        const cssWidth = host.clientWidth;
+
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+            const page = await pdf.getPage(pageNumber);
+            const base = page.getViewport({ scale: 1 });
+            const scale = (cssWidth / base.width) * Math.min(window.devicePixelRatio || 1, 2);
+            const viewport = page.getViewport({ scale });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            canvas.style.width = '100%';
+            canvas.style.height = 'auto';
+            canvas.className = 'w-full rounded-lg border border-line bg-white';
+            canvas.setAttribute('role', 'img');
+            canvas.setAttribute('aria-label', `Resume page ${pageNumber} of ${pdf.numPages}`);
+
+            if (!context) {
+                throw new Error('Canvas is not available');
+            }
+
+            host.append(canvas);
+            await page.render({ canvasContext: context, viewport, canvas }).promise;
+        }
+
+        status.hidden = true;
+    }
+
+    renderResume().catch((error) => {
+        if (!status) {
+            return;
+        }
+
+        status.textContent =
+            error instanceof Error
+                ? error.message
+                : 'The resume could not be drawn. Use Download PDF.';
+    });
+</script>

@@ -1,0 +1,242 @@
+---
+/**
+ * src/layouts/Layout.astro
+ * Layout Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 01 November, 2026
+ *
+ * Defines the shared HTML structure, metadata, canonical links,
+ * JSON-LD structured data, font preloads, and accessibility skip links.
+ *
+ * File Structure:
+ * - Imports and Props
+ * - Canonical, OpenGraph, and breadcrumb URL composition
+ * - HTML document layout with structured data and slot rendering
+ *
+ * Where this file is used within the repository:
+ * - All pages under src/pages/
+ *
+ * Usage:
+ * $ `npm run dev` : Renders base HTML layout for Astro page routes
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import '../styles/global.css';
+import faviconUrl from '../styles/favicon.svg?url';
+import { getProfileHighlightText, resume } from '../data/resume';
+
+interface Props {
+    title?: string;
+    description?: string;
+    ogImage?: string;
+    jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const {
+    title = `${resume.personal.name} | Portfolio`,
+    description = getProfileHighlightText(resume.about),
+    ogImage,
+    jsonLd,
+} = Astro.props;
+
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://edwardasilva.com';
+const canonicalURL = new URL(Astro.url.pathname, siteUrl);
+const socialImageURL = new URL(ogImage || '/favicon.svg', siteUrl);
+
+const pathname = Astro.url.pathname.replace(/\/$/, '');
+
+// Construct hierarchical breadcrumb items for search rich snippets
+const pathSegments = pathname.split('/').filter(Boolean);
+const breadcrumbItems = [
+    {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: `${siteUrl}/`,
+    },
+];
+
+let accumulatedPath = '';
+pathSegments.forEach((segment, index) => {
+    accumulatedPath += `/${segment}`;
+    const formattedName = segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
+    breadcrumbItems.push({
+        '@type': 'ListItem',
+        position: index + 2,
+        name: formattedName,
+        item: `${siteUrl}${accumulatedPath}`,
+    });
+});
+
+const isHomePage = pathname === '';
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content={description} />
+        <meta name="author" content={resume.personal.name} />
+        <meta
+            name="keywords"
+            content="Edward Silva, Embedded Software Engineer, Digital Signal Processing, DSP, C++, C, Python, FPGA, RTOS, Firmware, SpaceX, Colorado School of Mines, Electrical Engineering"
+        />
+        <meta name="theme-color" content="#f3f5f7" />
+        <meta name="color-scheme" content="light" />
+        <meta
+            name="robots"
+            content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+        />
+
+        <!-- Performance: Font preload for zero layout shift (CLS) -->
+        <link
+            rel="preload"
+            href="/fonts/carlito-semibold.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin="anonymous"
+        />
+
+        <!-- Authorship & Discovery Links -->
+        <link rel="author" href={resume.personal.website} />
+        <link rel="canonical" href={canonicalURL} />
+
+        <!-- Open Graph / Social Sharing Previews -->
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content={isHomePage ? 'profile' : 'website'} />
+        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:image" content={socialImageURL} />
+        <meta property="og:image:alt" content={title} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:site_name" content={`${resume.personal.name} Portfolio`} />
+        <meta property="profile:first_name" content="Edward" />
+        <meta property="profile:last_name" content="Silva" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={socialImageURL} />
+        <meta name="twitter:image:alt" content={title} />
+
+        <!-- Schema.org Profile & Knowledge Graph JSON-LD -->
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': isHomePage ? 'ProfilePage' : 'WebPage',
+                '@id': canonicalURL.toString(),
+                url: canonicalURL.toString(),
+                name: title,
+                description: description,
+                mainEntity: {
+                    '@type': 'Person',
+                    '@id': `${siteUrl}/#person`,
+                    name: resume.personal.name,
+                    givenName: 'Edward',
+                    familyName: 'Silva',
+                    url: resume.personal.website,
+                    image: socialImageURL.toString(),
+                    email: `mailto:${resume.personal.email}`,
+                    jobTitle: 'Embedded Software Engineer',
+                    worksFor: {
+                        '@type': 'Organization',
+                        name: 'SpaceX',
+                        sameAs: 'https://www.spacex.com',
+                    },
+                    alumniOf: {
+                        '@type': 'CollegeOrUniversity',
+                        name: 'Colorado School of Mines',
+                        sameAs: 'https://en.wikipedia.org/wiki/Colorado_School_of_Mines',
+                    },
+                    hasOccupation: {
+                        '@type': 'Occupation',
+                        name: 'Embedded Software Engineer',
+                        description:
+                            'Embedded software development, digital signal processing, flight software, and real-time systems.',
+                        skills: 'C, C++, Python, Embedded Systems, DSP, RTOS, Linux, FPGA, Git',
+                    },
+                    knowsAbout: [
+                        'Embedded Systems',
+                        'Digital Signal Processing (DSP)',
+                        'C',
+                        'C++',
+                        'Python',
+                        'RTOS',
+                        'Linux',
+                        'FPGA',
+                        'Firmware Engineering',
+                        'Real-Time Systems',
+                        'Microcontrollers',
+                    ],
+                    description: getProfileHighlightText(resume.about),
+                    sameAs: [
+                        resume.personal.linkedin,
+                        resume.personal.github,
+                        resume.personal.website,
+                    ],
+                },
+            })}
+        />
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                '@id': `${siteUrl}/#website`,
+                name: `${resume.personal.name} Portfolio`,
+                url: resume.personal.website,
+            })}
+        />
+        {
+            breadcrumbItems.length > 1 && (
+                <script
+                    type="application/ld+json"
+                    set:html={JSON.stringify({
+                        '@context': 'https://schema.org',
+                        '@type': 'BreadcrumbList',
+                        itemListElement: breadcrumbItems,
+                    })}
+                />
+            )
+        }
+        {
+            jsonLd && (
+                <script
+                    type="application/ld+json"
+                    set:html={JSON.stringify(
+                        Array.isArray(jsonLd)
+                            ? jsonLd
+                            : { '@context': 'https://schema.org', ...jsonLd }
+                    )}
+                />
+            )
+        }
+
+        <!-- Favicons -->
+        <link rel="icon" href={faviconUrl} sizes="any" type="image/svg+xml" />
+        <link rel="shortcut icon" href={faviconUrl} type="image/svg+xml" />
+        <link rel="apple-touch-icon" href={faviconUrl} />
+        <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+    </head>
+    <body class="bg-paper text-ink font-sans antialiased flex flex-col min-h-screen">
+        <!-- Accessibility Skip Links (Keyboard / Screen Reader) -->
+        <a href="#main-content" class="sr-only focus:not-sr-only"> Skip to main content </a>
+
+        <slot />
+    </body>
+</html>
