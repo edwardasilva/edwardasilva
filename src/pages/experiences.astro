@@ -99,8 +99,12 @@ const experiencesJsonLd = {
                                             {experience.company}
                                         </span>
                                     )}
-                                    <span class="text-dim">·</span>
-                                    <span>{experience.location}</span>
+                                    {experience.location && (
+                                        <>
+                                            <span class="text-dim">·</span>
+                                            <span>{experience.location}</span>
+                                        </>
+                                    )}
                                     <span class="text-dim">·</span>
                                     <span>{experience.duration}</span>
                                 </p>

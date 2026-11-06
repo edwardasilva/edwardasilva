@@ -47,7 +47,16 @@ const {
 
 const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://edwardasilva.com';
 const canonicalURL = new URL(Astro.url.pathname, siteUrl);
-const socialImageURL = new URL(ogImage || '/favicon.svg', siteUrl);
+// Only detail pages have a generated card. The favicon is inlined at build time, so there is no
+// /favicon.svg to fall back on; other pages simply carry no image tags.
+const socialImageURL = ogImage ? new URL(ogImage, siteUrl) : undefined;
+
+/**
+ * @brief Serializes JSON-LD for a script element in the page head
+ * @param data Structured data object
+ * @return JSON text with < escaped, so no string in the data can close the script element
+ */
+const toJsonLd = (data: unknown): string => JSON.stringify(data).replace(/</g, '\\u003c');
 
 const pathname = Astro.url.pathname.replace(/\/$/, '');
 
@@ -113,27 +122,39 @@ const isHomePage = pathname === '';
         <meta property="og:description" content={description} />
         <meta property="og:type" content={isHomePage ? 'profile' : 'website'} />
         <meta property="og:url" content={canonicalURL} />
-        <meta property="og:image" content={socialImageURL} />
-        <meta property="og:image:alt" content={title} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/png" />
+        {
+            socialImageURL && (
+                <>
+                    <meta property="og:image" content={socialImageURL} />
+                    <meta property="og:image:alt" content={title} />
+                    <meta property="og:image:width" content="1200" />
+                    <meta property="og:image:height" content="630" />
+                    <meta property="og:image:type" content="image/png" />
+                </>
+            )
+        }
         <meta property="og:locale" content="en_US" />
         <meta property="og:site_name" content={`${resume.personal.name} Portfolio`} />
         <meta property="profile:first_name" content="Edward" />
         <meta property="profile:last_name" content="Silva" />
 
         <!-- Twitter Card -->
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content={socialImageURL ? 'summary_large_image' : 'summary'} />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={socialImageURL} />
-        <meta name="twitter:image:alt" content={title} />
+        {
+            socialImageURL && (
+                <>
+                    <meta name="twitter:image" content={socialImageURL} />
+                    <meta name="twitter:image:alt" content={title} />
+                </>
+            )
+        }
 
         <!-- Schema.org Profile & Knowledge Graph JSON-LD -->
         <script
             type="application/ld+json"
-            set:html={JSON.stringify({
+            set:html={toJsonLd({
                 '@context': 'https://schema.org',
                 '@type': isHomePage ? 'ProfilePage' : 'WebPage',
                 '@id': canonicalURL.toString(),
@@ -147,7 +168,7 @@ const isHomePage = pathname === '';
                     givenName: 'Edward',
                     familyName: 'Silva',
                     url: resume.personal.website,
-                    image: socialImageURL.toString(),
+                    ...(socialImageURL ? { image: socialImageURL.toString() } : {}),
                     email: `mailto:${resume.personal.email}`,
                     jobTitle: 'Embedded Software Engineer',
                     worksFor: {
@@ -191,7 +212,7 @@ const isHomePage = pathname === '';
         />
         <script
             type="application/ld+json"
-            set:html={JSON.stringify({
+            set:html={toJsonLd({
                 '@context': 'https://schema.org',
                 '@type': 'WebSite',
                 '@id': `${siteUrl}/#website`,
@@ -203,7 +224,7 @@ const isHomePage = pathname === '';
             breadcrumbItems.length > 1 && (
                 <script
                     type="application/ld+json"
-                    set:html={JSON.stringify({
+                    set:html={toJsonLd({
                         '@context': 'https://schema.org',
                         '@type': 'BreadcrumbList',
                         itemListElement: breadcrumbItems,
@@ -215,7 +236,7 @@ const isHomePage = pathname === '';
             jsonLd && (
                 <script
                     type="application/ld+json"
-                    set:html={JSON.stringify(
+                    set:html={toJsonLd(
                         Array.isArray(jsonLd)
                             ? jsonLd
                             : { '@context': 'https://schema.org', ...jsonLd }

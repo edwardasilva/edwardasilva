@@ -113,13 +113,10 @@ const pdfUrl = getResumePdfUrl();
     }
 
     renderResume().catch((error) => {
-        if (!status) {
-            return;
-        }
+        console.error(error);
 
-        status.textContent =
-            error instanceof Error
-                ? error.message
-                : 'The resume could not be drawn. Use Download PDF.';
+        if (status) {
+            status.textContent = 'The resume could not be drawn. Use Download PDF.';
+        }
     });
 </script>
