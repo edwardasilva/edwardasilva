@@ -19,7 +19,6 @@
  *
  * Usage:
  * $ `npm run sync:resume-secret` : Syncs resume-data.json and TODO.md to the github-pages environment
- * $ `npm run sync:resume-secret:env` : Same environment sync, with the scope set explicitly
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
  * NOTICE: This file contains personal biographical data.

@@ -60,7 +60,7 @@ const slug = getExperienceSlug(experience);
 const highlights = getExperienceHighlights(experience);
 const relatedSkills = getExperienceSkills(experience);
 const proof = experience.proof ?? [];
-const ogImageUrl = `/og/${slug}.png`;
+const ogImageUrl = `/og/experiences/${slug}.png`;
 
 const experienceJsonLd = {
     '@type': 'Occupation',
@@ -106,8 +106,14 @@ const experienceJsonLd = {
                         <span class="font-medium">{experience.company}</span>
                     )
                 }
-                <span aria-hidden="true" class="h-3 w-px bg-line"></span>
-                <span>{experience.location}</span>
+                {
+                    experience.location && (
+                        <>
+                            <span aria-hidden="true" class="h-3 w-px bg-line" />
+                            <span>{experience.location}</span>
+                        </>
+                    )
+                }
                 <span aria-hidden="true" class="h-3 w-px bg-line"></span>
                 <span>{experience.duration}</span>
             </p>

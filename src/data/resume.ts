@@ -479,9 +479,8 @@ export const resume: ResumeData = {
 // Rank lookup for the skill order in resume-data.json: the curated TopSkills run first in the
 // order they are written, then ResumeSkills in stored order.
 const SKILL_RANKS = new Map(
-    [...resume.TopSkills, ...(resume.ResumeSkills || resume.OtherSkills || [])].map(
-        (name, index) => [name.toLowerCase(), index]
-    )
+    // ResumeSkills already falls back to OtherSkills above, and is always an array
+    [...resume.TopSkills, ...resume.ResumeSkills].map((name, index) => [name.toLowerCase(), index])
 );
 
 /**

@@ -61,7 +61,7 @@ const highlights = getProjectHighlights(project);
 const relatedSkills = getProjectSkills(project);
 const proof = project.proof ?? [];
 const courseHref = getCourseHref(project.course);
-const ogImageUrl = `/og/${slug}.png`;
+const ogImageUrl = `/og/projects/${slug}.png`;
 
 const projectJsonLd = {
     '@type': project.github ? 'SoftwareSourceCode' : 'CreativeWork',

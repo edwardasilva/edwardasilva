@@ -1,5 +1,5 @@
 /**
- * src/pages/og/[slug].png.ts
+ * src/pages/og/[kind]/[slug].png.ts
  * Open Graph Image Route
  *
  * Author: Edward Silva
@@ -14,10 +14,10 @@
  * - API route image rendering
  *
  * Where this file is used within the repository:
- * - Dynamic OG image endpoint /og/[slug].png
+ * - Dynamic OG image endpoint /og/projects/[slug].png and /og/experiences/[slug].png
  *
  * Usage:
- * $ `npm run build` : Built statically by Astro during build to output /og/[slug].png preview images
+ * $ `npm run build` : Built statically by Astro during build to output /og/[kind]/[slug].png preview images
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
  * NOTICE: This file contains personal biographical data.
@@ -25,7 +25,6 @@
  * may not be reproduced, distributed, or modified without permission.
  */
 
-import { html } from 'satori-html';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import fs from 'fs/promises';
@@ -35,7 +34,7 @@ import {
     getProjectSlug,
     getExperienceSlug,
     getPublicExperiences,
-} from '../../data/resume';
+} from '../../../data/resume';
 import type { APIRoute } from 'astro';
 
 /**
@@ -49,7 +48,7 @@ export async function getStaticPaths() {
 
     const paths = [
         ...projects.map((project) => ({
-            params: { slug: getProjectSlug(project) },
+            params: { kind: 'projects', slug: getProjectSlug(project) },
             props: {
                 type: 'Project',
                 title: project.title,
@@ -57,7 +56,7 @@ export async function getStaticPaths() {
             },
         })),
         ...experiences.map((exp) => ({
-            params: { slug: getExperienceSlug(exp) },
+            params: { kind: 'experiences', slug: getExperienceSlug(exp) },
             props: { type: 'Experience', title: exp.title, tags: [exp.company, exp.duration] },
         })),
     ];
@@ -111,25 +110,67 @@ export const GET: APIRoute = async ({ props }) => {
 
     const [fontData, boldFontData] = await Promise.all([getFontData(), getBoldFontData()]);
 
-    const markup = html`
-        <div
-            style="display: flex; flex-direction: column; width: 1200px; height: 630px; background-color: #f3f5f7; padding: 60px; justify-content: space-between; font-family: 'Carlito'; border: 30px solid #d8e0ea;"
-        >
-            <div style="display: flex; flex-direction: column;">
-                <p style="font-size: 34px; color: #4c78a8; margin-bottom: 20px;">
-                    Edward Silva - ${type}
-                </p>
-                <h1
-                    style="font-size: 72px; font-weight: 700; color: #1f2937; margin: 0; line-height: 1.1;"
-                >
-                    ${title}
-                </h1>
-            </div>
-            <p style="font-size: 30px; color: #64748b; margin: 0;">${tags.join(', ')}</p>
-        </div>
-    `;
+    // Plain element objects rather than an HTML template: text is passed through as-is, so a title
+    // such as "R&D" renders literally instead of as an escaped entity.
+    const markup = {
+        type: 'div',
+        props: {
+            style: {
+                display: 'flex',
+                flexDirection: 'column',
+                width: '1200px',
+                height: '630px',
+                backgroundColor: '#f3f5f7',
+                padding: '60px',
+                justifyContent: 'space-between',
+                fontFamily: 'Carlito',
+                border: '30px solid #d8e0ea',
+            },
+            children: [
+                {
+                    type: 'div',
+                    props: {
+                        style: { display: 'flex', flexDirection: 'column' },
+                        children: [
+                            {
+                                type: 'p',
+                                props: {
+                                    style: {
+                                        fontSize: '34px',
+                                        color: '#4c78a8',
+                                        marginBottom: '20px',
+                                    },
+                                    children: `Edward Silva - ${type}`,
+                                },
+                            },
+                            {
+                                type: 'h1',
+                                props: {
+                                    style: {
+                                        fontSize: '72px',
+                                        fontWeight: 700,
+                                        color: '#1f2937',
+                                        margin: 0,
+                                        lineHeight: 1.1,
+                                    },
+                                    children: title,
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'p',
+                    props: {
+                        style: { fontSize: '30px', color: '#64748b', margin: 0 },
+                        children: tags.join(', '),
+                    },
+                },
+            ],
+        },
+    };
 
-    const svg = await satori(markup, {
+    const svg = await satori(markup as Parameters<typeof satori>[0], {
         width: 1200,
         height: 630,
         fonts: [

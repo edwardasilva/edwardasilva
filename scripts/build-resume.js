@@ -38,6 +38,7 @@ const OUTPUT_DIR = path.join(ROOT_DIR, 'public', 'resume');
 const GENERATE_SCRIPT = path.join(ROOT_DIR, 'scripts', 'generate-resume.js');
 const ASSET_SOURCE_DIR = path.join(ROOT_DIR, 'src', 'assets');
 const ASSET_OUTPUT_DIR = path.join(ROOT_DIR, 'public', 'assets');
+const TEX_FILE = 'Edward_Silva_Resume.tex';
 
 /**
  * @brief Syncs assets from source to public directory
@@ -66,8 +67,9 @@ function regenerateTexFiles() {
 }
 
 /**
- * @brief Compiles TeX files to PDF using pdflatex
+ * @brief Compiles the generated TeX file to PDF using pdflatex
  * @details Runs pdflatex twice for proper cross-references, then cleans auxiliary files.
+ * Exits non-zero when pdflatex fails, so a stale PDF is never committed as current.
  * Skips PDF compilation entirely when SKIP_RESUME_PDF_BUILD=1.
  */
 function compileResumeToPdf() {
@@ -85,64 +87,40 @@ function compileResumeToPdf() {
         process.exit(1);
     }
 
-    console.log(`Resume Directory: ${OUTPUT_DIR}`);
-    console.log(`Output Directory: ${OUTPUT_DIR}`);
-
-    const ALLOWED_TEX_FILES = new Set(['Edward_Silva_Resume.tex']);
-
-    if (!fs.existsSync(OUTPUT_DIR)) {
-        fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+    if (!fs.existsSync(path.join(OUTPUT_DIR, TEX_FILE))) {
+        console.error(`${TEX_FILE} not found in ${OUTPUT_DIR}. Run without SKIP_RESUME_GENERATE.`);
+        process.exit(1);
     }
 
-    try {
-        const files = fs
-            .readdirSync(OUTPUT_DIR)
-            .filter((f) => f.endsWith('.tex') && ALLOWED_TEX_FILES.has(f));
+    // SOURCE_DATE_EPOCH pins pdflatex's embedded timestamps so the PDF is
+    // byte-identical across rebuilds when the resume content is unchanged.
+    const compileEnv = {
+        ...process.env,
+        SOURCE_DATE_EPOCH: '0',
+        FORCE_SOURCE_DATE: '1',
+    };
 
-        console.log(`Found ${files.length} resume files to compile.`);
-
-        // SOURCE_DATE_EPOCH pins pdflatex's embedded timestamps so the PDF is
-        // byte-identical across rebuilds when the resume content is unchanged.
-        const compileEnv = {
-            ...process.env,
-            SOURCE_DATE_EPOCH: '0',
-            FORCE_SOURCE_DATE: '1',
-        };
-
-        for (const file of files) {
-            for (const pass of [1, 2]) {
-                console.log(`Step ${pass}: Compiling ${file}...`);
-                try {
-                    const cmd = `pdflatex -interaction=nonstopmode "${file}"`;
-                    execSync(cmd, {
-                        stdio: 'inherit',
-                        cwd: OUTPUT_DIR,
-                        env: compileEnv,
-                    });
-                    console.log(`Compiled ${file} successfully.`);
-                } catch {
-                    console.error(
-                        `Failed to compile ${file}. It might have errors or missing dependencies.`
-                    );
-                }
-            }
-        }
-
-        const C_CLEANUP_EXTENSIONS = ['.aux', '.log', '.out', '.toc'];
-        if (fs.existsSync(OUTPUT_DIR)) {
-            const generatedFiles = fs.readdirSync(OUTPUT_DIR);
-            for (const file of generatedFiles) {
-                if (C_CLEANUP_EXTENSIONS.some((ext) => file.endsWith(ext))) {
-                    fs.unlinkSync(path.join(OUTPUT_DIR, file));
-                }
-            }
-        }
-    } catch (err) {
-        if (err.code === 'ENOENT') {
-            console.warn('Resume output directory not found. Skipping resume build.');
-        } else {
-            console.error('Error during resume build:', err);
+    for (const pass of [1, 2]) {
+        console.log(`Step ${pass}: Compiling ${TEX_FILE}...`);
+        try {
+            execSync(`pdflatex -interaction=nonstopmode "${TEX_FILE}"`, {
+                stdio: 'inherit',
+                cwd: OUTPUT_DIR,
+                env: compileEnv,
+            });
+        } catch {
+            // Auxiliary files, including the .log, are left in place so the error can be read.
+            console.error(
+                `Failed to compile ${TEX_FILE}. See the .log next to it in ${OUTPUT_DIR}.`
+            );
             process.exit(1);
+        }
+    }
+    console.log(`Compiled ${TEX_FILE} successfully.`);
+
+    for (const file of fs.readdirSync(OUTPUT_DIR)) {
+        if (['.aux', '.log', '.out', '.toc'].some((ext) => file.endsWith(ext))) {
+            fs.unlinkSync(path.join(OUTPUT_DIR, file));
         }
     }
 }

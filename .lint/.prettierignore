@@ -1,9 +1,10 @@
+# Patterns are resolved relative to this .lint/ folder, so paths with a slash need **/ to match.
 node_modules/
 dist/
 .astro/
-public/resume/
-public/assets/
-public/vendor/
+**/public/resume/
+**/public/assets/
+**/public/vendor/
 resume-data.json
 .agents/
 .gemini/

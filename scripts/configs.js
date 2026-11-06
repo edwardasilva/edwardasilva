@@ -78,64 +78,41 @@ function copyRecursive(src, dest) {
 }
 
 /**
+ * @brief Lists the files and folders this script writes into one AI target folder
+ * @param folder Target folder name relative to root
+ * @return Array of [source, absolute destination] pairs
+ * @details Each assistant reads its own file names; .cursor keeps everything under rules/.
+ */
+function managedCopies(folder) {
+    const targetDir = path.join(root, folder);
+    const rulesNames = {
+        '.claude': ['CLAUDE.md'],
+        '.copilot': ['copilot-instructions.md', 'instructions.md'],
+        '.cursor': ['rules/agents.mdc'],
+    };
+
+    return [
+        ...(rulesNames[folder] ?? ['AGENTS.md']).map((name) => [SOURCE_AGENTS, name]),
+        [SOURCE_RESUME, folder === '.cursor' ? 'rules/resume.mdc' : 'RESUME.md'],
+        [SOURCE_SKILL, folder === '.cursor' ? 'rules/skill.mdc' : 'SKILL.md'],
+        // Standard skills folder format (.agents/skills/resume-review/SKILL.md, .claude/skills/..., etc.)
+        [SOURCE_SKILL, 'skills/resume-review/SKILL.md'],
+        [SOURCE_DOCS, 'docs'],
+    ].map(([source, dest]) => [source, path.join(targetDir, dest)]);
+}
+
+/**
  * @brief Synchronizes configuration files and docs to a single AI target folder
  * @param folder Target folder name relative to root
  * @return void
- * @details Duplicates rules, playbooks, skills, and docs using each AI assistant's native format
+ * @details Replaces only the paths this script manages. Anything else in the folder, such as
+ *          .claude/settings.local.json or .cursor/mcp.json, is left alone.
  */
 function syncAiFolder(folder) {
-    const targetDir = path.join(root, folder);
-
-    // Clean existing folder content for fresh sync
-    if (fs.existsSync(targetDir)) {
-        fs.rmSync(targetDir, { recursive: true, force: true });
-    }
-    fs.mkdirSync(targetDir, { recursive: true });
-
-    // 1. Copy rules file depending on folder convention
-    if (fs.existsSync(SOURCE_AGENTS)) {
-        if (folder === '.claude') {
-            fs.copyFileSync(SOURCE_AGENTS, path.join(targetDir, 'CLAUDE.md'));
-        } else if (folder === '.copilot') {
-            fs.copyFileSync(SOURCE_AGENTS, path.join(targetDir, 'copilot-instructions.md'));
-            fs.copyFileSync(SOURCE_AGENTS, path.join(targetDir, 'instructions.md'));
-        } else if (folder === '.cursor') {
-            const rulesDir = path.join(targetDir, 'rules');
-            fs.mkdirSync(rulesDir, { recursive: true });
-            fs.copyFileSync(SOURCE_AGENTS, path.join(rulesDir, 'agents.mdc'));
-        } else {
-            // .agents, .gemini
-            fs.copyFileSync(SOURCE_AGENTS, path.join(targetDir, 'AGENTS.md'));
-        }
-    }
-
-    // 2. Copy RESUME.md and SKILL.md
-    if (fs.existsSync(SOURCE_RESUME)) {
-        if (folder === '.cursor') {
-            const rulesDir = path.join(targetDir, 'rules');
-            fs.copyFileSync(SOURCE_RESUME, path.join(rulesDir, 'resume.mdc'));
-        } else {
-            fs.copyFileSync(SOURCE_RESUME, path.join(targetDir, 'RESUME.md'));
-        }
-    }
-
-    if (fs.existsSync(SOURCE_SKILL)) {
-        if (folder === '.cursor') {
-            const rulesDir = path.join(targetDir, 'rules');
-            fs.copyFileSync(SOURCE_SKILL, path.join(rulesDir, 'skill.mdc'));
-        } else {
-            fs.copyFileSync(SOURCE_SKILL, path.join(targetDir, 'SKILL.md'));
-        }
-
-        // Standard skills folder format (.agents/skills/resume-review/SKILL.md, .claude/skills/..., etc.)
-        const skillTargetDir = path.join(targetDir, 'skills', 'resume-review');
-        fs.mkdirSync(skillTargetDir, { recursive: true });
-        fs.copyFileSync(SOURCE_SKILL, path.join(skillTargetDir, 'SKILL.md'));
-    }
-
-    // 3. Copy docs directory recursively
-    if (fs.existsSync(SOURCE_DOCS)) {
-        copyRecursive(SOURCE_DOCS, path.join(targetDir, 'docs'));
+    for (const [source, dest] of managedCopies(folder)) {
+        // Drop the previous copy first, so files removed from docs/ disappear from the target too
+        fs.rmSync(dest, { recursive: true, force: true });
+        copyRecursive(source, dest);
     }
 
     console.log(`${GREEN}[SUCCESS]${RESET} ${GREEN}Synced AI configuration to ${folder}/${RESET}`);
