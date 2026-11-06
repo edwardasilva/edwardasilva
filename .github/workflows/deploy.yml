@@ -23,14 +23,12 @@ jobs:
     # The pre-push hook keeps both current, so the build always uses the latest resume data.
     environment: github-pages
     env:
-      # Optional repo-level Variables you can set in GitHub:
-      # - ASTRO_SITE (e.g. https://edwardasilva.com)
-      # - ASTRO_BASE (e.g. /, or /your-repo for project pages)
+      # Optional repo-level Variable: ASTRO_SITE (e.g. https://edwardasilva.com)
       ASTRO_SITE: ${{ vars.ASTRO_SITE || 'https://edwardasilva.com' }}
-      ASTRO_BASE: ${{ vars.ASTRO_BASE }}
     steps:
+      # Actions are pinned to a commit, so a moved tag can't change what runs here. Update on purpose.
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       # resume-data.json and TODO.md stay off GitHub.
       # Both are environment secrets on "github-pages":
@@ -78,47 +76,13 @@ jobs:
           PY
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: npm
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Configure Astro base path (auto for GitHub Pages)
-        shell: bash
-        run: |
-          if [[ -n "${ASTRO_BASE:-}" ]]; then
-            echo "Using ASTRO_BASE from repo variables: ${ASTRO_BASE}"
-            exit 0
-          fi
-
-          # Custom domains should be served from root.
-          if [[ -n "${ASTRO_SITE:-}" ]]; then
-            SITE_HOST="$(python3 - <<'PY'
-          import os
-          from urllib.parse import urlparse
-
-          site = os.environ.get("ASTRO_SITE", "")
-          host = urlparse(site).hostname or ""
-          print(host)
-          PY
-            )"
-
-            if [[ -n "$SITE_HOST" && "$SITE_HOST" != *.github.io ]]; then
-              echo "ASTRO_BASE=/" >> "$GITHUB_ENV"
-              echo "Using ASTRO_BASE=/ for custom domain host: $SITE_HOST"
-              exit 0
-            fi
-          fi
-
-          REPO="${GITHUB_REPOSITORY#*/}"
-          if [[ "$REPO" == *.github.io ]]; then
-            echo "ASTRO_BASE=/" >> "$GITHUB_ENV"
-          else
-            echo "ASTRO_BASE=/$REPO" >> "$GITHUB_ENV"
-          fi
 
       - name: Build
         env:
@@ -129,7 +93,7 @@ jobs:
       # Uploads dist/ straight from this job, so the built site is never stored as a workflow artifact.
       # Needs two repository secrets: CLOUDFLARE_API_TOKEN (Account > Cloudflare Pages > Edit) and CLOUDFLARE_ACCOUNT_ID.
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3.15.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

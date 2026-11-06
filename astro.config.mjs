@@ -6,7 +6,7 @@
  * Creation Date: 16 March, 2026
  * Last Update: 13 October, 2026
  *
- * Defines site, base path, output mode, redirects, and integrations for the Astro portfolio.
+ * Defines site, output mode, redirects, and integrations for the Astro portfolio.
  * Copies the PDF.js viewer scripts into public/vendor when the dev server or build starts.
  *
  * File Structure:
@@ -68,12 +68,8 @@ function pdfViewerAssets() {
 }
 
 export default defineConfig({
-    // Set ASTRO_SITE and ASTRO_BASE env vars for GitHub Pages if needed
+    // The site is served from the domain root; every internal link is root-relative.
     site: process.env.ASTRO_SITE || 'https://edwardasilva.com',
-    base:
-        process.env.ASTRO_BASE && process.env.ASTRO_BASE !== '/'
-            ? process.env.ASTRO_BASE
-            : undefined,
     output: 'static',
     // Legacy routes that used to exist as standalone redirect pages
     redirects: {
