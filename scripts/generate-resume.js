@@ -55,7 +55,7 @@ function loadResumeData() {
  * @brief Writes content to a file
  * @param filepath The destination file path
  * @param content The content to write
- * @details Logs success or error; does not exit on failure
+ * @details Exits on failure, so a stale TeX file is never compiled in its place
  */
 function writeFile(filepath, content) {
     try {
@@ -63,30 +63,51 @@ function writeFile(filepath, content) {
         console.log(`Generated: ${filepath}`);
     } catch (error) {
         console.error(`Error writing ${filepath}:`, error.message);
+        process.exit(1);
     }
 }
+
+// Characters LaTeX treats specially, and what to print for each one. Replaced in a single
+// pass, so the braces that one replacement emits are never escaped again by another.
+const LATEX_SPECIAL = {
+    '\\': '\\textbackslash{}',
+    $: '\\$',
+    '#': '\\#',
+    '%': '\\%',
+    '&': '\\&',
+    _: '\\_',
+    '^': '\\textasciicircum{}',
+    '{': '\\{',
+    '}': '\\}',
+    '~': '\\textasciitilde{}',
+    '<': '\\textless{}',
+    '>': '\\textgreater{}',
+};
+const LATEX_SPECIAL_PATTERN = /[\\$#%&_^{}~<>]/g;
+// Control characters, which LaTeX rejects as input. Tabs and line breaks are kept.
+// eslint-disable-next-line no-control-regex
+const CONTROL_CHARS = /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g;
 
 /**
  * @brief Escapes special characters for LaTeX
  * @param text The text to escape
  * @return Escaped LaTeX string
- * @details Handles backslash, dollar, braces, underscore, and other special chars
+ * @details Drops control characters, then replaces each special character in one pass
  */
 function escapeLatex(text) {
     if (typeof text !== 'string') return text;
     return text
-        .replace(/\\/g, '\\textbackslash{}')
-        .replace(/\$/g, '\\$')
-        .replace(/#/g, '\\#')
-        .replace(/%/g, '\\%')
-        .replace(/&/g, '\\&')
-        .replace(/_/g, '\\_')
-        .replace(/\^/g, '\\^{}')
-        .replace(/{/g, '\\{')
-        .replace(/}/g, '\\}')
-        .replace(/~/g, '\\textasciitilde{}')
-        .replace(/</g, '\\textless{}')
-        .replace(/>/g, '\\textgreater{}');
+        .replace(CONTROL_CHARS, '')
+        .replace(LATEX_SPECIAL_PATTERN, (char) => LATEX_SPECIAL[char]);
+}
+
+/**
+ * @brief Escapes a URL for the first argument of \href
+ * @param url The link target
+ * @return URL with %, #, &, _ and ~ backslash-escaped, which \href turns back into plain characters
+ */
+function escapeUrl(url) {
+    return String(url).replace(/[%#&_~]/g, (char) => `\\${char}`);
 }
 
 /**
@@ -133,6 +154,26 @@ function formatDateRange(text) {
 }
 
 // ============ Filter Functions ============
+
+/**
+ * @brief Checks whether an education entry is a master's degree
+ * @param entry Education entry
+ * @return True for degrees starting with MS or naming a master's
+ */
+function isMasters(entry) {
+    const degree = String(entry?.degree ?? '').toLowerCase();
+    return degree.startsWith('ms') || degree.includes('master');
+}
+
+/**
+ * @brief Checks whether an education entry is a bachelor's degree
+ * @param entry Education entry
+ * @return True for degrees starting with BS or naming a bachelor's
+ */
+function isBachelors(entry) {
+    const degree = String(entry?.degree ?? '').toLowerCase();
+    return degree.startsWith('bs') || degree.includes('bachelor');
+}
 
 const filters = {
     filterResumeExperience(experiences) {
@@ -203,33 +244,14 @@ const filters = {
 
         return mode === 'Resume' ? resumeText : highlightsText;
     },
-    getEducationContext(education) {
-        if (!Array.isArray(education) || education.length === 0) return { primaryEducation: null };
-        const isMasters = (e) => {
-            const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
-            return deg.startsWith('ms') || deg.includes('master');
-        };
-        const allEntries = education.filter((e) => e && e.Visibility === 'All');
-        const mastersPrimary = allEntries.find(isMasters);
-        const primary = mastersPrimary || allEntries[0] || education[0];
-        return { primaryEducation: primary };
-    },
-    filterWebsiteEducation(education) {
-        return education.filter((edu) => edu.Visibility === 'All' || edu.Visibility === 'Site');
-    },
-    filterWebsiteSkills(skills) {
-        const filtered = {};
-        Object.entries(skills).forEach(([category, skillList]) => {
-            filtered[category] = skillList.filter(
-                (skill) => skill.Visibility === 'All' || skill.Visibility === 'Site'
-            );
-        });
-        return filtered;
-    },
-    filterWebsiteCertifications(certifications) {
-        return certifications.filter(
-            (cert) => cert.Visibility === 'All' || cert.Visibility === 'Site' || !cert.Visibility
-        );
+    /**
+     * @brief Picks the education entry used for PDF keywords and as the fallback display entry
+     * @return First resume-visible master's entry, else the first resume-visible entry, else the first entry
+     */
+    getPrimaryEducation(education) {
+        if (!Array.isArray(education) || education.length === 0) return null;
+        const resumeEntries = education.filter((e) => e && e.Visibility === 'All');
+        return resumeEntries.find(isMasters) || resumeEntries[0] || education[0];
     },
 };
 
@@ -253,19 +275,11 @@ function estimateWrappedLines(text, charsPerLine) {
  * @brief Calculates optimal spacing profile to fit content to target page count
  * @param data The resume data object
  * @param includeProfile Whether to include profile section
- * @param includeMS Whether to include Masters degree
- * @param shouldStackMsBs Whether MS/BS are stacked
  * @param targetPages Target number of pages for output
  * @return Spacing profile object with calculated values
  * @details Uses binary search to find minimum tightening for ATS-friendly formatting
  */
-function calculateSpacingProfile({
-    data,
-    includeProfile,
-    includeMS,
-    shouldStackMsBs,
-    targetPages = 1,
-}) {
+function calculateSpacingProfile({ data, includeProfile, targetPages = 1 }) {
     const CHARS_PER_LINE = 95; // ~chars per line at 11pt with 0.5" margins
     const BASELINE_PTS = 12.6; // baseline skip for 11pt
     const PAGE_TEXTHEIGHT_PTS = 10 * 72; // 10in usable height
@@ -329,8 +343,8 @@ function calculateSpacingProfile({
 
         // Education section.
         lines += 1 + sp.sectionBeforeBs + sp.sectionAfterBs;
-        // Education body is typically 2 lines for BS; stacked MS/BS can be 3.
-        lines += includeMS ? (shouldStackMsBs ? 3 : 2) : 2;
+        // Education body: institution line plus degree line.
+        lines += 2;
         if (courseworkLine) {
             // “Relevant Coursework:” + list can wrap.
             lines += estimateWrappedLines(`Relevant Coursework: ${courseworkLine}`, CHARS_PER_LINE);
@@ -394,9 +408,15 @@ function calculateSpacingProfile({
         return lines;
     }
 
-    const looseEstimate = estimateTotalLines(loose);
+    /**
+     * @brief Builds the spacing profile a fraction t of the way from loose to tight
+     * @param t Tightness between 0 (loose) and 1 (tight)
+     * @return Spacing profile values
+     */
+    const interpolate = (t) =>
+        Object.fromEntries(Object.keys(loose).map((key) => [key, lerp(loose[key], tight[key], t)]));
 
-    let mode = looseEstimate <= CAP_LINES ? 'loose' : 'tighten';
+    const mode = estimateTotalLines(loose) <= CAP_LINES ? 'loose' : 'tighten';
     let t = 0;
 
     if (mode === 'tighten') {
@@ -405,32 +425,13 @@ function calculateSpacingProfile({
         let hiT = 1;
         for (let i = 0; i < 16; i++) {
             const mid = (loT + hiT) / 2;
-            const sp = {
-                sectionBeforeBs: lerp(loose.sectionBeforeBs, tight.sectionBeforeBs, mid),
-                sectionAfterBs: lerp(loose.sectionAfterBs, tight.sectionAfterBs, mid),
-                entryGapPt: lerp(loose.entryGapPt, tight.entryGapPt, mid),
-                itemsepPt: lerp(loose.itemsepPt, tight.itemsepPt, mid),
-                topsepPt: lerp(loose.topsepPt, tight.topsepPt, mid),
-                afterHeaderPt: lerp(loose.afterHeaderPt, tight.afterHeaderPt, mid),
-            };
-            const est = estimateTotalLines(sp);
-            if (est <= CAP_LINES) hiT = mid;
+            if (estimateTotalLines(interpolate(mid)) <= CAP_LINES) hiT = mid;
             else loT = mid;
         }
         t = hiT;
     }
 
-    const raw =
-        mode === 'tighten'
-            ? {
-                  sectionBeforeBs: lerp(loose.sectionBeforeBs, tight.sectionBeforeBs, t),
-                  sectionAfterBs: lerp(loose.sectionAfterBs, tight.sectionAfterBs, t),
-                  entryGapPt: lerp(loose.entryGapPt, tight.entryGapPt, t),
-                  itemsepPt: lerp(loose.itemsepPt, tight.itemsepPt, t),
-                  topsepPt: lerp(loose.topsepPt, tight.topsepPt, t),
-                  afterHeaderPt: lerp(loose.afterHeaderPt, tight.afterHeaderPt, t),
-              }
-            : { ...loose };
+    const raw = interpolate(t);
 
     const spFinal = {
         sectionBeforeBs: raw.sectionBeforeBs,
@@ -474,32 +475,19 @@ function calculateSpacingProfile({
  * @brief Generates LaTeX resume from resume data
  * @param data The resume data object
  * @param options Configuration options for generation
- * @param options.includeMS Whether to include Masters degree
  * @param options.includeProfile Whether to include profile summary
  * @param options.targetPages Target page count for auto-spacing
  * @return Complete LaTeX document string ready for compilation
- * @details Builds sections: experience, projects, education, skills with ATS-friendly formatting
+ * @details Builds sections: experience, projects, education, skills with ATS-friendly formatting.
+ *          Master's entries stay off the resume; the bachelor's entry is shown when present.
  */
 function generateResume(data, options = {}) {
-    const { includeMS = false, includeProfile = false, targetPages = 1 } = options;
+    const { includeProfile = false, targetPages = 1 } = options;
 
-    const allExperiences = data.experiences || [];
-    const resumeExperience = filters.filterResumeExperience(allExperiences);
+    const resumeExperience = filters.filterResumeExperience(data.experiences || []);
     const resumeProjects = filters.filterResumeProjects(data.projects);
-
-    let resumeEducations = filters.filterResumeEducation(data.education);
-    if (includeMS) {
-        const msEducations = data.education.filter((edu) => {
-            const degree = (edu.degree || '').toLowerCase();
-            return (
-                (degree.startsWith('ms') || degree.includes('master')) &&
-                !resumeEducations.includes(edu)
-            );
-        });
-        resumeEducations = [...resumeEducations, ...msEducations];
-    }
-
-    const { primaryEducation } = filters.getEducationContext(data.education) || {};
+    const resumeEducations = filters.filterResumeEducation(data.education);
+    const primaryEducation = filters.getPrimaryEducation(data.education);
 
     const shouldShowProfile = includeProfile && filters.shouldShowResumeProfile(data.about);
     const profileText = shouldShowProfile ? filters.getProfileText(data.about, 'Resume') : null;
@@ -529,126 +517,70 @@ function generateResume(data, options = {}) {
 
     const courseworkLine = courseNames.length > 0 ? courseNames.join(', ') : '';
 
-    const isMasters = (e) => {
-        const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
-        return deg.startsWith('ms') || deg.includes('master');
-    };
-    const isBachelors = (e) => {
-        const deg = (e && e.degree ? String(e.degree) : '').toLowerCase();
-        return deg.startsWith('bs') || deg.includes('bachelor');
-    };
-
-    const filteredEducations = includeMS
-        ? resumeEducations
-        : resumeEducations.filter((e) => !isMasters(e));
-
-    const mastersEntry = includeMS ? resumeEducations.find(isMasters) || null : null;
+    const filteredEducations = resumeEducations.filter((e) => !isMasters(e));
     const bachelorsEntry = filteredEducations.find(isBachelors) || null;
-    const shouldStackMsBs = Boolean(mastersEntry);
 
-    const otherEducations = filteredEducations.filter(
-        (e) => e && e !== mastersEntry && e !== bachelorsEntry && e !== primaryEducation
-    );
-    const otherEducationBlocks = shouldStackMsBs
-        ? ''
-        : otherEducations
-              .map((ed) => {
-                  const lines = [];
-                  const inst = ed.institution || '';
-                  const expected = ed.graduationDate ? `${escapeLatex(ed.graduationDate)}` : '';
-                  lines.push(
-                      `\\textbf{${escapeLatex(inst)}} ${expected ? `\\hfill ${expected}` : ''} \\\\`
-                  );
-                  const degreeLine = `\\textbf{${escapeLatex(ed.degree || '')}}${ed.specialization ? ` -- ${escapeLatex(ed.specialization)}` : ''}`;
-                  lines.push(`${degreeLine} \\\\`);
-                  if (ed.minor || ed.minorSpecialization) {
-                      lines.push(
-                          `${escapeLatex(ed.minor || '')}${ed.minorSpecialization ? ` -- ${escapeLatex(ed.minorSpecialization)}` : ''} \\\\`
-                      );
-                  }
-                  return lines.join('\n');
-              })
-              .join('\n\n');
+    const otherEducationBlocks = filteredEducations
+        .filter((e) => e && e !== bachelorsEntry && e !== primaryEducation)
+        .map((ed) => {
+            const lines = [];
+            const inst = ed.institution || '';
+            const expected = ed.graduationDate ? `${escapeLatex(ed.graduationDate)}` : '';
+            lines.push(
+                `\\textbf{${escapeLatex(inst)}} ${expected ? `\\hfill ${expected}` : ''} \\\\`
+            );
+            const degreeLine = `\\textbf{${escapeLatex(ed.degree || '')}}${ed.specialization ? ` -- ${escapeLatex(ed.specialization)}` : ''}`;
+            lines.push(`${degreeLine} \\\\`);
+            if (ed.minor || ed.minorSpecialization) {
+                lines.push(
+                    `${escapeLatex(ed.minor || '')}${ed.minorSpecialization ? ` -- ${escapeLatex(ed.minorSpecialization)}` : ''} \\\\`
+                );
+            }
+            return lines.join('\n');
+        })
+        .join('\n\n');
 
     /**
      * @brief Builds the LaTeX body for the Education section
      * @return Education section body as LaTeX lines
-     * @details Handles stacked MS/BS output when both entries are present.
      */
     const buildEducationBody = () => {
-        if (shouldStackMsBs && mastersEntry) {
-            const inst =
-                mastersEntry.institution ||
-                (bachelorsEntry
-                    ? bachelorsEntry.institution
-                    : primaryEducation
-                      ? primaryEducation.institution
-                      : '');
-            const lines = [];
-            lines.push(`\\textbf{${escapeLatex(inst)}} \\\\`);
-            const msExpected = mastersEntry.graduationDate
-                ? ` \\hfill ${escapeLatex(mastersEntry.graduationDate)}`
-                : '';
+        const eduToDisplay = bachelorsEntry || primaryEducation;
+        if (!eduToDisplay) return '';
+
+        const lines = [
+            `\\textbf{${escapeLatex(eduToDisplay.institution)}} ${eduToDisplay.graduationDate ? `\\hfill ${escapeLatex(eduToDisplay.graduationDate)}` : ''} \\\\`,
+        ];
+        if (eduToDisplay.degree && eduToDisplay.minor) {
             lines.push(
-                `\\textbf{${escapeLatex(mastersEntry.degree)}}${mastersEntry.specialization ? ` -- ${escapeLatex(mastersEntry.specialization)}` : ''}${msExpected} \\\\`
+                `\\textbf{${escapeLatex(eduToDisplay.degree)}}, ${escapeLatex(eduToDisplay.minor)} \\\\`
             );
-            if (bachelorsEntry) {
-                const bsExpected = bachelorsEntry.graduationDate
-                    ? ` \\hfill ${escapeLatex(bachelorsEntry.graduationDate)}`
-                    : '';
-                const bsDegreeNorm = String(bachelorsEntry.degree || '')
-                    .replace(/\b[in]\b\s*/i, ' ')
-                    .replace(/\s{2,}/g, ' ')
-                    .trim();
-                const bsMinorPart = bachelorsEntry.minor
-                    ? `, ${escapeLatex(bachelorsEntry.minor)}`
-                    : '';
+        } else {
+            lines.push(
+                `\\textbf{${escapeLatex(eduToDisplay.degree)}}${eduToDisplay.specialization ? ` -- ${escapeLatex(eduToDisplay.specialization)}` : ''} \\\\`
+            );
+            if (eduToDisplay.minor || eduToDisplay.minorSpecialization) {
                 lines.push(
-                    `\\textbf{${escapeLatex(bsDegreeNorm)}}${bsMinorPart}${bsExpected} \\\\`
+                    `${escapeLatex(eduToDisplay.minor || '')}${eduToDisplay.minorSpecialization ? ` -- ${escapeLatex(eduToDisplay.minorSpecialization)}` : ''} \\\\`
                 );
             }
-            return lines.join('\n');
         }
-
-        const eduToDisplay = !includeMS && bachelorsEntry ? bachelorsEntry : primaryEducation;
-
-        if (eduToDisplay) {
-            const lines = [];
-            lines.push(
-                `\\textbf{${escapeLatex(eduToDisplay.institution)}} ${eduToDisplay.graduationDate ? `\\hfill ${escapeLatex(eduToDisplay.graduationDate)}` : ''} \\\\`
-            );
-            if (eduToDisplay.degree && eduToDisplay.minor) {
-                lines.push(
-                    `\\textbf{${escapeLatex(eduToDisplay.degree)}}, ${escapeLatex(eduToDisplay.minor)} \\\\`
-                );
-            } else {
-                lines.push(
-                    `\\textbf{${escapeLatex(eduToDisplay.degree)}}${eduToDisplay.specialization ? ` -- ${escapeLatex(eduToDisplay.specialization)}` : ''} \\\\`
-                );
-                if (eduToDisplay.minor || eduToDisplay.minorSpecialization) {
-                    lines.push(
-                        `${escapeLatex(eduToDisplay.minor || '')}${eduToDisplay.minorSpecialization ? ` -- ${escapeLatex(eduToDisplay.minorSpecialization)}` : ''} \\\\`
-                    );
-                }
-            }
-            return lines.join('\n');
-        }
-        return '';
+        return lines.join('\n');
     };
     const educationBody = buildEducationBody();
 
     const contactParts = [];
     if (data.personal.linkedin)
         contactParts.push(
-            `\\href{${data.personal.linkedin}}{${escapeLatex(data.personal.linkedin.replace('https://www.', '').replace('http://www.', ''))}}`
+            `\\href{${escapeUrl(data.personal.linkedin)}}{${escapeLatex(data.personal.linkedin.replace('https://www.', '').replace('http://www.', ''))}}`
         );
     if (data.personal.website)
         contactParts.push(
-            `\\href{${data.personal.website}}{${escapeLatex(data.personal.website.replace('https://', '').replace('http://', ''))}}`
+            `\\href{${escapeUrl(data.personal.website)}}{${escapeLatex(data.personal.website.replace('https://', '').replace('http://', ''))}}`
         );
     if (data.personal.email)
         contactParts.push(
-            `\\href{mailto:${data.personal.email}}{${escapeLatex(data.personal.email)}}`
+            `\\href{mailto:${escapeUrl(data.personal.email)}}{${escapeLatex(data.personal.email)}}`
         );
     if (data.personal.phone) {
         const telHref = data.personal.phone.replace(/\D/g, '');
@@ -673,8 +605,6 @@ function generateResume(data, options = {}) {
     const SP = calculateSpacingProfile({
         data,
         includeProfile: Boolean(profileText),
-        includeMS: Boolean(includeMS),
-        shouldStackMsBs,
         targetPages,
     });
 
@@ -695,7 +625,7 @@ function generateResume(data, options = {}) {
     const projectsSection = resumeProjects
         .map(
             (project) =>
-                `\\textbf{${escapeLatex(project.title)}}, ${(project.skills || []).map((skill) => escapeLatex(skill)).join(', ')} ${project.github ? `\\href{${project.github}}{Github}` : ''} \\hfill ${escapeLatex(formatDateRange(project.duration))}
+                `\\textbf{${escapeLatex(project.title)}}, ${(project.skills || []).map((skill) => escapeLatex(skill)).join(', ')} ${project.github ? `\\href{${escapeUrl(project.github)}}{Github}` : ''} \\hfill ${escapeLatex(formatDateRange(project.duration))}
 \\begin{itemize}
 ${project.Resume.map((item) => `  \\item ${escapeLatex(item)}`).join('\n')}
 \\end{itemize}`
@@ -814,18 +744,14 @@ const data = loadResumeData();
 const outRoot = path.resolve(__dirname, '..');
 const texDir = path.join(outRoot, 'public', 'resume');
 
-try {
-    fs.mkdirSync(texDir, { recursive: true });
-} catch {
-    // Directory already exists
-}
+fs.mkdirSync(texDir, { recursive: true });
 
 console.log('Generating resume variations...\n');
 
 const C_RESUME_VARIATIONS = [
     {
         name: 'Edward_Silva_Resume.tex',
-        options: { includeMS: false, includeProfile: true, targetPages: 1 },
+        options: { includeProfile: true, targetPages: 1 },
     },
 ];
 
