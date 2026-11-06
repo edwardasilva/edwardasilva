@@ -2,7 +2,7 @@
   "name": "edwardasilva.com",
   "license": "MIT",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "prettier": "./.lint/.prettierrc.json",
   "scripts": {
     "dev": "astro dev",
