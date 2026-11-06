@@ -8,19 +8,20 @@
  *
  * Keeps local AI instructions and resume source off GitHub. .gitignore already
  * skips them on add. This script removes them from the index during commit and
- * rejects a push whose tip still contains them. Working tree files are not deleted.
+ * rejects a push whose tip, or any commit not yet on a remote, contains them.
+ * Working tree files are not deleted.
  *
  * File Structure:
  * - Path rules: basenames and directory names that stay local
  * - isPrivatePath: classifies a repo-relative path
  * - scrubStaged: drops matching paths from the index
- * - scrubPush: reads pre-push stdin and blocks a push that still contains them
+ * - scrubPush: reads pre-push stdin and blocks a push whose new commits contain them
  *
  * Used by .githooks/pre-commit and .githooks/pre-push, installed via scripts/setup-git-hooks.js.
  *
  * Usage:
  * $ `npm run scrub:private` : Remove private paths from the index. Files stay on disk.
- * $ `node scripts/scrub-private.js push` : Block if pre-push stdin points at a tip that contains them.
+ * $ `node scripts/scrub-private.js push` : Block if a pushed tip or new commit contains them.
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
  * NOTICE: This file contains personal biographical data.
@@ -119,9 +120,12 @@ function scrubStaged() {
 }
 
 /**
- * @brief Blocks a push when any updated tip still contains a private path
+ * @brief Blocks a push when any updated tip, or any commit it adds, contains a private path
  * @return void
  * @details Reads the pre-push hook's stdin. Each line is local ref, local sha, remote ref, remote sha.
+ *          A file added in one commit and deleted in a later one would still reach GitHub in
+ *          history, so every commit not already on a remote is checked, not just the tip.
+ *          Deletions are ignored, so a push that removes a leaked file is allowed.
  */
 function scrubPush() {
     const stdin = process.stdin.isTTY ? '' : fs.readFileSync(0, 'utf8');
@@ -149,7 +153,20 @@ function scrubPush() {
             .split('\n')
             .filter(Boolean);
 
-        names.filter(isPrivatePath).forEach((name) => {
+        // Paths added or changed by commits that no remote-tracking branch has yet
+        const historyNames = runGit([
+            'log',
+            '--format=',
+            '--name-only',
+            '--diff-filter=d',
+            localSha,
+            '--not',
+            '--remotes',
+        ])
+            .split('\n')
+            .filter(Boolean);
+
+        [...names, ...historyNames].filter(isPrivatePath).forEach((name) => {
             blocked.add(name);
         });
     });
@@ -158,12 +175,12 @@ function scrubPush() {
         return;
     }
 
-    console.error('[SCRUB] Push blocked. These private paths are in the commit being pushed:');
+    console.error('[SCRUB] Push blocked. These private paths are in the commits being pushed:');
     blocked.forEach((name) => {
         console.error(`[SCRUB] ${name}`);
     });
     console.error(
-        '[SCRUB] The files are still on disk. Remove them from the commit, then push again.'
+        '[SCRUB] The files are still on disk. Rewrite the unpushed commits without them, then push again.'
     );
     process.exit(1);
 }

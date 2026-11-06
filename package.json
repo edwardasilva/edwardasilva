@@ -18,9 +18,9 @@
     "scrub:private": "node scripts/scrub-private.js staged",
     "prepare": "npm run hooks:install",
     "sync:resume-secret": "node scripts/sync-resume-secret.js --scope=env --env=github-pages",
-    "sync:resume-secret:env": "node scripts/sync-resume-secret.js --scope=env --env=github-pages",
     "sync:ai-configs": "node scripts/configs.js",
     "all": "node scripts/run-all.js",
+    "all:dev": "node scripts/run-all.js --dev",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -32,7 +32,6 @@
     "astro": "^7.3.5",
     "pdfjs-dist": "6.4.299",
     "satori": "^0.26.0",
-    "satori-html": "^0.3.2",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {

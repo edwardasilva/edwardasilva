@@ -17,11 +17,11 @@
  * - Main Execution Flow: Sequential step execution
  *
  * Used in: Local development workflow
- * Invoked via: npm run all [--dev] or node scripts/run-all.js [--dev]
+ * Invoked via: npm run all, npm run all:dev, or node scripts/run-all.js [--dev]
  *
  * Usage:
  * $ `npm run all` : Runs AI config sync, code clean/format, and project build sequentially
- * $ `npm run all --dev` : Runs full pipeline (sync, clean, build) and launches the local dev server
+ * $ `npm run all:dev` : Runs full pipeline (sync, clean, build) and launches the local dev server
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
  * NOTICE: This file contains personal biographical data.
@@ -72,43 +72,11 @@ function runStep(command, args = []) {
 /**
  * @brief Checks if --dev flag was passed to the process
  * @return boolean True if --dev flag is present
- * @details Scans process.argv and npm_config_argv environment variables
+ * @details npm 7+ keeps `npm run all --dev` to itself (it is a deprecated npm option), so the flag
+ *          has to come through argv: `npm run all:dev` or `npm run all -- --dev`.
  */
 function hasDevFlag() {
-    const isDevInArgv = process.argv.some(
-        (arg) =>
-            arg === '--dev' ||
-            arg === '-dev' ||
-            arg === 'dev' ||
-            arg === '--include=dev' ||
-            arg.includes('dev')
-    );
-
-    const isDevInNpmEnv =
-        process.env.npm_config_dev === 'true' ||
-        process.env.npm_config_dev === '' ||
-        process.env.npm_config_include === 'dev' ||
-        Object.keys(process.env).some(
-            (key) =>
-                key.toLowerCase().includes('config') &&
-                key.toLowerCase().includes('dev') &&
-                process.env[key] !== 'false'
-        );
-
-    let isDevInNpmArgv = false;
-    const npmConfigArgv = process.env.npm_config_argv;
-    if (npmConfigArgv) {
-        try {
-            const parsed = JSON.parse(npmConfigArgv);
-            if (parsed.original && parsed.original.some((arg) => arg.includes('dev'))) {
-                isDevInNpmArgv = true;
-            }
-        } catch {
-            // Ignore parse errors
-        }
-    }
-
-    return isDevInArgv || isDevInNpmEnv || isDevInNpmArgv;
+    return process.argv.slice(2).includes('--dev');
 }
 
 /**
