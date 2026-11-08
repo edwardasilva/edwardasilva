@@ -4,10 +4,10 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
- * Finds a figure under src/figures by name, so pages and frontmatter can refer to figures by name
- * and still get hashed URLs and real dimensions.
+ * Finds a figure under src/figures by name, so pages and resume-data.json can name a figure and
+ * still get hashed URLs and real dimensions.
  *
  * File Structure:
  * - C_FIGURES: every figure, keyed by name

@@ -4,18 +4,21 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
- * Reads the project pages from the docs collection, in reading order, for the index and home page,
- * and gives other pages each project's sentence-case title.
+ * Pairs each project in resume-data.json with its write-up in the docs collection. The kind, the
+ * order, and the card fields come from resume-data.json. The write-up holds the page title,
+ * description, and body.
  *
  * File Structure:
- * - getProjectPages: pages grouped by kind
  * - getPageSlug: the last part of a page id
+ * - getPageProject: the resume-data.json entry behind a write-up
+ * - getProjectPages: listed pages grouped by kind, in order
  * - getDisplayTitle: a project's page title, in sentence case, for links
  *
  * Where this file is used within the repository:
- * - src/pages/index.astro and src/pages/projects.astro
+ * - src/pages/index.astro, src/pages/projects.astro, src/pages/llms.txt.ts, src/pages/og/
+ * - src/components/Head.astro, PageTitle.astro, ProjectFacts.astro, and ProjectCards.astro
  *
  * Usage:
  * $ `npm run dev` : Runs at build time
@@ -27,8 +30,16 @@
  */
 
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { getProjectSlug, resume, visibleProjects } from './resume';
+import type { Project, ProjectKind } from './types';
 
-export type ProjectPage = CollectionEntry<'docs'>;
+export interface ProjectPage {
+    entry: CollectionEntry<'docs'>;
+    project: Project;
+    href: string;
+}
+
+const C_DOCS = await getCollection('docs');
 
 /**
  * @brief Gets the slug a project page shares with resume-data.json
@@ -40,23 +51,55 @@ export function getPageSlug(id: string): string {
 }
 
 /**
+ * @brief Finds the resume-data.json entry behind a project write-up
+ * @param id Page id
+ * @return The project, or undefined when the page is not a project write-up
+ * @details Every write-up under projects/ needs an entry, so its facts have one source.
+ */
+export function getPageProject(id: string): Project | undefined {
+    if (!id.startsWith('projects/')) {
+        return undefined;
+    }
+
+    const slug = getPageSlug(id);
+    const project = resume.projects.find((candidate) => getProjectSlug(candidate) === slug);
+
+    if (!project) {
+        throw new Error(`[ERROR] ${id} is published, but resume-data.json has no project ${slug}`);
+    }
+
+    if (project.Visibility === 'Hide') {
+        throw new Error(`[ERROR] ${id} is published, but resume-data.json marks ${slug} as Hide`);
+    }
+
+    return project;
+}
+
+/**
  * @brief Lists the project pages of one kind
  * @param kind Project or personal project
- * @return Pages sorted by their order field
+ * @return Visible projects of that kind, sorted by their order field, each with its write-up
  */
-export async function getProjectPages(
-    kind: NonNullable<ProjectPage['data']['kind']>
-): Promise<ProjectPage[]> {
-    const pages = await getCollection('docs', (entry) => entry.data.kind === kind);
+export async function getProjectPages(kind: ProjectKind): Promise<ProjectPage[]> {
+    return visibleProjects
+        .filter((project) => project.kind === kind)
+        .sort((left, right) => (left.order ?? 0) - (right.order ?? 0))
+        .map((project) => {
+            const slug = getProjectSlug(project);
+            const entry = C_DOCS.find((candidate) => candidate.id === `projects/${slug}`);
 
-    return pages.sort((left, right) => (left.data.order ?? 0) - (right.data.order ?? 0));
+            if (!entry) {
+                throw new Error(
+                    `[ERROR] resume-data.json lists ${slug}, but src/content/docs/projects/${slug}.mdx does not exist`
+                );
+            }
+
+            return { entry, project, href: `/projects/${slug}/` };
+        });
 }
 
 const C_PAGE_TITLES = new Map(
-    (await getCollection('docs')).map((entry) => [
-        `/projects/${getPageSlug(entry.id)}`,
-        entry.data.title,
-    ])
+    C_DOCS.map((entry) => [`/projects/${getPageSlug(entry.id)}`, entry.data.title])
 );
 
 /**

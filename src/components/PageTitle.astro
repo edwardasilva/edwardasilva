@@ -29,9 +29,11 @@
 
 import ProjectFacts from './ProjectFacts.astro';
 import RoleFacts from './RoleFacts.astro';
+import { getPageProject } from '../data/projects';
 
 const { entry } = Astro.locals.starlightRoute;
 const splash = entry.data.template === 'splash';
+const project = getPageProject(entry.id);
 ---
 
 {
@@ -41,5 +43,5 @@ const splash = entry.data.template === 'splash';
         </h1>
     )
 }
-{entry.data.kind && <ProjectFacts />}
+{project && <ProjectFacts />}
 {entry.data.role && <RoleFacts slug={entry.data.role} />}

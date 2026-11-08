@@ -8,10 +8,12 @@
  *
  * Defines site, base path, redirects, the Markdown pipeline, and the Starlight integration that
  * supplies search, navigation, table of contents, dark mode, and the sitemap. Copies the PDF.js
- * viewer scripts into public/vendor when the dev server or build starts.
+ * viewer scripts into public/vendor when the dev server or build starts. The site's origin, title,
+ * description, and the sidebar's role and project links come from information/resume-data.json.
  *
  * File Structure:
  * - Imports: Astro integrations and plugins
+ * - Resume data: the site settings and the sidebar links read from resume-data.json
  * - PDF viewer asset copy: the plugin behind /resume/viewer
  * - Dev assets: serves /assets from src/assets in the dev server
  * - Config Export: defineConfig call with environment-aware options
@@ -41,7 +43,20 @@ import remarkMath from 'remark-math';
 import rehypeExternalLinks from './src/plugins/rehype-external-links.js';
 
 const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const C_DEFAULT_SITE = 'https://edwardasilva.com';
+
+/**
+ * @typedef {{ title: string, slug?: string, navLabel?: string, Visibility?: string }} SiteEntry
+ * @typedef {SiteEntry & { kind?: 'project' | 'personal', order?: number }} SiteProject
+ * @typedef {object} SiteData The parts of resume-data.json this file reads
+ * @property {{ name: string, website: string }} personal
+ * @property {{ description: string }} site
+ * @property {SiteEntry[]} experiences
+ * @property {SiteProject[]} projects
+ */
+/** @type {SiteData} */
+const C_RESUME = JSON.parse(
+    fs.readFileSync(path.join(ROOT_DIR, 'information/resume-data.json'), 'utf8')
+);
 /** @type {Record<string, string>} */
 const C_ASSET_TYPES = {
     '.jpg': 'image/jpeg',
@@ -56,6 +71,48 @@ const C_LIGHT_CODE_THEME = JSON.parse(
 const C_DARK_CODE_THEME = JSON.parse(
     fs.readFileSync(path.join(ROOT_DIR, 'src/styles/ec-dark.json'), 'utf8')
 );
+
+/**
+ * @brief Checks whether a resume-data.json entry appears on the site
+ * @param {{ Visibility?: string }} entry Experience or project
+ * @return {boolean} True when Visibility is All or Site
+ */
+function isVisibleOnSite(entry) {
+    return entry.Visibility === 'All' || entry.Visibility === 'Site';
+}
+
+/**
+ * @brief Gets the sidebar label of an entry the site shows
+ * @param {{ title: string, slug?: string, navLabel?: string }} entry Experience or project
+ * @return {string} The entry's navLabel
+ */
+function navLabel(entry) {
+    if (!entry.slug || !entry.navLabel) {
+        throw new Error(
+            `[ERROR] resume-data.json: ${entry.title} is on the site, so it needs a slug and a navLabel`
+        );
+    }
+
+    return entry.navLabel;
+}
+
+/**
+ * @brief Lists the sidebar links to the project pages of one kind
+ * @param {'project' | 'personal'} kind Project or personal project
+ * @return {{ label: string, slug: string }[]} Links in the order resume-data.json gives
+ */
+function projectLinks(kind) {
+    return C_RESUME.projects
+        .filter((project) => isVisibleOnSite(project) && project.kind === kind)
+        .sort((left, right) => (left.order ?? 0) - (right.order ?? 0))
+        .map((project) => ({ label: navLabel(project), slug: `projects/${project.slug}` }));
+}
+
+const C_ROLE_LINKS = C_RESUME.experiences.filter(isVisibleOnSite).map((experience) => ({
+    label: navLabel(experience),
+    link: `/experiences/${experience.slug}/`,
+}));
+const C_DESCRIPTION = C_RESUME.site.description;
 
 /**
  * @brief Copies the PDF.js browser build into public/vendor
@@ -130,7 +187,7 @@ function devAssets() {
 
 export default defineConfig({
     // The site serves from the domain root. ASTRO_SITE overrides the canonical origin if needed.
-    site: process.env.ASTRO_SITE || C_DEFAULT_SITE,
+    site: process.env.ASTRO_SITE || C_RESUME.personal.website,
     output: 'static',
     // Legacy routes that used to exist as standalone pages
     redirects: {
@@ -154,9 +211,8 @@ export default defineConfig({
     },
     integrations: [
         starlight({
-            title: 'Edward Silva',
-            description:
-                'Engineering write-ups by Edward Silva: control, state estimation, and signal processing, with the reports behind them.',
+            title: C_RESUME.personal.name,
+            description: /[.!?]$/.test(C_DESCRIPTION) ? C_DESCRIPTION : `${C_DESCRIPTION}.`,
             credits: false,
             favicon: '/favicon.svg',
             customCss: [
@@ -213,37 +269,21 @@ export default defineConfig({
                 },
             },
             // Every page except the home page is listed here. A group whose first link shares its
-            // label opens with that page. Add /about/ when the page is published.
+            // label opens with that page. The role and project links come from resume-data.json, in
+            // its order, so a Visibility change there updates them. Add /about/ when the page is
+            // published.
             sidebar: [
                 {
                     label: 'Projects',
                     items: [
                         { label: 'Projects', link: '/projects/' },
-                        { label: 'Gantry crane control', slug: 'projects/MCD-project' },
-                        { label: 'Damper state estimation', slug: 'projects/EKF-project' },
-                        { label: 'Pitch tracking', slug: 'projects/dsp-final' },
-                        { label: 'EMBR damper', slug: 'projects/capstone-project' },
-                        { label: 'Maze robot', slug: 'projects/seed-robot' },
-                        { label: 'Ram pump', slug: 'projects/ram-pump' },
-                        {
-                            label: 'Personal projects',
-                            items: [
-                                { label: 'eeprep', slug: 'projects/eeprep' },
-                                { label: 'resume-generator', slug: 'projects/resume-generator' },
-                                { label: 'Solar tracker', slug: 'projects/solar-tracker' },
-                            ],
-                        },
+                        ...projectLinks('project'),
+                        { label: 'Personal projects', items: projectLinks('personal') },
                     ],
                 },
                 {
                     label: 'Experience',
-                    items: [
-                        { label: 'Experience', link: '/experiences/' },
-                        { label: 'SpaceX', link: '/experiences/SpaceX-swe/' },
-                        { label: 'Kratos', link: '/experiences/Kratos-swe/' },
-                        { label: 'Jordan and Skala', link: '/experiences/jse-coop/' },
-                        { label: 'ePower lab', link: '/experiences/ugrad-research/' },
-                    ],
+                    items: [{ label: 'Experience', link: '/experiences/' }, ...C_ROLE_LINKS],
                 },
                 {
                     label: 'Education',

@@ -5,9 +5,9 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
- * A row of project cards. A card shows a figure from the work when the page names one.
+ * A row of project cards. A card shows a figure from the work when resume-data.json names one.
  *
  * File Structure:
  * - Props: project pages
@@ -26,7 +26,8 @@
  */
 
 import { getFigure } from '../data/figures';
-import { getPageSlug, type ProjectPage } from '../data/projects';
+import type { ProjectPage } from '../data/projects';
+import { asSentence } from '../data/resume';
 
 interface Props {
     pages: ProjectPage[];
@@ -37,26 +38,26 @@ const { pages } = Astro.props;
 
 <ul class="es-cards not-content">
     {
-        pages.map((page) => {
-            const figure = page.data.figure ? getFigure(page.data.figure) : undefined;
+        pages.map(({ entry, project, href }) => {
+            const figure = project.figure ? getFigure(project.figure) : undefined;
 
             return (
                 <li>
-                    <a href={`/projects/${getPageSlug(page.id)}/`}>
+                    <a href={href}>
                         {figure && (
                             <span class="es-card-plate">
                                 <img
                                     src={figure.src}
                                     width={figure.width}
                                     height={figure.height}
-                                    alt={page.data.figureAlt ?? ''}
+                                    alt={project.figureAlt ?? ''}
                                     loading="lazy"
                                     decoding="async"
                                 />
                             </span>
                         )}
-                        <strong>{page.data.title}</strong>
-                        <span class="es-card-dek">{page.data.dek}</span>
+                        <strong>{entry.data.title}</strong>
+                        <span class="es-card-dek">{project.dek && asSentence(project.dek)}</span>
                     </a>
                 </li>
             );

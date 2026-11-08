@@ -4,9 +4,10 @@
  *
  * Author: Edward Silva
  * Creation Date: 06 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
- * Builds the schema.org objects the pages embed as JSON-LD for search results.
+ * Builds the schema.org objects the pages embed as JSON-LD for search results. The person's job,
+ * employer, school, and topics come from resume-data.json.
  *
  * File Structure:
  * - pageSchema: the page and the person it belongs to
@@ -25,9 +26,10 @@
  * may not be reproduced, distributed, or modified without permission.
  */
 
-import { C_DISPLAY_ROLE, resume } from './resume';
+import { asSentence, primaryEducation, resume } from './resume';
 
 const { name, email, website, linkedin, github } = resume.personal;
+const { jobTitle, worksFor, occupation, knowsAbout } = resume.site.person;
 const [C_GIVEN_NAME, ...C_FAMILY_NAMES] = name.split(' ');
 
 /**
@@ -55,30 +57,24 @@ export function pageSchema(
             familyName: C_FAMILY_NAMES.join(' '),
             url: website,
             email: `mailto:${email}`,
-            jobTitle: C_DISPLAY_ROLE,
+            jobTitle,
             worksFor: {
                 '@type': 'Organization',
-                name: 'SpaceX',
-                sameAs: 'https://www.spacex.com',
+                name: worksFor.name,
+                sameAs: worksFor.url,
             },
-            alumniOf: {
+            alumniOf: primaryEducation && {
                 '@type': 'CollegeOrUniversity',
-                name: 'Colorado School of Mines',
-                sameAs: 'https://en.wikipedia.org/wiki/Colorado_School_of_Mines',
+                name: primaryEducation.institution,
+                sameAs: primaryEducation.wikipedia,
             },
             hasOccupation: {
                 '@type': 'Occupation',
-                name: C_DISPLAY_ROLE,
-                description: 'Embedded software development and digital signal processing.',
+                name: jobTitle,
+                description: asSentence(occupation),
                 skills: resume.TopSkills.join(', '),
             },
-            knowsAbout: [
-                'Embedded Systems',
-                'Digital Signal Processing (DSP)',
-                'Control Systems',
-                'State Estimation',
-                ...resume.TopSkills,
-            ],
+            knowsAbout: [...knowsAbout, ...resume.TopSkills],
             description: resume.about.Highlights,
             sameAs: [linkedin, github, website],
         },

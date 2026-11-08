@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
  * Draws the resume PDF in the page with PDF.js, with a direct download link.
  *
@@ -29,7 +29,16 @@ import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
 import { resume } from '../../data/resume';
 
-const { name, resumePdfUrl = '/resume/Edward_Silva_Resume.pdf' } = resume.personal;
+const { name, resumePdfUrl } = resume.personal;
+const generatorUrl = resume.projects.find((project) => project.slug === 'resume-generator')?.github;
+
+if (!resumePdfUrl || !generatorUrl) {
+    throw new Error(
+        '[ERROR] resume-data.json needs personal.resumePdfUrl and the resume-generator github link'
+    );
+}
+
+const pdfName = resumePdfUrl.split('/').at(-1);
 ---
 
 <StarlightPage
@@ -41,11 +50,9 @@ const { name, resumePdfUrl = '/resume/Edward_Silva_Resume.pdf' } = resume.person
     }}
 >
     <p>
-        <a href={resumePdfUrl} download="Edward_Silva_Resume.pdf">Download the PDF</a>. A script
-        builds it from one data file, using the same page-fitting method as{' '}
-        <ExternalLink href="https://github.com/edwardasilva/resume-generator">
-            resume-generator
-        </ExternalLink>.
+        <a href={resumePdfUrl} download={pdfName}>Download the PDF</a>. A script builds it from one
+        data file, using the same page-fitting method as{' '}
+        <ExternalLink href={generatorUrl}> resume-generator </ExternalLink>.
     </p>
 
     <p id="resume-status">Loading resume.</p>

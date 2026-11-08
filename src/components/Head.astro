@@ -30,19 +30,24 @@
 import Default from '@astrojs/starlight/components/Head.astro';
 import serifUrl from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-opsz-normal.woff2?url';
 import JsonLd from './JsonLd.astro';
+import { getPageProject } from '../data/projects';
 import { resume } from '../data/resume';
 import { breadcrumbSchema, pageSchema, websiteSchema } from '../data/structured-data';
 
 const site = Astro.site ?? new URL(resume.personal.website);
 const route = Astro.locals.starlightRoute;
-const { title, description, kind } = route.entry.data;
+const { title, description } = route.entry.data;
 const pathname = Astro.url.pathname.replace(/\/$/, '');
 const isHome = pathname === '';
 const canonicalUrl = new URL(Astro.url.pathname, site).href;
 const pageDescription = description ?? resume.about.Highlights;
 
 // Project pages and the home page have a generated card. Other pages share as a plain link.
-const cardSlug = isHome ? 'home' : kind ? pathname.split('/').at(-1) : undefined;
+const cardSlug = isHome
+    ? 'home'
+    : getPageProject(route.entry.id)?.kind
+      ? pathname.split('/').at(-1)
+      : undefined;
 
 route.head = route.head.filter(
     (tag) =>

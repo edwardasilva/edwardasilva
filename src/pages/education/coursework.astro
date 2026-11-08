@@ -27,14 +27,13 @@
 
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import CourseEntry from '../../components/CourseEntry.astro';
-import { courseCategories } from '../../data/resume';
+import { asSentence, courseCategories, resume } from '../../data/resume';
 ---
 
 <StarlightPage
     frontmatter={{
         title: 'Coursework',
-        description:
-            'Electrical engineering and computer science courses Edward Silva took at Colorado School of Mines.',
+        description: asSentence(resume.site.pages.coursework.description),
         tableOfContents: false,
     }}
 >

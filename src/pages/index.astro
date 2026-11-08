@@ -36,13 +36,13 @@ import { asSentence, resume } from '../data/resume';
 const caseStudies = (await getProjectPages('project')).slice(0, 3);
 const personal = await getProjectPages('personal');
 const { linkedin } = resume.personal;
+const { home } = resume.site.pages;
 ---
 
 <StarlightPage
     frontmatter={{
         title: resume.personal.name,
-        description:
-            'Edward Silva writes embedded software for Starlink at SpaceX. Control, state estimation, and signal processing write-ups, with the reports behind them.',
+        description: asSentence(home.description),
         head: [{ tag: 'title', content: resume.personal.name }],
         template: 'splash',
         pagefind: false,
@@ -54,9 +54,7 @@ const { linkedin } = resume.personal;
     <section class="es-hero">
         <h1 id="_top">{resume.personal.name}</h1>
         <p class="es-lede">
-            I write embedded software for Starlink at SpaceX in Bastrop, Texas. This site has the
-            long versions of my projects: the math, the measured results, who on the team did which
-            part, and where each design fell short. My job history is on{' '}
+            {home.intro && `${asSentence(home.intro)} `}My job history is on{' '}
             <ExternalLink href={linkedin}>LinkedIn</ExternalLink>.
         </p>
     </section>
