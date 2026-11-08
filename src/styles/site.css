@@ -456,9 +456,6 @@ a.external-link .es-ext-last::after {
 .es-role-meta {
     color: var(--es-ink-2);
 }
-.es-roles section {
-    scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
-}
 
 .es-skills {
     display: grid;

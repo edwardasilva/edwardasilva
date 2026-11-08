@@ -95,6 +95,7 @@ function filledList(value: unknown): string[] {
 // Skills the site shows on top of resume-data.json. They stay here because the skills in that file
 // print on the resume PDF. Solar tracker has no entry in that file, so it is linked directly.
 const C_SITE_SKILLS: Record<string, string[]> = {
+    'SpaceX-swe': ['SIMD', 'Jupyter', 'YAML'],
     'Kratos-swe': ['SIMD'],
     'seed-robot': ['Arduino', 'Git'],
     'dsp-final': ['Git'],
@@ -380,12 +381,12 @@ export function getProjectHref(project: Project): string {
 }
 
 /**
- * @brief Gets the link to an experience on the experience page
+ * @brief Gets the link to an experience's page
  * @param experience Experience to link to
- * @return Route path and anchor for the experience
+ * @return Route path for the experience
  */
 export function getExperienceHref(experience: Experience): string {
-    return `/experiences#${getExperienceSlug(experience)}`;
+    return `/experiences/${getExperienceSlug(experience)}`;
 }
 
 /**

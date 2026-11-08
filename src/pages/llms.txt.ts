@@ -29,7 +29,7 @@
 
 import type { APIRoute } from 'astro';
 import { getPageSlug, getProjectPages } from '../data/projects';
-import { resume } from '../data/resume';
+import { getExperienceHref, resume, visibleExperiences } from '../data/resume';
 
 const C_SECTION_PAGES = [
     ['Experience', '/experiences/', 'Current and past engineering roles, and organizations.'],
@@ -88,6 +88,17 @@ export const GET: APIRoute = async ({ site }) => {
         '## Personal projects',
         '',
         ...(await projectLines('personal')),
+        '',
+        '## Experience',
+        '',
+        ...visibleExperiences.map((experience) =>
+            linkLine(
+                `${experience.title}, ${experience.company}`,
+                `${getExperienceHref(experience)}/`,
+                origin,
+                experience.duration
+            )
+        ),
         '',
         '## Pages',
         '',
