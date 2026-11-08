@@ -1,0 +1,165 @@
+---
+/**
+ * src/pages/education.astro
+ * Education Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 07 November, 2026
+ *
+ * The degree, which classes produced which projects, honors, and certifications.
+ *
+ * File Structure:
+ * - Degree
+ * - Course to project map
+ * - Honors and scholarships
+ * - Certifications
+ *
+ * Where this file is used within the repository:
+ * - Route: /education
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import { getDisplayTitle, getPageSlug, getProjectPages } from '../data/projects';
+import {
+    C_INSTITUTION_URL,
+    getCertificationSlug,
+    getCourseByCode,
+    getCourseHref,
+    getProjectHref,
+    primaryEducation,
+    visibleCertifications,
+    visibleProjects,
+} from '../data/resume';
+import { jsonLdHeadTag } from '../data/structured-data';
+
+const pagesWithCourse = (await getProjectPages('project')).filter((page) => page.data.course);
+const courseProjects = [
+    ...visibleProjects.flatMap((project) =>
+        project.course
+            ? [
+                  {
+                      title: getDisplayTitle(getProjectHref(project), project.title),
+                      href: getProjectHref(project),
+                      code: project.course,
+                  },
+              ]
+            : []
+    ),
+    ...pagesWithCourse.map((page) => ({
+        title: page.data.title,
+        href: `/projects/${getPageSlug(page.id)}/`,
+        code: page.data.course as string,
+    })),
+];
+
+const honors = [...(primaryEducation?.honors ?? []), ...(primaryEducation?.scholarships ?? [])];
+
+const description = primaryEducation
+    ? `${primaryEducation.degree} at ${primaryEducation.institution}, graduated ${primaryEducation.graduationDate}, and the classes behind each project.`
+    : 'Education details.';
+
+const head = primaryEducation
+    ? [
+          jsonLdHeadTag({
+              '@type': 'EducationalOccupationalCredential',
+              name: primaryEducation.degree,
+              credentialCategory: 'degree',
+              recognizedBy: {
+                  '@type': 'CollegeOrUniversity',
+                  name: primaryEducation.institution,
+                  sameAs: C_INSTITUTION_URL,
+              },
+          }),
+      ]
+    : [];
+---
+
+<StarlightPage frontmatter={{ title: 'Education', description, head, tableOfContents: false }}>
+    {
+        primaryEducation && (
+            <p class="es-lede">
+                {primaryEducation.degree}
+                {primaryEducation.minor && `, ${primaryEducation.minor}`},{' '}
+                <ExternalLink href={C_INSTITUTION_URL}>{primaryEducation.institution}</ExternalLink>
+                , {primaryEducation.location}. Graduated {primaryEducation.graduationDate}
+                {primaryEducation.gpa && ` with a ${primaryEducation.gpa} GPA`}.
+            </p>
+        )
+    }
+
+    <h2>Where the classes showed up</h2>
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">Course</th>
+                <th scope="col">What came out of it</th>
+            </tr>
+        </thead>
+        <tbody>
+            {
+                courseProjects.map(({ title, href: projectHref, code }) => {
+                    const course = getCourseByCode(code);
+                    const href = getCourseHref(code);
+
+                    return (
+                        <tr>
+                            <td>
+                                {href ? <a href={href}>{code}</a> : code}
+                                {course && `, ${course.name}`}
+                            </td>
+                            <td>
+                                <a href={projectHref}>{title}</a>
+                            </td>
+                        </tr>
+                    );
+                })
+            }
+        </tbody>
+    </table>
+    <p>The <a href="/education/coursework/">full coursework list</a> has the rest.</p>
+
+    {
+        honors.length > 0 && (
+            <>
+                <h2>Honors and scholarships</h2>
+                <ul>
+                    {honors.map((item) => (
+                        <li>{item}</li>
+                    ))}
+                </ul>
+            </>
+        )
+    }
+
+    {
+        visibleCertifications.length > 0 && (
+            <>
+                <h2>Certifications</h2>
+                <ul>
+                    {visibleCertifications.map((certification) => (
+                        <li id={getCertificationSlug(certification)}>
+                            {certification.link ? (
+                                <ExternalLink href={certification.link}>
+                                    {certification.name}
+                                </ExternalLink>
+                            ) : (
+                                certification.name
+                            )}
+                            , {certification.organization}
+                        </li>
+                    ))}
+                </ul>
+            </>
+        )
+    }
+</StarlightPage>

@@ -1,0 +1,319 @@
+/**
+ * src/styles/theme.css
+ * Site Theme
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Design tokens, the Starlight variable mapping, and base typography. The system is shared with
+ * eeprep.com: Source Serif 4, Source Code Pro, one crimson accent, night navy in dark mode.
+ * Unlayered CSS beats Starlight's @layer rules. Starlight treats :root as dark and
+ * :root[data-theme='light'] as light.
+ *
+ * File Structure:
+ * - Tokens: type, spacing, measure, radii
+ * - Colors: light, then dark
+ * - Starlight variable mapping
+ * - Base typography, figures, equations, sidebar
+ *
+ * Where this file is used within the repository:
+ * - Loaded through customCss in astro.config.mjs
+ *
+ * Usage:
+ * $ `npm run dev` : Applied to every page
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+/* ---------- 2. Raw tokens (mode-independent) ---------- */
+:root {
+    --es-font-serif: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --es-font-sans: var(--es-font-serif);
+    --es-font-mono:
+        'Source Code Pro Variable', 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo,
+        monospace;
+    --es-text-h1: 3.5rem;
+    --es-text-h2: 2.125rem;
+    --es-text-h3: 1.5rem;
+    --es-text-h4: 1.1875rem;
+    --es-text-lede: 1.4375rem;
+    --es-text-body: 1.0625rem;
+    --es-text-caption: 0.84375rem;
+    --es-text-eyebrow: 0.75rem;
+    --es-text-code: 0.875rem;
+    --es-text-eq: 1.12em;
+    --es-lh-body: 1.7;
+    --es-lh-heading: 1.08;
+    --es-track-h1: -0.025em;
+    --es-space-1: 0.25rem;
+    --es-space-2: 0.5rem;
+    --es-space-3: 0.75rem;
+    --es-space-4: 1rem;
+    --es-space-5: 1.5rem;
+    --es-space-6: 2rem;
+    --es-space-7: 2.5rem;
+    --es-space-8: 3rem;
+    --es-measure: 40em;
+    /* Radii & borders */
+    --es-radius-sm: 2px;
+    --es-radius: 4px;
+    --es-radius-lg: 8px;
+    --es-border: 1px solid var(--es-rule);
+}
+:root[data-theme='light'] {
+    --es-paper: #fbfbfc;
+    --es-surface: #ffffff;
+    --es-sunken: #f3f4f6;
+    --es-rule: #e2e4e8;
+    --es-rule-2: #c4c8cf;
+    --es-ink: #16233a;
+    /* Three text roles: ink, ink-2 (secondary) and accent (current item and
+	   figures only). Silver is never text. Older names alias onto them. */
+    --es-text: var(--es-ink);
+    --es-ink-2: #424d63;
+    --es-mute: var(--es-ink-2);
+    --es-silver: #838c9a;
+    --es-accent: #a3201d;
+    --es-accent-hover: #7d1714;
+    --es-accent-soft: #f8ecea;
+    --es-on-accent: #ffffff;
+    --es-ex: #1d5f8a;
+    --es-ex-soft: #eef4f8;
+    --es-dg-grid: #e9ecf0;
+}
+:root {
+    --es-paper: #0d1524;
+    --es-surface: #131c2e;
+    --es-sunken: #101828;
+    --es-rule: #232b3a;
+    --es-rule-2: #3b4352;
+    --es-ink: #eceef2;
+    --es-text: var(--es-ink);
+    --es-ink-2: #a6afbf;
+    --es-mute: var(--es-ink-2);
+    --es-silver: #76808f;
+    --es-accent: #e06a5f;
+    --es-accent-hover: #f08b81;
+    --es-accent-soft: #2a1a24;
+    --es-on-accent: #0d1524;
+    --es-ex: #7fb3d9;
+    --es-ex-soft: #14243a;
+    --es-dg-grid: #1c2537;
+}
+:root,
+:root[data-theme='light'] {
+    --sl-font: var(--es-font-sans);
+    --sl-font-mono: var(--es-font-mono);
+    --sl-color-bg: var(--es-paper);
+    --sl-color-bg-nav: var(--es-paper);
+    --sl-color-bg-sidebar: var(--es-paper);
+    --sl-color-bg-inline-code: var(--es-sunken);
+    --sl-color-bg-accent: var(--es-accent);
+    --sl-color-text: var(--es-ink);
+    --sl-color-text-accent: var(--es-accent);
+    --sl-color-text-invert: var(--es-on-accent);
+    --sl-color-white: var(--es-ink);
+    --sl-color-black: var(--es-paper);
+    --sl-color-gray-1: var(--es-ink);
+    --sl-color-gray-2: var(--es-ink);
+    --sl-color-gray-3: var(--es-ink-2);
+    --sl-color-gray-4: var(--es-ink-2);
+    --sl-color-gray-5: var(--es-rule-2);
+    --sl-color-gray-6: var(--es-rule);
+    --sl-color-gray-7: var(--es-sunken);
+    --sl-color-accent-low: var(--es-accent-soft);
+    --sl-color-accent: var(--es-accent);
+    --sl-color-accent-high: var(--es-accent-hover);
+    --sl-color-hairline: var(--es-rule);
+    --sl-color-hairline-light: var(--es-rule);
+    --sl-color-hairline-shade: var(--es-rule);
+    --sl-color-orange: var(--es-accent);
+    --sl-color-orange-low: var(--es-sunken);
+    --sl-color-orange-high: var(--es-accent);
+    --sl-color-blue: var(--es-ex);
+    --sl-color-blue-low: var(--es-ex-soft);
+    --sl-color-blue-high: var(--es-ex);
+    --sl-color-green: var(--es-ex);
+    --sl-color-green-low: var(--es-ex-soft);
+    --sl-color-green-high: var(--es-ex);
+    --sl-color-purple: var(--es-accent);
+    --sl-color-purple-low: var(--es-accent-soft);
+    --sl-color-purple-high: var(--es-accent);
+    --sl-color-red: var(--es-accent);
+    --sl-color-red-low: var(--es-accent-soft);
+    --sl-color-red-high: var(--es-accent);
+    --sl-shadow-sm: none;
+    --sl-shadow-md: 0 1px 0 var(--es-rule);
+    --sl-shadow-lg: 0 8px 24px rgb(0 0 0 / 0.08);
+    --sl-text-body: var(--es-text-body);
+    --sl-text-code: var(--es-text-code);
+    --sl-line-height: var(--es-lh-body);
+    --sl-line-height-headings: var(--es-lh-heading);
+    --sl-content-width: 44rem;
+    --sl-sidebar-width: 17rem;
+    --sl-nav-height: 4.5rem;
+}
+
+:root:not([data-has-sidebar]),
+:root[data-theme='light']:not([data-has-sidebar]) {
+    --sl-content-width: 67.5rem;
+}
+body {
+    background: var(--es-paper);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+}
+.sl-markdown-content :is(h1, h2, h3, h4),
+h1#_top {
+    font-family: var(--es-font-serif);
+    font-weight: 500;
+    color: var(--es-ink);
+    font-variation-settings: 'opsz' 72;
+    letter-spacing: -0.015em;
+}
+h1#_top {
+    font-size: clamp(2.5rem, 5vw, var(--es-text-h1));
+    letter-spacing: var(--es-track-h1);
+    line-height: 1.02;
+}
+.sl-markdown-content h2 {
+    font-size: var(--es-text-h2);
+    margin-top: var(--es-space-8);
+}
+.sl-markdown-content h3 {
+    font-size: var(--es-text-h3);
+}
+.sl-markdown-content h4 {
+    font-size: var(--es-text-h4);
+    font-weight: 600;
+}
+.sl-markdown-content :is(p, li) {
+    max-width: var(--es-measure);
+}
+.sl-markdown-content a {
+    color: var(--es-ink);
+    text-decoration-line: underline;
+    text-decoration-color: var(--es-silver);
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+}
+.sl-markdown-content a:focus-visible {
+    color: var(--es-accent);
+    text-decoration-color: currentColor;
+}
+@media (hover: hover) {
+    .sl-markdown-content a:hover {
+        color: var(--es-accent);
+        text-decoration-color: currentColor;
+    }
+}
+.sl-markdown-content code:not(pre code) {
+    border-radius: var(--es-radius-sm);
+    padding: 0.1em 0.35em;
+    font-size: 0.88em;
+}
+figure.es-fig {
+    margin: var(--es-space-7) 0 var(--es-space-2);
+    /* The padding shrinks only on screens narrower than 316px, which on a
+	   phone means 200% zoom or more. From a 320px screen up at 100% zoom it
+	   stays at the full 2.25rem. It follows the screen width, not the
+	   figure's, so parts inside a figure can read the same value. */
+    --es-fig-pad: clamp(0.75rem, 100vw - 17.5rem, 2.25rem);
+    padding: var(--es-fig-pad) var(--es-fig-pad) clamp(0.75rem, 100vw - 18.5rem, 1.375rem);
+    background: var(--es-surface);
+    border: var(--es-border);
+    border-radius: var(--es-radius);
+}
+figure.es-fig > :is(svg, img) {
+    display: block;
+    width: 100%;
+    max-width: 560px;
+    height: auto;
+    margin: 0 auto;
+}
+figure.es-fig.wide > :is(svg, img) {
+    max-width: none;
+}
+figure.es-fig figcaption {
+    display: flex;
+    gap: var(--es-space-3);
+    margin-top: 1.125rem;
+    padding-top: 0.875rem;
+    border-top: var(--es-border);
+    font-size: var(--es-text-caption);
+    line-height: 1.55;
+    color: var(--es-ink-2);
+}
+figure.es-fig figcaption .es-fignum {
+    font: 600 var(--es-text-eyebrow)/1.9 var(--es-font-serif);
+    color: var(--es-mute);
+    white-space: nowrap;
+}
+figure.es-fig {
+    container: es-fig / inline-size;
+}
+@container es-fig (max-width: 25rem) {
+    figure.es-fig figcaption {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+}
+
+/* Below a 316px screen, which on a phone means about 120% zoom or more, the figure padding shrinks,
+   and a long word or a fixed-width part could push a figure wider than the screen. There any word
+   may break and no part keeps a minimum width. */
+@media (max-width: 19.75rem) {
+    figure.es-fig * {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+/* Equations. A display equation too wide for its column scrolls on its own. */
+.katex {
+    font-size: var(--es-text-eq);
+    color: var(--es-ink);
+}
+.katex-display {
+    margin: var(--es-space-6) 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: var(--es-space-2) 0;
+}
+.katex-display > .katex {
+    font-size: 1.3em;
+}
+@media (max-width: 40rem) {
+    .katex-display > .katex {
+        font-size: 0.95em;
+    }
+}
+.katex .mord.text,
+.katex .text {
+    font-family: var(--es-font-sans);
+}
+
+/* Code. Expressive Code's style overrides cover the frame, and this is the fallback. */
+.expressive-code .frame {
+    border-radius: var(--es-radius);
+}
+
+/* On this page. Inactive entries are secondary and the current one is the accent. */
+starlight-toc a {
+    color: var(--es-ink-2);
+}
+starlight-toc a[aria-current='true'] {
+    color: var(--es-accent);
+}
+@media (hover: hover) {
+    starlight-toc a:hover {
+        color: var(--es-accent);
+    }
+}
+starlight-toc a:focus-visible {
+    color: var(--es-accent);
+}

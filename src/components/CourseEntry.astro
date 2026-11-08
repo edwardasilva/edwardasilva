@@ -1,0 +1,70 @@
+---
+/**
+ * src/components/CourseEntry.astro
+ * Course Entry
+ *
+ * Author: Edward Silva
+ * Creation Date: 06 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * One expandable course: its description, skills, and any project that came out of it.
+ *
+ * File Structure:
+ * - Props: course
+ * - Details element
+ *
+ * Where this file is used within the repository:
+ * - src/pages/education/coursework.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import SkillLinks from './SkillLinks.astro';
+import { getCourseCopy } from '../data/course-copy';
+import { getDisplayTitle } from '../data/projects';
+import { getCourseSlug, getProjectHref, getProjectsForCourse } from '../data/resume';
+import type { Course } from '../data/types';
+
+interface Props {
+    course: Course;
+}
+
+const { course } = Astro.props;
+const projects = getProjectsForCourse(course);
+---
+
+<details id={getCourseSlug(course)} class="es-course">
+    <summary>
+        <code>{course.code}</code>
+        <span>{course.name}</span>
+    </summary>
+    <p>{getCourseCopy(course)}</p>
+    {
+        course.skills.length > 0 && (
+            <p class="es-course-meta">
+                Skills: <SkillLinks skills={course.skills} />
+            </p>
+        )
+    }
+    {
+        projects.length > 0 && (
+            <p class="es-course-meta">
+                {projects.length === 1 ? 'Project: ' : 'Projects: '}
+                {projects.map((project, index) => (
+                    <>
+                        {index > 0 && ', '}
+                        <a href={getProjectHref(project)}>
+                            {getDisplayTitle(getProjectHref(project), project.title)}
+                        </a>
+                    </>
+                ))}
+            </p>
+        )
+    }
+</details>

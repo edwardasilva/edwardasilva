@@ -1,0 +1,36 @@
+---
+/**
+ * src/components/JsonLd.astro
+ * JSON-LD Component
+ *
+ * Author: Edward Silva
+ * Creation Date: 06 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Writes schema.org data into the page head. "<" is escaped so that no text in the data can
+ * close the script tag early.
+ *
+ * File Structure:
+ * - Props: schema object
+ * - Template: one JSON-LD script
+ *
+ * Where this file is used within the repository:
+ * - Used in src/components/Head.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Rendered as part of the pages that use it
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+interface Props {
+    data: object;
+}
+
+const json = JSON.stringify(Astro.props.data).replace(/</g, '\\u003c');
+---
+
+<script type="application/ld+json" set:html={json} />

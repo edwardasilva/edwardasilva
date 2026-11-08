@@ -1,0 +1,80 @@
+---
+/**
+ * src/pages/index.astro
+ * Home Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Who this is, three projects to start with, personal projects, and where this is heading.
+ *
+ * File Structure:
+ * - Hero
+ * - Project cards
+ * - Personal projects
+ * - Where this is heading, from about.future in resume-data.json
+ *
+ * Where this file is used within the repository:
+ * - Route: /
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import ProjectCards from '../components/ProjectCards.astro';
+import { getProjectPages } from '../data/projects';
+import { asSentence, resume } from '../data/resume';
+
+const caseStudies = (await getProjectPages('project')).slice(0, 3);
+const personal = await getProjectPages('personal');
+const { linkedin } = resume.personal;
+---
+
+<StarlightPage
+    frontmatter={{
+        title: resume.personal.name,
+        description:
+            'Edward Silva writes embedded software for Starlink at SpaceX. Control, state estimation, and signal processing write-ups, with the reports behind them.',
+        head: [{ tag: 'title', content: resume.personal.name }],
+        template: 'splash',
+        pagefind: false,
+        prev: false,
+        next: false,
+    }}
+    hasSidebar={false}
+>
+    <section class="es-hero">
+        <h1 id="_top">{resume.personal.name}</h1>
+        <p class="es-lede">
+            I write embedded software for Starlink at SpaceX in Bastrop, Texas. My{' '}
+            <ExternalLink href={linkedin}>LinkedIn</ExternalLink> has the job titles. These pages have
+            the equations, the numbers, who did which part, and where each design stopped working.
+        </p>
+    </section>
+
+    <h2>Start with one of these</h2>
+    <ProjectCards pages={caseStudies} />
+    <p><a href="/projects/">All projects</a></p>
+
+    <h2>Personal projects</h2>
+    <ProjectCards pages={personal} />
+
+    {
+        resume.about.future.length > 0 && (
+            <>
+                <h2>Where this is heading</h2>
+                {resume.about.future.map((line) => (
+                    <p>{asSentence(line)}</p>
+                ))}
+            </>
+        )
+    }
+</StarlightPage>

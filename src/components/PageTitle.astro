@@ -1,0 +1,41 @@
+---
+/**
+ * src/components/PageTitle.astro
+ * Page Title
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * The page heading, followed by the facts block on project pages. The home page has its own heading.
+ *
+ * File Structure:
+ * - Heading
+ * - ProjectFacts on project pages
+ *
+ * Where this file is used within the repository:
+ * - Starlight PageTitle override, set in astro.config.mjs
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import ProjectFacts from './ProjectFacts.astro';
+
+const { entry } = Astro.locals.starlightRoute;
+const splash = entry.data.template === 'splash';
+---
+
+{
+    !splash && (
+        <h1 id="_top" data-pagefind-meta="title">
+            {entry.data.title}
+        </h1>
+    )
+}
+{entry.data.kind && <ProjectFacts />}

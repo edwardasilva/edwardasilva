@@ -1,0 +1,175 @@
+---
+title: Damper state estimation
+description: Estimating the terrain force on a magnetorheological mountain bike damper with an EKF and a UKF. A live port of the filters shows when their results differ.
+slug: projects/EKF-project
+kind: project
+order: 2
+dek: Two Kalman filters estimate the force a mountain bike damper cannot measure. Rerunning them shows they agree at the report's parameters. Change the fluid's yield constant to see where they separate.
+figure: estimation/ukf-force
+figureAlt: Unscented Kalman filter estimate of terrain force tracking the true force, with three-sigma bounds.
+team: Edward Silva
+---
+
+{/*
+  src/content/docs/projects/EKF-project.mdx
+  Project write-up
+
+  Author: Edward Silva
+  Creation Date: 07 November, 2026
+  Last Update: 07 November, 2026
+
+  Built from the EENG 519 report in src/assets/EKF and the project's Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
+
+  Usage:
+  $ `npm run dev` : Renders at /projects/EKF-project
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+  NOTICE: This file contains personal biographical data.
+  It is strictly excluded from the repository's MIT License and
+  may not be reproduced, distributed, or modified without permission.
+*/}
+
+import EstimationFigure from '../../../components/EstimationFigure.astro';
+import Figure from '../../../components/Figure.astro';
+import ProofList from '../../../components/ProofList.astro';
+
+The unscented filter pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sampling spread, it cut the force error from 625 N to 401 N. It also kept every sample inside its bounds. At the report's parameters the two filters agree to within 0.4 N. Their force series in the report's own figures differ by at most 0.06 pixels.
+
+A Kalman filter estimates values a sensor cannot read by combining a model with noisy measurements. This was my final project for EENG 519. It ran in MATLAB and Simulink, and nothing here ran on the bike.
+
+The [EMBR damper](/projects/capstone-project/) changes its damping by changing the yield stress of a magnetorheological (MR) fluid. Low-cost sensors cannot measure the field intensity or the force coming up from the trail. So the filters infer them from a string potentiometer and accelerometers.
+
+<Figure name="damper/cross-section" number={1} alt="Cross section of the damper showing the MR fluid, internal floating piston, electromagnet core and coil, rebound piston, and the control system with MOSFET, microcontroller, battery, and accelerometers.">
+  The damper and its control system, from the capstone team's design work.
+</Figure>
+
+## The model
+
+The suspension is a sprung mass with displacement $z$. An unmeasured force $F_{in}$ drives it, and the spring and damper resist:
+
+$$
+m\ddot{z} = F_{in} - kz - K_v\dot{z} - K_m h \tanh(\alpha\dot{z})
+$$
+
+Field intensity $h$ follows the coil current $i$ with a first-order lag:
+
+$$
+\dot{h} = -\frac{1}{\tau}h + \frac{1}{\tau}i
+$$
+
+The $\tanh(\alpha\dot{z})$ term models the fluid's yield transition. With $\alpha = 100$ s/m it changes quickly around zero velocity.
+
+| Parameter | Value |
+| --- | --- |
+| Equivalent mass $m$ | 100 kg |
+| Spring rate $k$ | 10000 N/m |
+| Viscous coefficient $K_v$ | 1000 N·s/m |
+| Magnetic yield constant $K_m$ | 0.005 |
+| Transition sharpness $\alpha$ | 100 s/m |
+| Field time constant $\tau$ | 0.05 s |
+| Sample time $T_s$ | 0.01 s |
+
+The simulated trail combines 1.5 Hz roughness, 8 Hz chatter, Gaussian surface noise, and two obstacles at $t = 1$ s and $t = 2$ s. Coil current sits at 1 A on chatter and steps to 2 A when obstacle force passes 750 N.
+
+```matlab title="Main.m"
+F_harmonic = ...
+    100 * sin(2*pi*f1*t) + ...  % Primary undulating terrain
+     75 * sin(2*pi*f2*t) + ...  % High-frequency vibration
+     50 * randn(size(t));       % Stochastic surface noise
+
+F_pulse1    = pulse1_amp * exp(-((t - pulse1_mu).^2) / (2 * pulse1_sig^2));
+F_pulse2    = pulse2_amp * exp(-((t - pulse2_mu).^2) / (2 * pulse2_sig^2));
+```
+
+<Figure name="estimation/disturbance" number={2} alt="Input force over three seconds, with noise around zero and peaks of about 1.5 and 1 kilonewtons near one and two seconds.">
+  The force the filters never see directly.
+</Figure>
+
+## Estimating the terrain force
+
+I wanted the filters to estimate the terrain force directly, so I modeled it as a discrete random walk and added it to the state:
+
+$$
+F_{in,k+1} = F_{in,k} + s_k, \qquad \tilde{x}_k = [z_k,\ \dot{z}_k,\ h_k,\ F_{in,k}]^T
+$$
+
+Here $s_k$ is zero-mean Gaussian noise with variance $Q_s = 5 \times 10^6\ \text{N}^2$. An Euler step discretizes the dynamics. The filters measure displacement and acceleration.
+
+## Extended Kalman filter
+
+The extended Kalman filter (EKF) linearizes the dynamics at each step. It propagates covariance, its estimate of its own uncertainty, through the resulting Jacobians (matrices of partial derivatives). Two entries carry the nonlinearity:
+
+```matlab title="Main.m"
+da_dzd  = -(Kv/m) - (Km/m)*h_hat*alpha*(sech(alpha*zd_hat))^2;
+da_dh   = -(Km/m)*tanh(alpha*zd_hat);
+```
+
+The EKF tracks displacement, velocity, and the low-frequency terrain, and its errors stayed inside the $\pm 3\sigma$ bounds (three standard deviations) for the whole 3 s run. The force estimate lags slightly, and the report attributes that to the 8 Hz chatter.
+
+<Figure name="estimation/ekf-force" number={3} alt="EKF force estimate against true force over three seconds, with wide dotted three-sigma bounds.">
+  EKF estimate of the terrain force.
+</Figure>
+
+## Unscented Kalman filter
+
+The unscented Kalman filter (UKF) skips the Jacobians. It passes a small set of chosen sample states, called sigma points, through the nonlinear functions directly. It has 9 sigma points ($2L + 1$ with $L = 4$) and uses the same $Q$ and $R$ as the EKF.
+
+```matlab title="Main.m"
+alpha_ukf = 1e-3;   % Spread of sigma points
+ki        = 0;      % Secondary scaling parameter
+beta      = 2;      % Optimal for Gaussian distributions
+lambda    = alpha_ukf^2 * (L + ki) - L;
+c         = L + lambda;
+
+Wm = [lambda/c, 0.5/c * ones(1, 2*L)];
+```
+
+<Figure name="estimation/ukf-force" number={4} alt="UKF force estimate against true force over three seconds, nearly identical to the EKF figure.">
+  UKF estimate of the terrain force. Compare it with Figure 3.
+</Figure>
+
+## Why the two filters agree
+
+At these numbers the nonlinear term is tiny. Since $|\tanh| \le 1$ and $h$ peaks near 2,
+
+$$
+|K_m h \tanh(\alpha\dot{z})| \le 0.005 \times 2 = 0.01\ \text{N}
+$$
+
+The viscous force at the same moment is $K_v|\dot{z}|$, or hundreds of newtons. So the plant is close to linear, and both filters reduce to the same linear Kalman filter. It also means the coil current has almost no effect on the motion in this simulation.
+
+The chosen sigma point spread matters too. With $\kappa = 0$, the code above spreads the points by
+
+$$
+\sqrt{L + \lambda} = \alpha_{ukf}\sqrt{L} = 0.002
+$$
+
+and gives the center point a weight of
+
+$$
+W_0 = \frac{\lambda}{L + \lambda} = 1 - \frac{1}{\alpha_{ukf}^2} = -999{,}999
+$$
+
+The points sit within 0.002 standard deviations of the mean, so they sample the curve about as locally as a Jacobian does. They also never see the width of the tanh step.
+
+## Change the yield constant
+
+Raising $K_m$ makes that term matter. Over eight noise seeds at $K_m = 500$, where the yield force reaches 1000 N, the three filters separate:
+
+| Filter at $K_m = 500$ | RMS error | Samples inside $\pm 3\sigma$ |
+| --- | --- | --- |
+| EKF | 625 N | 58% |
+| UKF, $\alpha = 0.001$ | 675 N | 74% |
+| UKF, $\alpha = 1$ | 401 N | 100% |
+
+The EKF becomes overconfident, so its errors leave its bounds. The UKF with a wide spread stays inside its bounds. The UKF with the report's spread does no better than the EKF on error. So the report's argument for the UKF holds, but only with a larger $K_m$ and a wider $\alpha_{ukf}$ than it used.
+
+<EstimationFigure number={5} />
+
+Fitting $K_m$ to dynamometer data would settle which of these cases describes the real fork. The report's stated next step is to run the UKF on a microcontroller and measure its cost against the EKF.
+
+If I did this again, I would tune the filters for biking. I tuned them for the simulation and simple inputs, and I want more randomness in those inputs and more tuning against it.
+
+## Report
+
+<ProofList slug="EKF-project" />

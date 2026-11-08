@@ -1,0 +1,29 @@
+{
+  "name": "site-light",
+  "type": "light",
+  "colors": {
+    "editor.background": "#f3f4f6",
+    "editor.foreground": "#16233a"
+  },
+  "tokenColors": [
+    {
+      "scope": ["keyword", "storage", "keyword.control", "storage.type", "storage.modifier"],
+      "settings": {
+        "foreground": "#a3201d"
+      }
+    },
+    {
+      "scope": ["keyword.operator"],
+      "settings": {
+        "foreground": "#16233a"
+      }
+    },
+    {
+      "scope": ["comment", "punctuation.definition.comment"],
+      "settings": {
+        "foreground": "#424d63",
+        "fontStyle": "italic"
+      }
+    }
+  ]
+}

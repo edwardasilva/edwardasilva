@@ -1,0 +1,133 @@
+---
+title: Autonomous maze robot
+description: A four-person autonomous maze robot in EENG 350, with a Python and OpenCV vision stack talking to an Arduino motor controller over I2C.
+slug: projects/seed-robot
+kind: project
+order: 5
+dek: A four-person robot that reads printed markers to find its way through a maze. I built the vision stack, and there is video.
+team: Edward Silva, Jesus, Leland, Maverick
+figure: robot/front
+figureAlt: The maze robot, with its two large wheels, drive motors, and electronics.
+myPart: The Python and OpenCV vision stack, its multithreading, and the team's Git repository.
+---
+
+{/*
+  src/content/docs/projects/seed-robot.mdx
+  Project write-up
+
+  Author: Edward Silva
+  Creation Date: 07 November, 2026
+  Last Update: 07 November, 2026
+
+  Built from the project entry in resume-data.json and the team's repository. Written to the rules in eeprep's .github/STYLE.md.
+
+  Usage:
+  $ `npm run dev` : Renders at /projects/seed-robot
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+  NOTICE: This file contains personal biographical data.
+  It is strictly excluded from the repository's MIT License and
+  may not be reproduced, distributed, or modified without permission.
+*/}
+
+import Figure from '../../../components/Figure.astro';
+import ProofList from '../../../components/ProofList.astro';
+
+Our robot had the second-fastest final run in the class. The vision code finds ArUco markers (printed square codes a camera can locate) and works out the angle and distance to each one. It reads a green or red arrow beside the marker to pick left or right. It sends those over I2C to the team's Arduino motor controller.
+
+<Figure name="robot/front" number={1} narrow plate={false} alt="The robot from the front, showing its two large wheels, drive motors, and electronics.">
+  The robot from the front.
+</Figure>
+
+## Angle and distance from one image
+
+A calibrated camera gives both from a single frame. The marker is 2 inches (0.0508 m) on a side, so its apparent size gives the distance by similar triangles. Here $f_x$ is the focal length in pixels, and $e$ is the marker's edge in pixels:
+
+$$
+d = \frac{f_x \cdot 0.0508}{e}
+$$
+
+```python title="FinalDemo/src/main.py"
+# Calculate angle using calibrated focal length
+x = (undist[0, 0, 0] - cx) / fx
+
+# Convert to degrees
+angle = np.degrees(np.arctan2(x, 1.0))
+
+# DISTANCE:
+tl, tr, br, bl = corners
+
+wpx = np.linalg.norm(tr - tl)
+hpx = np.linalg.norm(br - tr)
+edgepx = 0.5 * (wpx + hpx)
+
+dist = (fx * 0.0508) / edgepx
+```
+
+The edge length is the average of the marker's width and height in pixels.
+
+Calibration was a huge problem for us. We calibrated the camera with checkerboard and ChArUco scripts, and at first we did not have enough good photos of the markers to calibrate from. A larger set of higher-quality photos fixed it. The final code undistorts each marker's position with that calibration before it computes the angle.
+
+## Speeding up the Python
+
+The Python was far too slow at first. I multithreaded it to run in stages, with separate threads for capture, processing, display, and the LCD on 640x480 video. Threads and timing keep each stage in the loop. Computation got much faster, and the Arduino stopped getting bottlenecked.
+
+The control loop needs the newest frame, so a full queue drops its oldest image.
+
+```python title="FinalDemo/src/main.py"
+try:
+    imageData.put((istream), timeout=0.01)
+except queue.Full:
+    # Remove oldest frame to keep queue fresh
+    try:
+        imageData.get_nowait()
+        imageData.put((istream), timeout=0.01)
+    except queue.Empty:
+        pass  # Queue was empty, just skip this frame
+```
+
+## Doubles over I2C
+
+The first I2C packets sent the angle and distance as doubles, which are 8 bytes in Python. The Arduino only had room for a float, 4 bytes, on each value.
+
+```python title="Demo2/src/main.py, first version"
+struct.pack(">dd???", 13.0, 15.0, found, lr, LorR)
+```
+
+```cpp title="Demo2/src/robotPositionControl/robotPositionControl.ino"
+for(int i=0; i<4; i++){
+  bytes[i] = Wire.read();
+}
+memcpy(&desiredAngle,bytes,4);
+```
+
+We changed the packet to floats, and the byte order to little-endian.
+
+```python title="FinalDemo/src/main.py"
+struct.pack("<ff???", angle_val, dist_val, found, lr, LorR)
+```
+
+The only reason I knew how to debug this was my internship at Kratos. The SIMD work there taught me a lot about registers and floating-point conversions.
+
+## Reading the arrows
+
+An HSV color mask (hue, saturation, and value, which separates color from brightness) finds each arrow in a region beside the marker.
+
+```python title="FinalDemo/src/main.py"
+def hsv_mask_green_bgr(img_bgr):
+    # Green mask to detect left arrow
+    hsv = cv.cvtColor(img_bgr, cv.COLOR_BGR2HSV)
+    # Broad green range
+    lower = np.array([35, 50, 50], dtype=np.uint8)
+    upper = np.array([85, 255, 255], dtype=np.uint8)
+    mask = cv.inRange(hsv, lower, upper)
+    return _clean_mask(mask)
+```
+
+<Figure name="robot/top" number={2} narrow plate={false} alt="The robot from above, showing the Raspberry Pi, the motor controller boards, and the wiring.">
+  The robot from above.
+</Figure>
+
+## Final demonstration
+
+<ProofList slug="seed-robot" only="video" />

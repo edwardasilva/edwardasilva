@@ -1,0 +1,73 @@
+---
+/**
+ * src/pages/experiences.astro
+ * Experience Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 08 November, 2026
+ *
+ * The roles marked for the site, in a few lines each. LinkedIn holds the full history.
+ *
+ * File Structure:
+ * - Intro
+ * - One short entry per role
+ *
+ * Where this file is used within the repository:
+ * - Route: /experiences
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import SkillLinks from '../components/SkillLinks.astro';
+import { asSentence, getExperienceSlug, resume, visibleExperiences } from '../data/resume';
+---
+
+<StarlightPage
+    frontmatter={{
+        title: 'Experience',
+        description: 'Where Edward Silva works and has worked.',
+        tableOfContents: false,
+    }}
+>
+    <p>
+        The full history is on <ExternalLink href={resume.personal.linkedin}>LinkedIn</ExternalLink
+        >. I don't write up employer work here. The reports and code on this site come from school
+        projects and my own work.
+    </p>
+
+    <div class="es-roles">
+        {
+            visibleExperiences.map((experience) => (
+                <section id={getExperienceSlug(experience)}>
+                    <h2>{experience.title}</h2>
+                    <p class="es-role-meta">
+                        {experience.companyUrl ? (
+                            <ExternalLink href={experience.companyUrl}>
+                                {experience.company}
+                            </ExternalLink>
+                        ) : (
+                            experience.company
+                        )}
+                        {experience.location ? `, ${experience.location}.` : '.'}{' '}
+                        {experience.duration}.
+                    </p>
+                    {experience.Summary && <p>{asSentence(experience.Summary)}</p>}
+                    {experience.skills.length > 0 && (
+                        <p class="es-role-meta">
+                            Tools: <SkillLinks skills={experience.skills} />
+                        </p>
+                    )}
+                </section>
+            ))
+        }
+    </div>
+</StarlightPage>

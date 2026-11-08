@@ -1,0 +1,141 @@
+name: Deploy to Cloudflare Pages
+
+# A push to main deploys the dev site, the "dev" preview branch of the edwardasilva Pages project.
+# A version tag, such as v1.0.0, deploys edwardasilva.com. A manual run picks either.
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Where to deploy
+        type: choice
+        options:
+          - dev
+          - production
+        default: dev
+
+permissions:
+  contents: read
+
+env:
+  # Opt in now to the GitHub Actions Node 24 JavaScript runtime.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  TARGET: ${{ github.event_name == 'workflow_dispatch' && inputs.target || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'dev') }}
+
+concurrency:
+  group: cloudflare-pages-${{ github.event_name == 'workflow_dispatch' && inputs.target || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'dev') }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy (${{ github.event_name == 'workflow_dispatch' && inputs.target || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'dev') }})
+    runs-on: ubuntu-latest
+    env:
+      # Optional repo-level variable: ASTRO_SITE (e.g. https://edwardasilva.com)
+      ASTRO_SITE: ${{ vars.ASTRO_SITE || 'https://edwardasilva.com' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      # resume-data.json stays off this public repo. It lives in information/, a submodule that points
+      # at the private repo edwardasilva/information. INFORMATION_REPO_KEY is the private half of a
+      # read-only deploy key on that repo.
+      - name: Find the information commit this repo points at
+        id: information
+        shell: bash
+        env:
+          INFORMATION_REPO_KEY: ${{ secrets.INFORMATION_REPO_KEY }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${INFORMATION_REPO_KEY:-}" ]]; then
+            echo "::error::INFORMATION_REPO_KEY is not set. Add the deploy key for edwardasilva/information as a repository secret."
+            exit 1
+          fi
+
+          sha="$(git ls-tree HEAD information | awk '$2 == "commit" { print $3 }')"
+
+          if [[ -z "$sha" ]]; then
+            echo "::error::This commit has no information submodule."
+            exit 1
+          fi
+
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      # Checks out that exact commit, and only resume-data.json, so the other private files never
+      # reach the runner.
+      - name: Checkout resume data from the information submodule
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          repository: edwardasilva/information
+          ref: ${{ steps.information.outputs.sha }}
+          ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
+          path: information
+          filter: blob:none
+          sparse-checkout: resume-data.json
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Validate resume data
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python3 - <<'PY'
+          import json
+          import sys
+
+          path = "information/resume-data.json"
+          try:
+            with open(path, "r", encoding="utf-8") as f:
+              data = json.load(f)
+          except Exception as exc:
+            print(f"::error::{path} is not valid JSON: {exc}")
+            sys.exit(1)
+
+          required_keys = ["personal", "education", "experiences", "projects"]
+          missing = [key for key in required_keys if key not in data]
+          if missing:
+            print(f"::error::{path} is missing required top-level keys: {', '.join(missing)}")
+            sys.exit(1)
+
+          print(f"{path} checked out and validated.")
+          PY
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        env:
+          SKIP_RESUME_PDF_BUILD: '1'
+          SKIP_RESUME_GENERATE: '1'
+        run: npm run build
+
+      # Pages treats the main branch as production. Any other branch name is a preview, and the
+      # "dev" branch gets a stable preview alias. Cloudflare adds X-Robots-Tag: noindex to previews.
+      - name: Pick the Pages branch
+        id: branch
+        shell: bash
+        run: |
+          if [[ "$TARGET" == production ]]; then
+            echo "name=main" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=dev" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Uploads dist/ straight from this job, so the built site is never stored as a workflow artifact.
+      # Needs two repository secrets: CLOUDFLARE_API_TOKEN (Account > Cloudflare Pages > Edit) and CLOUDFLARE_ACCOUNT_ID.
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3.15.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=edwardasilva --branch=${{ steps.branch.outputs.name }} --commit-hash=${{ github.sha }}

@@ -1,0 +1,65 @@
+---
+/**
+ * src/pages/projects.astro
+ * Projects Index
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Every project, then personal projects.
+ *
+ * File Structure:
+ * - Projects
+ * - Personal projects
+ *
+ * Where this file is used within the repository:
+ * - Route: /projects
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ProjectCards from '../components/ProjectCards.astro';
+import { getPageSlug, getProjectPages } from '../data/projects';
+import { itemListSchema, jsonLdHeadTag } from '../data/structured-data';
+
+const projects = await getProjectPages('project');
+const personal = await getProjectPages('personal');
+const site = Astro.site ?? Astro.url;
+
+const schema = itemListSchema(
+    'Projects',
+    [...projects, ...personal].map((page) => ({
+        name: page.data.title,
+        path: `/projects/${getPageSlug(page.id)}`,
+    })),
+    site
+);
+---
+
+<StarlightPage
+    frontmatter={{
+        title: 'Projects',
+        description:
+            'Projects by Edward Silva, built from the reports, code, and data behind them, with interactive figures.',
+        head: [jsonLdHeadTag(schema)],
+        tableOfContents: false,
+    }}
+>
+    <p>
+        Each page comes from the reports and source code behind the project. Four of them have live
+        figures you can change. To find work by tool, use the <a href="/skills/">skills index</a>.
+    </p>
+
+    <ProjectCards pages={projects} />
+
+    <h2>Personal projects</h2>
+    <ProjectCards pages={personal} />
+</StarlightPage>
