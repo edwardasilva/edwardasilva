@@ -88,6 +88,24 @@
     }
 }
 
+/* Narrow desktops: the name and the five section links keep their width, and the search box
+   takes what is left. Without this, the search box keeps its full width and squeezes the name. */
+@media (min-width: 50rem) and (max-width: 72rem) {
+    div.header {
+        grid-template-columns: auto auto minmax(0, 1fr) auto;
+    }
+    .es-nav {
+        gap: 1.25rem;
+    }
+}
+
+/* Small phones: one size down, so all five section links fit on a 360px screen. */
+@media (max-width: 24rem) {
+    .es-nav a {
+        font-size: 0.8125rem;
+    }
+}
+
 /* Suggested pages in the search dialog, shown only while the query is empty. */
 .es-suggest {
     margin-top: 1rem;
@@ -218,17 +236,19 @@ button[data-open-modal] kbd {
     .es-nav {
         grid-column: 1 / -1;
         grid-row: 2;
-        gap: 1rem;
+        justify-content: space-between;
+        gap: 0.5rem;
         overflow-x: auto;
         scrollbar-width: none;
     }
     .es-nav a {
         display: inline-flex;
+        flex: none;
         align-items: center;
         justify-content: center;
         min-width: var(--es-tap);
         min-height: var(--es-tap);
-        padding-inline: 0.25rem;
+        padding-inline: 0;
     }
     .es-nav a[aria-current='page'] {
         box-shadow: inset 0 -2px 0 var(--es-accent);
