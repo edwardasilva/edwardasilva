@@ -27,9 +27,8 @@
  */
 
 import SkillLinks from './SkillLinks.astro';
-import { getCourseCopy } from '../data/course-copy';
 import { getDisplayTitle } from '../data/projects';
-import { getCourseSlug, getProjectHref, getProjectsForCourse } from '../data/resume';
+import { asSentence, getCourseSlug, getProjectHref, getProjectsForCourse } from '../data/resume';
 import type { Course } from '../data/types';
 
 interface Props {
@@ -46,7 +45,7 @@ const projects = getProjectsForCourse(course);
         <span class="es-course-name">{course.name}</span>
     </summary>
     <div class="es-course-body">
-        <p>{getCourseCopy(course)}</p>
+        <p>{course.Summary ? asSentence(course.Summary) : course.description}</p>
         {
             (course.skills.length > 0 || projects.length > 0) && (
                 <dl class="es-facts">

@@ -31,6 +31,7 @@ import ExternalLink from '../components/ExternalLink.astro';
 import {
     asSentence,
     getExperienceHref,
+    resume,
     visibleExperiences,
     visibleOrganizations,
 } from '../data/resume';
@@ -39,8 +40,7 @@ import {
 <StarlightPage
     frontmatter={{
         title: 'Experience',
-        description:
-            "Edward Silva's current and past engineering roles and organization memberships.",
+        description: asSentence(resume.site.pages.experiences.description),
         tableOfContents: false,
     }}
 >

@@ -7,7 +7,8 @@
  * Last Update: 08 November, 2026
  *
  * Reads information/resume-data.json once, cleans it for the site, and exports what the pages render.
- * Anything hidden, unfilled, or pointing at a missing file is dropped here, so pages and
+ * That file is the only source of the site's data, including the site-only fields and the site
+ * block. Anything hidden, unfilled, or pointing at a missing file is dropped here, so pages and
  * components can use the exports without checking them again.
  *
  * File Structure:
@@ -37,8 +38,10 @@ import type {
     Experience,
     Organization,
     Project,
+    ProjectLink,
     Proof,
     ResumeData,
+    Site,
     SkillEntry,
     SkillReference,
     VisibilityScope,
@@ -48,10 +51,6 @@ import type {
 const C_SITE_COURSE_PREFIXES = new Set(['CSCI', 'EENG']);
 const C_PLACEHOLDER_PATTERN = /\[INSERT[^\]]*\]/i;
 
-// The about page is held back until its narrative is written. Turning this on restores the
-// route and its header link.
-const C_ABOUT_PAGE_PUBLISHED = false;
-
 // Every file under src/assets, keyed by the /assets/ URL it is served from. Lazy glob, so
 // nothing is bundled. It only answers whether a referenced file is in the repo.
 const C_AVAILABLE_ASSETS = new Set(
@@ -59,11 +58,6 @@ const C_AVAILABLE_ASSETS = new Set(
         assetPath.replace(/^\.\.\/assets\//, '/assets/')
     )
 );
-
-export const C_INSTITUTION_URL = 'https://www.mines.edu';
-
-// Shown on the site in place of the official title kept in the resume data.
-export const C_DISPLAY_ROLE = 'Embedded Software Engineer';
 
 /**
  * @brief Returns text only when it holds real content
@@ -90,25 +84,6 @@ function filledList(value: unknown): string[] {
     }
 
     return value.map(filledText).filter((entry): entry is string => entry !== undefined);
-}
-
-// Skills the site shows on top of resume-data.json. They stay here because the skills in that file
-// print on the resume PDF. Solar tracker has no entry in that file, so it is linked directly.
-const C_SITE_SKILLS: Record<string, string[]> = {
-    'SpaceX-swe': ['SIMD', 'Jupyter', 'YAML'],
-    'Kratos-swe': ['SIMD'],
-    'seed-robot': ['Arduino', 'Git'],
-    'dsp-final': ['Git'],
-    'solar-tracker': ['Arduino', 'Python', 'Bash'],
-};
-
-/**
- * @brief Gets the skills the site adds to a page or entry
- * @param slug Slug of the page or entry
- * @return Skill labels, empty when the site adds none
- */
-export function getSiteSkills(slug: string | undefined): string[] {
-    return C_SITE_SKILLS[slug ?? ''] ?? [];
 }
 
 /**
@@ -175,16 +150,54 @@ function proofList(value: unknown): Proof[] {
  * @brief Cleans the fields experiences and projects share
  * @param entry Raw experience or project
  * @return Entry with filled text, deduplicated skills, and usable proof
+ * @details The site shows skills and siteSkills together. Only skills print on the resume, so
+ * siteSkills holds the tools the site credits but the PDF leaves off.
  */
 function normalizeWork<T extends WorkEntry>(entry: T): T {
     return {
         ...entry,
+        navLabel: filledText(entry.navLabel),
         Summary: filledText(entry.Summary),
-        skills: skillList([...filledList(entry.skills), ...getSiteSkills(entry.slug)]),
+        skills: skillList([...filledList(entry.skills), ...filledList(entry.siteSkills)]),
         Resume: filledList(entry.Resume),
         Highlights: filledList(entry.Highlights),
         Visibility: visibilityScope(entry.Visibility),
         proof: proofList(entry.proof),
+    };
+}
+
+/**
+ * @brief Keeps the links that have a label and a target
+ * @param value Raw links array from content
+ * @return Links ready to render
+ */
+function linkList(value: unknown): ProjectLink[] {
+    if (!Array.isArray(value)) {
+        return [];
+    }
+
+    return value.flatMap((entry: Partial<ProjectLink> | null) => {
+        const label = filledText(entry?.label);
+        const href = filledText(entry?.href);
+
+        return label && href ? [{ label, href }] : [];
+    });
+}
+
+/**
+ * @brief Cleans a project, including the fields its write-up page shows
+ * @param project Raw project
+ * @return Project with filled text and usable links
+ */
+function normalizeProject(project: Project): Project {
+    return {
+        ...normalizeWork(project),
+        dek: filledText(project.dek),
+        figure: filledText(project.figure),
+        figureAlt: filledText(project.figureAlt),
+        team: filledText(project.team),
+        myPart: filledText(project.myPart),
+        links: linkList(project.links),
     };
 }
 
@@ -203,6 +216,7 @@ function normalizeEducation(education: Education): Education {
                 category,
                 (courses ?? []).map((course) => ({
                     ...course,
+                    Summary: filledText(course.Summary),
                     skills: skillList(course.skills),
                     Visibility: visibilityScope(course.Visibility),
                 })),
@@ -299,6 +313,36 @@ function normalizeAbout(about: Partial<About> & { Resume?: string }): About {
     };
 }
 
+/**
+ * @brief Checks that the site block is filled in
+ * @param site Raw site block
+ * @return The site block
+ * @details The site copy has no fallback, so a missing field stops the build instead of
+ * shipping an empty description.
+ */
+function requireSite(site: Site | undefined): Site {
+    const pages = site?.pages;
+    const person = site?.person;
+    const filled =
+        filledText(site?.description) &&
+        typeof site?.aboutPublished === 'boolean' &&
+        filledText(person?.jobTitle) &&
+        filledText(person?.worksFor?.name) &&
+        filledText(person?.worksFor?.url) &&
+        filledText(person?.occupation) &&
+        Array.isArray(person?.knowsAbout) &&
+        pages &&
+        (['home', 'projects', 'experiences', 'coursework', 'skills'] as const).every((page) =>
+            filledText(pages[page]?.description)
+        );
+
+    if (!site || !filled) {
+        throw new Error('[ERROR] resume-data.json: the site block is missing a field');
+    }
+
+    return site;
+}
+
 const C_RAW_RESUME = rawResumeData as unknown as ResumeData;
 
 export const resume: ResumeData = {
@@ -309,13 +353,14 @@ export const resume: ResumeData = {
         ...normalizeWork(entry),
         employmentType: filledText(entry.employmentType),
     })),
-    projects: (C_RAW_RESUME.projects ?? []).map(normalizeWork),
+    projects: (C_RAW_RESUME.projects ?? []).map(normalizeProject),
     certifications: (C_RAW_RESUME.certifications ?? []).map(normalizeCertification),
     organizations: (C_RAW_RESUME.organizations ?? [])
         .map(normalizeOrganization)
         .filter((entry): entry is Organization => entry !== null),
     TopSkills: filledList(C_RAW_RESUME.TopSkills),
     ResumeSkills: filledList(C_RAW_RESUME.ResumeSkills),
+    site: requireSite(C_RAW_RESUME.site),
 };
 
 export const primaryEducation: Education | undefined = resume.education[0];
@@ -331,8 +376,9 @@ export const visibleOrganizations = resume.organizations.filter((entry) =>
 );
 
 // The about route and its header link both read this, so the link cannot outlive the page.
+// site.aboutPublished holds the page back until its narrative is written.
 export const hasAboutContent =
-    C_ABOUT_PAGE_PUBLISHED &&
+    resume.site.aboutPublished &&
     isVisibleOnSite(resume.about.Visibility) &&
     (resume.about.intro.length > 0 ||
         resume.about.path.length > 0 ||
@@ -554,11 +600,6 @@ function buildSkillIndex(): SkillEntry[] {
     for (const project of visibleProjects) {
         addReference(project.skills, { label: project.title, href: getProjectHref(project) });
     }
-
-    addReference(getSiteSkills('solar-tracker'), {
-        label: 'Solar tracker',
-        href: '/projects/solar-tracker',
-    });
 
     for (const course of courseCategories.flatMap((entry) => entry.courses)) {
         addReference(course.skills, {

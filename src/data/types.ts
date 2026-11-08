@@ -12,7 +12,7 @@
  * File Structure:
  * - Scopes: VisibilityScope
  * - Sections: PersonalInfo, About, Education, Course, Experience, Project, Certification,
- *   Organization
+ *   Organization, Site
  * - Derived types: SkillEntry, SkillReference
  *
  * Used in: src/data/resume.ts and the components that display resume data
@@ -63,6 +63,7 @@ export interface Course {
     name: string;
     alias?: string;
     description: string;
+    Summary?: string;
     relevancy: string;
     skills: string[];
     Visibility: VisibilityScope;
@@ -70,6 +71,8 @@ export interface Course {
 
 export interface Education {
     institution: string;
+    url?: string;
+    wikipedia?: string;
     location: string;
     degree: string;
     specialization?: string;
@@ -93,9 +96,11 @@ export interface Proof {
 export interface WorkEntry {
     title: string;
     slug?: string;
+    navLabel?: string;
     Summary?: string;
     duration: string;
     skills: string[];
+    siteSkills?: string[];
     proof: Proof[];
     Resume: string[];
     Highlights: string[];
@@ -109,9 +114,24 @@ export interface Experience extends WorkEntry {
     employmentType?: string;
 }
 
+export type ProjectKind = 'project' | 'personal';
+
+export interface ProjectLink {
+    label: string;
+    href: string;
+}
+
 export interface Project extends WorkEntry {
     github?: string;
     course?: string;
+    kind?: ProjectKind;
+    order?: number;
+    dek?: string;
+    figure?: string;
+    figureAlt?: string;
+    team?: string;
+    myPart?: string;
+    links: ProjectLink[];
 }
 
 export interface Certification {
@@ -133,6 +153,23 @@ export interface Organization {
     Visibility: VisibilityScope;
 }
 
+export interface PageCopy {
+    description: string;
+    intro?: string;
+}
+
+export interface Site {
+    description: string;
+    aboutPublished: boolean;
+    person: {
+        jobTitle: string;
+        worksFor: { name: string; url: string };
+        occupation: string;
+        knowsAbout: string[];
+    };
+    pages: Record<'home' | 'projects' | 'experiences' | 'coursework' | 'skills', PageCopy>;
+}
+
 export interface ResumeData {
     personal: PersonalInfo;
     about: About;
@@ -143,6 +180,7 @@ export interface ResumeData {
     organizations: Organization[];
     TopSkills: string[];
     ResumeSkills: string[];
+    site: Site;
 }
 
 export interface SkillReference {

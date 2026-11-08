@@ -28,7 +28,7 @@
  */
 
 import type { APIRoute } from 'astro';
-import { getPageSlug, getProjectPages } from '../data/projects';
+import { getProjectPages } from '../data/projects';
 import { getExperienceHref, resume, visibleExperiences } from '../data/resume';
 
 const C_SECTION_PAGES = [
@@ -65,13 +65,8 @@ function linkLine(title: string, href: string, site: URL, note?: string): string
 export const GET: APIRoute = async ({ site }) => {
     const origin = site ?? new URL(resume.personal.website);
     const projectLines = async (kind: 'project' | 'personal') =>
-        (await getProjectPages(kind)).map((page) =>
-            linkLine(
-                page.data.title,
-                `/projects/${getPageSlug(page.id)}/`,
-                origin,
-                page.data.description
-            )
+        (await getProjectPages(kind)).map(({ entry, href }) =>
+            linkLine(entry.data.title, href, origin, entry.data.description)
         );
 
     const lines = [

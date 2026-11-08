@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
  * The name as live text in the heading font.
  *
@@ -24,11 +24,13 @@
  * may not be reproduced, distributed, or modified without permission.
  */
 
+import { resume } from '../data/resume';
+
 const { siteTitleHref } = Astro.locals.starlightRoute;
 ---
 
 <a href={siteTitleHref} class="site-title sl-flex">
-    <span class="es-wordmark" translate="no">Edward Silva</span>
+    <span class="es-wordmark" translate="no">{resume.personal.name}</span>
 </a>
 
 <style>

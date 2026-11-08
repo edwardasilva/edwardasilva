@@ -35,7 +35,7 @@ import { Resvg } from '@resvg/resvg-js';
 import type { APIRoute } from 'astro';
 import satori from 'satori';
 import { getPageSlug, getProjectPages } from '../../data/projects';
-import { resume } from '../../data/resume';
+import { asSentence, resume } from '../../data/resume';
 
 const C_WIDTH = 1200;
 const C_HEIGHT = 630;
@@ -64,9 +64,9 @@ export async function getStaticPaths() {
             params: { slug: 'home' },
             props: { title: resume.personal.name, line: resume.about.Highlights },
         },
-        ...pages.map((page) => ({
-            params: { slug: getPageSlug(page.id) },
-            props: { title: page.data.title, line: page.data.dek ?? '' },
+        ...pages.map(({ entry, project }) => ({
+            params: { slug: getPageSlug(entry.id) },
+            props: { title: entry.data.title, line: project.dek ? asSentence(project.dek) : '' },
         })),
     ];
 }

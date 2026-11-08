@@ -28,6 +28,7 @@
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import ProjectCards from '../components/ProjectCards.astro';
 import { getPageSlug, getProjectPages } from '../data/projects';
+import { asSentence, resume } from '../data/resume';
 import { itemListSchema, jsonLdHeadTag } from '../data/structured-data';
 
 const projects = await getProjectPages('project');
@@ -36,9 +37,9 @@ const site = Astro.site ?? Astro.url;
 
 const schema = itemListSchema(
     'Projects',
-    [...projects, ...personal].map((page) => ({
-        name: page.data.title,
-        path: `/projects/${getPageSlug(page.id)}`,
+    [...projects, ...personal].map(({ entry }) => ({
+        name: entry.data.title,
+        path: `/projects/${getPageSlug(entry.id)}`,
     })),
     site
 );
@@ -47,8 +48,7 @@ const schema = itemListSchema(
 <StarlightPage
     frontmatter={{
         title: 'Projects',
-        description:
-            'Projects by Edward Silva, built from the reports, code, and data behind them, with interactive figures.',
+        description: asSentence(resume.site.pages.projects.description),
         head: [jsonLdHeadTag(schema)],
         tableOfContents: false,
     }}

@@ -4,13 +4,13 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
  * Opens links to other sites in a new tab and marks them for the arrow CSS draws. Each one gets
  * target, rel, the external-link class, and a screen-reader hint. Adapted from eeprep.com.
  *
  * File Structure:
- * - Hosts: this site never counts as external
+ * - Hosts: this site, from personal.website in resume-data.json, never counts as external
  * - walk, isExternal, mark, withTail: the tree transform
  *
  * Where this file is used within the repository:
@@ -25,9 +25,17 @@
  * may not be reproduced, distributed, or modified without permission.
  */
 
+import fs from 'node:fs';
 import { splitTail } from './external-link-tail.js';
 
-const C_OWN_HOSTS = new Set(['edwardasilva.com', 'www.edwardasilva.com']);
+const C_SITE_HOST = new URL(
+    JSON.parse(
+        fs.readFileSync(new URL('../../information/resume-data.json', import.meta.url), 'utf8')
+    ).personal.website
+).hostname
+    .toLowerCase()
+    .replace(/^www\./, '');
+const C_OWN_HOSTS = new Set([C_SITE_HOST, `www.${C_SITE_HOST}`]);
 
 /**
  * @brief Checks whether a link element points at another site

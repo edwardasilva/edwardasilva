@@ -4,7 +4,7 @@
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 07 November, 2026
+  Last Update: 08 November, 2026
 
   Explains why this folder does not reach the website and how to publish it.
 
@@ -27,11 +27,7 @@ Nothing here reaches the website. The docs loader reads only `src/content/docs`,
 
 1. Move `natlock.mdx` to `src/content/docs/projects/natlock.mdx`. Its imports already expect that location.
 
-2. In `astro.config.mjs`, add this line after the ram pump entry in the Projects group:
-
-   ```js
-   { label: 'natlock', slug: 'projects/natlock' },
-   ```
+2. In `information/resume-data.json`, change the `natlock` project's `Visibility` from `Hide` to `Site`. Its sidebar label, card, team, and dates are already there, so the sidebar and the project lists pick it up.
 
 3. Fill in the `[INSERT ...]` comments at the top of `natlock.mdx`.
 

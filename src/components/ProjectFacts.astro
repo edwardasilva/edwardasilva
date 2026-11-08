@@ -5,10 +5,11 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
  * When, which course, who was on the team, and which part was mine, under a project title. This is
- * what a profile page flattens. A page for a project marked Hide fails the build.
+ * what a profile page flattens. Every fact comes from the page's entry in resume-data.json. A page
+ * with no entry, or one marked Hide, fails the build.
  *
  * File Structure:
  * - Match the page to resume-data.json by slug
@@ -28,33 +29,23 @@
 
 import ExternalLink from './ExternalLink.astro';
 import SkillLinks from './SkillLinks.astro';
-import {
-    getCourseByCode,
-    getCourseHref,
-    getProjectSlug,
-    getSiteSkills,
-    resume,
-} from '../data/resume';
-import { getPageSlug } from '../data/projects';
+import { asSentence, getCourseByCode, getCourseHref } from '../data/resume';
+import { getPageProject } from '../data/projects';
 
-const { id, entry } = Astro.locals.starlightRoute;
-const { team, myPart, when, links, course: pageCourse } = entry.data;
-const slug = getPageSlug(id);
-const project = resume.projects.find((candidate) => getProjectSlug(candidate) === slug);
+const { id } = Astro.locals.starlightRoute;
+const project = getPageProject(id);
 
-if (project?.Visibility === 'Hide') {
-    throw new Error(`[ERROR] ${id} is published, but resume-data.json marks ${slug} as Hide`);
+if (!project) {
+    throw new Error(`[ERROR] ${id} is not a project write-up`);
 }
 
-const courseCode = project?.course ?? pageCourse;
+const { course: courseCode, duration: dates, team, myPart, skills } = project;
 const course = courseCode ? getCourseByCode(courseCode) : undefined;
 const courseHref = courseCode ? getCourseHref(courseCode) : undefined;
 const allLinks = [
-    ...(links ?? []),
-    ...(project?.github ? [{ label: 'Source on GitHub', href: project.github }] : []),
+    ...project.links,
+    ...(project.github ? [{ label: 'Source on GitHub', href: project.github }] : []),
 ];
-const skills = project?.skills ?? getSiteSkills(slug);
-const dates = project?.duration ?? when;
 ---
 
 <dl class="es-facts">
@@ -89,7 +80,7 @@ const dates = project?.duration ?? when;
         myPart && (
             <div>
                 <dt>My part</dt>
-                <dd>{myPart}</dd>
+                <dd>{asSentence(myPart)}</dd>
             </div>
         )
     }
