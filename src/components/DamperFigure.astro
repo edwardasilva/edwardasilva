@@ -193,7 +193,7 @@ const speeds = [0, C_MAX_V];
                     plot
                 )
             );
-            read.textContent = `Gap ${(radialGap(piston) * 1000).toFixed(2)} mm, length ${(piston.length * 1000).toFixed(1)} mm. At 8 m/s the model gives ${force < 10 ? force.toFixed(2) : force.toFixed(0)} N, ${ratio < 10 ? ratio.toFixed(1) : ratio.toFixed(0)} times the V1 geometry.`;
+            read.textContent = `Gap ${(radialGap(piston) * 1000).toFixed(2)} mm, length ${(piston.length * 1000).toFixed(1)} mm. At 8 m/s the model gives ${force < 10 ? force.toFixed(2) : force.toFixed(0)} N, ${ratio < 10 ? ratio.toFixed(1) : ratio.toFixed(0)} times the V1 force.`;
         };
 
         diameter.addEventListener('input', update);

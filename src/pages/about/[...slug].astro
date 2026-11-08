@@ -13,7 +13,7 @@
  * File Structure:
  * - Route: a single path, or none while held back
  * - The story, one section per chapter in about.chapters
- * - Where it goes
+ * - Long-term plans
  * - Before engineering: the jobs list, kept after the story so it does not interrupt it
  *
  * Where this file is used within the repository:
@@ -44,7 +44,7 @@ const { Summary: earlyWorkSummary, roles } = about.earlyWork;
 
 const narrativeSections = [
     ...about.chapters,
-    { title: 'Where it goes', paragraphs: about.future },
+    { title: 'Long-term plans', paragraphs: about.future },
 ].filter((section) => section.paragraphs.length > 0);
 ---
 

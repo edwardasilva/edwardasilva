@@ -4,5 +4,5 @@ Electrical engineering grad from Colorado School of Mines (May 2026), now an emb
 
 ## Contact
 
-- **LinkedIn:** [Edward Silva](https://www.linkedin.com/in/edwardasilva)
-- **Website:** [edwardasilva.com](https://edwardasilva.com)
+- LinkedIn: [Edward Silva](https://www.linkedin.com/in/edwardasilva)
+- Website: [edwardasilva.com](https://edwardasilva.com)
