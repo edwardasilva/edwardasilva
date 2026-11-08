@@ -2,6 +2,5 @@
 set -e
 
 node scripts/scrub-private.js push
-echo "[pre-push] Pushing information/, so the deploy can find the commit this repo points at..."
-node scripts/information.js push
-echo "[pre-push] information/ pushed. Proceeding with push."
+node scripts/information.js check
+echo "[pre-push] information/ points at its main branch. Proceeding with push."

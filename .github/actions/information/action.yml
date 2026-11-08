@@ -1,0 +1,90 @@
+# .github/actions/information/action.yml
+# Information Checkout
+#
+# Author: Edward Silva
+# Creation Date: 08 November, 2026
+# Last Update: 08 November, 2026
+#
+# Checks out resume-data.json from the private information submodule, at the exact commit this
+# repo points at, and checks that the file parses. CI and the deploy both use it.
+#
+# Usage:
+# $ `uses: ./.github/actions/information` : Run after actions/checkout, with ssh-key set
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+# NOTICE: This file contains personal biographical data.
+# It is strictly excluded from the repository's MIT License and
+# may not be reproduced, distributed, or modified without permission.
+
+name: Information checkout
+description: Check out resume-data.json from edwardasilva/information at the submodule commit.
+
+inputs:
+  ssh-key:
+    description: Private half of the read-only deploy key on edwardasilva/information.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Find the information commit this repo points at
+      id: pointer
+      shell: bash
+      env:
+        INFORMATION_REPO_KEY: ${{ inputs.ssh-key }}
+      run: |
+        set -euo pipefail
+
+        if [[ -z "${INFORMATION_REPO_KEY:-}" ]]; then
+          echo "::error::INFORMATION_REPO_KEY is not set. Add the deploy key for edwardasilva/information as a repository secret, and as a Dependabot secret for Dependabot pull requests."
+          exit 1
+        fi
+
+        sha="$(git ls-tree HEAD information | awk '$2 == "commit" { print $3 }')"
+
+        if [[ -z "$sha" ]]; then
+          echo "::error::This commit has no information submodule."
+          exit 1
+        fi
+
+        echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+    # Checks out that exact commit, and only resume-data.json, so the other private files never
+    # reach the runner. The fetch fails if the commit is not on GitHub.
+    - name: Check out resume-data.json
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      with:
+        repository: edwardasilva/information
+        ref: ${{ steps.pointer.outputs.sha }}
+        ssh-key: ${{ inputs.ssh-key }}
+        path: information
+        filter: blob:none
+        sparse-checkout: resume-data.json
+        sparse-checkout-cone-mode: false
+        persist-credentials: false
+
+    - name: Validate resume data
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        python3 - <<'PY'
+        import json
+        import sys
+
+        path = "information/resume-data.json"
+        try:
+          with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        except Exception as exc:
+          print(f"::error::{path} is not valid JSON: {exc}")
+          sys.exit(1)
+
+        required_keys = ["personal", "education", "experiences", "projects"]
+        missing = [key for key in required_keys if key not in data]
+        if missing:
+          print(f"::error::{path} is missing required top-level keys: {', '.join(missing)}")
+          sys.exit(1)
+
+        print(f"{path} checked out and validated.")
+        PY

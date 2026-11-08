@@ -1,0 +1,27 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    target-branch: main
+    labels:
+      - dependencies
+    groups:
+      astro-starlight:
+        patterns:
+          - astro
+          - '@astrojs/*'
+  - package-ecosystem: github-actions
+    directories:
+      - /
+      - /.github/actions/information
+    schedule:
+      interval: weekly
+    target-branch: main
+    labels:
+      - dependencies
+    groups:
+      github-actions:
+        patterns:
+          - '*'
