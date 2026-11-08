@@ -4,7 +4,7 @@ description: A script that turns one JSON file into a one-page PDF resume. It me
 slug: projects/resume-generator
 kind: personal
 order: 2
-dek: A script that turns one JSON file into a one-page PDF resume. It measures the compiled page to make it fit, then checks the text an applicant tracking system would read.
+dek: A script that turns one JSON file into a one-page PDF resume.
 when: Ongoing
 links:
     - label: Source on GitHub
@@ -30,9 +30,7 @@ links:
   may not be reproduced, distributed, or modified without permission.
 */}
 
-I built this for the same reason I started [eeprep](/projects/eeprep/), to make a good resume easier to put together.
-
-You write the content in a JSON file, and the script does the layout. It follows the rules on [eeprep's resume page](https://eeprep.com/advice/resume/).
+You write your resume in one JSON file, and the script lays it out on one page by the rules on [eeprep's resume page](https://eeprep.com/advice/resume/).
 
 ## How it fits one page
 
@@ -56,7 +54,7 @@ def fit(typeface):
     return None, log
 ```
 
-Changing the vertical spacing never moves a line break, so the page gets taller in a straight line as the spacing grows. The script builds once at the roomiest spacing to measure that line, works out the spacing that exactly fills the page, and builds once more at that spacing.
+Spacing never moves a line break, so page height grows in a straight line with spacing. That takes two builds: one at the roomiest spacing to find the slope, and one at the spacing that exactly fills the page.
 
 ## How it checks the result
 
@@ -64,4 +62,4 @@ Applicant tracking systems read a PDF's text layer. So each build extracts the t
 
 The fonts ship with the project, so the PDF looks the same on every system. CI builds every example and fails if a PDF is not exactly one page.
 
-The [resume on this site](/resume/viewer/) uses the same fitting and checking steps, in a JavaScript port tied to my own data file.
+The [resume on this site](/resume/viewer/) uses a JavaScript port of the same steps.
