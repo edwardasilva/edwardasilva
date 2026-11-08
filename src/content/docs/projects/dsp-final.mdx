@@ -41,7 +41,7 @@ Audio comes in at 48 kHz and goes through a cascaded Butterworth band-pass filte
   The band-pass filter. Report Fig. 2.
 </Figure>
 
-The FFT reads the current frame, 682 samples after decimation. It applies a Hamming window and 8192 bins, then fits a parabola through the peak and its neighbors to resolve pitch between bins:
+The FFT reads the current frame, 682 samples after decimation. It applies a Hamming window and uses 8192 bins, then fits a parabola through the peak and its neighbors to resolve pitch between bins:
 
 ```matlab title="Run.m"
 spectraPitch = fft(pitchSignal_NoDc .* hamming(L_pitch), nfft_hires);
@@ -69,11 +69,11 @@ segment = acor(searchIndices);
 [peaks, locs] = findpeaks(segment);
 ```
 
-The retuning stage picks the nearest note in 12-tone equal temperament, the standard Western scale. An exponential moving average with $\alpha = 0.2$ stops the target jumping between notes. The stage then resamples the frame by the pitch ratio, applies a Hann window, and normalizes it.
+The retuning stage picks the nearest note in 12-tone equal temperament, the standard Western scale. An exponential moving average with $\alpha = 0.2$ stops the target from jumping between notes. The stage then resamples the frame by the pitch ratio, applies a Hann window, and normalizes it.
 
 ## Latency
 
-On paper the FFT is $O(n \log n)$ and the ACF is $O(n^2)$. I timed each detector with `tic` and `toc` around its own block on every frame. The FFT was also more consistent:
+On paper the FFT is $O(n \log n)$ and the ACF is $O(n^2)$. I timed each detector with `tic` and `toc` around its own block on every frame. The FFT was faster and more consistent:
 
 | Per frame | FFT | ACF |
 | --- | --- | --- |
