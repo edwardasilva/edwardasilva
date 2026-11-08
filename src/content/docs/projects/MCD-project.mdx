@@ -74,7 +74,7 @@ The real pair puts a zero outside the unit circle and turns the DC gain negative
   Load position for a 1 m command.
 </Figure>
 
-The report gives load swing of no more than 1 degree, about 3 inches on this cable. Its swing plot does show a brief first peak near 1.5 degrees.
+The report gives a load swing of no more than 1 degree, about 3 inches on this cable. Its swing plot does show a brief first peak near 1.5 degrees.
 
 <Figure name="gantry/slow-swing" number={4} alt="Load swing angle decaying from a first peak near 1.5 degrees to zero over about 150 seconds.">
   Load swing over the same move.
@@ -123,7 +123,7 @@ $$
 
 The report's $N = 4.4721$ is the first entry of $K_{ref} = [4.4721,\ 2.7148,\ 1.4310]$.
 
-State augmentation adds an integrated error state. That design needed anti-windup (a term that stops the integrator growing while the actuator is saturated), with a back-calculation gain of $K_b = 10$.
+State augmentation adds an integrated error state. That design needed anti-windup (a term that stops the integrator from growing while the actuator is saturated), with a back-calculation gain of $K_b = 10$.
 
 | Result | Reference scaling | State augmentation |
 | --- | --- | --- |

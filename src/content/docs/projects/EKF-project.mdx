@@ -63,7 +63,7 @@ The $\tanh(\alpha\dot{z})$ term models the fluid's yield transition. With $\alph
 | Field time constant $\tau$ | 0.05 s |
 | Sample time $T_s$ | 0.01 s |
 
-The simulated trail combines 1.5 Hz roughness, 8 Hz chatter, Gaussian surface noise, and two obstacles at $t = 1$ s and $t = 2$ s. Coil current sits at 1 A on chatter and steps to 2 A when obstacle force passes 750 N.
+The simulated trail combines 1.5 Hz roughness, 8 Hz chatter, Gaussian surface noise, and two obstacles at $t = 1$ s and $t = 2$ s. Coil current sits at 1 A during chatter and steps to 2 A when obstacle force passes 750 N.
 
 ```matlab title="Main.m"
 F_harmonic = ...
@@ -98,7 +98,7 @@ da_dzd  = -(Kv/m) - (Km/m)*h_hat*alpha*(sech(alpha*zd_hat))^2;
 da_dh   = -(Km/m)*tanh(alpha*zd_hat);
 ```
 
-The EKF tracks displacement, velocity, and the low-frequency terrain, and its errors stayed inside the $\pm 3\sigma$ bounds (three standard deviations) for the whole 3 s run. The force estimate lags slightly, and the report attributes that to the 8 Hz chatter.
+The EKF tracked displacement, velocity, and the low-frequency terrain, and its errors stayed inside the $\pm 3\sigma$ bounds (three standard deviations) for the whole 3 s run. The force estimate lags slightly, and the report attributes that to the 8 Hz chatter.
 
 <Figure name="estimation/ekf-force" number={3} alt="EKF force estimate against true force over three seconds, with wide dotted three-sigma bounds.">
   EKF estimate of the terrain force.
@@ -162,7 +162,7 @@ The EKF becomes overconfident, so its errors leave its bounds. The UKF with a wi
 
 Fitting $K_m$ to dynamometer data would settle which of these cases describes the real fork. The report's stated next step is to run the UKF on a microcontroller and measure its cost against the EKF.
 
-If I did this again, I would tune the filters for biking. I tuned them for the simulation and simple inputs, and I want more randomness in those inputs and more tuning against it.
+If I did this again, I would tune the filters for biking. I tuned them for the simulation and simple inputs, and I want more randomness in those inputs and more tuning against them.
 
 ## Report
 

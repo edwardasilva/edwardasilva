@@ -63,7 +63,7 @@ Calibration gave us a lot of trouble. We calibrated the camera with checkerboard
 
 ## Speeding up the Python
 
-The Python was far too slow at first. I multithreaded it to run in stages, with separate threads for capture, processing, display, and the LCD on 640x480 video. Threads and timing keep each stage in the loop. Processing got much faster, and the Arduino stopped waiting on the Python.
+The Python was far too slow at first. I multithreaded it to run on 640x480 video in stages, with separate threads for capture, processing, display, and the LCD. Threads and timing keep each stage in the loop. Processing got much faster, and the Arduino stopped waiting on the Python.
 
 The control loop needs the newest frame, so a full queue drops its oldest image.
 
@@ -81,7 +81,7 @@ except queue.Full:
 
 ## Doubles over I2C
 
-The first I2C packets sent the angle and distance as doubles, which are 8 bytes in Python. The Arduino only had room for a float, 4 bytes, on each value.
+The first I2C packets sent the angle and distance as doubles, which are 8 bytes in Python. The Arduino read only 4 bytes, the size of a float, for each value.
 
 ```python title="Demo2/src/main.py, first version"
 struct.pack(">dd???", 13.0, 15.0, found, lr, LorR)
@@ -94,7 +94,7 @@ for(int i=0; i<4; i++){
 memcpy(&desiredAngle,bytes,4);
 ```
 
-We changed the packet to floats, and the byte order to little-endian.
+We changed the packet to floats and the byte order to little-endian.
 
 ```python title="FinalDemo/src/main.py"
 struct.pack("<ff???", angle_val, dist_val, found, lr, LorR)
