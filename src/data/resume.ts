@@ -31,6 +31,7 @@
 import rawResumeData from '../../information/resume-data.json';
 import type {
     About,
+    AboutChapter,
     AboutRole,
     Certification,
     Course,
@@ -290,12 +291,29 @@ function normalizeAboutRole(role: AboutRole): AboutRole | null {
 }
 
 /**
+ * @brief Cleans one chapter of the about page story
+ * @param chapter Raw chapter entry
+ * @return Chapter without placeholder paragraphs, or null until it has a title and a paragraph
+ */
+function normalizeAboutChapter(chapter: AboutChapter): AboutChapter | null {
+    const title = filledText(chapter?.title);
+    const paragraphs = filledList(chapter?.paragraphs);
+
+    if (!title || paragraphs.length === 0) {
+        return null;
+    }
+
+    return { title, paragraphs };
+}
+
+/**
  * @brief Cleans the about section, which also carries the profile text
  * @param about Raw about object, including the Resume line the generator also reads
  * @return About with placeholders stripped from every block
  */
 function normalizeAbout(about: Partial<About> & { Resume?: string }): About {
     const roles = about.earlyWork?.roles;
+    const chapters = about.chapters;
 
     return {
         Highlights: filledText(about.Highlights) ?? filledText(about.Resume) ?? '',
@@ -307,7 +325,9 @@ function normalizeAbout(about: Partial<About> & { Resume?: string }): About {
                 .map(normalizeAboutRole)
                 .filter((role): role is AboutRole => role !== null),
         },
-        path: filledList(about.path),
+        chapters: (Array.isArray(chapters) ? chapters : [])
+            .map(normalizeAboutChapter)
+            .filter((chapter): chapter is AboutChapter => chapter !== null),
         future: filledList(about.future),
         Visibility: visibilityScope(about.Visibility),
     };
@@ -381,7 +401,7 @@ export const hasAboutContent =
     resume.site.aboutPublished &&
     isVisibleOnSite(resume.about.Visibility) &&
     (resume.about.intro.length > 0 ||
-        resume.about.path.length > 0 ||
+        resume.about.chapters.length > 0 ||
         resume.about.future.length > 0 ||
         resume.about.earlyWork.roles.length > 0 ||
         Boolean(resume.about.earlyWork.Summary));

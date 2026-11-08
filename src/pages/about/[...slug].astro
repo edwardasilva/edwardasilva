@@ -12,9 +12,9 @@
  *
  * File Structure:
  * - Route: a single path, or none while held back
- * - Before engineering
- * - How I got here
+ * - The story, one section per chapter in about.chapters
  * - Where it goes
+ * - Before engineering: the jobs list, kept after the story so it does not interrupt it
  *
  * Where this file is used within the repository:
  * - Route: /about
@@ -43,7 +43,7 @@ const { about } = resume;
 const { Summary: earlyWorkSummary, roles } = about.earlyWork;
 
 const narrativeSections = [
-    { title: 'How I got here', paragraphs: about.path },
+    ...about.chapters,
     { title: 'Where it goes', paragraphs: about.future },
 ].filter((section) => section.paragraphs.length > 0);
 ---
@@ -55,6 +55,17 @@ const narrativeSections = [
     }}
 >
     {about.intro.map((paragraph) => <p class="es-lede">{asSentence(paragraph)}</p>)}
+
+    {
+        narrativeSections.map((section) => (
+            <>
+                <h2>{section.title}</h2>
+                {section.paragraphs.map((paragraph) => (
+                    <p>{asSentence(paragraph)}</p>
+                ))}
+            </>
+        ))
+    }
 
     {
         (earlyWorkSummary || roles.length > 0) && (
@@ -75,16 +86,5 @@ const narrativeSections = [
                 )}
             </>
         )
-    }
-
-    {
-        narrativeSections.map((section) => (
-            <>
-                <h2>{section.title}</h2>
-                {section.paragraphs.map((paragraph) => (
-                    <p>{asSentence(paragraph)}</p>
-                ))}
-            </>
-        ))
     }
 </StarlightPage>

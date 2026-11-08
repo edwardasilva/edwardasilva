@@ -45,6 +45,11 @@ export interface AboutRole {
     Summary?: string;
 }
 
+export interface AboutChapter {
+    title: string;
+    paragraphs: string[];
+}
+
 export interface About {
     Highlights: string;
     Summary?: string;
@@ -53,7 +58,7 @@ export interface About {
         Summary?: string;
         roles: AboutRole[];
     };
-    path: string[];
+    chapters: AboutChapter[];
     future: string[];
     Visibility: VisibilityScope;
 }
