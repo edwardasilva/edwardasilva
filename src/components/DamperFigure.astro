@@ -1,0 +1,221 @@
+---
+/**
+ * src/components/DamperFigure.astro
+ * Damper Flow Figure
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Live figure: change the piston's diameter and length and see the least-damped force the flow model
+ * predicts. The build fails if it stops reproducing the design report's numbers for V1 and V2.
+ *
+ * File Structure:
+ * - Build-time check against the report
+ * - Controls, prerendered plot at the V2 geometry, and readout
+ * - Script: redraws on slider and preset changes
+ *
+ * Where this file is used within the repository:
+ * - src/content/docs/projects/capstone-project.mdx
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import Plot from './Plot.astro';
+import { C_V1, C_V2, dampingForce, radialGap } from '../lib/damper';
+import { linePath, makePlot } from '../lib/plot';
+
+interface Props {
+    number: number;
+}
+
+const C_V1_REPORT_N = 0.9;
+const C_V2_REPORT_N = 300;
+const C_MAX_V = 8;
+const v1Force = dampingForce(C_MAX_V, C_V1);
+const v2Force = dampingForce(C_MAX_V, C_V2);
+
+if (
+    Math.abs(v1Force - C_V1_REPORT_N) / C_V1_REPORT_N > 0.1 ||
+    Math.abs(v2Force - C_V2_REPORT_N) / C_V2_REPORT_N > 0.1
+) {
+    throw new Error(`[ERROR] Damper model drifted from the report: ${v1Force}, ${v2Force}`);
+}
+
+const plot = makePlot(0, C_MAX_V, 0, 600);
+const speeds = [0, C_MAX_V];
+---
+
+<figure
+    class="es-fig es-live"
+    data-damper
+    data-plot-config={JSON.stringify(plot)}
+    data-v1={JSON.stringify(C_V1)}
+    data-v2={JSON.stringify(C_V2)}
+>
+    <div class="es-live-controls not-content" data-controls hidden>
+        <label for="damper-diameter">Piston diameter, in a 20.2 mm tube</label>
+        <input
+            id="damper-diameter"
+            type="range"
+            min="16"
+            max="19.6"
+            step="0.001"
+            value={C_V2.diameter * 1000}
+            data-diameter
+        />
+        <label for="damper-length">Piston length</label>
+        <input
+            id="damper-length"
+            type="range"
+            min="4"
+            max="30"
+            step="0.5"
+            value={C_V2.length * 1000}
+            data-length
+        />
+        <div class="es-live-presets">
+            <button type="button" data-preset="v1">V1 geometry</button>
+            <button type="button" data-preset="v2">V2 geometry</button>
+        </div>
+    </div>
+
+    <ul class="es-live-legend not-content" aria-hidden="true">
+        <li><span class="es-swatch es-swatch-live"></span>This piston</li>
+        <li><span class="es-swatch es-swatch-base"></span>V2 geometry</li>
+        <li><span class="es-swatch es-swatch-ref"></span>V1 geometry</li>
+    </ul>
+
+    <Plot
+        id="damper-plot"
+        plot={plot}
+        xTicks={[0, 2, 4, 6, 8]}
+        yTicks={[0, 200, 400, 600]}
+        xLabel="Rebound shaft velocity (m/s)"
+        yLabel="Force (N)"
+        label="Least-damped force against shaft velocity for the chosen piston"
+        paths={[
+            {
+                key: 'v1',
+                class: 'es-ref',
+                d: linePath(
+                    speeds,
+                    speeds.map((v) => dampingForce(v, C_V1)),
+                    plot
+                ),
+            },
+            {
+                key: 'v2',
+                class: 'es-line-base',
+                d: linePath(
+                    speeds,
+                    speeds.map((v) => dampingForce(v, C_V2)),
+                    plot
+                ),
+            },
+            {
+                key: 'live',
+                class: 'es-line-live',
+                d: linePath(
+                    speeds,
+                    speeds.map((v) => dampingForce(v, C_V2)),
+                    plot
+                ),
+            },
+        ]}
+    />
+
+    <p class="es-live-read" aria-live="polite" data-read>
+        Gap {(radialGap(C_V2) * 1000).toFixed(2)} mm, length {C_V2.length * 1000} mm. At 8 m/s the model
+        gives {v2Force.toFixed(0)} N.
+    </p>
+    <noscript>
+        <p>The sliders need JavaScript. The solid line is the V2 geometry.</p>
+    </noscript>
+
+    <figcaption>
+        <span class="es-fignum">Figure {Astro.props.number}</span>
+        <span>
+            The design report's plane Poiseuille model, with its fluid viscosity and shaft diameter.
+            It leaves out the magnetic field, entrance losses, and surface roughness, so it gives
+            the least-damped force only. It reproduces the report's figures of about 0.9 N for V1
+            and 300 N for V2 at 8 m/s.
+        </span>
+    </figcaption>
+</figure>
+
+<script>
+    import { dampingForce, radialGap, type PistonGeometry } from '../lib/damper';
+    import { attachCrosshair, linePath, type PlotConfig } from '../lib/plot';
+
+    const C_SPEEDS = [0, 8];
+
+    for (const root of document.querySelectorAll<HTMLElement>('[data-damper]')) {
+        const plot = JSON.parse(root.dataset.plotConfig ?? '{}') as PlotConfig;
+        const v1 = JSON.parse(root.dataset.v1 ?? '{}') as PistonGeometry;
+        const v2 = JSON.parse(root.dataset.v2 ?? '{}') as PistonGeometry;
+        const diameter = root.querySelector<HTMLInputElement>('[data-diameter]')!;
+        const length = root.querySelector<HTMLInputElement>('[data-length]')!;
+        const live = root.querySelector<SVGPathElement>('[data-path="live"]')!;
+        const read = root.querySelector<HTMLElement>('[data-read]')!;
+
+        root.querySelector<HTMLElement>('[data-controls]')!.hidden = false;
+
+        /**
+         * @brief Reads the piston geometry from the sliders
+         * @return Geometry in meters
+         */
+        const geometry = (): PistonGeometry => ({
+            diameter: Number(diameter.value) / 1000,
+            length: Number(length.value) / 1000,
+        });
+
+        /**
+         * @brief Redraws the chart and readout
+         * @return Nothing
+         */
+        const update = () => {
+            const piston = geometry();
+            const force = dampingForce(8, piston);
+            const ratio = force / dampingForce(8, v1);
+
+            live.setAttribute(
+                'd',
+                linePath(
+                    C_SPEEDS,
+                    C_SPEEDS.map((v) => dampingForce(v, piston)),
+                    plot
+                )
+            );
+            read.textContent = `Gap ${(radialGap(piston) * 1000).toFixed(2)} mm, length ${(piston.length * 1000).toFixed(1)} mm. At 8 m/s the model gives ${force < 10 ? force.toFixed(2) : force.toFixed(0)} N, ${ratio < 10 ? ratio.toFixed(1) : ratio.toFixed(0)} times the V1 geometry.`;
+        };
+
+        diameter.addEventListener('input', update);
+        length.addEventListener('input', update);
+
+        for (const button of root.querySelectorAll<HTMLButtonElement>('[data-preset]')) {
+            button.addEventListener('click', () => {
+                const piston = button.dataset.preset === 'v1' ? v1 : v2;
+
+                diameter.value = String(piston.diameter * 1000);
+                length.value = String(piston.length * 1000);
+                update();
+            });
+        }
+
+        attachCrosshair(
+            root.querySelector<HTMLElement>('[data-plot]')!,
+            plot,
+            (velocity) =>
+                `${velocity.toFixed(1)} m/s: ${dampingForce(velocity, geometry()).toFixed(1)} N`
+        );
+
+        update();
+    }
+</script>

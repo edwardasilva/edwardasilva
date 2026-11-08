@@ -1,0 +1,150 @@
+---
+/**
+ * src/components/Header.astro
+ * Site Header
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 08 November, 2026
+ *
+ * Name, section links, search, and theme toggle. Adapted from eeprep.com.
+ *
+ * File Structure:
+ * - Links: sections in the sidebar's order, with About added once it is published
+ * - Suggested pages in the empty search dialog
+ *
+ * Where this file is used within the repository:
+ * - Starlight Header override, set in astro.config.mjs
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import config from 'virtual:starlight/user-config';
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import { hasAboutContent } from '../data/resume';
+
+const shouldRenderSearch =
+    config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+
+const links = [
+    { href: '/projects/', label: 'Projects' },
+    { href: '/experiences/', label: 'Experience' },
+    { href: '/education/', label: 'Education' },
+    { href: '/skills/', label: 'Skills' },
+    { href: '/resume/viewer/', label: 'Resume' },
+    ...(hasAboutContent ? [{ href: '/about/', label: 'About' }] : []),
+];
+
+const suggestions = [
+    { href: '/projects/MCD-project/', label: 'Gantry crane control' },
+    { href: '/projects/EKF-project/', label: 'Damper state estimation' },
+    { href: '/projects/dsp-final/', label: 'Pitch tracking' },
+    { href: '/skills/', label: 'Skills' },
+];
+
+const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+---
+
+<div class="header">
+    <div class="title-wrapper sl-flex">
+        <SiteTitle />
+    </div>
+    <nav class="es-nav" aria-label="Sections">
+        {
+            links.map((link) => (
+                <a
+                    href={link.href}
+                    aria-current={pathname.startsWith(link.href) ? 'page' : undefined}
+                >
+                    {link.label}
+                </a>
+            ))
+        }
+    </nav>
+    <div class="sl-flex print:hidden">{shouldRenderSearch && <Search />}</div>
+    <div class="sl-flex print:hidden right-group">
+        <ThemeSelect />
+    </div>
+</div>
+
+<template id="es-suggest-template">
+    <nav class="es-suggest" aria-label="Suggested pages">
+        <p>Suggested pages</p>
+        <ul>
+            {
+                suggestions.map((suggestion) => (
+                    <li>
+                        <a href={suggestion.href}>{suggestion.label}</a>
+                    </li>
+                ))
+            }
+        </ul>
+    </nav>
+</template>
+
+<script>
+    const dialog = document.querySelector('site-search dialog');
+    const template = document.querySelector<HTMLTemplateElement>('#es-suggest-template');
+    const container = dialog?.querySelector('.search-container');
+
+    if (dialog && template && container) {
+        const box = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+
+        container.append(box);
+
+        /**
+         * @brief Shows the suggestions only while the query is empty
+         * @return Nothing
+         */
+        const update = () => {
+            box.hidden = Boolean(dialog.querySelector('input')?.value.trim());
+        };
+
+        dialog.addEventListener('input', update);
+        new MutationObserver(update).observe(dialog, { attributes: true });
+    }
+</script>
+
+<style>
+    @layer starlight.core {
+        .header {
+            display: flex;
+            gap: var(--sl-nav-gap);
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .title-wrapper {
+            overflow: clip;
+            padding: 0.25rem;
+            margin: -0.25rem;
+            min-width: 0;
+        }
+
+        .right-group {
+            gap: 1rem;
+            align-items: center;
+        }
+
+        @media (min-width: 50rem) {
+            .header {
+                display: grid;
+                grid-template-columns: 1fr auto minmax(0, 22rem) 1fr;
+                align-content: center;
+            }
+
+            .right-group {
+                justify-self: end;
+            }
+        }
+    }
+</style>

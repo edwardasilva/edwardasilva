@@ -1,0 +1,129 @@
+---
+title: Pitch tracking for auto-tune
+description: Comparing FFT and autocorrelation pitch detection in a real-time MATLAB auto-tune chain, with the project's detectors running live on a test tone.
+slug: projects/dsp-final
+kind: project
+order: 3
+dek: FFT and autocorrelation pitch detection, compared on the same signal chain. The FFT took 0.22 ms per frame and autocorrelation took 0.59 ms. The live figure shows the frequency where each one stops tracking.
+figure: pitch/residual
+figureAlt: Residual frequency error for FFT and autocorrelation across a sweep. Both collapse past about frame 1000.
+team: Edward Silva, Jonas Krider, Tappen Douglas
+myPart: The real-time MATLAB pipeline, latency and error reporting, data visualization, results verification, and the team's Git repository. Jonas Krider and I pair-programmed the FFT and autocorrelation detectors. Tappen Douglas developed the auto-tune retuning and the live input and output. Jonas Krider directed the system architecture and filter tuning and built a MaxMSP live demonstration.
+---
+
+{/*
+  src/content/docs/projects/dsp-final.mdx
+  Project write-up
+
+  Author: Edward Silva
+  Creation Date: 07 November, 2026
+  Last Update: 08 November, 2026
+
+  Built from the EENG 411 report in src/assets/DSP and the project's Run.m and Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
+
+  Usage:
+  $ `npm run dev` : Renders at /projects/dsp-final
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+  NOTICE: This file contains personal biographical data.
+  It is strictly excluded from the repository's MIT License and
+  may not be reproduced, distributed, or modified without permission.
+*/}
+
+import Figure from '../../../components/Figure.astro';
+import PitchFigure from '../../../components/PitchFigure.astro';
+import ProofList from '../../../components/ProofList.astro';
+
+The FFT found the pitch 2.68 times faster than autocorrelation, and it kept tracking several hundred hertz higher. Either method works for a simple auto-tune. For the EENG 411 final project, I built the real-time MATLAB pipeline that runs both detectors, and I measured the results. The numbers and plots below are the ones I produced and checked. The detector code on this page is the team's.
+
+An FFT finds the pitch by looking for the strongest frequency bin. Autocorrelation (ACF) looks for the lag where a signal best matches itself.
+
+## The signal chain
+
+The pipeline is two files. `Main.m` runs the test or live input, and `Run.m` does the calculation once per frame: filtering, decimation, both detectors, and the timing.
+
+Audio comes in at 48 kHz and goes through a cascaded Butterworth band-pass filter that keeps the vocal range. Decimation keeps every Nth sample, and two stages, by 3 and then by 2, bring the rate down to 8 kHz.
+
+<Figure name="pitch/filters" number={1} alt="Block diagram: a high-pass Butterworth filter with a 30 hertz stop band and 60 hertz pass band, followed by a low-pass Butterworth filter with a 2000 hertz stop band and 1500 hertz pass band. Both have 80 decibel attenuation and 1 decibel ripple.">
+  The band-pass filter. Report Fig. 2.
+</Figure>
+
+The FFT reads the current frame, 682 samples after decimation. It applies a Hamming window and 8192 bins, then fits a parabola through the peak and its neighbors to resolve pitch between bins:
+
+```matlab title="Run.m"
+spectraPitch = fft(pitchSignal_NoDc .* hamming(L_pitch), nfft_hires);
+[~, I] = max(abs(spectraPitch(1:floor(end/2)))); % Max amplitude bin
+
+left_bin  = abs(spectraPitch(I-1));
+max_bin   = abs(spectraPitch(I));
+right_bin = abs(spectraPitch(I+1));
+
+p = 0.5 * (left_bin - right_bin) / (left_bin - 2*max_bin + right_bin);
+f0_fft = (I - 1 + p) * (Fs_pitch / nfft_hires);
+```
+
+The ACF reads a longer 2048-sample history. It limits its lags to 55 to 2000 Hz and takes the first local maximum, as long as it clears a 0.2 threshold:
+
+```matlab title="Run.m"
+minLag = floor(Fs_pitch / 2000);
+maxLag = floor(Fs_pitch / 55);
+searchIndices = (centerIdx + minLag) : min(centerIdx + maxLag, length(acor));
+
+% Autocorrelate search indexes sample segments
+segment = acor(searchIndices);
+
+% local peaks
+[peaks, locs] = findpeaks(segment);
+```
+
+The retuning stage picks the nearest note in 12-tone equal temperament, the standard Western scale. An exponential moving average with $\alpha = 0.2$ stops the target jumping between notes. The stage then resamples the frame by the pitch ratio, applies a Hann window, and normalizes it.
+
+## Latency
+
+On paper the FFT is $O(n \log n)$ and the ACF is $O(n^2)$. I timed each detector with `tic` and `toc` around its own block on every frame. The FFT was also more consistent:
+
+| Per frame | FFT | ACF |
+| --- | --- | --- |
+| Mean | 0.22 ms | 0.59 ms |
+| Variance | 0.26 | 0.74 |
+| Maximum | 1.18 ms | 3.21 ms |
+
+<Figure name="pitch/latency" number={2} alt="Latency per frame across 2000 frames. ACF sits higher than FFT, with spikes up to about 3 milliseconds.">
+  Latency for each frame across the test run.
+</Figure>
+
+## Where each one fails
+
+We swept a chirp, a tone that rises in frequency, from 50 Hz toward 4 kHz. Both methods track the pitch inside the pass band. The ACF fails past the 1500 Hz pass-band edge. The FFT keeps tracking into the transition band and collapses at the 2000 Hz stop band.
+
+<Figure name="pitch/residual" number={3} alt="Residual frequency error near zero for both methods until around frame 900, where ACF error falls sharply, followed by FFT near frame 1050.">
+  Estimated minus true frequency across the sweep.
+</Figure>
+
+The report puts both failures down to the filter. Running the detectors on a steady tone shows the ACF has a second limit of its own. At 8 kHz a 1700 Hz tone has a period of only 4.7 samples, so the lag grid is coarse and the error grows. The search also starts at lag 4, and a peak needs a neighbor on each side. Once the period drops below about 4.5 samples, the first peak is lost and the search takes the second one, at twice the lag:
+
+$$
+f_{est} = \frac{f_s}{2 \cdot f_s / f} = \frac{f}{2}
+$$
+
+Set the tone to 1800 Hz below and the ACF reports about 900 Hz. The filter has cut that tone by 48 dB, but it is still above the noise, so the lag grid is what fails. The FFT has no such limit. It holds until the tone drops under the noise, near 1935 Hz.
+
+<PitchFigure number={4} />
+
+A steady tone loses the ACF near 1780 Hz, and the report's sweep loses it a little earlier, near 1600 Hz. The sweep also has a falling second chirp and the real decimation filters, which this figure leaves out.
+
+Retuning follows the tracker. It maps correctly up to 2 kHz and fails in the attenuation zone. Around frame 1300 it works again, because a second chirp falling from 4 kHz enters the range the tracker can detect.
+
+<Figure name="pitch/retuning" number={5} alt="Autotuned frequency following the true frequency up to about 1800 hertz, then breaking down between frames 1050 and 1300, then falling as the true frequency keeps rising.">
+  Retuned frequency against the true frequency.
+</Figure>
+
+## Which method to use
+
+The report found both methods accurate within about the same margins for a simple filter. The FFT has lower latency. The ACF tracked better against error and has lower space complexity. The tracker cannot read below 55 Hz, the lower bound set in the code. The report names octave errors and a tremolo from overlapping frames as the next problems to fix.
+
+## Report
+
+The report's contribution list follows the course rubric, so it leaves out the pipeline.
+
+<ProofList slug="dsp-final" />

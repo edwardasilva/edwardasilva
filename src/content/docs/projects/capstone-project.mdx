@@ -1,0 +1,136 @@
+---
+title: EMBR damper
+description: A capstone team's semi-active magnetorheological mountain bike damper. The first design failed on the dynamometer, and the redesign moved the coil and cut the gap.
+slug: projects/capstone-project
+kind: project
+order: 4
+dek: Our eight-person capstone team built a magnetorheological damper into a production mountain bike fork. The first design barely responded to current, so we redesigned it. I designed the electromagnet.
+figure: damper/on-bike
+figureAlt: The EMBR fork on a mountain bike, with the front wheel lifted over a stone wall.
+team: Graham Adleman, Kyle Grote, Sam Harber, Coltrae Kerschen, Henry Kruse, Ben Mackenzie, Edward Silva, Eli Webster. Client John Weiler, sponsored by ARUS MR Tech. Project advisor Dr. Aubrey Wigner, technical advisors Shay Rubino and Dr. Oyvind Nilsen.
+myPart: Electromagnet design, calculation verification, and help with the PWM coil control design.
+---
+
+{/*
+  src/content/docs/projects/capstone-project.mdx
+  Project write-up
+
+  Author: Edward Silva
+  Creation Date: 07 November, 2026
+  Last Update: 08 November, 2026
+
+  Built from the capstone poster in src/assets/Capstone, the team's critical design report, and the project entry in resume-data.json. Written to the rules in eeprep's .github/STYLE.md.
+
+  Usage:
+  $ `npm run dev` : Renders at /projects/capstone-project
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+  NOTICE: This file contains personal biographical data.
+  It is strictly excluded from the repository's MIT License and
+  may not be reproduced, distributed, or modified without permission.
+*/}
+
+import DamperFigure from '../../../components/DamperFigure.astro';
+import VideoEmbed from '../../../components/VideoEmbed.astro';
+import Figure from '../../../components/Figure.astro';
+
+Our capstone team put a damper with electronically adjustable stiffness in a production mountain bike fork. We confirmed the electromagnet did what it was supposed to, and you could feel a physical difference. It costs \$1400, which is \$200 to \$300 below the two commercial forks we compared. It weighs 20 g more than the RockShox and 220 g more than the Fox. Getting there took two designs, because the first one barely responded to current.
+
+<VideoEmbed
+    id="ix0n2-wJunM"
+    number={1}
+    title="EMBR: electromagnetic bi-directional damping for MTB suspension"
+>
+    The team's video of the fork, on the Just Graham YouTube channel.
+</VideoEmbed>
+
+| Fork | Price | Weight |
+| --- | --- | --- |
+| EMBR | \$1400 | 2360 g |
+| RockShox Lyrik Flight Attendant | \$1700 | 2340 g |
+| Fox 36 Factory Live Valve | \$1600 | 2140 g |
+
+The damper uses magnetorheological (MR) fluid, a carrier fluid with microscopic iron particles in it. With no magnetic field it flows like an ordinary fluid. With a field it becomes a Bingham plastic, which resists flow until the force passes a yield stress. A stronger field gives more damping force. Cars and seismic dampers already use this fluid.
+
+## The first design failed
+
+EMBR V1 kept as much of the stock fork as it could. It swapped in MR fluid and wrapped a coil around the outside of the pressure tube. On the dynamometer, 2, 3, and 4 A all gave nearly the same curve as no current at all.
+
+<Figure name="damper/v1-dyno" number={2} alt="Force against velocity for no current, 2, 3, and 4 amps. All four curves nearly overlap.">
+  EMBR V1 with MR fluid at increasing current. Critical design report, Fig. 12.
+</Figure>
+
+The team traced that to two causes. The compression circuit had too much open area, so the fluid never saw much restriction. And the field ran the wrong way. Iron particles line up along field lines, and shearing across that alignment takes much more force than shearing along it. At the orifice, V1's field ran parallel to the flow.
+
+<Figure name="damper/v1-field" number={3} narrow plate={false} alt="Cross section of V1 with field lines looping around the outside coil and running along the tube at the center orifice.">
+  How V1's field likely ran. At the center it lies along the flow. Critical design report, Fig. 13.
+</Figure>
+
+## The redesign
+
+EMBR V2 moves the coil inside the pressure tube onto a steel piston, which channels the flux across the gap and perpendicular to the flow. There are no holes through the piston. All the fluid has to pass through a narrow annular (ring-shaped) gap between the piston and the tube.
+
+<Figure name="damper/v2-cad" number={4} narrow alt="CAD section of the V2 damper showing the spring, the internal floating piston, and the coil on the steel piston at the bottom of the tube.">
+  The V2 concept. Critical design report, Fig. 14.
+</Figure>
+
+The team modeled the gap as flow between two flat plates. That gives a pressure gradient, and the pressure drop pushes on the piston head:
+
+$$
+\frac{dP}{dy} = -\frac{12\,Q\,\mu}{a^3 W}, \qquad F = \left|\frac{dP}{dy}\right| L\, A_p
+$$
+
+Here $Q$ is the flow from the moving shaft, $\mu$ is the fluid viscosity, and $a$ is the gap. $W$ is the mean circumference, $L$ is the piston length, and $A_p$ is the piston area.
+
+```matlab title="Critical design report, appendix"
+Q2 = vel.*A1;                                       % [m^3/s] volumetric flow rate
+dPdy2 = -(12.*Q2.*mu_MR) ./ (a^3*W);
+deltaP2 = abs(dPdy2).*L;                            % [Pa] pressure drop across
+force_lbf = (deltaP2 .* A_p);                       % [N] force vs. velocity
+```
+
+The gap is cubed, so it dominates. V1's gap was 1.94 mm and V2's is 0.5 mm, which alone gives a factor of 58. The longer piston, larger area, and wider channel bring the total to 330 times the force, from 0.94 N to 310 N at 8 m/s.
+
+<DamperFigure number={5} />
+
+## The electromagnet
+
+The fluid only stiffens if the field crosses the gap perpendicular to the flow. That was the problem I worked on, with limits on space, power draw, and heat.
+
+The coil is about 250 turns of 26 AWG copper on a 9 mm steel core. It runs at 2 A from a 40 V DC supply. I modeled it in Python by summing the field of each loop, since a coil this short does not match the infinite solenoid approximation. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
+
+$$
+B_z = \frac{\mu_0 I}{2\pi}\frac{1}{\sqrt{(a+r)^2 + z^2}}\left[K + \frac{a^2 - r^2 - z^2}{(a-r)^2 + z^2}E\right]
+$$
+
+$K$ and $E$ are complete elliptic integrals. They have no closed form, and SciPy evaluates them directly. Adding the magnetized core gives an estimated peak of 0.15 T across the 2.5 mm radial gap modeled at the time. That number comes from the model, and the design report calls the geometry difficult to model. The steel parts carry the flux, so the field crosses the gap where the fluid flows.
+
+## Control and heat
+
+Two accelerometers track the motion of the uppers against the lowers, and an Arduino drives the electromagnet. It uses PWM (pulse-width modulation, switching quickly between on and off) to vary the coil current, and with it the field. Graham Adleman programmed the Arduino, and I helped him design the system. Control is needed for two reasons. Holding the field on during rebound would trap fluid and risk cavitation. And the coil turns 20 to 40 W into heat at full power, so it can only run when damping is needed. Curb tests at 15 mph with BMI160 accelerometers showed the pair could tell when a compression starts, when it peaks, and when rebound begins.
+
+## How we checked it
+
+The team compared a flow model of the gap against Ansys Fluent computational fluid dynamics (CFD) at three axle velocities. The difference shrinks as velocity rises.
+
+| Axle velocity | Flow model | Fluent CFD | Difference |
+| --- | --- | --- | --- |
+| 2 m/s | 20 N | 16 N | 16.5% |
+| 4 m/s | 45 N | 40 N | 10.9% |
+| 6 m/s | 80 N | 74 N | 7.2% |
+
+A dynamometer then measured damper performance against velocity. The final numbers can't be made public.
+
+<Figure name="damper/test-rig" number={6} narrow plate={false} alt="The fork mounted vertically in a dynamometer test rig.">
+  The fork on the dynamometer.
+</Figure>
+
+<Figure name="damper/on-bike" number={7} plate={false} alt="The EMBR fork on a mountain bike, with the front wheel lifted over a stone wall.">
+  The finished fork on a bike.
+</Figure>
+
+## Poster
+
+<Figure name="damper/poster" number={8} wide plate={false} alt="The EMBR capstone poster, covering motivation, key technology, the damper design, cost analysis, and testing.">
+  The final poster. [Open it as a PDF](/assets/Capstone/Poster.pdf) to zoom in.
+</Figure>

@@ -1,0 +1,209 @@
+---
+/**
+ * src/components/GantryWeight.astro
+ * Gantry LQR Weight Figure
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Live figure: change the LQR weight on load position and see the gain, the step response, and the
+ * phase margin follow. The build fails if the solver no longer recovers the report's gain at Q = 20.
+ *
+ * File Structure:
+ * - Build-time gate against the report
+ * - Controls, prerendered plot at the report's weight, and readout
+ * - Script: solves the LQR problem and redraws
+ *
+ * Where this file is used within the repository:
+ * - src/content/docs/projects/MCD-project.mdx
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import Plot from './Plot.astro';
+import { measure, phaseMargin, sampleResponse, simulate, solveLqr } from '../lib/gantry';
+import { linePath, makePlot } from '../lib/plot';
+
+interface Props {
+    number: number;
+}
+
+const C_REPORT_Q = 20;
+const C_REPORT_GAIN = [4.4721, 2.7148, 1.431];
+const C_REPORT_MARGIN = 36.8925;
+const C_SECONDS = 15;
+
+const gain = solveLqr(C_REPORT_Q);
+const margin = phaseMargin(gain);
+
+gain.forEach((value, index) => {
+    if (Math.abs(value - C_REPORT_GAIN[index]) / C_REPORT_GAIN[index] > 0.001) {
+        throw new Error(`[ERROR] LQR solver no longer recovers the report's gain: ${gain}`);
+    }
+});
+
+if (Math.abs(margin.margin - C_REPORT_MARGIN) > 0.5) {
+    throw new Error(`[ERROR] Phase margin drifted from the report: ${margin.margin}`);
+}
+
+const plot = makePlot(0, C_SECONDS, -0.5, 2.5);
+const response = simulate({ delay: 0, saturate: true, gain });
+const points = sampleResponse(response, C_SECONDS);
+const start = measure(response);
+---
+
+<figure class="es-fig es-live" data-gantry-weight data-plot-config={JSON.stringify(plot)}>
+    <div class="es-live-controls not-content" data-controls hidden>
+        <label for="gantry-weight">Weight Q on load position, with R = 1</label>
+        <input
+            id="gantry-weight"
+            type="range"
+            min="0"
+            max="2.7"
+            step="0.01"
+            value={Math.log10(C_REPORT_Q)}
+            data-slider
+        />
+        <div class="es-live-presets">
+            <button type="button" data-preset="1">Q = 1</button>
+            <button type="button" data-preset="20">Q = 20, the report's value</button>
+            <button type="button" data-preset="100">Q = 100</button>
+            <button type="button" data-preset="500">Q = 500</button>
+        </div>
+        <label class="es-live-check">
+            <input type="checkbox" data-saturate checked />
+            Limit the actuator to 1 m/s
+        </label>
+    </div>
+
+    <ul class="es-live-legend not-content" aria-hidden="true">
+        <li><span class="es-swatch es-swatch-live"></span>This weight</li>
+        <li><span class="es-swatch es-swatch-base"></span>Q = 20</li>
+        <li><span class="es-swatch es-swatch-ref"></span>1 m reference</li>
+    </ul>
+
+    <Plot
+        id="gantry-weight-plot"
+        plot={plot}
+        xTicks={[0, 5, 10, 15]}
+        yTicks={[0, 1, 2]}
+        xLabel="Time (s)"
+        yLabel="Position (m)"
+        label="Load position against time for a 1 meter step at the chosen LQR weight"
+        paths={[
+            { key: 'ref', class: 'es-ref', d: linePath([0, C_SECONDS], [1, 1], plot) },
+            { key: 'base', class: 'es-line-base', d: linePath(points.times, points.values, plot) },
+            { key: 'live', class: 'es-line-live', d: linePath(points.times, points.values, plot) },
+        ]}
+    />
+
+    <p class="es-live-read" aria-live="polite" data-read>
+        Q = {C_REPORT_Q}. K = [{gain.map((value) => value.toFixed(2)).join(', ')}]. Overshoot {
+            start.overshoot.toFixed(1)
+        }%. It settles in {start.settling?.toFixed(2)} s. Phase margin {margin.margin.toFixed(1)} degrees.
+    </p>
+    <noscript>
+        <p>The slider needs JavaScript. The curve above is the report's weight.</p>
+    </noscript>
+
+    <figcaption>
+        <span class="es-fignum">Figure {Astro.props.number}</span>
+        <span>
+            The LQR solution for each weight, on the linearized plant, with the report's estimator
+            gains held fixed. At Q = 20 the solver recovers the report's gain to four decimals. The
+            phase margin ignores saturation, as the report's does.
+        </span>
+    </figcaption>
+</figure>
+
+<script>
+    import { measure, phaseMargin, sampleResponse, simulate, solveLqr } from '../lib/gantry';
+    import { attachCrosshair, linePath, type PlotConfig } from '../lib/plot';
+
+    const C_SECONDS = 15;
+
+    for (const root of document.querySelectorAll<HTMLElement>('[data-gantry-weight]')) {
+        const plot = JSON.parse(root.dataset.plotConfig ?? '{}') as PlotConfig;
+        const slider = root.querySelector<HTMLInputElement>('[data-slider]')!;
+        const saturate = root.querySelector<HTMLInputElement>('[data-saturate]')!;
+        const live = root.querySelector<SVGPathElement>('[data-path="live"]')!;
+        const base = root.querySelector<SVGPathElement>('[data-path="base"]')!;
+        const read = root.querySelector<HTMLElement>('[data-read]')!;
+        const reportGain = solveLqr(20);
+        let q = 10 ** Number(slider.value);
+        let livePoints: { times: number[]; values: number[] } = { times: [], values: [] };
+        let basePoints: { times: number[]; values: number[] } = { times: [], values: [] };
+
+        root.querySelector<HTMLElement>('[data-controls]')!.hidden = false;
+
+        /**
+         * @brief Solves for the chosen weight and redraws the chart and readout
+         * @return Nothing
+         */
+        const update = () => {
+            const gain = solveLqr(q);
+            const limited = saturate.checked;
+            const response = simulate({ delay: 0, saturate: limited, gain });
+            const { overshoot, settling } = measure(response);
+            const { margin } = phaseMargin(gain);
+
+            livePoints = sampleResponse(response, C_SECONDS);
+            basePoints = sampleResponse(
+                simulate({ delay: 0, saturate: limited, gain: reportGain }),
+                C_SECONDS
+            );
+            live.setAttribute('d', linePath(livePoints.times, livePoints.values, plot));
+            base.setAttribute('d', linePath(basePoints.times, basePoints.values, plot));
+
+            const settled =
+                settling === null
+                    ? 'It does not settle within 60 s.'
+                    : `It settles in ${settling.toFixed(2)} s.`;
+            const peak = overshoot > 1000 ? 'over 1000' : overshoot.toFixed(1);
+
+            read.textContent = `Q = ${q < 10 ? q.toFixed(1) : q.toFixed(0)}. K = [${gain.map((value) => value.toFixed(2)).join(', ')}]. Overshoot ${peak}%. ${settled} Phase margin ${margin.toFixed(1)} degrees.`;
+        };
+
+        slider.addEventListener('input', () => {
+            q = 10 ** Number(slider.value);
+            update();
+        });
+        saturate.addEventListener('change', update);
+
+        for (const button of root.querySelectorAll<HTMLButtonElement>('[data-preset]')) {
+            button.addEventListener('click', () => {
+                q = Number(button.dataset.preset);
+                slider.value = String(Math.log10(q));
+                update();
+            });
+        }
+
+        /**
+         * @brief Reads a charted response at a time
+         * @param points Charted response
+         * @param time Time in seconds
+         * @return Position as display text
+         */
+        const at = (points: { times: number[]; values: number[] }, time: number): string => {
+            const value = points.values[Math.round(time / 0.05)];
+
+            return value === undefined || Math.abs(value) > 100 ? 'off scale' : value.toFixed(2);
+        };
+
+        attachCrosshair(
+            root.querySelector<HTMLElement>('[data-plot]')!,
+            plot,
+            (time) =>
+                `${time.toFixed(1)} s: ${at(livePoints, time)} m at this weight, ${at(basePoints, time)} m at Q = 20`
+        );
+
+        update();
+    }
+</script>

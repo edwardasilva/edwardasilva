@@ -1,0 +1,54 @@
+/**
+ * src/data/figures.ts
+ * Figure Lookup
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Finds a figure under src/figures by name, so pages and frontmatter can refer to figures by name
+ * and still get hashed URLs and real dimensions.
+ *
+ * File Structure:
+ * - C_FIGURES: every figure, keyed by name
+ * - getFigure: looks one up and fails the build when it is missing
+ *
+ * Where this file is used within the repository:
+ * - src/components/Figure.astro and the project cards
+ *
+ * Usage:
+ * $ `npm run dev` : Runs at build time
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import type { ImageMetadata } from 'astro';
+
+const C_FIGURES = Object.fromEntries(
+    Object.entries(
+        import.meta.glob<{ default: ImageMetadata }>('../figures/**/*.{png,jpg,svg}', {
+            eager: true,
+        })
+    ).map(([file, module]) => [
+        file.replace('../figures/', '').replace(/\.(png|jpg|svg)$/, ''),
+        module.default,
+    ])
+);
+
+/**
+ * @brief Finds a figure by name
+ * @param name Path under src/figures with no extension, such as gantry/augmented
+ * @return Image metadata
+ */
+export function getFigure(name: string): ImageMetadata {
+    const figure = C_FIGURES[name];
+
+    if (!figure) {
+        throw new Error(`[ERROR] No figure named ${name} under src/figures`);
+    }
+
+    return figure;
+}

@@ -1,0 +1,59 @@
+---
+/**
+ * src/components/Figure.astro
+ * Figure
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * A numbered figure with a caption. Plots from reports sit on a white plate in both themes, since
+ * they were drawn for a white page.
+ *
+ * File Structure:
+ * - Props: figure name, alt text, number, plate
+ * - Caption from the default slot
+ *
+ * Where this file is used within the repository:
+ * - Project pages
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import { getFigure } from '../data/figures';
+
+interface Props {
+    name: string;
+    alt: string;
+    number: number;
+    plate?: boolean;
+    narrow?: boolean;
+    wide?: boolean;
+}
+
+const { name, alt, number, plate = true, narrow = false, wide = false } = Astro.props;
+const figure = getFigure(name);
+---
+
+<figure
+    class:list={['es-fig', { 'es-fig-plate': plate, 'es-fig-narrow': narrow, 'es-fig-wide': wide }]}
+>
+    <img
+        src={figure.src}
+        width={figure.width}
+        height={figure.height}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+    />
+    <figcaption>
+        <span class="es-fignum">Figure {number}</span>
+        <span><slot /></span>
+    </figcaption>
+</figure>

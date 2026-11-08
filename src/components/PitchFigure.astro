@@ -1,0 +1,269 @@
+---
+/**
+ * src/components/PitchFigure.astro
+ * Pitch Figure
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Live figure: pick a test tone and watch both pitch detectors work on it, with the FFT spectrum and
+ * the autocorrelation drawn. The build fails if the order of failure stops matching the page text.
+ *
+ * File Structure:
+ * - Build-time checks
+ * - Controls, two prerendered plots, and readout
+ * - Script: rebuilds the signal and reruns both detectors
+ *
+ * Where this file is used within the repository:
+ * - src/content/docs/projects/dsp-final.mdx
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import Plot from './Plot.astro';
+import { detectAcf, detectFft, makeSignal } from '../lib/pitch';
+import { linePath, makePlot, xAt, yAt } from '../lib/plot';
+
+interface Props {
+    number: number;
+}
+
+const C_START = 1000;
+const C_BIN_STRIDE = 4;
+const C_FLOOR_DB = -60;
+
+/**
+ * @brief Runs both detectors on a tone
+ * @param frequency Tone frequency in hertz
+ * @return Both detector results
+ */
+function detect(frequency: number) {
+    const signal = makeSignal(frequency);
+
+    return { fft: detectFft(signal), acf: detectAcf(signal) };
+}
+
+const inBand = detect(1000);
+const pastAcf = detect(1800);
+const pastFft = detect(2300);
+
+if (
+    Math.abs(inBand.fft.frequency - 1000) > 1 ||
+    Math.abs(inBand.acf.frequency - 1000) > 1 ||
+    Math.abs(pastAcf.fft.frequency - 1800) > 1 ||
+    Math.abs(pastAcf.acf.frequency - 1800) < 100 ||
+    Math.abs(pastFft.fft.frequency - 2300) < 100
+) {
+    throw new Error('[ERROR] Pitch detectors no longer fail in the order the page describes');
+}
+
+const spectrumPlot = makePlot(0, 4000, C_FLOOR_DB, 60, 240);
+const acfPlot = makePlot(0, 40, -1, 1, 240);
+const start = detect(C_START);
+const bins = start.fft.spectrum
+    .filter((_, bin) => bin % C_BIN_STRIDE === 0)
+    .map((value) => Math.max(C_FLOOR_DB, 20 * Math.log10(value + 1e-9)));
+const hz = bins.map((_, index) => (index * C_BIN_STRIDE * 8000) / 8192);
+const near = start.acf.lags.findIndex((lag) => lag > 40);
+const shownLags = start.acf.lags.slice(0, near);
+const shownValues = start.acf.values.slice(0, near);
+const thresholdD = `M${xAt(0, acfPlot)} ${yAt(0.2, acfPlot)}L${xAt(40, acfPlot)} ${yAt(0.2, acfPlot)}`;
+---
+
+<figure
+    class="es-fig es-live"
+    data-pitch
+    data-spectrum-config={JSON.stringify(spectrumPlot)}
+    data-acf-config={JSON.stringify(acfPlot)}
+>
+    <div class="es-live-controls not-content" data-controls hidden>
+        <label for="pitch-frequency">Test tone</label>
+        <input
+            id="pitch-frequency"
+            type="range"
+            min="1.74"
+            max="3.48"
+            step="0.001"
+            value={Math.log10(C_START)}
+            data-slider
+        />
+        <div class="es-live-presets">
+            <button type="button" data-preset="440">440 Hz</button>
+            <button type="button" data-preset="1500">1500 Hz</button>
+            <button type="button" data-preset="1800">1800 Hz</button>
+            <button type="button" data-preset="2300">2300 Hz</button>
+        </div>
+    </div>
+
+    <p class="es-live-read" aria-live="polite" data-read>
+        Tone {C_START} Hz. FFT {start.fft.frequency.toFixed(1)} Hz. ACF {
+            start.acf.frequency.toFixed(1)
+        } Hz.
+    </p>
+
+    <p class="es-live-title">FFT magnitude, with a line at the tone</p>
+    <Plot
+        id="pitch-spectrum"
+        plot={spectrumPlot}
+        xTicks={[0, 1000, 2000, 3000, 4000]}
+        yTicks={[-60, -30, 0, 30, 60]}
+        xLabel="Frequency (Hz)"
+        yLabel="Magnitude (dB)"
+        label="Magnitude spectrum of the current frame"
+        paths={[
+            { key: 'mark', class: 'es-ref', d: '' },
+            { key: 'live', class: 'es-line-live', d: linePath(hz, bins, spectrumPlot) },
+        ]}
+    />
+
+    <p class="es-live-title">
+        Autocorrelation by lag, with the 0.2 threshold and a line at the tone's true period
+    </p>
+    <Plot
+        id="pitch-acf"
+        plot={acfPlot}
+        xTicks={[0, 10, 20, 30, 40]}
+        yTicks={[-1, 0, 1]}
+        xLabel="Lag (samples at 8 kHz)"
+        yLabel="Correlation"
+        label="Normalized autocorrelation across the search lags"
+        paths={[
+            { key: 'threshold', class: 'es-ref', d: thresholdD },
+            { key: 'mark', class: 'es-line-base', d: '' },
+            {
+                key: 'live',
+                class: 'es-line-live',
+                d: linePath(shownLags, shownValues, acfPlot),
+            },
+        ]}
+    />
+    <noscript>
+        <p>The slider needs JavaScript. The curves above are for a 1000 Hz tone.</p>
+    </noscript>
+
+    <figcaption>
+        <span class="es-fignum">Figure {Astro.props.number}</span>
+        <span>
+            The project's detectors from Run.m, run in your browser on a steady tone. The figure
+            scales the tone by the magnitude of the two Butterworth filters and adds white noise at
+            the level in Main.m. The search starts at lag 4 and the plot stops at lag 40, though the
+            search continues to lag 145.
+        </span>
+    </figcaption>
+</figure>
+
+<script>
+    import { detectAcf, detectFft, filterGain, makeSignal } from '../lib/pitch';
+    import { attachCrosshair, linePath, xAt, yAt, type PlotConfig } from '../lib/plot';
+
+    const C_BIN_STRIDE = 4;
+    const C_FLOOR_DB = -60;
+
+    for (const root of document.querySelectorAll<HTMLElement>('[data-pitch]')) {
+        const spectrumPlot = JSON.parse(root.dataset.spectrumConfig ?? '{}') as PlotConfig;
+        const acfPlot = JSON.parse(root.dataset.acfConfig ?? '{}') as PlotConfig;
+        const slider = root.querySelector<HTMLInputElement>('[data-slider]')!;
+        const read = root.querySelector<HTMLElement>('[data-read]')!;
+        const spectrumHost = root.querySelector<HTMLElement>('[data-plot="pitch-spectrum"]')!;
+        const acfHost = root.querySelector<HTMLElement>('[data-plot="pitch-acf"]')!;
+        let frequency = 10 ** Number(slider.value);
+        let bins: number[] = [];
+        let lags: number[] = [];
+        let values: number[] = [];
+
+        root.querySelector<HTMLElement>('[data-controls]')!.hidden = false;
+
+        /**
+         * @brief Reruns both detectors and redraws the plots and readout
+         * @return Nothing
+         */
+        const update = () => {
+            const signal = makeSignal(frequency);
+            const fft = detectFft(signal);
+            const acf = detectAcf(signal);
+
+            bins = fft.spectrum
+                .filter((_, bin) => bin % C_BIN_STRIDE === 0)
+                .map((value) => Math.max(C_FLOOR_DB, 20 * Math.log10(value + 1e-9)));
+
+            const hz = bins.map((_, index) => (index * C_BIN_STRIDE * 8000) / 8192);
+            const end = acf.lags.findIndex((lag) => lag > 40);
+
+            lags = acf.lags.slice(0, end);
+            values = acf.values.slice(0, end);
+            spectrumHost
+                .querySelector('[data-path="live"]')!
+                .setAttribute('d', linePath(hz, bins, spectrumPlot));
+            acfHost
+                .querySelector('[data-path="live"]')!
+                .setAttribute('d', linePath(lags, values, acfPlot));
+
+            const toneX = xAt(frequency, spectrumPlot);
+            const periodX = xAt(8000 / frequency, acfPlot);
+
+            spectrumHost
+                .querySelector('[data-path="mark"]')!
+                .setAttribute(
+                    'd',
+                    `M${toneX} ${yAt(60, spectrumPlot)}L${toneX} ${yAt(C_FLOOR_DB, spectrumPlot)}`
+                );
+            acfHost
+                .querySelector('[data-path="mark"]')!
+                .setAttribute(
+                    'd',
+                    8000 / frequency <= 40
+                        ? `M${periodX} ${yAt(1, acfPlot)}L${periodX} ${yAt(-1, acfPlot)}`
+                        : ''
+                );
+
+            /**
+             * @brief Describes one detector's result
+             * @param name Detector name
+             * @param estimate Estimated frequency, 0 when it found nothing
+             * @return Sentence for the readout
+             */
+            const describe = (name: string, estimate: number): string =>
+                estimate === 0
+                    ? `${name} found no peak.`
+                    : `${name} ${estimate.toFixed(1)} Hz, off by ${Math.abs(estimate - frequency).toFixed(1)} Hz.`;
+            const gainDb = 20 * Math.log10(filterGain(frequency) + 1e-12);
+
+            read.textContent = `Tone ${frequency.toFixed(0)} Hz, filter gain ${gainDb.toFixed(0)} dB. ${describe('FFT', fft.frequency)} ${describe('ACF', acf.frequency)}`;
+        };
+
+        slider.addEventListener('input', () => {
+            frequency = 10 ** Number(slider.value);
+            update();
+        });
+
+        for (const button of root.querySelectorAll<HTMLButtonElement>('[data-preset]')) {
+            button.addEventListener('click', () => {
+                frequency = Number(button.dataset.preset);
+                slider.value = String(Math.log10(frequency));
+                update();
+            });
+        }
+
+        attachCrosshair(spectrumHost, spectrumPlot, (hz) => {
+            const index = Math.round((hz * 8192) / 8000 / C_BIN_STRIDE);
+
+            return `${hz.toFixed(0)} Hz: ${(bins[index] ?? C_FLOOR_DB).toFixed(1)} dB`;
+        });
+        attachCrosshair(acfHost, acfPlot, (lag) => {
+            const index = lags.findIndex((candidate) => candidate >= Math.round(lag));
+
+            return index < 0
+                ? 'Below the search range'
+                : `Lag ${lags[index]}: ${values[index].toFixed(3)}`;
+        });
+
+        update();
+    }
+</script>

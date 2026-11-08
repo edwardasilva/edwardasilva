@@ -1,0 +1,67 @@
+---
+title: resume-generator
+description: A script that turns one JSON file into a one-page PDF resume. It measures the real page to fit it and checks the text an applicant tracking system would read.
+slug: projects/resume-generator
+kind: personal
+order: 2
+dek: A script that turns one JSON file into a one-page PDF resume. It measures the compiled page to make it fit, then checks the text an applicant tracking system would read.
+when: Ongoing
+links:
+    - label: Source on GitHub
+      href: https://github.com/edwardasilva/resume-generator
+---
+
+{/*
+  src/content/docs/projects/resume-generator.mdx
+  Project write-up
+
+  Author: Edward Silva
+  Creation Date: 07 November, 2026
+  Last Update: 08 November, 2026
+
+  Short description of resume-generator, from its public README. Written to the rules in eeprep's .github/STYLE.md.
+
+  Usage:
+  $ `npm run dev` : Renders at /projects/resume-generator
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+  NOTICE: This file contains personal biographical data.
+  It is strictly excluded from the repository's MIT License and
+  may not be reproduced, distributed, or modified without permission.
+*/}
+
+I built this for the same reason I started [eeprep](/projects/eeprep/), to make a good resume easier to put together.
+
+You write the content in a JSON file, and the script does the layout. It follows the rules on [eeprep's resume page](https://eeprep.com/advice/resume/).
+
+## How it fits one page
+
+The script runs LuaLaTeX and reads the page measurements back from its log.
+
+1. It starts at 11 pt text with 0.5 in margins. It steps the text down to 10 pt, then the margins down to 0.4 in, and keeps the first layout that fits.
+2. It grows line spacing and the section and entry gaps together until the page is full. Spacing never shrinks below its compact values.
+3. If nothing fits at the tightest layout, it stops and says about how many lines to cut.
+
+```python title="build.py"
+def fit(typeface):
+    """Find the roomiest layout that fits on one page, then fill the page.
+
+    Returns (font, margin, fill, free lines), or None and the log of the
+    tightest try when nothing fits.
+    """
+    for font, margin in LAYOUTS:
+        pages, log = compile_once(typeface, font, margin)
+        if pages == 1:
+            return (font, margin, *fill_page(typeface, font, margin, log)), log
+    return None, log
+```
+
+Line breaks do not depend on vertical spacing, so the page's height grows in a straight line as the spacing grows. One build at the roomy end gives the slope, and one more lands on a full page.
+
+## How it checks the result
+
+Applicant tracking systems read a PDF's text layer. So each build extracts the text with `pdftotext` and confirms that every heading, entry, and bullet comes out whole and in reading order. It also notes bullets with a short last line and pages with more than 3 empty lines.
+
+The fonts ship with the project, so the PDF looks the same on every system. CI builds every example and fails if a PDF is not exactly one page.
+
+The [resume on this site](/resume/viewer/) uses the same fitting and checking steps, in a JavaScript port tied to my own data file.
