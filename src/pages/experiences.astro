@@ -11,7 +11,6 @@
  * Edward belongs to.
  *
  * File Structure:
- * - Intro
  * - Roles: company, title, and dates, linking to the role page
  * - Organizations
  *
@@ -32,7 +31,6 @@ import ExternalLink from '../components/ExternalLink.astro';
 import {
     asSentence,
     getExperienceHref,
-    resume,
     visibleExperiences,
     visibleOrganizations,
 } from '../data/resume';
@@ -46,14 +44,6 @@ import {
         tableOfContents: false,
     }}
 >
-    <p>
-        My full work history is on{' '}
-        <ExternalLink href={resume.personal.linkedin}>LinkedIn</ExternalLink>. Each role below has
-        its own page. For work I did at a company, I share only what is on my resume, so there is no
-        employer code, data, or figures here. The reports and code elsewhere on this site are from
-        school and personal projects.
-    </p>
-
     <ul class="es-roles">
         {
             visibleExperiences.map((experience) => (

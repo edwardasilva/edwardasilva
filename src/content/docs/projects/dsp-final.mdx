@@ -4,7 +4,7 @@ description: Comparing FFT and autocorrelation pitch detection in a real-time MA
 slug: projects/dsp-final
 kind: project
 order: 3
-dek: FFT and autocorrelation pitch detection, compared on the same signal chain. The FFT took 0.22 ms per frame and autocorrelation took 0.59 ms. The live figure shows the frequency where each one stops tracking.
+dek: FFT and autocorrelation pitch detection, compared on one signal chain. The FFT ran 2.68 times faster.
 figure: pitch/residual
 figureAlt: Residual frequency error for FFT and autocorrelation across a sweep. Both collapse past about frame 1000.
 team: Edward Silva, Jonas Krider, Tappen Douglas
@@ -34,7 +34,7 @@ import Figure from '../../../components/Figure.astro';
 import PitchFigure from '../../../components/PitchFigure.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-The FFT found the pitch 2.68 times faster than autocorrelation, and it kept tracking several hundred hertz higher. Either method works for a simple auto-tune. For the EENG 411 final project, I built the real-time MATLAB pipeline that runs both detectors, and I measured the results. The numbers and plots below are the ones I produced and checked. The detector code on this page is the team's.
+The FFT found the pitch 2.68 times faster than autocorrelation, and it kept tracking several hundred hertz higher. Either method works for a simple auto-tune. For the EENG 411 final project, I built the real-time MATLAB pipeline that runs both detectors, and I measured the results. The detector code on this page is the team's.
 
 An FFT finds the pitch by looking for the strongest frequency bin. Autocorrelation (ACF) looks for the lag where a signal best matches itself.
 
