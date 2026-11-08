@@ -14,10 +14,13 @@ concurrency:
   group: ci-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+# The ruleset for main in edwardasilva/information#23 requires Build and Lint by name, so keep
+# these job names.
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -39,9 +42,11 @@ jobs:
           SKIP_RESUME_GENERATE: '1'
         run: npm run build
 
+  # A failed check does not stop the others, so one run lists every problem.
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -55,10 +60,20 @@ jobs:
           node-version: 24
           cache: npm
 
-      - run: npm ci --ignore-scripts
-      - run: npm run lint
+      - name: npm ci
+        id: install
+        run: npm ci --ignore-scripts
+
+      - name: Lint (ESLint)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run lint
+
+      - name: Format (Prettier)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run format
+
       # tsc reads the astro:content and import.meta.glob types from .astro/, which a fresh
       # checkout does not have until astro sync generates them.
-      - run: npx astro sync
-      - run: npm run typecheck
-      - run: npm run format
+      - name: Type check
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npx astro sync && npm run typecheck
