@@ -28,21 +28,19 @@
  */
 
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import ExternalLink from '../components/ExternalLink.astro';
 import ProjectCards from '../components/ProjectCards.astro';
 import { getProjectPages } from '../data/projects';
 import { asSentence, resume } from '../data/resume';
 
 const caseStudies = (await getProjectPages('project')).slice(0, 3);
 const personal = await getProjectPages('personal');
-const { linkedin } = resume.personal;
 ---
 
 <StarlightPage
     frontmatter={{
         title: resume.personal.name,
         description:
-            'Edward Silva writes embedded software for Starlink at SpaceX. Control, state estimation, and signal processing write-ups, with the reports behind them.',
+            'Edward Silva writes embedded software for Starlink at SpaceX. Projects in control, state estimation, and signal processing.',
         head: [{ tag: 'title', content: resume.personal.name }],
         template: 'splash',
         pagefind: false,
@@ -53,12 +51,7 @@ const { linkedin } = resume.personal;
 >
     <section class="es-hero">
         <h1 id="_top">{resume.personal.name}</h1>
-        <p class="es-lede">
-            I write embedded software for Starlink at SpaceX in Bastrop, Texas. This site has the
-            long versions of my projects: the math, the measured results, who on the team did which
-            part, and where each design fell short. My job history is on{' '}
-            <ExternalLink href={linkedin}>LinkedIn</ExternalLink>.
-        </p>
+        <p class="es-lede">I write embedded software for Starlink at SpaceX.</p>
     </section>
 
     <h2>Selected projects</h2>

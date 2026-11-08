@@ -8,8 +8,8 @@
  *
  * Fails a pull request whose body does not name its issue on a line of its own, the same rule
  * eeprep uses. Issues are off in this repo, so the issue is usually in another one, such as
- * Part of edwardasilva/information#7 on the edwardasilva.com board. Part of #12 also passes. Dependabot
- * and pull requests labeled no-epic are exempt.
+ * Part of edwardasilva/information#7 on the edwardasilva.com board. Part of #12 also passes.
+ * Dependabot and pull requests labeled no-epic are exempt.
  *
  * File Structure:
  * - Inputs: PR_BODY, PR_LABELS, PR_ACTOR, and PR_SENDER from the environment

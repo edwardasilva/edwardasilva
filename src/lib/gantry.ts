@@ -39,7 +39,7 @@ const C_STEP_S = 0.001;
 const C_SETTLING_BAND = 0.02;
 const C_ESCAPE_M = 1e6;
 
-export const C_RUN_S = 60;
+const C_RUN_S = 60;
 export const C_PREDICTED_LIMIT_S = 0.1878;
 export const C_REPORT = {
     linear: { overshoot: 10.1723, settling: 3.6926 },
