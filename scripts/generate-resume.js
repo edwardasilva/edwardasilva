@@ -440,7 +440,7 @@ export function expectedText(data) {
  * @brief Reads and validates the resume data
  * @return Resume data
  */
-export function loadResumeData() {
+function loadResumeData() {
     const data = JSON.parse(fs.readFileSync(C_DATA_PATH, 'utf8'));
 
     validate(data);

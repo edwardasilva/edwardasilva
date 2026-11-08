@@ -53,7 +53,7 @@ function runStep(command) {
 }
 
 C_STEPS.forEach(runStep);
-console.log('\n[SUCCESS] All sync, lint, format, and build steps completed.');
+console.log('\n[SUCCESS] Lint, format, and build steps completed.');
 
 if (C_START_DEV) {
     runStep('npm run dev');
