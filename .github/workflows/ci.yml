@@ -61,5 +61,8 @@ jobs:
 
       - run: npm ci --ignore-scripts
       - run: npm run lint
+      # tsc reads the astro:content and import.meta.glob types from .astro/, which a fresh
+      # checkout does not have until astro sync generates them.
+      - run: npx astro sync
       - run: npm run typecheck
       - run: npm run format
