@@ -1,6 +1,6 @@
 ## Issue
 
-Part of edwardasilva/eeprep#
+Part of edwardasilva/information#
 
 ## Summary
 

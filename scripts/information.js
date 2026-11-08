@@ -7,9 +7,9 @@
  * Last Update: 08 November, 2026
  *
  * Manages information/, a git submodule that points at the private repo edwardasilva/information.
- * It holds the files that stay off the public repo: resume-data.json, TODO.md, .agents/, and
- * previousjobs/. Only Edward can read the private repo, so anyone else who clones this one gets an
- * empty information/ folder.
+ * It holds the files that stay off the public repo: resume-data.json, .agents/, and previousjobs/.
+ * Only Edward can read the private repo, so anyone else who clones this one gets an empty
+ * information/ folder.
  *
  * Both repos change only through pull requests. A change to information/ goes up on a branch of
  * its own and merges there first. This repo then points at the merged commit on information's

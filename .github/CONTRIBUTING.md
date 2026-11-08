@@ -4,7 +4,7 @@ This page covers how a change gets from an idea to edwardasilva.com. It follows 
 
 ## Start with an issue
 
-Every change starts as a GitHub issue. Issues are off in this repo, so they live in [eeprep](https://github.com/edwardasilva/eeprep/issues) with an `edwardasilva.com:` title prefix, and on its project board.
+Every change starts as a GitHub issue on the edwardasilva.com project board. Issues are off in this repo, so they live in the private repo `edwardasilva/information`. Issues labeled `repo` are work anyone can pick up. Issues labeled `personal` are Edward's. Work that also involves eeprep can use an eeprep issue instead, with an `edwardasilva.com:` title prefix.
 
 ## Branches and pull requests
 
@@ -13,7 +13,7 @@ Cut a short branch from `main` and open a pull request back into `main`. Keep ea
 The pull request body names its issue on its own line:
 
 ```text
-Part of edwardasilva/eeprep#244
+Part of edwardasilva/information#7
 ```
 
 CI fails a pull request when that line is missing. Dependabot is exempt, and so is a pull request labeled `no-epic`. The check runs again when you edit the body or change a label, so no new push is needed.
@@ -38,7 +38,7 @@ The pre-push hook stops a push that points at an `information/` commit outside i
 
 Pull requests into `main` run these jobs:
 
-- the body contains `Part of edwardasilva/eeprep#<issue>` (Dependabot and `no-epic` skip this)
+- the body contains `Part of edwardasilva/information#<issue>` or another repo's issue (Dependabot and `no-epic` skip this)
 - `npm ci` and the production build, with `resume-data.json` from the commit `information/` points at
 - `npm run lint`, `npm run typecheck`, and `npm run format`
 

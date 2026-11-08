@@ -7,8 +7,8 @@
  * Last Update: 08 November, 2026
  *
  * Fails a pull request whose body does not name its issue on a line of its own, the same rule
- * eeprep uses. The issue can be in this repo (Part of #12) or another one
- * (Part of edwardasilva/eeprep#12), so work tracked on the eeprep board also counts. Dependabot
+ * eeprep uses. Issues are off in this repo, so the issue is usually in another one, such as
+ * Part of edwardasilva/information#7 on the edwardasilva.com board. Part of #12 also passes. Dependabot
  * and pull requests labeled no-epic are exempt.
  *
  * File Structure:
