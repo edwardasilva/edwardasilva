@@ -8,7 +8,7 @@ dek: Eight of us put a magnetorheological damper in a production fork. The first
 figure: damper/on-bike
 figureAlt: The EMBR fork on a mountain bike, with the front wheel lifted over a stone wall.
 team: Graham Adleman, Kyle Grote, Sam Harber, Coltrae Kerschen, Henry Kruse, Ben Mackenzie, Edward Silva, Eli Webster. Client John Weiler, sponsored by ARUS MR Tech. Project advisor Dr. Aubrey Wigner, technical advisors Shay Rubino and Dr. Oyvind Nilsen.
-myPart: Electromagnet design and calculation verification.
+myPart: Electromagnet design, calculation verification, and help with the PWM coil control design.
 ---
 
 {/*
@@ -17,7 +17,7 @@ myPart: Electromagnet design and calculation verification.
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 07 November, 2026
+  Last Update: 08 November, 2026
 
   Built from the capstone poster in src/assets/Capstone, the team's critical design report, and the project entry in resume-data.json. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -107,7 +107,7 @@ $K$ and $E$ are complete elliptic integrals. They have no closed form, and SciPy
 
 ## Control and heat
 
-Two accelerometers track the motion of the uppers against the lowers, and a controller drives the electromagnet. Control is needed for two reasons. Holding the field on during rebound would trap fluid and risk cavitation. And the coil turns 20 to 40 W into heat at full power, so it can only run when damping is needed. Curb tests at 15 mph with BMI160 accelerometers showed the pair could tell when a compression starts, when it peaks, and when rebound begins.
+Two accelerometers track the motion of the uppers against the lowers, and an Arduino drives the electromagnet. It uses PWM (pulse-width modulation, switching quickly between on and off) to vary the coil current, and with it the field. Graham Adleman programmed the Arduino, and I helped him design the system. Control is needed for two reasons. Holding the field on during rebound would trap fluid and risk cavitation. And the coil turns 20 to 40 W into heat at full power, so it can only run when damping is needed. Curb tests at 15 mph with BMI160 accelerometers showed the pair could tell when a compression starts, when it peaks, and when rebound begins.
 
 ## How we checked it
 
