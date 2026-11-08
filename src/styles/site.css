@@ -334,6 +334,20 @@ body {
     :root[data-has-sidebar][data-has-toc] .main-pane {
         --sl-content-margin-inline: auto;
     }
+
+    /* A page with no table of contents puts its column where a page with one does, so the text
+       starts at the same place on every page. The end padding is the width Starlight gives the
+       table of contents, and the rule under the title still runs to the edge of the window. */
+    :root[data-has-sidebar]:not([data-has-toc]) .content-panel {
+        padding-inline-end: calc(
+            var(--sl-content-pad-x) +
+                max(
+                    var(--sl-sidebar-width),
+                    var(--sl-sidebar-width) +
+                        (100% - var(--sl-content-width) - var(--sl-sidebar-width)) / 2
+                )
+        );
+    }
 }
 
 /* Phones: 16px inputs stop iOS from zooming on focus, and no grey tap flash. */
