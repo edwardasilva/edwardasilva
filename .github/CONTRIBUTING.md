@@ -32,7 +32,7 @@ Every merge is a squash merge, and the branch is deleted when it merges. Do not 
 4. Run `npm run info:pull` here. It moves `information/` to the new `main` and stages the pointer.
 5. Commit the pointer on a branch and open a pull request in this repo.
 
-The pre-push hook stops a push that points at an `information/` commit outside its `main` branch, because a squash merge leaves a branch commit out of `main`.
+The pre-push hook blocks a push when `information/` points at a commit that is not on information's `main`. A squash merge does not keep branch commits, so a pointer to one can break the deploy.
 
 ## Checks
 
@@ -42,7 +42,7 @@ Pull requests into `main` run these jobs:
 - `npm ci` and the production build, with `resume-data.json` from the commit `information/` points at
 - `npm run lint`, `npm run typecheck`, and `npm run format`
 
-CI reads the private data with the read-only deploy key in the `INFORMATION_REPO_KEY` secret. Dependabot pull requests can only read Dependabot secrets, so the same key is also saved there.
+CI reads the private data with the read-only deploy key in the `INFORMATION_REPO_KEY` secret. Dependabot pull requests can only read Dependabot secrets, so save the same key as a Dependabot secret too.
 
 ## Releases and deploys
 

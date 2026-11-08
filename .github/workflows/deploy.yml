@@ -21,8 +21,6 @@ permissions:
   contents: read
 
 env:
-  # Opt in now to the GitHub Actions Node 24 JavaScript runtime.
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   TARGET: ${{ github.event_name == 'workflow_dispatch' && inputs.target || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'dev') }}
 
 # A deploy that has started runs to the end. A newer one waits for it.
@@ -39,7 +37,7 @@ jobs:
       ASTRO_SITE: ${{ vars.ASTRO_SITE || 'https://edwardasilva.com' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # resume-data.json stays off this public repo. It lives in information/, a submodule that points
       # at the private repo edwardasilva/information. INFORMATION_REPO_KEY is the private half of a
@@ -49,7 +47,7 @@ jobs:
           ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
 
       - name: Setup Node
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm

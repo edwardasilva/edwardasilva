@@ -28,14 +28,12 @@
  */
 
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import ExternalLink from '../components/ExternalLink.astro';
 import ProjectCards from '../components/ProjectCards.astro';
 import { getProjectPages } from '../data/projects';
 import { asSentence, resume } from '../data/resume';
 
 const caseStudies = (await getProjectPages('project')).slice(0, 3);
 const personal = await getProjectPages('personal');
-const { linkedin } = resume.personal;
 const { home } = resume.site.pages;
 ---
 
@@ -53,10 +51,7 @@ const { home } = resume.site.pages;
 >
     <section class="es-hero">
         <h1 id="_top">{resume.personal.name}</h1>
-        <p class="es-lede">
-            {home.intro && `${asSentence(home.intro)} `}My job history is on{' '}
-            <ExternalLink href={linkedin}>LinkedIn</ExternalLink>.
-        </p>
+        {home.intro && <p class="es-lede">{asSentence(home.intro)}</p>}
     </section>
 
     <h2>Selected projects</h2>

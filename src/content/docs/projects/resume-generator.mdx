@@ -23,9 +23,7 @@ slug: projects/resume-generator
   may not be reproduced, distributed, or modified without permission.
 */}
 
-I built this for the same reason I started [eeprep](/projects/eeprep/), to make a good resume easier to put together.
-
-You write the content in a JSON file, and the script does the layout. It follows the rules on [eeprep's resume page](https://eeprep.com/advice/resume/).
+You write your resume in one JSON file, and the script lays it out on one page by the rules on [eeprep's resume page](https://eeprep.com/advice/resume/).
 
 ## How it fits one page
 
@@ -49,7 +47,7 @@ def fit(typeface):
     return None, log
 ```
 
-Line breaks do not depend on vertical spacing, so the page's height grows in a straight line as the spacing grows. One build at the roomy end gives the slope, and one more lands on a full page.
+Spacing never moves a line break, so page height grows in a straight line with spacing. That takes two builds: one at the roomiest spacing to find the slope, and one at the spacing that exactly fills the page.
 
 ## How it checks the result
 
@@ -57,4 +55,4 @@ Applicant tracking systems read a PDF's text layer. So each build extracts the t
 
 The fonts ship with the project, so the PDF looks the same on every system. CI builds every example and fails if a PDF is not exactly one page.
 
-The [resume on this site](/resume/viewer/) uses the same fitting and checking steps, in a JavaScript port tied to my own data file.
+The [resume on this site](/resume/viewer/) uses a JavaScript port of the same steps.
