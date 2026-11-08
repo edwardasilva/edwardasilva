@@ -5,15 +5,17 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
- * The degree, which classes produced which projects, honors, and certifications.
+ * The degree, which classes produced which projects, honors, and certifications. Each list is a
+ * ledger, the same rows as the coursework page.
  *
  * File Structure:
+ * - splitDetail: separates a trailing parenthetical so it can sit in the detail column
  * - Degree
- * - Course to project map
- * - Honors and scholarships
- * - Certifications
+ * - Course to project ledger
+ * - Honors and scholarships ledger
+ * - Certifications ledger
  *
  * Where this file is used within the repository:
  * - Route: /education
@@ -62,7 +64,20 @@ const courseProjects = [
     })),
 ];
 
-const honors = [...(primaryEducation?.honors ?? []), ...(primaryEducation?.scholarships ?? [])];
+/**
+ * @brief Separates a trailing parenthetical from an honor or scholarship
+ * @param text Entry from resume-data.json, such as Dean's List (Fall 2022, Fall 2024)
+ * @return The name, and the text inside the parentheses when there is one
+ */
+function splitDetail(text: string): { name: string; detail?: string } {
+    const match = text.match(/^(.+?)\s*\(([^()]+)\)$/);
+
+    return match ? { name: match[1], detail: match[2] } : { name: text };
+}
+
+const honors = [...(primaryEducation?.honors ?? []), ...(primaryEducation?.scholarships ?? [])].map(
+    splitDetail
+);
 
 const description = primaryEducation
     ? `${primaryEducation.degree} at ${primaryEducation.institution}, graduated ${primaryEducation.graduationDate}, and the classes behind each project.`
@@ -98,45 +113,40 @@ const head = primaryEducation
     }
 
     <h2>Where the classes showed up</h2>
-    <table>
-        <thead>
-            <tr>
-                <th scope="col">Course</th>
-                <th scope="col">What came out of it</th>
-            </tr>
-        </thead>
-        <tbody>
-            {
-                courseProjects.map(({ title, href: projectHref, code }) => {
-                    const course = getCourseByCode(code);
-                    const href = getCourseHref(code);
+    <div class="es-ledger not-content">
+        {
+            courseProjects.map(({ title, href: projectHref, code }) => {
+                const course = getCourseByCode(code);
+                const href = getCourseHref(code);
 
-                    return (
-                        <tr>
-                            <td>
-                                {href ? <a href={href}>{code}</a> : code}
-                                {course && `, ${course.name}`}
-                            </td>
-                            <td>
-                                <a href={projectHref}>{title}</a>
-                            </td>
-                        </tr>
-                    );
-                })
-            }
-        </tbody>
-    </table>
+                return (
+                    <div class="es-ledger-row es-ledger-coded">
+                        <code>{code}</code>
+                        <span class="es-ledger-name">
+                            {href ? <a href={href}>{course?.name}</a> : course?.name}
+                        </span>
+                        <span class="es-ledger-detail">
+                            <a href={projectHref}>{title}</a>
+                        </span>
+                    </div>
+                );
+            })
+        }
+    </div>
     <p>The <a href="/education/coursework/">full coursework list</a> has the rest.</p>
 
     {
         honors.length > 0 && (
             <>
                 <h2>Honors and scholarships</h2>
-                <ul>
-                    {honors.map((item) => (
-                        <li>{item}</li>
+                <div class="es-ledger not-content">
+                    {honors.map(({ name, detail }) => (
+                        <div class="es-ledger-row">
+                            <span class="es-ledger-name">{name}</span>
+                            {detail && <span class="es-ledger-detail">{detail}</span>}
+                        </div>
                     ))}
-                </ul>
+                </div>
             </>
         )
     }
@@ -145,20 +155,22 @@ const head = primaryEducation
         visibleCertifications.length > 0 && (
             <>
                 <h2>Certifications</h2>
-                <ul>
+                <div class="es-ledger not-content">
                     {visibleCertifications.map((certification) => (
-                        <li id={getCertificationSlug(certification)}>
-                            {certification.link ? (
-                                <ExternalLink href={certification.link}>
-                                    {certification.name}
-                                </ExternalLink>
-                            ) : (
-                                certification.name
-                            )}
-                            , {certification.organization}
-                        </li>
+                        <div id={getCertificationSlug(certification)} class="es-ledger-row">
+                            <span class="es-ledger-name">
+                                {certification.link ? (
+                                    <ExternalLink href={certification.link}>
+                                        {certification.name}
+                                    </ExternalLink>
+                                ) : (
+                                    certification.name
+                                )}
+                            </span>
+                            <span class="es-ledger-detail">{certification.organization}</span>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </>
         )
     }

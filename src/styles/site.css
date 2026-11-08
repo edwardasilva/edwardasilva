@@ -435,7 +435,8 @@ a.external-link .es-ext-last::after {
 .es-footer a,
 .es-roles a,
 .es-skills a,
-.es-courses a {
+.es-courses a,
+.es-ledger a {
     color: var(--es-ink);
     text-decoration-line: underline;
     text-decoration-color: var(--es-silver);
@@ -447,7 +448,8 @@ a.external-link .es-ext-last::after {
     .es-footer a:hover,
     .es-roles a:hover,
     .es-skills a:hover,
-    .es-courses a:hover {
+    .es-courses a:hover,
+    .es-ledger a:hover {
         color: var(--es-accent);
         text-decoration-color: currentColor;
     }
@@ -482,10 +484,14 @@ a.external-link .es-ext-last::after {
     color: var(--es-accent);
 }
 
-.es-courses {
+/* Ledgers: the coursework rows and the lists on the education page share the hairline rows, the
+   code column, and the name weight. */
+.es-courses,
+.es-ledger {
     border-bottom: var(--es-border);
 }
-.es-course {
+.es-course,
+.es-ledger-row {
     border-top: var(--es-border);
     scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
 }
@@ -502,14 +508,16 @@ a.external-link .es-ext-last::after {
 .es-course summary::-webkit-details-marker {
     display: none;
 }
-.es-course summary code {
+.es-course summary code,
+.es-ledger-row code {
     padding: 0;
     background: none;
     color: var(--es-ink-2);
     font: 0.8125rem/1.5 var(--es-font-mono);
     white-space: nowrap;
 }
-.es-course-name {
+.es-course-name,
+.es-ledger-name {
     font-weight: 500;
     line-height: 1.45;
 }
@@ -570,6 +578,39 @@ a.external-link .es-ext-last::after {
     }
     .es-course-body {
         padding-inline: 0;
+    }
+}
+
+.es-ledger-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) min(15rem, 35%);
+    gap: var(--es-space-1) var(--es-space-3);
+    align-items: baseline;
+    padding-block: var(--es-space-2);
+}
+.es-ledger-coded {
+    grid-template-columns: 5.5rem minmax(0, 1fr) min(15rem, 35%);
+}
+.es-ledger-detail {
+    color: var(--es-ink-2);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+.es-ledger-row:target .es-ledger-name,
+.es-ledger-row:target .es-ledger-name a {
+    color: var(--es-accent);
+}
+/* Phones: the detail drops under the name. */
+@media (max-width: 30rem) {
+    .es-ledger-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .es-ledger-coded {
+        grid-template-columns: 4.5rem minmax(0, 1fr);
+        column-gap: var(--es-space-2);
+    }
+    .es-ledger-coded .es-ledger-detail {
+        grid-column: 2;
     }
 }
 
