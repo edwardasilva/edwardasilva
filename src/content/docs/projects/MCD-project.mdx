@@ -4,7 +4,7 @@ description: Two controllers for a simulated gantry crane in EENG 417, a slow z-
 slug: projects/MCD-project
 kind: project
 order: 1
-dek: Two controllers for one crane. The slow one holds a 48 degree phase margin. The fast one settles in under 4 seconds and gives margin back. Change the weights and the delay yourself.
+dek: Two controllers for the same simulated crane, a slow one with a 48 degree phase margin and a faster one that settles in under 4 seconds with less margin. The live figures let you change the weight and the delay.
 figure: gantry/reference-scaling
 figureAlt: Reference-scaling response of the crane to a 2 meter pulse.
 team: Tarek Al-Bakri, Brian Durland, Edward Silva
@@ -59,7 +59,7 @@ That is an integrator and an undamped pair of poles at $s = \pm j\sqrt{2.6771}$.
   The open-loop step response. The position climbs and the swing never decays.
 </Figure>
 
-## Part 1: slow on purpose
+## Part 1: the slow controller
 
 We assumed a heavy load and traded time for safety. The specs were zero overshoot, settling within 120 s, and hoist velocity at or below 1 m/s. We discretized the plant at 50 Hz and designed directly in the z-domain, the discrete-time form of a transfer function. The Simulink model has a zero pair at $z = 0.9993 \pm 0.0171j$ and three poles at 0.8225, 0.6689, and 0.9273.
 
@@ -157,13 +157,13 @@ Augmentation removes the overshoot and costs 12.7 degrees of phase margin. The r
 - The `lqr` weights have no physical meaning, so the result is optimal only in that it met the spec.
 - A real crane would need these margins validated before anyone ran this controller on it.
 
-## What the weight does
+## Changing the LQR weight
 
 The report says we raised the ratio of $Q$ to $R$ until the design met spec. This figure shows what that does. With the 1 m/s limit on, more weight speeds up the response until Q is near 100. Past that, the gains ask for more than the actuator can give. At Q = 500 the saturated loop runs away, though the linear analysis still shows 25.6 degrees of margin.
 
 <GantryWeight number={8} />
 
-## Try the delay yourself
+## Adding delay
 
 Part 1 tested its delay prediction in simulation, and Part 2 did not. The Part 2 report calculates a limit of $36.8925^\circ \times \frac{\pi}{180} / 3.4293 = 0.1878$ s, then says the phase margin "was not validated". This figure runs that test on the reference-scaling design.
 

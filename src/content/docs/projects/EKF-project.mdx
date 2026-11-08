@@ -4,7 +4,7 @@ description: Estimating the terrain force on a magnetorheological mountain bike 
 slug: projects/EKF-project
 kind: project
 order: 2
-dek: Two Kalman filters estimate the force a mountain bike damper cannot measure. Rerunning them shows they agree at the report's parameters. Change the fluid's yield constant to see where they separate.
+dek: Two Kalman filters estimate a force the damper's sensors can't measure. At the report's parameters they agree, and the live figure shows them pull apart as the fluid's yield constant goes up.
 figure: estimation/ukf-force
 figureAlt: Unscented Kalman filter estimate of terrain force tracking the true force, with three-sigma bounds.
 team: Edward Silva
@@ -16,7 +16,7 @@ team: Edward Silva
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 07 November, 2026
+  Last Update: 08 November, 2026
 
   Built from the EENG 519 report in src/assets/EKF and the project's Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -33,7 +33,7 @@ import EstimationFigure from '../../../components/EstimationFigure.astro';
 import Figure from '../../../components/Figure.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-The unscented filter pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sampling spread, it cut the force error from 625 N to 401 N. It also kept every sample inside its bounds. At the report's parameters the two filters agree to within 0.4 N. Their force series in the report's own figures differ by at most 0.06 pixels.
+The unscented filter pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sampling spread, it cut the force error from 625 N to 401 N. It also kept every sample inside its bounds. At the report's parameters the two filters agree to within 0.4 N. In the report's own plots, the two force curves are never more than 0.06 pixels apart.
 
 A Kalman filter estimates values a sensor cannot read by combining a model with noisy measurements. This was my final project for EENG 519. It ran in MATLAB and Simulink, and nothing here ran on the bike.
 

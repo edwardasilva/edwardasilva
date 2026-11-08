@@ -6,10 +6,11 @@
  * Creation Date: 16 March, 2026
  * Last Update: 08 November, 2026
  *
- * Points git at the committed hooks in .githooks/. The pre-commit hook builds the resume, commits
- * information/, and strips private paths from the index. The pre-push hook blocks private paths
- * and pushes information/. The hook files are the source of truth, so this script never writes
- * them. It only restores their executable bit and registers the folder.
+ * Points git at the committed hooks in .githooks/. The pre-commit hook builds the resume and strips
+ * private paths from the index. The pre-push hook blocks private paths, and blocks a push that
+ * points information/ at a commit that is not on its main branch. The hook files are the source of
+ * truth, so this script never writes them. It only restores their executable bit and registers
+ * the folder.
  *
  * File Structure:
  * - Global Constants: root and hook paths

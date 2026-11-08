@@ -1,0 +1,68 @@
+name: CI
+
+# Every change reaches main through a pull request, and this workflow checks each one.
+# The "Part of #" check is in pr-body.yml, so editing the body or a label does not restart it.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  # Opt in now to the GitHub Actions Node 24 JavaScript runtime.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+# A newer push to the same pull request cancels the older run.
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: ./.github/actions/information
+        with:
+          ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      # --ignore-scripts skips prepare, which writes git hook config.
+      - run: npm ci --ignore-scripts
+
+      - name: Build
+        env:
+          SKIP_RESUME_PDF_BUILD: '1'
+          SKIP_RESUME_GENERATE: '1'
+        run: npm run build
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      # Type checking reads src/data/resume.ts, which imports resume-data.json.
+      - uses: ./.github/actions/information
+        with:
+          ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      # tsc reads the astro:content and import.meta.glob types from .astro/, which a fresh
+      # checkout does not have until astro sync generates them.
+      - run: npx astro sync
+      - run: npm run typecheck
+      - run: npm run format

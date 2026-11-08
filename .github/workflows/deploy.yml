@@ -1,7 +1,8 @@
 name: Deploy to Cloudflare Pages
 
-# A push to main deploys the dev site, the "dev" preview branch of the edwardasilva Pages project.
-# A version tag, such as v1.0.0, deploys edwardasilva.com. A manual run picks either.
+# A merge to main deploys the dev site, the "dev" preview branch of the edwardasilva Pages project.
+# A version tag, such as v1.0.0, deploys edwardasilva.com and creates its GitHub release.
+# A manual run picks either target. .github/CONTRIBUTING.md has the release steps.
 on:
   push:
     branches: [main]
@@ -24,9 +25,10 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   TARGET: ${{ github.event_name == 'workflow_dispatch' && inputs.target || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'dev') }}
 
+# A deploy that has started runs to the end. A newer one waits for it.
 concurrency:
   group: cloudflare-pages-${{ github.event_name == 'workflow_dispatch' && inputs.target || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'dev') }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -42,67 +44,9 @@ jobs:
       # resume-data.json stays off this public repo. It lives in information/, a submodule that points
       # at the private repo edwardasilva/information. INFORMATION_REPO_KEY is the private half of a
       # read-only deploy key on that repo.
-      - name: Find the information commit this repo points at
-        id: information
-        shell: bash
-        env:
-          INFORMATION_REPO_KEY: ${{ secrets.INFORMATION_REPO_KEY }}
-        run: |
-          set -euo pipefail
-
-          if [[ -z "${INFORMATION_REPO_KEY:-}" ]]; then
-            echo "::error::INFORMATION_REPO_KEY is not set. Add the deploy key for edwardasilva/information as a repository secret."
-            exit 1
-          fi
-
-          sha="$(git ls-tree HEAD information | awk '$2 == "commit" { print $3 }')"
-
-          if [[ -z "$sha" ]]; then
-            echo "::error::This commit has no information submodule."
-            exit 1
-          fi
-
-          echo "sha=$sha" >> "$GITHUB_OUTPUT"
-
-      # Checks out that exact commit, and only resume-data.json, so the other private files never
-      # reach the runner.
-      - name: Checkout resume data from the information submodule
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: ./.github/actions/information
         with:
-          repository: edwardasilva/information
-          ref: ${{ steps.information.outputs.sha }}
           ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
-          path: information
-          filter: blob:none
-          sparse-checkout: resume-data.json
-          sparse-checkout-cone-mode: false
-          persist-credentials: false
-
-      - name: Validate resume data
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          python3 - <<'PY'
-          import json
-          import sys
-
-          path = "information/resume-data.json"
-          try:
-            with open(path, "r", encoding="utf-8") as f:
-              data = json.load(f)
-          except Exception as exc:
-            print(f"::error::{path} is not valid JSON: {exc}")
-            sys.exit(1)
-
-          required_keys = ["personal", "education", "experiences", "projects"]
-          missing = [key for key in required_keys if key not in data]
-          if missing:
-            print(f"::error::{path} is missing required top-level keys: {', '.join(missing)}")
-            sys.exit(1)
-
-          print(f"{path} checked out and validated.")
-          PY
 
       - name: Setup Node
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -139,3 +83,24 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=edwardasilva --branch=${{ steps.branch.outputs.name }} --commit-hash=${{ github.sha }}
+
+  release:
+    name: GitHub release
+    needs: deploy
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create the release with generated notes, or keep an existing one
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        # A release published by hand before this job runs already exists. This workflow uploads
+        # no assets, so there is nothing to update in that case.
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $TAG already exists. No assets to upload, so it is left as it is."
+          else
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TAG" --generate-notes --verify-tag
+          fi
