@@ -5,13 +5,14 @@
  *
  * Author: Edward Silva
  * Creation Date: 06 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
- * One expandable course: its description, skills, and any project that came out of it.
+ * One row of the coursework ledger. The closed row shows the code and name. Opened, it shows the
+ * description, then the skills and any project from the course as a label and value grid.
  *
  * File Structure:
  * - Props: course
- * - Details element
+ * - Details element: summary row, then the description and facts grid
  *
  * Where this file is used within the repository:
  * - src/pages/education/coursework.astro
@@ -42,29 +43,35 @@ const projects = getProjectsForCourse(course);
 <details id={getCourseSlug(course)} class="es-course">
     <summary>
         <code>{course.code}</code>
-        <span>{course.name}</span>
+        <span class="es-course-name">{course.name}</span>
     </summary>
-    <p>{getCourseCopy(course)}</p>
-    {
-        course.skills.length > 0 && (
-            <p class="es-course-meta">
-                Skills: <SkillLinks skills={course.skills} />
-            </p>
-        )
-    }
-    {
-        projects.length > 0 && (
-            <p class="es-course-meta">
-                {projects.length === 1 ? 'Project: ' : 'Projects: '}
-                {projects.map((project, index) => (
-                    <>
-                        {index > 0 && ', '}
-                        <a href={getProjectHref(project)}>
-                            {getDisplayTitle(getProjectHref(project), project.title)}
-                        </a>
-                    </>
-                ))}
-            </p>
-        )
-    }
+    <div class="es-course-body">
+        <p>{getCourseCopy(course)}</p>
+        {
+            (course.skills.length > 0 || projects.length > 0) && (
+                <dl class="es-facts">
+                    {course.skills.length > 0 && (
+                        <div>
+                            <dt>Skills</dt>
+                            <dd>
+                                <SkillLinks skills={course.skills} />
+                            </dd>
+                        </div>
+                    )}
+                    {projects.length > 0 && (
+                        <div>
+                            <dt>{projects.length === 1 ? 'Project' : 'Projects'}</dt>
+                            <dd class="es-facts-links">
+                                {projects.map((project) => (
+                                    <a href={getProjectHref(project)}>
+                                        {getDisplayTitle(getProjectHref(project), project.title)}
+                                    </a>
+                                ))}
+                            </dd>
+                        </div>
+                    )}
+                </dl>
+            )
+        }
+    </div>
 </details>

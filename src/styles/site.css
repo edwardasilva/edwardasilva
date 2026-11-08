@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
  * Header, cards, external link marks, page lists, the project facts block, figures on a white
  * plate, the live figures, and the sidebar. Adapted from eeprep.com.
@@ -485,33 +485,95 @@ a.external-link .es-ext-last::after {
     color: var(--es-accent);
 }
 
+.es-courses {
+    border-bottom: var(--es-border);
+}
 .es-course {
-    padding-block: var(--es-space-3);
     border-top: var(--es-border);
     scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
 }
 .es-course summary {
-    display: flex;
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr) 0.75rem;
     gap: var(--es-space-3);
     align-items: baseline;
+    padding-block: var(--es-space-2);
+    list-style: none;
+    color: var(--es-ink);
     cursor: pointer;
 }
+.es-course summary::-webkit-details-marker {
+    display: none;
+}
 .es-course summary code {
-    flex: none;
-    width: 5.5rem;
     padding: 0;
     background: none;
     color: var(--es-ink-2);
+    font: 0.8125rem/1.5 var(--es-font-mono);
+    white-space: nowrap;
 }
-.es-course p {
-    max-width: var(--es-measure);
+.es-course-name {
+    font-weight: 500;
+    line-height: 1.45;
 }
-.es-course-meta {
-    color: var(--es-ink-2);
-    font-size: 0.9375rem;
+/* Chevron at the end of the row. It points down when closed and up when open. */
+.es-course summary::after {
+    --es-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+    content: '';
+    align-self: center;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: var(--es-silver);
+    forced-color-adjust: none;
+    -webkit-mask: var(--es-chevron) no-repeat center / contain;
+    mask: var(--es-chevron) no-repeat center / contain;
 }
-.es-course:target summary span {
+.es-course[open] summary::after {
+    transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: no-preference) {
+    .es-course summary::after {
+        transition: transform 0.15s ease-out;
+    }
+}
+.es-course:target .es-course-name,
+.es-course summary:focus-visible .es-course-name {
     color: var(--es-accent);
+}
+@media (hover: hover) {
+    .es-course summary:hover .es-course-name {
+        color: var(--es-accent);
+    }
+    .es-course summary:hover::after {
+        background-color: var(--es-accent);
+    }
+}
+/* The open course lines up under the name, so the codes stay a clean column. */
+.es-course-body {
+    padding: 0 calc(0.75rem + var(--es-space-3)) var(--es-space-4) calc(5.5rem + var(--es-space-3));
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+.es-course-body p {
+    max-width: var(--es-measure);
+    margin: 0;
+    color: var(--es-ink-2);
+}
+.es-course-body .es-facts {
+    margin-top: var(--es-space-3);
+}
+.es-course-body .es-facts > div {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+}
+/* Phones: a narrower code column, and the open course uses the full width. */
+@media (max-width: 30rem) {
+    .es-course summary {
+        grid-template-columns: 4.5rem minmax(0, 1fr) 0.75rem;
+        gap: var(--es-space-2);
+    }
+    .es-course-body {
+        padding-inline: 0;
+    }
 }
 
 .es-proof-list {
