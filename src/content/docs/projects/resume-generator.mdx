@@ -56,7 +56,7 @@ def fit(typeface):
     return None, log
 ```
 
-Line breaks do not depend on vertical spacing, so the page's height grows in a straight line as the spacing grows. One build at the roomy end gives the slope, and one more lands on a full page.
+Changing the vertical spacing never moves a line break, so the page gets taller in a straight line as the spacing grows. The script builds once at the roomiest spacing to measure that line, works out the spacing that exactly fills the page, and builds once more at that spacing.
 
 ## How it checks the result
 

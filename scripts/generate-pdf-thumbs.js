@@ -27,15 +27,12 @@
  * may not be reproduced, distributed, or modified without permission.
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { pdf } from 'pdf-to-img';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const ROOT_DIR = path.resolve(__dirname, '..');
+const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ASSET_DIR = path.join(ROOT_DIR, 'src', 'assets');
 const THUMB_DIR = path.join(ASSET_DIR, 'thumbs');
 const RESUME_DATA = path.join(ROOT_DIR, 'information', 'resume-data.json');
