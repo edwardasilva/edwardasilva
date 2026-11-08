@@ -1,0 +1,87 @@
+---
+/**
+ * src/components/ThemeSelect.astro
+ * Theme Toggle
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Sun and moon button. With no saved choice, Starlight follows the device. Adapted from eeprep.com.
+ *
+ * File Structure:
+ * - Button markup
+ * - Script: applies and stores the theme
+ *
+ * Where this file is used within the repository:
+ * - Starlight ThemeSelect override, set in astro.config.mjs
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+---
+
+<button class="es-theme" type="button" aria-label="Switch color theme">
+    <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.75"
+        ></circle>
+        <path
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"
+        ></path>
+    </svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linejoin="round"
+            d="M16 3.5A8.5 8.5 0 1 0 20.5 14 6.5 6.5 0 0 1 16 3.5z"></path>
+    </svg>
+</button>
+
+<script>
+    const C_STORAGE_KEY = 'starlight-theme';
+
+    /**
+     * @brief Reads the theme now on the page
+     * @return The current theme
+     */
+    function currentTheme(): 'light' | 'dark' {
+        return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+    }
+
+    /**
+     * @brief Names the action the button will take
+     * @param theme The current theme
+     * @return Label for the button
+     */
+    function labelFor(theme: 'light' | 'dark'): string {
+        return theme === 'light' ? 'Switch to dark' : 'Switch to light';
+    }
+
+    for (const button of document.querySelectorAll<HTMLButtonElement>('.es-theme')) {
+        button.setAttribute('aria-label', labelFor(currentTheme()));
+        button.addEventListener('click', () => {
+            const theme = currentTheme() === 'light' ? 'dark' : 'light';
+
+            document.documentElement.dataset.theme = theme;
+            button.setAttribute('aria-label', labelFor(theme));
+
+            // Storage can be blocked or full. The theme still switches for this page.
+            try {
+                localStorage.setItem(C_STORAGE_KEY, theme);
+            } catch {
+                return;
+            }
+        });
+    }
+</script>

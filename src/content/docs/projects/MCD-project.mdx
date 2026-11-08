@@ -1,0 +1,176 @@
+---
+title: Gantry crane control
+description: Two controllers for a simulated gantry crane in EENG 417, a slow z-domain design and a faster state-space redesign. Live figures let you change the LQR weight and the delay.
+slug: projects/MCD-project
+kind: project
+order: 1
+dek: Two controllers for one crane. The slow one holds a 48 degree phase margin. The fast one settles in under 4 seconds and gives margin back. Change the weights and the delay yourself.
+figure: gantry/reference-scaling
+figureAlt: Reference-scaling response of the crane to a 2 meter pulse.
+team: Tarek Al-Bakri, Brian Durland, Edward Silva
+myPart: The cable length solver, the K and L gains, the main script, and the figures. Brian Durland did most of the simulation. He and I pair-programmed the LQR design, the anti-windup, and the margin analysis on his computer.
+---
+
+{/*
+  src/content/docs/projects/MCD-project.mdx
+  Project write-up
+
+  Author: Edward Silva
+  Creation Date: 07 November, 2026
+  Last Update: 08 November, 2026
+
+  Built from the two gantry crane reports in src/assets/MCD and the project repository. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
+
+  Usage:
+  $ `npm run dev` : Renders at /projects/MCD-project
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+  NOTICE: This file contains personal biographical data.
+  It is strictly excluded from the repository's MIT License and
+  may not be reproduced, distributed, or modified without permission.
+*/}
+
+import Figure from '../../../components/Figure.astro';
+import GantryDelay from '../../../components/GantryDelay.astro';
+import GantryWeight from '../../../components/GantryWeight.astro';
+import ProofList from '../../../components/ProofList.astro';
+
+My team built two controllers for one simulated crane. The first moves the load 1 m in just under 2 minutes with no overshoot. The second settles in under 4 seconds, and its phase margin drops from 48 degrees to 36.9 or 24.2. Phase margin is how much extra lag a loop can take before it goes unstable. Figures 8 and 9 run the second design in your browser.
+
+An operator on a gantry crane controls only the direction and speed, so where the load ends up depends on the operator's skill. This work comes from two projects in EENG 417. It all ran in MATLAB and Simulink, with no physical crane.
+
+## Finding the cable length
+
+The project gave us measured crane data and no cable length. We tried a range of lengths, compared each one's steady-state oscillation to the data, and narrowed the range. The answer was $\ell = 3.6644$ m, which the reports round to 3.7 m.
+
+<Figure name="gantry/cable-length" number={1} alt="Experimental data overlaid with the linear and nonlinear model responses. All three nearly coincide over ten seconds.">
+  The measured response against the nonlinear model and its small-angle linearization.
+</Figure>
+
+With small-angle approximations, the plant from cart velocity to load position is
+
+$$
+G(s) = \frac{g/\ell}{s\left(s^2 + g/\ell\right)}
+$$
+
+That is an integrator and an undamped pair of poles at $s = \pm j\sqrt{2.6771}$. A step input alone leaves the load swinging, so the controller has to move it without exciting that pair.
+
+<Figure name="gantry/step-response" number={2} alt="Open-loop step response of the linear and nonlinear models, rising with a visible oscillation.">
+  The open-loop step response. The position climbs and the swing never decays.
+</Figure>
+
+## Part 1: slow on purpose
+
+We assumed a heavy load and traded time for safety. The specs were zero overshoot, settling within 120 s, and hoist velocity at or below 1 m/s. We discretized the plant at 50 Hz and designed directly in the z-domain, the discrete-time form of a transfer function. The Simulink model has a zero pair at $z = 0.9993 \pm 0.0171j$ and three poles at 0.8225, 0.6689, and 0.9273.
+
+Equation (7) in the report rounds these coefficients, and the rounding changes the zeros from complex to real. The model's numerator is $z^2 - 1.9986z + 0.9989$, and its discriminant is negative:
+
+$$
+1.9986^2 - 4(0.9989) = -0.0012
+$$
+
+The printed numerator is $z^2 - 1.999z + 0.9989$, and its discriminant is positive:
+
+$$
+1.999^2 - 4(0.9989) = +0.0004
+$$
+
+The real pair puts a zero outside the unit circle and turns the DC gain negative. Use the values in the model to reproduce the result. Run against the linearized plant, they give no overshoot and a 112.6 s settling time, which matches the report's "just under 2 minutes".
+
+<Figure name="gantry/slow-position" number={3} alt="Load position rising slowly and smoothly to the 1 meter reference over about 120 seconds, with no overshoot.">
+  Load position for a 1 m command.
+</Figure>
+
+The report gives load swing of no more than 1 degree, about 3 inches on this cable. Its swing plot does show a brief first peak near 1.5 degrees.
+
+<Figure name="gantry/slow-swing" number={4} alt="Load swing angle decaying from a first peak near 1.5 degrees to zero over about 150 seconds.">
+  Load swing over the same move.
+</Figure>
+
+A phase margin $\phi_m$ turns into a delay limit at crossover $\omega_c$, the frequency where the loop gain is 1. A pure delay $\tau$ adds phase lag $\omega\tau$ without changing the gain, so:
+
+$$
+\omega_c \tau = \phi_m \quad\Rightarrow\quad \tau = \frac{48^\circ \cdot \pi / 180}{1.62} = 0.5\ \text{s}
+$$
+
+That is 25 samples at 50 Hz. We added a 25-sample delay to check. The instability was marginal, and the response never settled.
+
+<Figure name="gantry/slow-delay" number={5} alt="Load position with a 25-sample delay. The response keeps oscillating around the reference and does not settle.">
+  The same command with a 25-sample delay added.
+</Figure>
+
+## Part 2: the same crane with harder specs
+
+| Spec | Part 1 | Part 2 |
+| --- | --- | --- |
+| Overshoot | 0% | At most 20% |
+| Settling time | At most 120 s | 5 s |
+| Velocity limit | 1 m/s, met by the design | 1 m/s, met by actuator saturation |
+| Method | z-domain | State space with an estimator |
+
+We rewrote the plant in control canonical form. MATLAB's `lqr` (a linear-quadratic regulator, which picks gains by minimizing a weighted cost) set the state feedback. It also set the estimator, the code that infers states we could not measure. The estimator's poles came out about 6 times faster than the controller's.
+
+```matlab title="Project 2/src/main.m"
+A = [0 1 0;0 0 1;0 -g/l 0];
+B = [0;0;g/l];
+C = [1 0 0];
+
+% to achieve settling time requirement, Q must be more heavily weighted
+[Kopt, Soptplant, Poptplant] = lqr(A,B,20*(C'*C),1)
+
+% same method with observer matrices, but 4x faster than system
+[Lopt, Soptobs, Poptobs] = lqr(A',C',500000*(B*B'),1)
+```
+
+We compared two ways to remove steady-state error. Reference scaling multiplies the input by a factor $N$. On this plant the factor has a short proof. At steady state the load sits at the reference, the velocity and acceleration are zero, and the estimate equals the state, so $x = [r,\ 0,\ 0]^T$. The integrator needs $u = 0$ to hold still:
+
+$$
+u = Nr - Kx = Nr - K_1 r = 0 \quad\Rightarrow\quad N = K_1
+$$
+
+The report's $N = 4.4721$ is the first entry of $K_{ref} = [4.4721,\ 2.7148,\ 1.4310]$.
+
+State augmentation adds an integrated error state. That design needed anti-windup (a term that stops the integrator growing while the actuator is saturated), with a back-calculation gain of $K_b = 10$.
+
+| Result | Reference scaling | State augmentation |
+| --- | --- | --- |
+| Overshoot | 9.02% | Negligible |
+| Settling time | 3.95 s | 3.45 s |
+| Steady-state error | About $10^{-7}$ | About $10^{-16}$ |
+| Gain margin | Factor of 3.18, or 10.05 dB | Factor of 2.02, or 6.11 dB |
+| Phase margin | 36.9 degrees at 3.43 rad/s | 24.2 degrees at 5.09 rad/s |
+
+The report's text labels the gain margins 3.18 and 2.02 dB. The repository's script computes `Kunst = 20*log10(gmr)`, so those two numbers are ratios, and the table gives both forms.
+
+<Figure name="gantry/reference-scaling" number={6} alt="Reference-scaling response to a 2 meter pulse with a small step disturbance at 10 seconds. The load overshoots slightly and settles.">
+  Reference scaling on a pulse, with a step disturbance at 10 s. Part 2 report, Fig. 3.
+</Figure>
+
+<Figure name="gantry/augmented" number={7} alt="State-augmented response to the same pulse. The load reaches the reference without overshoot.">
+  State augmentation on the same pulse. Part 2 report, Fig. 5.
+</Figure>
+
+Augmentation removes the overshoot and costs 12.7 degrees of phase margin. The report also records four things we did not solve:
+
+- An LQG design (an LQR with a noise-aware estimator) to reject the disturbance did not work.
+- The large $K_b$ may be sensitive to noise.
+- The `lqr` weights have no physical meaning, so the result is optimal only in that it met the spec.
+- A real crane would need these margins validated before anyone ran this controller on it.
+
+## What the weight does
+
+The report says we raised the ratio of $Q$ to $R$ until the design met spec. This figure shows what that does. With the 1 m/s limit on, more weight speeds up the response until Q is near 100. Past that, the gains ask for more than the actuator can give. At Q = 500 the saturated loop runs away, though the linear analysis still shows 25.6 degrees of margin.
+
+<GantryWeight number={8} />
+
+## Try the delay yourself
+
+Part 1 tested its delay prediction in simulation, and Part 2 did not. The Part 2 report calculates a limit of $36.8925^\circ \times \frac{\pi}{180} / 3.4293 = 0.1878$ s, then says the phase margin "was not validated". This figure runs that test on the reference-scaling design.
+
+<GantryDelay number={9} />
+
+The response rings longer as the delay grows. At 0.18 s it takes about 49 s to settle. At 0.19 s the swing grows and never settles, which agrees with the 0.1878 s prediction. With the 1 m/s limit on, the result is the same: it settles at 0.18 s and grows at 0.19 s.
+
+## Reports
+
+<ProofList slug="MCD-project" />
