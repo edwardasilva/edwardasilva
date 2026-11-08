@@ -7,14 +7,12 @@
  * Creation Date: 16 March, 2026
  * Last Update: 08 November, 2026
  *
- * The roles marked for the site, laid out the way LinkedIn lists them, then the organizations
- * Edward belongs to. Role text comes only from the Summary and Highlights in resume-data.json,
- * which stay at resume level.
+ * The index of roles marked for the site, each linking to its own page, then the organizations
+ * Edward belongs to.
  *
  * File Structure:
  * - Intro
- * - One card per role, linking to its entry
- * - One entry per role: facts, then highlights
+ * - Roles: company, title, and dates, linking to the role page
  * - Organizations
  *
  * Where this file is used within the repository:
@@ -31,10 +29,9 @@
 
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import ExternalLink from '../components/ExternalLink.astro';
-import SkillLinks from '../components/SkillLinks.astro';
 import {
     asSentence,
-    getExperienceSlug,
+    getExperienceHref,
     resume,
     visibleExperiences,
     visibleOrganizations,
@@ -51,109 +48,45 @@ import {
 >
     <p>
         The full history is on <ExternalLink href={resume.personal.linkedin}>LinkedIn</ExternalLink
-        >. Employer work appears here at the level of my resume, with no employer code, data, or
-        figures. The reports and code elsewhere on this site come from school projects and my own
-        work. The <a href="#organizations">organizations</a> I belong to are at the end.
+        >. Each role has its own page. Employer work appears at the level of my resume, with no
+        employer code, data, or figures. The reports and code elsewhere on this site come from
+        school projects and my own work.
     </p>
 
-    <ul class="es-cards not-content">
+    <ul class="es-roles">
         {
             visibleExperiences.map((experience) => (
                 <li>
-                    <a href={`#${getExperienceSlug(experience)}`}>
-                        <strong>{experience.company}</strong>
-                        <span class="es-card-dek">
-                            {experience.title}, {experience.duration}
-                        </span>
-                        {experience.Summary && (
-                            <span class="es-card-dek">{asSentence(experience.Summary)}</span>
-                        )}
-                    </a>
+                    <a href={getExperienceHref(experience)}>{experience.company}</a>,{' '}
+                    {experience.title}. <span class="es-role-meta">{experience.duration}.</span>
                 </li>
             ))
         }
     </ul>
 
-    <div class="es-roles">
-        {
-            visibleExperiences.map((experience) => (
-                <section id={getExperienceSlug(experience)}>
-                    <h2>{experience.title}</h2>
-                    <dl class="es-facts">
-                        <div>
-                            <dt>Company</dt>
-                            <dd>
-                                {experience.companyUrl ? (
-                                    <ExternalLink href={experience.companyUrl}>
-                                        {experience.company}
-                                    </ExternalLink>
-                                ) : (
-                                    experience.company
-                                )}
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>When</dt>
-                            <dd>{experience.duration}</dd>
-                        </div>
-                        {experience.employmentType && (
-                            <div>
-                                <dt>Type</dt>
-                                <dd>{experience.employmentType}</dd>
-                            </div>
-                        )}
-                        {experience.location && (
-                            <div>
-                                <dt>Where</dt>
-                                <dd>{experience.location}</dd>
-                            </div>
-                        )}
-                        {experience.skills.length > 0 && (
-                            <div>
-                                <dt>Tools</dt>
-                                <dd>
-                                    <SkillLinks skills={experience.skills} />
-                                </dd>
-                            </div>
-                        )}
-                    </dl>
-                    {experience.Highlights.length > 0 ? (
-                        <ul>
-                            {experience.Highlights.map((highlight) => (
-                                <li>{asSentence(highlight)}</li>
-                            ))}
-                        </ul>
-                    ) : (
-                        experience.Summary && <p>{asSentence(experience.Summary)}</p>
-                    )}
-                </section>
-            ))
-        }
-
-        {
-            visibleOrganizations.length > 0 && (
-                <section id="organizations">
-                    <h2>Organizations</h2>
-                    <ul>
-                        {visibleOrganizations.map((organization) => (
-                            <li>
-                                {organization.url ? (
-                                    <ExternalLink href={organization.url}>
-                                        {organization.name}
-                                    </ExternalLink>
-                                ) : (
-                                    organization.name
-                                )}
-                                {organization.chapter && `, ${organization.chapter}`}.{' '}
-                                <span class="es-role-meta">
-                                    {organization.role}, {organization.duration}.
-                                </span>
-                                {organization.Summary && ` ${asSentence(organization.Summary)}`}
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )
-        }
-    </div>
+    {
+        visibleOrganizations.length > 0 && (
+            <>
+                <h2 id="organizations">Organizations</h2>
+                <ul class="es-roles">
+                    {visibleOrganizations.map((organization) => (
+                        <li>
+                            {organization.url ? (
+                                <ExternalLink href={organization.url}>
+                                    {organization.name}
+                                </ExternalLink>
+                            ) : (
+                                organization.name
+                            )}
+                            {organization.chapter && `, ${organization.chapter}`}.{' '}
+                            <span class="es-role-meta">
+                                {organization.role}, {organization.duration}.
+                            </span>
+                            {organization.Summary && ` ${asSentence(organization.Summary)}`}
+                        </li>
+                    ))}
+                </ul>
+            </>
+        )
+    }
 </StarlightPage>

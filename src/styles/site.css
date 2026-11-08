@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
  * Header, cards, external link marks, page lists, the project facts block, figures on a white
  * plate, the live figures, and the sidebar. Adapted from eeprep.com.
@@ -455,9 +455,6 @@ a.external-link .es-ext-last::after {
 
 .es-role-meta {
     color: var(--es-ink-2);
-}
-.es-roles section {
-    scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
 }
 
 .es-skills {

@@ -380,12 +380,12 @@ export function getProjectHref(project: Project): string {
 }
 
 /**
- * @brief Gets the link to an experience on the experience page
+ * @brief Gets the link to an experience's page
  * @param experience Experience to link to
- * @return Route path and anchor for the experience
+ * @return Route path for the experience
  */
 export function getExperienceHref(experience: Experience): string {
-    return `/experiences#${getExperienceSlug(experience)}`;
+    return `/experiences/${getExperienceSlug(experience)}`;
 }
 
 /**

@@ -135,8 +135,6 @@ export default defineConfig({
     // Legacy routes that used to exist as standalone pages
     redirects: {
         '/experience': '/experiences',
-        '/experiences/SpaceX-swe': '/experiences',
-        '/experiences/Kratos-swe': '/experiences',
         '/classes': '/education/coursework',
         '/coursework': '/education/coursework',
         '/portfolio': '/projects',
@@ -237,7 +235,16 @@ export default defineConfig({
                         },
                     ],
                 },
-                { label: 'Experience', link: '/experiences/' },
+                {
+                    label: 'Experience',
+                    items: [
+                        { label: 'Experience', link: '/experiences/' },
+                        { label: 'SpaceX', link: '/experiences/SpaceX-swe/' },
+                        { label: 'Kratos', link: '/experiences/Kratos-swe/' },
+                        { label: 'Jordan and Skala', link: '/experiences/jse-coop/' },
+                        { label: 'ePower lab', link: '/experiences/ugrad-research/' },
+                    ],
+                },
                 {
                     label: 'Education',
                     items: [

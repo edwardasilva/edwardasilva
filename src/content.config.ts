@@ -4,14 +4,14 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
  * Defines the docs collection Starlight reads, with the project fields the facts block, the
  * project index, and the home page use. Dates, course, proof, and visibility stay in
  * resume-data.json and are matched by slug.
  *
  * File Structure:
- * - collections: docs, extended with kind, order, card, team, and my part
+ * - collections: docs, extended with kind, order, card, team, my part, and role
  *
  * Used in: Starlight's content loader, src/components/ProjectFacts.astro, src/data/projects.ts
  *
@@ -40,6 +40,7 @@ export const collections = {
                 figureAlt: z.string().optional(),
                 team: z.string().optional(),
                 myPart: z.string().optional(),
+                role: z.string().optional(),
                 when: z.string().optional(),
                 course: z.string().optional(),
                 links: z.array(z.object({ label: z.string(), href: z.string() })).optional(),

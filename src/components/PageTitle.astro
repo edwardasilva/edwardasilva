@@ -5,13 +5,15 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
- * The page heading, followed by the facts block on project pages. The home page has its own heading.
+ * The page heading, followed by the facts block on project and role pages. The home page has its
+ * own heading.
  *
  * File Structure:
  * - Heading
  * - ProjectFacts on project pages
+ * - RoleFacts on role pages
  *
  * Where this file is used within the repository:
  * - Starlight PageTitle override, set in astro.config.mjs
@@ -26,6 +28,7 @@
  */
 
 import ProjectFacts from './ProjectFacts.astro';
+import RoleFacts from './RoleFacts.astro';
 
 const { entry } = Astro.locals.starlightRoute;
 const splash = entry.data.template === 'splash';
@@ -39,3 +42,4 @@ const splash = entry.data.template === 'splash';
     )
 }
 {entry.data.kind && <ProjectFacts />}
+{entry.data.role && <RoleFacts slug={entry.data.role} />}
