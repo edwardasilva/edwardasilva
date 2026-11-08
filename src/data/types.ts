@@ -4,14 +4,15 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
  * Types for the normalized resume data the site renders. Field names match
  * resume-data.json, and fields only the resume generator reads are left out.
  *
  * File Structure:
  * - Scopes: VisibilityScope
- * - Sections: PersonalInfo, About, Education, Course, Experience, Project, Certification
+ * - Sections: PersonalInfo, About, Education, Course, Experience, Project, Certification,
+ *   Organization
  * - Derived types: SkillEntry, SkillReference
  *
  * Used in: src/data/resume.ts and the components that display resume data
@@ -105,6 +106,7 @@ export interface Experience extends WorkEntry {
     company: string;
     companyUrl?: string;
     location: string;
+    employmentType?: string;
 }
 
 export interface Project extends WorkEntry {
@@ -121,6 +123,16 @@ export interface Certification {
     Visibility: VisibilityScope;
 }
 
+export interface Organization {
+    name: string;
+    chapter?: string;
+    url?: string;
+    role: string;
+    duration: string;
+    Summary?: string;
+    Visibility: VisibilityScope;
+}
+
 export interface ResumeData {
     personal: PersonalInfo;
     about: About;
@@ -128,6 +140,7 @@ export interface ResumeData {
     experiences: Experience[];
     projects: Project[];
     certifications: Certification[];
+    organizations: Organization[];
     TopSkills: string[];
     ResumeSkills: string[];
 }

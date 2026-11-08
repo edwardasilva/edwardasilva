@@ -32,7 +32,7 @@ import { getPageSlug, getProjectPages } from '../data/projects';
 import { resume } from '../data/resume';
 
 const C_SECTION_PAGES = [
-    ['Experience', '/experiences/', 'Current and past engineering roles.'],
+    ['Experience', '/experiences/', 'Current and past engineering roles, and organizations.'],
     [
         'Education',
         '/education/',

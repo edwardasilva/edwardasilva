@@ -14,6 +14,7 @@
  * - Constants: display values and patterns
  * - Normalizers: placeholder, visibility, and proof filtering
  * - Exports: resume, the visible lists, slugs, links, and the skills index
+ * - Organizations: memberships listed on the experience page
  *
  * Used in: All components, pages, and routes that need resume data
  *
@@ -34,6 +35,7 @@ import type {
     Course,
     Education,
     Experience,
+    Organization,
     Project,
     Proof,
     ResumeData,
@@ -226,6 +228,31 @@ function normalizeCertification(certification: Certification): Certification {
 }
 
 /**
+ * @brief Cleans an organization membership
+ * @param organization Raw organization entry
+ * @return Organization with empty fields dropped, or null until name, role, and dates are filled
+ */
+function normalizeOrganization(organization: Organization): Organization | null {
+    const name = filledText(organization?.name);
+    const role = filledText(organization?.role);
+    const duration = filledText(organization?.duration);
+
+    if (!name || !role || !duration) {
+        return null;
+    }
+
+    return {
+        name,
+        role,
+        duration,
+        chapter: filledText(organization.chapter),
+        url: filledText(organization.url),
+        Summary: filledText(organization.Summary),
+        Visibility: visibilityScope(organization.Visibility),
+    };
+}
+
+/**
  * @brief Cleans an earlier role listed on the about page
  * @param role Raw role entry
  * @return Role without placeholder fields, or null until title and employer are filled
@@ -277,9 +304,15 @@ export const resume: ResumeData = {
     ...C_RAW_RESUME,
     about: normalizeAbout(C_RAW_RESUME.about ?? {}),
     education: (C_RAW_RESUME.education ?? []).map(normalizeEducation),
-    experiences: (C_RAW_RESUME.experiences ?? []).map(normalizeWork),
+    experiences: (C_RAW_RESUME.experiences ?? []).map((entry) => ({
+        ...normalizeWork(entry),
+        employmentType: filledText(entry.employmentType),
+    })),
     projects: (C_RAW_RESUME.projects ?? []).map(normalizeWork),
     certifications: (C_RAW_RESUME.certifications ?? []).map(normalizeCertification),
+    organizations: (C_RAW_RESUME.organizations ?? [])
+        .map(normalizeOrganization)
+        .filter((entry): entry is Organization => entry !== null),
     TopSkills: filledList(C_RAW_RESUME.TopSkills),
     ResumeSkills: filledList(C_RAW_RESUME.ResumeSkills),
 };
@@ -290,6 +323,9 @@ export const visibleExperiences = resume.experiences.filter((entry) =>
 );
 export const visibleProjects = resume.projects.filter((entry) => isVisibleOnSite(entry.Visibility));
 export const visibleCertifications = resume.certifications.filter((entry) =>
+    isVisibleOnSite(entry.Visibility)
+);
+export const visibleOrganizations = resume.organizations.filter((entry) =>
     isVisibleOnSite(entry.Visibility)
 );
 
