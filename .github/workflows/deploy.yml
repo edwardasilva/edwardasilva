@@ -2,7 +2,7 @@ name: Deploy to Cloudflare Pages
 
 # A merge to main deploys the dev site, the "dev" preview branch of the edwardasilva Pages project.
 # A version tag, such as v1.0.0, deploys edwardasilva.com and creates its GitHub release.
-# A manual run picks either target. .github/CONTRIBUTING.md has the release steps.
+# A manual run picks either target. information/.agents/docs/site_notes.md has the release steps.
 on:
   push:
     branches: [main]
