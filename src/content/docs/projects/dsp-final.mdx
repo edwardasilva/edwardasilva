@@ -87,7 +87,7 @@ On paper the FFT is $O(n \log n)$ and the ACF is $O(n^2)$. I timed each detector
 
 ## Where each one fails
 
-We swept a chirp, a tone that rises in frequency, from 50 Hz toward 4 kHz. Both methods track the pitch inside the pass band. The ACF fails past the 1500 Hz pass-band edge. The FFT keeps tracking into the transition band and collapses at the 2000 Hz stop band.
+We swept a chirp, a tone that rises in frequency, from 50 Hz toward 4 kHz. Both methods track the pitch inside the pass band. The ACF fails past the 1500 Hz pass-band edge. The FFT keeps tracking into the transition band and collapses near 1800 Hz, before the 2000 Hz stop band.
 
 <Figure name="pitch/residual" number={3} alt="Residual frequency error near zero for both methods until around frame 900, where ACF error falls sharply, followed by FFT near frame 1050.">
   Estimated minus true frequency across the sweep.
@@ -105,7 +105,7 @@ Set the tone to 1800 Hz below and the ACF reports about 900 Hz. The filter has c
 
 A steady tone loses the ACF near 1780 Hz, and the report's sweep loses it a little earlier, near 1600 Hz. The sweep also has a falling second chirp and the real decimation filters, which this figure leaves out.
 
-Retuning follows the tracker. It maps correctly up to 2 kHz and fails in the attenuation zone. Around frame 1300 it works again, because a second chirp falling from 4 kHz enters the range the tracker can detect.
+Retuning follows the tracker. It maps correctly up to about 1800 Hz and fails in the filter's attenuation zone. The report rounds that failure point to 2 kHz. Around frame 1300 it works again, because a second chirp falling from 4 kHz enters the range the tracker can detect.
 
 <Figure name="pitch/retuning" number={5} alt="Autotuned frequency following the true frequency up to about 1800 hertz, then breaking down between frames 1050 and 1300, then falling as the true frequency keeps rising.">
   Retuned frequency against the true frequency.
@@ -113,7 +113,7 @@ Retuning follows the tracker. It maps correctly up to 2 kHz and fails in the att
 
 ## Which method to use
 
-The report found both methods accurate within about the same margins for a simple filter. The FFT has lower latency. The ACF tracked better against error and has lower space complexity. The tracker cannot read below 55 Hz, the lower bound set in the code. The report names octave errors and a tremolo from overlapping frames as the next problems to fix.
+The report found both methods accurate within about the same margins for a simple filter. The FFT has lower latency. The report also credits the ACF with better tracking against error and lower space complexity. The tracker cannot read below 55 Hz, the lower bound set in the code. The report names octave errors and a tremolo from overlapping frames as the next problems to fix.
 
 ## Report
 
