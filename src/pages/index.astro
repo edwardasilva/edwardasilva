@@ -5,15 +5,15 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 08 November, 2026
  *
- * Who this is, three projects to start with, personal projects, and where this is heading.
+ * Who this is, three selected projects, personal projects, and long-term plans.
  *
  * File Structure:
  * - Hero
  * - Project cards
  * - Personal projects
- * - Where this is heading, from about.future in resume-data.json
+ * - Long-term plans, from about.future in resume-data.json
  *
  * Where this file is used within the repository:
  * - Route: /
@@ -54,13 +54,14 @@ const { linkedin } = resume.personal;
     <section class="es-hero">
         <h1 id="_top">{resume.personal.name}</h1>
         <p class="es-lede">
-            I write embedded software for Starlink at SpaceX in Bastrop, Texas. My{' '}
-            <ExternalLink href={linkedin}>LinkedIn</ExternalLink> has the job titles. These pages have
-            the equations, the numbers, who did which part, and where each design stopped working.
+            I write embedded software for Starlink at SpaceX in Bastrop, Texas. This site has the
+            long versions of my projects: the math, the measured results, who on the team did which
+            part, and where each design fell short. My job history is on{' '}
+            <ExternalLink href={linkedin}>LinkedIn</ExternalLink>.
         </p>
     </section>
 
-    <h2>Start with one of these</h2>
+    <h2>Selected projects</h2>
     <ProjectCards pages={caseStudies} />
     <p><a href="/projects/">All projects</a></p>
 
@@ -70,7 +71,7 @@ const { linkedin } = resume.personal;
     {
         resume.about.future.length > 0 && (
             <>
-                <h2>Where this is heading</h2>
+                <h2>Long-term plans</h2>
                 {resume.about.future.map((line) => (
                     <p>{asSentence(line)}</p>
                 ))}

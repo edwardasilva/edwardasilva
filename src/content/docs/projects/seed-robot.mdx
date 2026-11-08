@@ -4,7 +4,7 @@ description: A four-person autonomous maze robot in EENG 350, with a Python and 
 slug: projects/seed-robot
 kind: project
 order: 5
-dek: A four-person robot that reads printed markers to find its way through a maze. I built the vision stack, and there is video.
+dek: A robot that finds its way through a maze by reading printed markers, built by a team of four. I built the Python vision stack, and the page has video of the final run.
 team: Edward Silva, Jesus, Leland, Maverick
 figure: robot/front
 figureAlt: The maze robot, with its two large wheels, drive motors, and electronics.
@@ -17,7 +17,7 @@ myPart: The Python and OpenCV vision stack, its multithreading, and the team's G
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 07 November, 2026
+  Last Update: 08 November, 2026
 
   Built from the project entry in resume-data.json and the team's repository. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -66,11 +66,11 @@ dist = (fx * 0.0508) / edgepx
 
 The edge length is the average of the marker's width and height in pixels.
 
-Calibration was a huge problem for us. We calibrated the camera with checkerboard and ChArUco scripts, and at first we did not have enough good photos of the markers to calibrate from. A larger set of higher-quality photos fixed it. The final code undistorts each marker's position with that calibration before it computes the angle.
+Calibration gave us a lot of trouble. We calibrated the camera with checkerboard and ChArUco scripts, and at first we did not have enough good photos of the markers to calibrate from. A larger set of higher-quality photos fixed it. The final code undistorts each marker's position with that calibration before it computes the angle.
 
 ## Speeding up the Python
 
-The Python was far too slow at first. I multithreaded it to run in stages, with separate threads for capture, processing, display, and the LCD on 640x480 video. Threads and timing keep each stage in the loop. Computation got much faster, and the Arduino stopped getting bottlenecked.
+The Python was far too slow at first. I multithreaded it to run in stages, with separate threads for capture, processing, display, and the LCD on 640x480 video. Threads and timing keep each stage in the loop. Processing got much faster, and the Arduino stopped waiting on the Python.
 
 The control loop needs the newest frame, so a full queue drops its oldest image.
 
@@ -107,7 +107,7 @@ We changed the packet to floats, and the byte order to little-endian.
 struct.pack("<ff???", angle_val, dist_val, found, lr, LorR)
 ```
 
-The only reason I knew how to debug this was my internship at Kratos. The SIMD work there taught me a lot about registers and floating-point conversions.
+I only knew how to debug this because of my internship at Kratos, where the SIMD work taught me a lot about registers and floating-point conversions.
 
 ## Reading the arrows
 
