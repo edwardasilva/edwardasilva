@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
  * Turns resume-data.json into the LaTeX body of the resume, and into the list of text the finished
  * PDF has to contain. Only entries marked Visibility "All" reach the resume. A field with the wrong
@@ -289,7 +289,7 @@ function renderExperience(experience) {
  * @return LaTeX for the entry
  */
 function renderProject(project) {
-    const repository = project.github ? `\\href{${escapeUrl(project.github)}}{Github}` : '';
+    const repository = project.github ? `\\href{${escapeUrl(project.github)}}{GitHub}` : '';
 
     return `\\textbf{${escapeLatex(project.title)}}, ${renderSkills(project.skills)} ${repository} \\hfill ${escapeLatex(formatDateRange(project.duration))}\n${renderBullets(project.Resume)}`;
 }

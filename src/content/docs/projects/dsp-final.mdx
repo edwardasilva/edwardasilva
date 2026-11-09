@@ -10,7 +10,7 @@ slug: projects/dsp-final
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 08 November, 2026
+  Last Update: 09 November, 2026
 
   Built from the EENG 411 report in src/assets/DSP and the project's Run.m and Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -27,7 +27,7 @@ import Figure from '../../../components/Figure.astro';
 import PitchFigure from '../../../components/PitchFigure.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-The FFT found the pitch 2.68 times faster than autocorrelation, and it kept tracking several hundred hertz higher. Either method works for a simple auto-tune. For the EENG 411 final project, I built the real-time MATLAB pipeline that runs both detectors, and I measured the results. The detector code on this page is the team's.
+The FFT found the pitch 2.68 times faster than autocorrelation, and it kept tracking several hundred hertz higher. Either method works for a simple auto-tune. For the EENG 411 final project, I built the real-time MATLAB pipeline that runs both detectors and measured the results. Jonas Krider and I wrote the detector code on this page together.
 
 An FFT finds the pitch by looking for the strongest frequency bin. Autocorrelation (ACF) looks for the lag where a signal best matches itself.
 

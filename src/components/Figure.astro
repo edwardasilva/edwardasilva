@@ -5,13 +5,16 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 09 November, 2026
  *
- * A numbered figure with a caption. Plots from reports sit on a white plate in both themes, since
- * they were drawn for a white page.
+ * A numbered figure with a caption. An SVG plot has a dark copy, written by
+ * scripts/theme-figures.js, and the figure shows whichever one matches the theme. A raster plot
+ * from a report has no dark copy, so it sits on a white plate in both themes. Photos take
+ * plate={false}.
  *
  * File Structure:
- * - Props: figure name, alt text, number, plate
+ * - Props: figure name, alt text, number, plate, narrow, wide
+ * - One image per theme when a dark copy exists, otherwise one image
  * - Caption from the default slot
  *
  * Where this file is used within the repository:
@@ -26,7 +29,7 @@
  * may not be reproduced, distributed, or modified without permission.
  */
 
-import { getFigure } from '../data/figures';
+import { getDarkFigure, getFigure } from '../data/figures';
 
 interface Props {
     name: string;
@@ -39,19 +42,50 @@ interface Props {
 
 const { name, alt, number, plate = true, narrow = false, wide = false } = Astro.props;
 const figure = getFigure(name);
+const dark = getDarkFigure(name);
+const onPlate = plate && !dark;
 ---
 
 <figure
-    class:list={['es-fig', { 'es-fig-plate': plate, 'es-fig-narrow': narrow, 'es-fig-wide': wide }]}
+    class:list={[
+        'es-fig',
+        { 'es-fig-plate': onPlate, 'es-fig-narrow': narrow, 'es-fig-wide': wide },
+    ]}
 >
-    <img
-        src={figure.src}
-        width={figure.width}
-        height={figure.height}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-    />
+    {
+        /* Both images are lazy, so the browser skips the one the theme hides. */
+        dark ? (
+            <>
+                <img
+                    class="dark:sl-hidden"
+                    src={figure.src}
+                    width={figure.width}
+                    height={figure.height}
+                    alt={alt}
+                    loading="lazy"
+                    decoding="async"
+                />
+                <img
+                    class="light:sl-hidden"
+                    src={dark.src}
+                    width={dark.width}
+                    height={dark.height}
+                    alt={alt}
+                    loading="lazy"
+                    decoding="async"
+                />
+            </>
+        ) : (
+            <img
+                src={figure.src}
+                width={figure.width}
+                height={figure.height}
+                alt={alt}
+                loading="lazy"
+                decoding="async"
+            />
+        )
+    }
     <figcaption>
         <span class="es-fignum">Figure {number}</span>
         <span><slot /></span>

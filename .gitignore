@@ -156,3 +156,7 @@ resume-data.json
 
 # local editor settings
 .editorconfig
+
+# Vale style, checked out from edwardasilva/eeprep by CI and by the prose check
+.lint/vale/styles/Eeprep/
+.lint/vale/eeprep/

@@ -4,10 +4,10 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
- * Header, cards, external link marks, page lists, the project facts block, figures on a white
- * plate, the live figures, and the sidebar. Adapted from eeprep.com.
+ * Header, cards, external link marks, page lists, the project facts block, figures, the live
+ * figures, and the sidebar. Adapted from eeprep.com.
  *
  * File Structure:
  * - Header and search
@@ -428,10 +428,14 @@ a.external-link .es-ext-last::after {
     height: 10rem;
     object-fit: contain;
 }
-.es-card-plate {
+/* A report plot drawn for a white page keeps a white plate. An SVG plot has a dark copy instead,
+   so it sits straight on the card. */
+.es-card-figure {
     display: block;
     padding: 0.5rem;
     border-radius: var(--es-radius);
+}
+.es-card-plate {
     background: #fff;
 }
 .es-card-dek {
@@ -711,6 +715,13 @@ figure.es-fig > img {
 }
 figure.es-fig-narrow > img {
     max-width: 320px;
+}
+/* A plot with a dark copy carries both images, one per theme. Starlight's own light: and dark:
+   utilities sit in a layer, and the unlayered figure rules above would beat them, so the pair is
+   repeated here. The hidden image is lazy, so the browser never fetches it. */
+[data-theme='light'] .light\:sl-hidden,
+[data-theme='dark'] .dark\:sl-hidden {
+    display: none;
 }
 
 .es-table-wrap {

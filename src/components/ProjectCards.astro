@@ -5,9 +5,10 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
- * A row of project cards. A card shows a figure from the work when resume-data.json names one.
+ * A row of project cards. A card shows a figure from the work when resume-data.json names one. An
+ * SVG plot switches to its dark copy in dark mode. A raster plot or a photo shows as it is.
  *
  * File Structure:
  * - Props: project pages
@@ -25,7 +26,7 @@
  * may not be reproduced, distributed, or modified without permission.
  */
 
-import { getFigure } from '../data/figures';
+import { getDarkFigure, getFigure } from '../data/figures';
 import type { ProjectPage } from '../data/projects';
 import { asSentence } from '../data/resume';
 
@@ -40,13 +41,15 @@ const { pages } = Astro.props;
     {
         pages.map(({ entry, project, href }) => {
             const figure = project.figure ? getFigure(project.figure) : undefined;
+            const dark = project.figure ? getDarkFigure(project.figure) : undefined;
 
             return (
                 <li>
                     <a href={href}>
                         {figure && (
-                            <span class="es-card-plate">
+                            <span class:list={['es-card-figure', { 'es-card-plate': !dark }]}>
                                 <img
+                                    class:list={{ 'dark:sl-hidden': dark }}
                                     src={figure.src}
                                     width={figure.width}
                                     height={figure.height}
@@ -54,6 +57,17 @@ const { pages } = Astro.props;
                                     loading="lazy"
                                     decoding="async"
                                 />
+                                {dark && (
+                                    <img
+                                        class="light:sl-hidden"
+                                        src={dark.src}
+                                        width={dark.width}
+                                        height={dark.height}
+                                        alt={project.figureAlt ?? ''}
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
+                                )}
                             </span>
                         )}
                         <strong>{entry.data.title}</strong>
