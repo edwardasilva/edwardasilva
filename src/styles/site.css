@@ -22,10 +22,7 @@
  * Usage:
  * $ `npm run dev` : Applied to every page
  *
- * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
+ * Copyright (c) 2026 Edward Silva. MIT License.
  */
 
 .es-nav {
@@ -99,17 +96,6 @@
     }
 }
 
-/* Small phones: one size down and a tighter gap, so all six section links fit on a 390px
-   screen. At 360px the row still scrolls sideways. */
-@media (max-width: 26rem) {
-    .es-nav {
-        gap: 0.375rem;
-    }
-    .es-nav a {
-        font-size: 0.75rem;
-    }
-}
-
 /* Suggested pages in the search dialog, shown only while the query is empty. */
 .es-suggest {
     margin-top: 1rem;
@@ -170,6 +156,22 @@ button[data-open-modal] kbd {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     gap: 1rem;
+}
+/* Selected work on the home page: 1 / 2 / 4 columns so four cards sit
+   one-up on phone, 2x2 at tablet, and four across on desktop. Writing and
+   tools and More projects keep the auto-fit row above. */
+.es-cards--selected {
+    grid-template-columns: 1fr;
+}
+@media (min-width: 40rem) {
+    .es-cards--selected {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (min-width: 64rem) {
+    .es-cards--selected {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
 }
 /* Starlight adds 0.25rem above every list item after the first. In this row
    that drops cards 2 and 3 by 4px and shortens them by the same amount. */
@@ -288,6 +290,20 @@ button[data-open-modal] kbd {
     .es-hero h1 {
         font-size: clamp(1.875rem, 5vw + 0.75rem, 2.25rem);
         line-height: 1.12;
+    }
+}
+
+/* Small phones: one size down and no gap, so all six section links fit from 360px. Below
+   that the row scrolls sideways. This block must come after the 50rem block above, which
+   sets the gap and the minimum link width. */
+@media (max-width: 26rem) {
+    .es-nav {
+        gap: 0;
+        justify-content: space-between;
+    }
+    .es-nav a {
+        min-width: 0;
+        font-size: 0.75rem;
     }
 }
 

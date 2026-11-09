@@ -7,12 +7,16 @@
  * Creation Date: 16 March, 2026
  * Last Update: 09 November, 2026
  *
- * Who this is, personal projects, and academic projects.
+ * Who this is, the strongest technical work first, then experience, writing and tools, more
+ * projects, and what comes next.
  *
  * File Structure:
  * - Hero
- * - Personal projects
- * - Academic projects
+ * - Selected work
+ * - Experience
+ * - Writing and tools
+ * - More projects
+ * - Next, from about.future in resume-data.json
  *
  * Where this file is used within the repository:
  * - Route: /
@@ -20,20 +24,21 @@
  * Usage:
  * $ `npm run dev` : Renders in the local development server
  *
- * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
+ * Copyright (c) 2026 Edward Silva. MIT License.
  */
 
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import ProjectCards from '../components/ProjectCards.astro';
-import { getProjectPages } from '../data/projects';
-import { asSentence, resume } from '../data/resume';
+import { getHomeProjectPages } from '../data/projects';
+import { asSentence, getExperienceHref, resume, visibleExperiences } from '../data/resume';
 
-const personal = await getProjectPages('personal');
-const academic = await getProjectPages('project');
+const selected = getHomeProjectPages('selected');
+const writing = getHomeProjectPages('writing');
+const more = getHomeProjectPages('more');
 const { home } = resume.site.pages;
+const C_FOCUS_FALLBACK = 'My projects are in state estimation, signal processing, and control';
+const focus = home.focus ?? C_FOCUS_FALLBACK;
+const next = resume.about.future.slice(0, 2);
 ---
 
 <StarlightPage
@@ -51,14 +56,53 @@ const { home } = resume.site.pages;
     <section class="es-hero">
         <h1 id="_top">{resume.personal.name}</h1>
         {home.intro && <p class="es-lede">{asSentence(home.intro)}</p>}
+        <p class="es-lede">{asSentence(focus)}</p>
     </section>
 
-    <h2>Personal projects</h2>
-    <ProjectCards pages={personal} />
+    <h2>Selected work</h2>
+    <ProjectCards pages={selected} class="es-cards--selected" />
 
-    <h2>Academic projects</h2>
-    <ProjectCards pages={academic} />
+    {visibleExperiences.length > 0 && (
+        <>
+            <h2>Experience</h2>
+            <ul class="es-roles">
+                {visibleExperiences.map((experience) => (
+                    <li>
+                        <a href={getExperienceHref(experience)}>{experience.title}</a>,{' '}
+                        {experience.company}.{' '}
+                        <span class="es-role-meta">{experience.duration.replace(' - ', '–')}.</span>
+                    </li>
+                ))}
+            </ul>
+            <p>
+                <a href="/experiences/">All experience</a>
+            </p>
+        </>
+    )}
+
+    {writing.length > 0 && (
+        <>
+            <h2>Writing and tools</h2>
+            <ProjectCards pages={writing} />
+        </>
+    )}
+
+    {more.length > 0 && (
+        <>
+            <h2>More projects</h2>
+            <ProjectCards pages={more} />
+        </>
+    )}
     <p>
         <a href="/projects/">All projects</a>
     </p>
+
+    {next.length > 0 && (
+        <>
+            <h2>Next</h2>
+            {next.map((line) => (
+                <p>{asSentence(line)}</p>
+            ))}
+        </>
+    )}
 </StarlightPage>

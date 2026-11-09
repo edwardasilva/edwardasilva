@@ -14,6 +14,7 @@
  * - getPageSlug: the last part of a page id
  * - getPageProject: the resume-data.json entry behind a write-up
  * - getProjectPages: listed pages grouped by kind, in order
+ * - getHomeProjectPages: the projects shown in each group on the home page
  * - getDisplayTitle: a project's page title, in sentence case, for links
  *
  * Where this file is used within the repository:
@@ -24,14 +25,11 @@
  * $ `npm run dev` : Runs at build time
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
  */
 
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getProjectSlug, resume, visibleProjects } from './resume';
-import type { Project, ProjectKind } from './types';
+import type { HomeGroup, Project, ProjectKind } from './types';
 
 export interface ProjectPage {
     entry: CollectionEntry<'docs'>;
@@ -84,18 +82,71 @@ export async function getProjectPages(kind: ProjectKind): Promise<ProjectPage[]>
     return visibleProjects
         .filter((project) => project.kind === kind)
         .sort((left, right) => (left.order ?? 0) - (right.order ?? 0))
-        .map((project) => {
-            const slug = getProjectSlug(project);
-            const entry = C_DOCS.find((candidate) => candidate.id === `projects/${slug}`);
+        .map(toProjectPage);
+}
 
-            if (!entry) {
-                throw new Error(
-                    `[ERROR] resume-data.json lists ${slug}, but src/content/docs/projects/${slug}.mdx does not exist`
-                );
+/**
+ * @brief Pairs a project with its write-up
+ * @param project Visible project
+ * @return The project page, or a build error when the write-up is missing
+ */
+function toProjectPage(project: Project): ProjectPage {
+    const slug = getProjectSlug(project);
+    const entry = C_DOCS.find((candidate) => candidate.id === `projects/${slug}`);
+
+    if (!entry) {
+        throw new Error(
+            `[ERROR] resume-data.json lists ${slug}, but src/content/docs/projects/${slug}.mdx does not exist`
+        );
+    }
+
+    return { entry, project, href: `/projects/${slug}/` };
+}
+
+const C_HOME_FALLBACK: Record<string, HomeGroup | false> = {
+    'EKF-project': 'selected',
+    'dsp-final': 'selected',
+    'capstone-project': 'selected',
+    'MCD-project': 'selected',
+    'seed-robot': 'more',
+    'ram-pump': 'more',
+    'solar-tracker': false,
+};
+
+const C_HOME_FALLBACK_ORDER = Object.keys(C_HOME_FALLBACK);
+
+/**
+ * @brief Lists the projects for one group on the home page
+ * @param group Selected work, writing and tools, or more projects
+ * @return Pages in home order
+ * @details Reads the home field in resume-data.json. While no project has that field, a slug
+ * list stands in for it. Personal projects without the field fall under writing, and projects
+ * with the field set to false stay off the home page.
+ */
+export function getHomeProjectPages(group: HomeGroup): ProjectPage[] {
+    const hasHomeField = visibleProjects.some((project) => project.home !== undefined);
+
+    return visibleProjects
+        .filter((project) => {
+            const assigned = hasHomeField ? project.home : C_HOME_FALLBACK[getProjectSlug(project)];
+
+            if (assigned === undefined) {
+                return group === 'writing' && project.kind === 'personal';
             }
 
-            return { entry, project, href: `/projects/${slug}/` };
-        });
+            return assigned === group;
+        })
+        .sort((left, right) => {
+            if (hasHomeField || left.kind === 'personal') {
+                return (left.order ?? 0) - (right.order ?? 0);
+            }
+
+            return (
+                C_HOME_FALLBACK_ORDER.indexOf(getProjectSlug(left)) -
+                C_HOME_FALLBACK_ORDER.indexOf(getProjectSlug(right))
+            );
+        })
+        .map(toProjectPage);
 }
 
 const C_PAGE_TITLES = new Map(
