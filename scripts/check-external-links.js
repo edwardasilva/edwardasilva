@@ -17,7 +17,7 @@
  * - listHtml: every HTML file under dist/
  * - collectUrls: the outside links on every page
  * - fetchStatus, attempt: HEAD first, then GET for servers that refuse HEAD
- * - Main Logic: eight requests at a time, then a summary
+ * - Main Logic: eight requests at a time, then a summary that separates dead pages from bot walls
  *
  * Where this file is used within the repository:
  * - .github/workflows/links.yml, weekly and on request
@@ -118,6 +118,7 @@ const urls = collectUrls();
 const skipped = urls.filter((url) => C_SKIP_HOSTS.has(new URL(url).hostname));
 const queue = urls.filter((url) => !C_SKIP_HOSTS.has(new URL(url).hostname));
 const checked = queue.length;
+const refused = [];
 const failed = [];
 
 console.log(`[RUN] Checking ${checked} outside links from ${urls.length} found in dist/`);
@@ -126,6 +127,11 @@ await Promise.all(
         for (let url = queue.shift(); url; url = queue.shift()) {
             const status = await fetchStatus(url);
             if (status >= 200 && status < 400) continue;
+            // A 403 is a bot wall, not a dead page. Many sites answer every script that way.
+            if (status === 403) {
+                refused.push(url);
+                continue;
+            }
             failed.push({ url, status });
             console.error(`[ERROR] ${status || 'no response'} ${url}`);
         }
@@ -133,10 +139,17 @@ await Promise.all(
 );
 
 const summary = [
-    `Checked ${checked} of ${urls.length} outside links. ${failed.length} failed, ${skipped.length} skipped.`,
+    `Checked ${checked} of ${urls.length} outside links. ${failed.length} failed, ${refused.length} refused a script, ${skipped.length} skipped.`,
     '',
     ...(failed.length
         ? ['Failed:', ...failed.map((f) => `- ${f.status || 'no response'} ${f.url}`), '']
+        : []),
+    ...(refused.length
+        ? [
+              'Refused with 403 (a bot wall, check by hand if the page matters):',
+              ...refused.map((u) => `- ${u}`),
+              '',
+          ]
         : []),
     ...(skipped.length
         ? ['Skipped (block automated clients, check by hand):', ...skipped.map((u) => `- ${u}`)]
