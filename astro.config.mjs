@@ -25,10 +25,7 @@
  * $ `npm run dev` : Runs local Astro development server
  * $ `npm run build` : Builds static site into dist/
  *
- * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
+ * Copyright (c) 2026 Edward Silva. MIT License.
  */
 
 // @ts-check
@@ -296,6 +293,29 @@ export default defineConfig({
                     uiFontFamily: 'var(--es-font-serif)',
                     uiFontSize: '0.8125rem',
                     uiFontWeight: '400',
+                    codePaddingBlock: '1.125rem',
+                    codePaddingInline: '1.375rem',
+                    frames: {
+                        shadowColor: 'transparent',
+                        frameBoxShadowCssValue: 'none',
+                        editorTabBarBackground: 'var(--es-sunken)',
+                        editorActiveTabBackground: 'var(--es-sunken)',
+                        editorTabBarBorderBottomColor: 'var(--es-silver)',
+                        editorActiveTabForeground: 'var(--es-ink-2)',
+                        editorActiveTabIndicatorTopColor: 'transparent',
+                        editorActiveTabIndicatorBottomColor: 'transparent',
+                        editorTabBarBorderColor: 'transparent',
+                        editorActiveTabBorderColor: 'transparent',
+                        terminalTitlebarBackground: 'var(--es-sunken)',
+                        terminalTitlebarForeground: 'var(--es-ink-2)',
+                        terminalTitlebarBorderBottomColor: 'var(--es-silver)',
+                        terminalTitlebarDotsOpacity: '0',
+                        inlineButtonBackground: 'transparent',
+                        inlineButtonForeground: 'var(--es-ink-2)',
+                        inlineButtonBorder: 'transparent',
+                        tooltipSuccessBackground: 'var(--es-ink)',
+                        tooltipSuccessForeground: 'var(--es-paper)',
+                    },
                 },
             },
             // Every page except the home page is listed here. A group whose first link shares its

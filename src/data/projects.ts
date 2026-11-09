@@ -25,9 +25,6 @@
  * $ `npm run dev` : Runs at build time
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
  */
 
 import { getCollection, type CollectionEntry } from 'astro:content';
