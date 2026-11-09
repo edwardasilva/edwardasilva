@@ -22,7 +22,7 @@
  * Usage:
  * $ `npm run check:links` : Checks every internal link in dist/
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

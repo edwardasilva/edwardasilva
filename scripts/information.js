@@ -34,7 +34,7 @@
  * $ `node scripts/information.js check` : Fails if this repo points at a commit that is not on
  *   information's main branch
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

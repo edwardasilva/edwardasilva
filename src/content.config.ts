@@ -18,7 +18,7 @@
  * Usage:
  * $ `npm run dev` : Loaded by Astro when it syncs content
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import { defineCollection, z } from 'astro:content';

@@ -23,7 +23,7 @@
  * Usage:
  * $ `npm run hooks:install` : Registers .githooks as this clone's hooks folder
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

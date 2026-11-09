@@ -15,8 +15,6 @@ This is the Astro and Starlight source of [edwardasilva.com](https://edwardasilv
 
 ## License
 
-The code is licensed under the [MIT License](LICENSE). Code means the components, layouts, pages, `src/lib/`, `src/plugins/`, `src/styles/`, `scripts/`, `.github/`, `.lint/`, and the config files.
+Everything in this repo, code and content, is all rights reserved. See [LICENSE](LICENSE).
 
-Everything else is Edward's own work and is all rights reserved. Neither license covers it. That includes the project write-ups in `src/content/`, the site text and data in `src/data/`, the images, PDFs, and figures in `src/assets/` and `src/figures/`, the drafts in `src/drafts/`, and the resume in `public/resume/`.
-
-The `information` submodule is private and is not covered by either license.
+The `information` submodule is private.

@@ -26,7 +26,7 @@
  * $ `npm run check:external-links` : Fetches every outside link in dist/
  * $ `npm run check:external-links -- --report` : Also writes a summary for GITHUB_STEP_SUMMARY
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

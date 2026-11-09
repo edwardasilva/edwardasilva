@@ -22,7 +22,7 @@
  * Usage:
  * $ `npm run dev` : Runs in the browser, and at build time for the checks
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 const C_ID_TUBE = 20.2e-3;

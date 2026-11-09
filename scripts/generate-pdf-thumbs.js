@@ -21,7 +21,7 @@
  * Usage:
  * $ `npm run build:thumbs` : Generates WebP thumbnails for all PDF proof assets
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

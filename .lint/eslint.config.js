@@ -20,7 +20,7 @@
  * $ `npm run lint` : Validates repository source code against ESLint rules
  * $ `npm run lint:fix` : Automatically fixes fixable ESLint violations
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import js from '@eslint/js';

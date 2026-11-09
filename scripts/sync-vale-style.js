@@ -9,7 +9,7 @@
  * Copies eeprep's Vale style, .github/vale/styles/Eeprep in the eeprep repo, into
  * .lint/vale/styles/Eeprep here, so the project pages are checked against the same plain-English
  * rules as eeprep.com. The eeprep repo is private, so CI cannot fetch the rules at run time and
- * the copy is committed instead. The rules are config files, which eeprep's MIT license covers.
+ * the copy is committed instead. The rules are config files that Edward owns.
  * Run this after a rule changes in eeprep, from a machine that has both repos checked out side by
  * side, or point EEPREP_DIR at the eeprep checkout.
  *
@@ -27,7 +27,7 @@
  * $ `npm run prose:sync -- --check` : Exits 1 if the copy differs from eeprep's rules
  * $ `EEPREP_DIR=/path/to/eeprep npm run prose:sync` : Reads eeprep from another folder
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

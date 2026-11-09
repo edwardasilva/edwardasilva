@@ -19,7 +19,7 @@
  * Usage:
  * $ `npm run dev` : Runs on every Markdown page during the build
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

@@ -21,7 +21,7 @@
  * Usage:
  * $ `npm run build` : Writes dist/llms.txt
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import type { APIRoute } from 'astro';

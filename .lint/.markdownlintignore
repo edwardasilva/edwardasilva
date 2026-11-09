@@ -10,7 +10,7 @@
 # Usage:
 # $ `npx markdownlint-cli2 --config .lint/.markdownlint.json "**/*.md"` : Lints Markdown outside these paths
 #
-# Copyright (c) 2026 Edward Silva. MIT License.
+# Copyright (c) 2026 Edward Silva. All rights reserved.
 
 node_modules/
 information/

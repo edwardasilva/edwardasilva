@@ -24,7 +24,7 @@
  * Usage:
  * $ `npm run icons` : Rewrites the three PNG files from public/favicon.svg
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

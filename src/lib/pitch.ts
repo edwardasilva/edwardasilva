@@ -24,7 +24,7 @@
  * Usage:
  * $ `npm run dev` : Runs in the browser, and at build time for the checks
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 const C_FS_IN = 48000;
