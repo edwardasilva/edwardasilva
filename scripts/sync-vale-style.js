@@ -27,10 +27,7 @@
  * $ `npm run prose:sync -- --check` : Exits 1 if the copy differs from eeprep's rules
  * $ `EEPREP_DIR=/path/to/eeprep npm run prose:sync` : Reads eeprep from another folder
  *
- * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
+ * Copyright (c) 2026 Edward Silva. MIT License.
  */
 
 import fs from 'node:fs';

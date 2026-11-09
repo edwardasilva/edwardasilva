@@ -11,6 +11,7 @@
     "build:resume": "node scripts/build-resume.js",
     "figures": "node scripts/theme-figures.js",
     "figures:check": "node scripts/theme-figures.js --check",
+    "icons": "node scripts/render-icons.js",
     "check:links": "node scripts/check-links.js",
     "check:external-links": "node scripts/check-external-links.js",
     "prose": "vale --config .lint/vale/.vale.ini src/content/docs",
@@ -37,27 +38,29 @@
     "@astrojs/starlight": "0.42.10",
     "@fontsource-variable/source-code-pro": "5.3.1",
     "@fontsource-variable/source-serif-4": "5.3.1",
-    "@fontsource/source-serif-4": "^5.3.1",
-    "@resvg/resvg-js": "^2.6.2",
-    "astro": "^7.4.7",
+    "@fontsource/source-serif-4": "5.3.1",
+    "@resvg/resvg-js": "2.6.2",
+    "astro": "7.4.7",
     "katex": "0.19.1",
     "pdfjs-dist": "6.5.438",
     "rehype-katex": "7.0.1",
     "remark-math": "6.0.0",
-    "satori": "^0.63.2"
+    "satori": "0.63.2"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.14.0",
-    "eslint-plugin-astro": "^3.2.1",
-    "globals": "^17.14.0",
-    "pdf-to-img": "^7.0.2",
-    "prettier": "^3.8.2",
-    "prettier-plugin-astro": "^1.1.2",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.1"
+    "@eslint/js": "10.0.1",
+    "eslint": "10.14.0",
+    "eslint-plugin-astro": "3.2.1",
+    "globals": "17.14.0",
+    "pdf-to-img": "7.0.2",
+    "prettier": "3.9.10",
+    "prettier-plugin-astro": "1.1.2",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1"
   },
   "overrides": {
-    "katex": "$katex"
+    "katex": "$katex",
+    "minimatch": "^11.0.1",
+    "fflate": "^0.7.5"
   }
 }
