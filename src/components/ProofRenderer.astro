@@ -60,7 +60,14 @@ const pdfThumbUrl = `/assets/thumbs/${proof.url
             rel="noopener noreferrer"
             aria-label={`Open ${label} as a PDF (opens in a new tab)`}
         >
-            <img src={pdfThumbUrl} alt="" width="166" height="214" loading="lazy" decoding="async" />
+            <img
+                src={pdfThumbUrl}
+                alt=""
+                width="166"
+                height="214"
+                loading="lazy"
+                decoding="async"
+            />
             <span>{label}, PDF</span>
         </a>
         <PdfViewer url={proof.url} label={label} />
