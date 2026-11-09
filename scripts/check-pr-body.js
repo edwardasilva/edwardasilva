@@ -4,12 +4,12 @@
  *
  * Author: Edward Silva
  * Creation Date: 08 November, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
  * Fails a pull request whose body does not name its issue on a line of its own, the same rule
- * eeprep uses. Issues are off in this repo, so the issue is usually in another one, such as
- * Part of edwardasilva/information#7 on the edwardasilva.com board. Part of #12 also passes.
- * Dependabot and pull requests labeled no-epic are exempt.
+ * eeprep uses. Site issues for edwardasilva.com live in this repo, so prefer Part of #12.
+ * Cross-repo refs such as Part of edwardasilva/information#7 still pass when the work is tied
+ * to a private data issue. Dependabot and pull requests labeled no-epic are exempt.
  *
  * File Structure:
  * - Inputs: PR_BODY, PR_LABELS, PR_ACTOR, and PR_SENDER from the environment
