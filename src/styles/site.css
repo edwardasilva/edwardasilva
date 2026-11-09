@@ -171,6 +171,22 @@ button[data-open-modal] kbd {
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     gap: 1rem;
 }
+/* Selected work on the home page: 1 / 2 / 4 columns so four cards sit
+   one-up on phone, 2x2 at tablet, and four across on desktop. Writing and
+   tools and More projects keep the auto-fit row above. */
+.es-cards--selected {
+    grid-template-columns: 1fr;
+}
+@media (min-width: 40rem) {
+    .es-cards--selected {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (min-width: 64rem) {
+    .es-cards--selected {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
 /* Starlight adds 0.25rem above every list item after the first. In this row
    that drops cards 2 and 3 by 4px and shortens them by the same amount. */
 .es-cards > li {
