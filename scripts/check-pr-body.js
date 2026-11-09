@@ -22,10 +22,7 @@
  * Usage:
  * $ `PR_BODY="Part of #12" node scripts/check-pr-body.js` : Checks a body by hand
  *
- * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
+ * Copyright (c) 2026 Edward Silva. MIT License.
  */
 
 const C_EXEMPT_ACTOR = 'dependabot[bot]';

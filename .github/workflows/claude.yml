@@ -89,8 +89,8 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           label_trigger: claude
           branch_prefix: claude/
-          # Only the owner's comments, Claude's own, and Bugbot's reach Claude as context.
-          include_comments_by_actor: ${{ github.repository_owner }},claude[bot],cursor[bot]
+          # Only the owner's comments and Claude's own reach Claude as context.
+          include_comments_by_actor: ${{ github.repository_owner }},claude[bot]
           additional_permissions: |
             actions: read
           claude_args: |
