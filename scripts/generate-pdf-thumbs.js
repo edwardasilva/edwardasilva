@@ -4,12 +4,12 @@
  *
  * Author: Edward Silva
  * Creation Date: 18 July, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
  * Renders the first page of every PDF referenced in resume-data.json proof
- * entries to a PNG in src/assets/thumbs, so project pages can show a real
- * preview without embedding a PDF viewer. Thumbnails are regenerated only
- * when missing or older than their source PDF.
+ * entries to a 400 px wide WebP in src/assets/thumbs, so project pages can
+ * show a real preview without embedding a PDF viewer. Thumbnails are
+ * regenerated only when missing or older than their source PDF.
  *
  * File Structure:
  * - Constants: directory paths and thumbnail naming convention
@@ -19,7 +19,7 @@
  * Invoked via: npm run build:thumbs
  *
  * Usage:
- * $ `npm run build:thumbs` : Generates PNG thumbnails for all PDF proof assets
+ * $ `npm run build:thumbs` : Generates WebP thumbnails for all PDF proof assets
  *
  * Copyright (c) 2026 Edward Silva. MIT License.
  */
@@ -28,7 +28,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { pdf } from 'pdf-to-img';
+import sharp from 'sharp';
 
+const THUMB_WIDTH = 400;
+const THUMB_QUALITY = 80;
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ASSET_DIR = path.join(ROOT_DIR, 'src', 'assets');
 const THUMB_DIR = path.join(ASSET_DIR, 'thumbs');
@@ -37,12 +40,12 @@ const RESUME_DATA = path.join(ROOT_DIR, 'information', 'resume-data.json');
 /**
  * @brief Maps a proof asset URL to its thumbnail file name
  * @param url Proof URL such as /assets/DSP/Writeup.pdf
- * @return Thumbnail file name such as DSP-Writeup.png
+ * @return Thumbnail file name such as DSP-Writeup.webp
  */
 function thumbNameFor(url) {
     return url
         .replace(/^\/assets\//, '')
-        .replace(/\.pdf$/i, '.png')
+        .replace(/\.pdf$/i, '.webp')
         .replace(/\//g, '-');
 }
 
@@ -100,7 +103,11 @@ async function generateThumbnails() {
 
         const document = await pdf(pdfPath, { scale: 2 });
         for await (const page of document) {
-            fs.writeFileSync(thumbPath, page);
+            const resized = await sharp(page)
+                .resize({ width: THUMB_WIDTH })
+                .webp({ quality: THUMB_QUALITY })
+                .toBuffer();
+            fs.writeFileSync(thumbPath, resized);
             break;
         }
         console.log(`Generated thumbnail: ${path.relative(ROOT_DIR, thumbPath)}`);
