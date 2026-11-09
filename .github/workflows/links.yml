@@ -6,7 +6,7 @@
 # Last Update: 09 November, 2026
 #
 # Builds the site and fetches every link that leaves it, then lists the ones that no longer
-# answer in the run summary. Outside sites go down on their own schedule, so this runs weekly
+# answer in the run summary. Outside sites go down on their own schedule, so this runs monthly
 # and by hand, never on a pull request.
 #
 # Usage:
@@ -21,7 +21,7 @@ name: Outside links
 
 on:
   schedule:
-    - cron: '41 11 * * 1'
+    - cron: '41 11 1 * *'
   workflow_dispatch:
 
 permissions:

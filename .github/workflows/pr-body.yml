@@ -18,8 +18,13 @@ jobs:
   pr-body:
     name: PR body
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
+      # Only the check script, not the whole repository.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: scripts
+          persist-credentials: false
       - name: Require an issue line
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
