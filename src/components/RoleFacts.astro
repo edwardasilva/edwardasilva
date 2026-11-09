@@ -20,10 +20,7 @@
  * Usage:
  * $ `npm run dev` : Renders in the local development server
  *
- * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
+ * Copyright (c) 2026 Edward Silva. MIT License.
  */
 
 import ExternalLink from './ExternalLink.astro';
@@ -42,42 +39,42 @@ if (!experience) {
 }
 ---
 
-<dl class="es-facts">
+<!-- The page body repeats these facts. Left out of search, the labels and values no longer run
+     together in excerpts ("WhenOngoing"). -->
+<dl class="es-facts" data-pagefind-ignore>
     <div>
-        <dt>Role{' '}</dt>
-        <dd>{experience.title}{' '}</dd>
+        <dt>Role</dt>
+        <dd>{experience.title}</dd>
     </div>
     <div>
-        <dt>When{' '}</dt>
-        <dd>{experience.duration}{' '}</dd>
+        <dt>When</dt>
+        <dd>{experience.duration}</dd>
     </div>
     {experience.employmentType && (
         <div>
-            <dt>Type{' '}</dt>
-            <dd>{experience.employmentType}{' '}</dd>
+            <dt>Type</dt>
+            <dd>{experience.employmentType}</dd>
         </div>
     )}
     {experience.location && (
         <div>
-            <dt>Where{' '}</dt>
-            <dd>{experience.location}{' '}</dd>
+            <dt>Where</dt>
+            <dd>{experience.location}</dd>
         </div>
     )}
     {experience.skills.length > 0 && (
         <div>
-            <dt>Tools{' '}</dt>
+            <dt>Tools</dt>
             <dd>
                 <SkillLinks skills={experience.skills} />
-                {' '}
             </dd>
         </div>
     )}
     {experience.companyUrl && (
         <div>
-            <dt>Links{' '}</dt>
+            <dt>Links</dt>
             <dd class="es-facts-links">
                 <ExternalLink href={experience.companyUrl}>{experience.company}</ExternalLink>
-                {' '}
             </dd>
         </div>
     )}
