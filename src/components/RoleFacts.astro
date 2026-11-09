@@ -44,38 +44,40 @@ if (!experience) {
 
 <dl class="es-facts">
     <div>
-        <dt>Role</dt>
-        <dd>{experience.title}</dd>
+        <dt>Role{' '}</dt>
+        <dd>{experience.title}{' '}</dd>
     </div>
     <div>
-        <dt>When</dt>
-        <dd>{experience.duration}</dd>
+        <dt>When{' '}</dt>
+        <dd>{experience.duration}{' '}</dd>
     </div>
     {experience.employmentType && (
         <div>
-            <dt>Type</dt>
-            <dd>{experience.employmentType}</dd>
+            <dt>Type{' '}</dt>
+            <dd>{experience.employmentType}{' '}</dd>
         </div>
     )}
     {experience.location && (
         <div>
-            <dt>Where</dt>
-            <dd>{experience.location}</dd>
+            <dt>Where{' '}</dt>
+            <dd>{experience.location}{' '}</dd>
         </div>
     )}
     {experience.skills.length > 0 && (
         <div>
-            <dt>Tools</dt>
+            <dt>Tools{' '}</dt>
             <dd>
                 <SkillLinks skills={experience.skills} />
+                {' '}
             </dd>
         </div>
     )}
     {experience.companyUrl && (
         <div>
-            <dt>Links</dt>
+            <dt>Links{' '}</dt>
             <dd class="es-facts-links">
                 <ExternalLink href={experience.companyUrl}>{experience.company}</ExternalLink>
+                {' '}
             </dd>
         </div>
     )}

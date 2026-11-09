@@ -51,46 +51,49 @@ const allLinks = [
 <dl class="es-facts">
     {dates && (
         <div>
-            <dt>When</dt>
-            <dd>{dates}</dd>
+            <dt>When{' '}</dt>
+            <dd>{dates}{' '}</dd>
         </div>
     )}
     {courseCode && (
         <div>
-            <dt>Course</dt>
+            <dt>Course{' '}</dt>
             <dd>
                 {courseHref ? <a href={courseHref}>{courseCode}</a> : courseCode}
                 {course && `, ${course.name}`}
+                {' '}
             </dd>
         </div>
     )}
     {team && (
         <div>
-            <dt>Team</dt>
-            <dd>{team}</dd>
+            <dt>Team{' '}</dt>
+            <dd>{team}{' '}</dd>
         </div>
     )}
     {myPart && (
         <div>
-            <dt>My part</dt>
-            <dd>{asSentence(myPart)}</dd>
+            <dt>My part{' '}</dt>
+            <dd>{asSentence(myPart)}{' '}</dd>
         </div>
     )}
     {skills.length > 0 && (
         <div>
-            <dt>Tools</dt>
+            <dt>Tools{' '}</dt>
             <dd>
                 <SkillLinks skills={skills} />
+                {' '}
             </dd>
         </div>
     )}
     {allLinks.length > 0 && (
         <div>
-            <dt>Links</dt>
+            <dt>Links{' '}</dt>
             <dd class="es-facts-links">
                 {allLinks.map((link) => (
                     <ExternalLink href={link.href}>{link.label}</ExternalLink>
                 ))}
+                {' '}
             </dd>
         </div>
     )}
