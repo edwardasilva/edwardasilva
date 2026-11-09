@@ -91,17 +91,8 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run figures:check
 
-      # The project pages follow eeprep's plain-English style. The Eeprep rules come from the
-      # eeprep repo, so the two sites share one copy, and .lint/vale/ adds this site's proper nouns.
-      - name: Check out eeprep's Vale style
-        if: ${{ !cancelled() }}
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: edwardasilva/eeprep
-          path: .lint/vale/eeprep
-          sparse-checkout: .github/vale/styles/Eeprep
-          sparse-checkout-cone-mode: false
-          persist-credentials: false
+      # The project pages follow eeprep's plain-English style. .lint/vale/styles/Eeprep is a copy of
+      # eeprep's rules, refreshed with npm run prose:sync, and .lint/vale/ adds this site's proper nouns.
       - name: Install Vale
         if: ${{ !cancelled() }}
         run: |
@@ -113,8 +104,4 @@ jobs:
           echo "$HOME/vale" >> "$GITHUB_PATH"
       - name: Prose (Vale)
         if: ${{ !cancelled() }}
-        run: |
-          set -euo pipefail
-          rm -rf .lint/vale/styles/Eeprep
-          cp -r .lint/vale/eeprep/.github/vale/styles/Eeprep .lint/vale/styles/Eeprep
-          npm run prose
+        run: npm run prose

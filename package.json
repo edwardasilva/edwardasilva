@@ -13,6 +13,7 @@
     "figures:check": "node scripts/theme-figures.js --check",
     "check:links": "node scripts/check-links.js",
     "prose": "vale --config .lint/vale/.vale.ini src/content/docs",
+    "prose:sync": "node scripts/sync-vale-style.js",
     "lint": "eslint --config .lint/eslint.config.js .",
     "lint:fix": "eslint --config .lint/eslint.config.js . --fix",
     "typecheck": "tsc --noEmit",

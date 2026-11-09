@@ -1,0 +1,7 @@
+# Prefer active voice and name the actor.
+extends: existence
+message: "Name the actor. '%s' is passive."
+level: warning
+ignorecase: true
+tokens:
+  - '\b(?:is|are|was|were|been|being) \w+ed by\b'

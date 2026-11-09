@@ -1,0 +1,60 @@
+# Stock phrases from the human-writing checklist (puffery, unnamed sources,
+# wrap-ups, hedges, ad copy, chatbot leftovers). See .github/STYLE.md section 3.
+extends: existence
+message: "Cut the stock phrase '%s'. See .github/STYLE.md section 3."
+level: error
+ignorecase: true
+tokens:
+  # Puffed-up importance
+  - '\bvital role\b'
+  - '\breminder of\b'
+  - '\bmarks? a shift\b'
+  - '\bturning point\b'
+  - '\blasting legacy\b'
+  - '\bevolving landscape\b'
+  - '\bindelible\b'
+  - '\bdeeply rooted\b'
+  # Unnamed sources
+  - '\bexperts (?:say|argue)\b'
+  - '\bcritics argue\b'
+  - '\bmany believe\b'
+  - '\bwidely regarded\b'
+  - '\bindustry reports\b'
+  - '\bsome say\b'
+  # Wrap-ups and outlooks
+  - '\bin conclusion\b'
+  - '(?:^|[.!?]\s+)overall,'
+  - '\bin summary\b'
+  - '\bdespite these challenges\b'
+  - '\bfaces several challenges\b'
+  - '\bfuture outlook\b'
+  - '\blooking ahead\b'
+  # Hedges about missing information
+  - '\bnot widely documented\b'
+  - '\bdetails are limited\b'
+  - '\bbased on available information\b'
+  - '\bin the provided sources\b'
+  - '\bit is important to note\b'
+  - "\\bit's worth noting\\b"
+  - '\bshould not be confused with\b'
+  # Ad copy
+  - '\bnestled\b'
+  - '\bin the heart of\b'
+  - '\brich history\b'
+  - '\bgroundbreaking\b'
+  - '\brenowned\b'
+  - '\bdiverse array\b'
+  - '\bcommitment to\b'
+  - '\bworld-class\b'
+  - '\bcutting-edge\b'
+  - '\bgame-changers?\b'
+  # Indirect connection
+  - '\bin connection with\b'
+  # Chatbot leftovers
+  - '\bI hope this helps\b'
+  - '(?:^|[.!?]\s+)certainly\b'
+  - '\bof course!'
+  - '\blet me know\b'
+  - '\bfeel free to\b'
+  - '\bgreat question\b'
+  - '\bas an AI\b'
