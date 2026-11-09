@@ -1,7 +1,8 @@
 name: Deploy to Cloudflare Pages
 
 # A merge to main deploys the dev site, the "dev" preview branch of the edwardasilva Pages project.
-# A version tag, such as v0.0.2, deploys edwardasilva.com and creates its GitHub release.
+# A version tag, such as v0.1.0, deploys edwardasilva.com and creates its GitHub release. Edward
+# cuts a tag only when he says so.
 # A manual run picks either target. information/.agents/docs/site_notes.md has the release steps.
 on:
   push:
@@ -38,6 +39,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # resume-data.json stays off this public repo. It lives in information/, a submodule that points
       # at the private repo edwardasilva/information. INFORMATION_REPO_KEY is the private half of a
@@ -50,7 +53,9 @@ jobs:
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
-          cache: npm
+          # No dependency cache: the deploy builds what ships and must not restore a cache that a
+          # pull request run could have written.
+          package-manager-cache: false
 
       - name: Install dependencies
         run: npm ci

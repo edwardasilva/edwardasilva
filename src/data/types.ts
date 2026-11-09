@@ -21,9 +21,6 @@
  * $ `import type { ResumeData } from './types'` : Imported for resume data type safety
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
  */
 
 export type VisibilityScope = 'All' | 'Site' | 'Hide';

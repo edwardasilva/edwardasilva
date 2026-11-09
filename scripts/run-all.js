@@ -21,10 +21,7 @@
  * $ `npm run all` : Runs code clean/format, then the project build
  * $ `npm run all -- --dev` : Runs the same pipeline, then launches the local dev server
  *
- * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
+ * Copyright (c) 2026 Edward Silva. MIT License.
  */
 
 import { spawnSync } from 'node:child_process';
