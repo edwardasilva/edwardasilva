@@ -1,0 +1,6 @@
+extends: existence
+message: 'No em dashes. Write two sentences, or use because, but, or so.'
+level: error
+nonword: true
+tokens:
+  - '—'

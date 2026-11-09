@@ -10,7 +10,7 @@ slug: projects/seed-robot
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 08 November, 2026
+  Last Update: 09 November, 2026
 
   Built from the project entry in resume-data.json and the team's repository. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -59,11 +59,11 @@ dist = (fx * 0.0508) / edgepx
 
 The edge length is the average of the marker's width and height in pixels.
 
-Calibration gave us a lot of trouble. We calibrated the camera with checkerboard and ChArUco scripts, and at first we did not have enough good photos of the markers to calibrate from. A larger set of higher-quality photos fixed it. The final code undistorts each marker's position with that calibration before it computes the angle.
+Calibration gave us the most trouble. We calibrated the camera with checkerboard and ChArUco scripts, and at first we did not have enough good photos of the markers to calibrate from. A larger set of sharper photos fixed it. The final code undistorts each marker's position with that calibration before it computes the angle.
 
 ## Speeding up the Python
 
-The Python was far too slow at first. I multithreaded it to run on 640x480 video in stages, with separate threads for capture, processing, display, and the LCD. Threads and timing keep each stage in the loop. Processing got much faster, and the Arduino stopped waiting on the Python.
+The Python was far too slow at first. I split it into threads for capture, processing, display, and the LCD, so each stage of the 640x480 video ran on its own. Processing got much faster, and the Arduino stopped waiting on the Python.
 
 The control loop needs the newest frame, so a full queue drops its oldest image.
 
