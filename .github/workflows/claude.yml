@@ -18,10 +18,11 @@ on:
 permissions:
   contents: read
 
-# One run at a time per issue or pull request. A second @claude waits for the first to finish.
+# Runs only on the explicit triggers above, never on every push or pull request, to save usage.
+# A newer @claude on the same issue or pull request cancels the older run.
 concurrency:
   group: claude-${{ github.event.issue.number || github.event.pull_request.number }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   claude:
@@ -38,7 +39,7 @@ jobs:
         github.event.review.user.login == github.repository_owner &&
         contains(github.event.review.body, '@claude'))
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     # The same build switches CI uses. The resume PDF needs TeX, which the runner does not have.
     env:
       SKIP_RESUME_PDF_BUILD: '1'
