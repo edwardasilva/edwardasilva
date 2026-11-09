@@ -10,7 +10,7 @@ slug: projects/EKF-project
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 08 November, 2026
+  Last Update: 09 November, 2026
 
   Built from the EENG 519 report in src/assets/EKF and the project's Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -76,7 +76,7 @@ F_pulse2    = pulse2_amp * exp(-((t - pulse2_mu).^2) / (2 * pulse2_sig^2));
 ```
 
 <Figure name="estimation/disturbance" number={2} alt="Input force over three seconds, with noise around zero and peaks of about 1.5 and 1 kilonewtons near one and two seconds.">
-  The force the filters never see directly.
+  The simulated input force. The filters estimate it from displacement and acceleration.
 </Figure>
 
 ## Estimating the terrain force
@@ -146,9 +146,9 @@ $$
 
 The points sit within 0.002 standard deviations of the mean, so they sample the curve about as locally as a Jacobian does. They also never see the width of the tanh step.
 
-## Change the yield constant
+## Raising the yield constant
 
-Raising $K_m$ makes that term matter. Over eight noise seeds at $K_m = 500$, where the yield force reaches 1000 N, the three filters separate:
+Raising $K_m$ makes that term matter. Over eight noise seeds at $K_m = 500$, where the yield force reaches 1000 N, the three configurations separate:
 
 | Filter at $K_m = 500$ | RMS error | Samples inside $\pm 3\sigma$ |
 | --- | --- | --- |
