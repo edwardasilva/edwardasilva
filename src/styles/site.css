@@ -99,8 +99,8 @@
     }
 }
 
-/* Small phones: one size down, so all five section links fit on a 360px screen. */
-@media (max-width: 24rem) {
+/* Small phones: one size down, so all six section links fit on a 390px screen. */
+@media (max-width: 26rem) {
     .es-nav a {
         font-size: 0.8125rem;
     }
