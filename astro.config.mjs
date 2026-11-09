@@ -49,7 +49,8 @@ const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
  * @typedef {SiteEntry & { kind?: 'project' | 'personal', order?: number }} SiteProject
  * @typedef {object} SiteData The parts of resume-data.json this file reads
  * @property {{ name: string, website: string }} personal
- * @property {{ description: string }} site
+ * @property {{ description: string, aboutPublished?: boolean }} site
+ * @property {{ intro?: string[], chapters?: object[], Visibility?: string }} [about]
  * @property {SiteEntry[]} experiences
  * @property {SiteProject[]} projects
  */
@@ -107,6 +108,13 @@ function projectLinks(kind) {
         .sort((left, right) => (left.order ?? 0) - (right.order ?? 0))
         .map((project) => ({ label: navLabel(project), slug: `projects/${project.slug}` }));
 }
+
+/** The about page is held back until the switch is on and the story has at least one paragraph. */
+const C_HAS_ABOUT = Boolean(
+    C_RESUME.site?.aboutPublished &&
+    isVisibleOnSite(C_RESUME.about ?? {}) &&
+    (C_RESUME.about?.intro?.length || C_RESUME.about?.chapters?.length)
+);
 
 const C_ROLE_LINKS = C_RESUME.experiences.filter(isVisibleOnSite).map((experience) => ({
     label: navLabel(experience),
@@ -270,9 +278,10 @@ export default defineConfig({
             },
             // Every page except the home page is listed here. A group whose first link shares its
             // label opens with that page. The role and project links come from resume-data.json, in
-            // its order, so a Visibility change there updates them. Add /about/ when the page is
-            // published.
+            // its order, so a Visibility change there updates them. About appears once
+            // site.aboutPublished is true and the story has text.
             sidebar: [
+                ...(C_HAS_ABOUT ? [{ label: 'About', link: '/about/' }] : []),
                 {
                     label: 'Projects',
                     items: [

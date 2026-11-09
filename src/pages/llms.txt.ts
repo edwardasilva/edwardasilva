@@ -29,9 +29,12 @@
 
 import type { APIRoute } from 'astro';
 import { getProjectPages } from '../data/projects';
-import { getExperienceHref, resume, visibleExperiences } from '../data/resume';
+import { getExperienceHref, hasAboutContent, resume, visibleExperiences } from '../data/resume';
 
 const C_SECTION_PAGES = [
+    ...(hasAboutContent
+        ? [['About', '/about/', 'How I got from the jobs before engineering to embedded software.']]
+        : []),
     ['Experience', '/experiences/', 'Current and past engineering roles, and organizations.'],
     [
         'Education',
