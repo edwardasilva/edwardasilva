@@ -53,7 +53,8 @@ const { pages, class: className } = Astro.props;
                                 'es-card-figure',
                                 {
                                     'es-card-photo': !dark && !C_DRAWINGS.has(project.figure ?? ''),
-                                    'es-card-drawing': !dark && C_DRAWINGS.has(project.figure ?? ''),
+                                    'es-card-drawing':
+                                        !dark && C_DRAWINGS.has(project.figure ?? ''),
                                 },
                             ]}
                             data-figure={project.figure}
