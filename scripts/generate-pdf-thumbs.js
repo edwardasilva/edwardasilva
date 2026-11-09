@@ -6,14 +6,14 @@
  * Creation Date: 18 July, 2026
  * Last Update: 09 November, 2026
  *
- * Renders the first page of every PDF referenced in resume-data.json proof
- * entries to a 400 px wide WebP in src/assets/thumbs, so project pages can
- * show a real preview without embedding a PDF viewer. Thumbnails are
+ * Renders the first page of every PDF that a project page lists as proof in
+ * resume-data.json to a 400 px wide WebP in src/assets/thumbs, so project pages
+ * can show a real preview without embedding a PDF viewer. Thumbnails are
  * regenerated only when missing or older than their source PDF.
  *
  * File Structure:
- * - Constants: directory paths and thumbnail naming convention
- * - Main Logic: proof scanning, staleness check, first-page rendering
+ * - Constants: directory paths
+ * - Main Logic: shown-proof lookup, staleness check, first-page rendering
  *
  * Used in: npm run build (before build:resume asset sync)
  * Invoked via: npm run build:thumbs
@@ -29,6 +29,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { pdf } from 'pdf-to-img';
 import sharp from 'sharp';
+import { listShownProofs, thumbNameFor } from './shown-proofs.js';
 
 const THUMB_WIDTH = 400;
 const THUMB_QUALITY = 80;
@@ -38,47 +39,12 @@ const THUMB_DIR = path.join(ASSET_DIR, 'thumbs');
 const RESUME_DATA = path.join(ROOT_DIR, 'information', 'resume-data.json');
 
 /**
- * @brief Maps a proof asset URL to its thumbnail file name
- * @param url Proof URL such as /assets/DSP/Writeup.pdf
- * @return Thumbnail file name such as DSP-Writeup.webp
- */
-function thumbNameFor(url) {
-    return url
-        .replace(/^\/assets\//, '')
-        .replace(/\.pdf$/i, '.webp')
-        .replace(/\//g, '-');
-}
-
-/**
- * @brief Collects unique PDF proof URLs from resume data
- * @param data Parsed resume-data.json contents
- * @return Array of /assets/... PDF URLs
- * @details Covers every section that can carry proof: projects and experiences
- */
-function collectPdfUrls(data) {
-    const urls = new Set();
-    const sections = [data.projects, data.experiences];
-
-    for (const section of sections) {
-        for (const entry of section ?? []) {
-            for (const proof of entry.proof ?? []) {
-                if (proof.type === 'pdf' && proof.url?.startsWith('/assets/')) {
-                    urls.add(proof.url);
-                }
-            }
-        }
-    }
-
-    return [...urls];
-}
-
-/**
- * @brief Generates a thumbnail for every PDF proof that is missing or out of date
+ * @brief Generates a thumbnail for every shown PDF proof that is missing or out of date
  * @return Promise that resolves when every thumbnail is written
  */
 async function generateThumbnails() {
     const data = JSON.parse(fs.readFileSync(RESUME_DATA, 'utf8'));
-    const pdfUrls = collectPdfUrls(data);
+    const pdfUrls = listShownProofs(data).thumbs;
 
     if (pdfUrls.length === 0) {
         console.log('No PDF proofs found; skipping thumbnail generation.');
