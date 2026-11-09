@@ -32,12 +32,13 @@ import { asSentence } from '../data/resume';
 
 interface Props {
     pages: ProjectPage[];
+    class?: string;
 }
 
-const { pages } = Astro.props;
+const { pages, class: className } = Astro.props;
 ---
 
-<ul class="es-cards not-content">
+<ul class:list={['es-cards', 'not-content', className]}>
     {pages.map(({ entry, project, href }) => {
         const figure = project.figure ? getFigure(project.figure) : undefined;
         const dark = project.figure ? getDarkFigure(project.figure) : undefined;

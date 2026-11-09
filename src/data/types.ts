@@ -121,6 +121,8 @@ export interface Experience extends WorkEntry {
 
 export type ProjectKind = 'project' | 'personal';
 
+export type HomeGroup = 'selected' | 'writing' | 'more';
+
 export interface ProjectLink {
     label: string;
     href: string;
@@ -131,6 +133,7 @@ export interface Project extends WorkEntry {
     course?: string;
     kind?: ProjectKind;
     order?: number;
+    home?: HomeGroup | false;
     dek?: string;
     figure?: string;
     figureAlt?: string;
@@ -161,6 +164,7 @@ export interface Organization {
 export interface PageCopy {
     description: string;
     intro?: string;
+    focus?: string;
 }
 
 export interface Site {
