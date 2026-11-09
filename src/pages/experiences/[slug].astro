@@ -59,13 +59,11 @@ const slug = getExperienceSlug(experience);
     }}
 >
     {experience.Summary && <p>{asSentence(experience.Summary)}</p>}
-    {
-        experience.Highlights.length > 0 && (
-            <ul>
-                {experience.Highlights.map((highlight) => (
-                    <li>{asSentence(highlight)}</li>
-                ))}
-            </ul>
-        )
-    }
+    {experience.Highlights.length > 0 && (
+        <ul>
+            {experience.Highlights.map((highlight) => (
+                <li>{asSentence(highlight)}</li>
+            ))}
+        </ul>
+    )}
 </StarlightPage>

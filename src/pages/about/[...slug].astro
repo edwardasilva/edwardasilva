@@ -82,37 +82,35 @@ function headingId(text: string): string {
     }}
     headings={headings}
 >
-    {about.intro.map((paragraph) => <p class="es-lede">{asSentence(paragraph)}</p>)}
+    {about.intro.map((paragraph) => (
+        <p class="es-lede">{asSentence(paragraph)}</p>
+    ))}
 
-    {
-        narrativeSections.map((section) => (
-            <>
-                <h2 id={section.id}>{section.title}</h2>
-                {section.paragraphs.map((paragraph) => (
-                    <p>{asSentence(paragraph)}</p>
-                ))}
-            </>
-        ))
-    }
+    {narrativeSections.map((section) => (
+        <>
+            <h2 id={section.id}>{section.title}</h2>
+            {section.paragraphs.map((paragraph) => (
+                <p>{asSentence(paragraph)}</p>
+            ))}
+        </>
+    ))}
 
-    {
-        hasEarlyWork && (
-            <>
-                <h2 id={headingId(C_BEFORE_ENGINEERING)}>{C_BEFORE_ENGINEERING}</h2>
-                {earlyWorkSummary && <p>{asSentence(earlyWorkSummary)}</p>}
-                {roles.length > 0 && (
-                    <ul>
-                        {roles.map((role) => (
-                            <li>
-                                {role.title}, {role.employer}
-                                {role.location && `, ${role.location}`}
-                                {role.duration && `. ${role.duration}`}
-                                {role.Summary && `. ${asSentence(role.Summary)}`}
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </>
-        )
-    }
+    {hasEarlyWork && (
+        <>
+            <h2 id={headingId(C_BEFORE_ENGINEERING)}>{C_BEFORE_ENGINEERING}</h2>
+            {earlyWorkSummary && <p>{asSentence(earlyWorkSummary)}</p>}
+            {roles.length > 0 && (
+                <ul>
+                    {roles.map((role) => (
+                        <li>
+                            {role.title}, {role.employer}
+                            {role.location && `, ${role.location}`}
+                            {role.duration && `. ${role.duration}`}
+                            {role.Summary && `. ${asSentence(role.Summary)}`}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </>
+    )}
 </StarlightPage>

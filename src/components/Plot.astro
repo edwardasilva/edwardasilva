@@ -56,44 +56,39 @@ const middleY = top + (height - top - bottom) / 2;
     <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label}>
         <defs>
             <clipPath id={`${id}-clip`}>
-                <rect x={left} y={top} width={width - left - right} height={height - top - bottom}
+                <rect
+                    x={left}
+                    y={top}
+                    width={width - left - right}
+                    height={height - top - bottom}
                 ></rect>
             </clipPath>
         </defs>
-        {
-            yTicks.map((tick) => (
-                <g>
-                    <line
-                        class="es-grid"
-                        x1={left}
-                        x2={width - right}
-                        y1={yAt(tick, plot)}
-                        y2={yAt(tick, plot)}
-                    />
-                    <text
-                        class="es-tick"
-                        x={left - 8}
-                        y={yAt(tick, plot)}
-                        text-anchor="end"
-                        dominant-baseline="middle"
-                    >
-                        {formatY(tick)}
-                    </text>
-                </g>
-            ))
-        }
-        {
-            xTicks.map((tick) => (
+        {yTicks.map((tick) => (
+            <g>
+                <line
+                    class="es-grid"
+                    x1={left}
+                    x2={width - right}
+                    y1={yAt(tick, plot)}
+                    y2={yAt(tick, plot)}
+                />
                 <text
                     class="es-tick"
-                    x={xAt(tick, plot)}
-                    y={height - bottom + 20}
-                    text-anchor="middle"
+                    x={left - 8}
+                    y={yAt(tick, plot)}
+                    text-anchor="end"
+                    dominant-baseline="middle"
                 >
-                    {tick}
+                    {formatY(tick)}
                 </text>
-            ))
-        }
+            </g>
+        ))}
+        {xTicks.map((tick) => (
+            <text class="es-tick" x={xAt(tick, plot)} y={height - bottom + 20} text-anchor="middle">
+                {tick}
+            </text>
+        ))}
         <text
             class="es-tick"
             x={left + (width - left - right) / 2}
@@ -112,8 +107,17 @@ const middleY = top + (height - top - bottom) / 2;
             {yLabel}
         </text>
         <g clip-path={`url(#${id}-clip)`}>
-            {paths.map((path) => <path class={path.class} d={path.d ?? ''} data-path={path.key} />)}
-            <line class="es-cross" y1={top} y2={height - bottom} x1="0" x2="0" data-cross hidden
+            {paths.map((path) => (
+                <path class={path.class} d={path.d ?? ''} data-path={path.key} />
+            ))}
+            <line
+                class="es-cross"
+                y1={top}
+                y2={height - bottom}
+                x1="0"
+                x2="0"
+                data-cross
+                hidden
             ></line>
         </g>
     </svg>

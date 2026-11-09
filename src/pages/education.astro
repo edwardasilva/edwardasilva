@@ -91,80 +91,72 @@ const head = primaryEducation
 ---
 
 <StarlightPage frontmatter={{ title: 'Education', description, head, tableOfContents: false }}>
-    {
-        primaryEducation && (
-            <p class="es-lede">
-                {primaryEducation.degree}
-                {primaryEducation.minor && `, ${primaryEducation.minor}`},{' '}
-                <ExternalLink href={primaryEducation.url}>
-                    {primaryEducation.institution}
-                </ExternalLink>
-                , {primaryEducation.location}. Graduated {primaryEducation.graduationDate}
-                {primaryEducation.gpa && ` with a ${primaryEducation.gpa} GPA`}.
-            </p>
-        )
-    }
+    {primaryEducation && (
+        <p class="es-lede">
+            {primaryEducation.degree}
+            {primaryEducation.minor && `, ${primaryEducation.minor}`},{' '}
+            <ExternalLink href={primaryEducation.url}>{primaryEducation.institution}</ExternalLink>,{' '}
+            {primaryEducation.location}. Graduated {primaryEducation.graduationDate}
+            {primaryEducation.gpa && ` with a ${primaryEducation.gpa} GPA`}.
+        </p>
+    )}
 
     <h2>Courses behind the projects</h2>
     <div class="es-ledger not-content">
-        {
-            courseProjects.map(({ title, href: projectHref, code }) => {
-                const course = getCourseByCode(code);
-                const href = getCourseHref(code);
+        {courseProjects.map(({ title, href: projectHref, code }) => {
+            const course = getCourseByCode(code);
+            const href = getCourseHref(code);
 
-                return (
-                    <div class="es-ledger-row es-ledger-coded">
-                        <code>{code}</code>
-                        <span class="es-ledger-name">
-                            {href ? <a href={href}>{course?.name}</a> : course?.name}
-                        </span>
-                        <span class="es-ledger-detail">
-                            <a href={projectHref}>{title}</a>
-                        </span>
-                    </div>
-                );
-            })
-        }
+            return (
+                <div class="es-ledger-row es-ledger-coded">
+                    <code>{code}</code>
+                    <span class="es-ledger-name">
+                        {href ? <a href={href}>{course?.name}</a> : course?.name}
+                    </span>
+                    <span class="es-ledger-detail">
+                        <a href={projectHref}>{title}</a>
+                    </span>
+                </div>
+            );
+        })}
     </div>
-    <p>The rest are on the <a href="/education/coursework/">full coursework list</a>.</p>
+    <p>
+        The rest are on the <a href="/education/coursework/">full coursework list</a>.
+    </p>
 
-    {
-        honors.length > 0 && (
-            <>
-                <h2>Honors and scholarships</h2>
-                <div class="es-ledger not-content">
-                    {honors.map(({ name, detail }) => (
-                        <div class="es-ledger-row">
-                            <span class="es-ledger-name">{name}</span>
-                            {detail && <span class="es-ledger-detail">{detail}</span>}
-                        </div>
-                    ))}
-                </div>
-            </>
-        )
-    }
+    {honors.length > 0 && (
+        <>
+            <h2>Honors and scholarships</h2>
+            <div class="es-ledger not-content">
+                {honors.map(({ name, detail }) => (
+                    <div class="es-ledger-row">
+                        <span class="es-ledger-name">{name}</span>
+                        {detail && <span class="es-ledger-detail">{detail}</span>}
+                    </div>
+                ))}
+            </div>
+        </>
+    )}
 
-    {
-        visibleCertifications.length > 0 && (
-            <>
-                <h2>Certifications</h2>
-                <div class="es-ledger not-content">
-                    {visibleCertifications.map((certification) => (
-                        <div id={getCertificationSlug(certification)} class="es-ledger-row">
-                            <span class="es-ledger-name">
-                                {certification.link ? (
-                                    <ExternalLink href={certification.link}>
-                                        {certification.name}
-                                    </ExternalLink>
-                                ) : (
-                                    certification.name
-                                )}
-                            </span>
-                            <span class="es-ledger-detail">{certification.organization}</span>
-                        </div>
-                    ))}
-                </div>
-            </>
-        )
-    }
+    {visibleCertifications.length > 0 && (
+        <>
+            <h2>Certifications</h2>
+            <div class="es-ledger not-content">
+                {visibleCertifications.map((certification) => (
+                    <div id={getCertificationSlug(certification)} class="es-ledger-row">
+                        <span class="es-ledger-name">
+                            {certification.link ? (
+                                <ExternalLink href={certification.link}>
+                                    {certification.name}
+                                </ExternalLink>
+                            ) : (
+                                certification.name
+                            )}
+                        </span>
+                        <span class="es-ledger-detail">{certification.organization}</span>
+                    </div>
+                ))}
+            </div>
+        </>
+    )}
 </StarlightPage>

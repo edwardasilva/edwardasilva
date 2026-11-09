@@ -44,14 +44,16 @@ const { id, number, title } = Astro.props;
         loading="lazy"
         referrerpolicy="strict-origin-when-cross-origin"
         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen></iframe>
+        allowfullscreen
+    ></iframe>
     <figcaption>
         <span class="es-fignum">Figure {number}</span>
         <span>
             <slot />
-            <ExternalLink href={`https://www.youtube.com/watch?v=${id}`}
-                >Watch on YouTube</ExternalLink
-            >.
+            <ExternalLink href={`https://www.youtube.com/watch?v=${id}`}>
+                Watch on YouTube
+            </ExternalLink>
+            .
         </span>
     </figcaption>
 </figure>

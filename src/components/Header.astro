@@ -58,16 +58,11 @@ const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astr
         <SiteTitle />
     </div>
     <nav class="es-nav" aria-label="Sections">
-        {
-            links.map((link) => (
-                <a
-                    href={link.href}
-                    aria-current={pathname.startsWith(link.href) ? 'page' : undefined}
-                >
-                    {link.label}
-                </a>
-            ))
-        }
+        {links.map((link) => (
+            <a href={link.href} aria-current={pathname.startsWith(link.href) ? 'page' : undefined}>
+                {link.label}
+            </a>
+        ))}
     </nav>
     <div class="sl-flex print:hidden">{shouldRenderSearch && <Search />}</div>
     <div class="sl-flex print:hidden right-group">
@@ -79,13 +74,11 @@ const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astr
     <nav class="es-suggest" aria-label="Suggested pages">
         <p>Suggested pages</p>
         <ul>
-            {
-                suggestions.map((suggestion) => (
-                    <li>
-                        <a href={suggestion.href}>{suggestion.label}</a>
-                    </li>
-                ))
-            }
+            {suggestions.map((suggestion) => (
+                <li>
+                    <a href={suggestion.href}>{suggestion.label}</a>
+                </li>
+            ))}
         </ul>
     </nav>
 </template>

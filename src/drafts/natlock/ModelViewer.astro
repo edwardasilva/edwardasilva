@@ -52,7 +52,9 @@ const { src, fallback, alt, number } = Astro.props;
     <canvas hidden tabindex="0" role="img" aria-label={alt}></canvas>
     <figcaption>
         <span class="es-fignum">Figure {number}</span>
-        <span><slot /></span>
+        <span>
+            <slot />
+        </span>
     </figcaption>
 </figure>
 

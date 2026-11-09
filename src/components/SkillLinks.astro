@@ -34,11 +34,9 @@ interface Props {
 const { skills } = Astro.props;
 ---
 
-{
-    skills.map((skill, index) => (
-        <>
-            {index > 0 && ', '}
-            <a href={getSkillHref(skill)}>{skill}</a>
-        </>
-    ))
-}
+{skills.map((skill, index) => (
+    <>
+        {index > 0 && ', '}
+        <a href={getSkillHref(skill)}>{skill}</a>
+    </>
+))}
