@@ -1052,3 +1052,13 @@ figure.es-fig-wide > img {
     border: 0;
     border-radius: var(--es-radius);
 }
+
+/* Phones: tables shrink a step so four columns fit. */
+@media (max-width: 30rem) {
+    .sl-markdown-content table {
+        font-size: 0.8125rem;
+    }
+    .sl-markdown-content :is(th, td) {
+        padding-inline-end: 0.5rem;
+    }
+}
