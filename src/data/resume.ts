@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
  * Reads information/resume-data.json once, cleans it for the site, and exports what the pages render.
  * That file is the only source of the site's data, including the site-only fields and the site
@@ -533,7 +533,7 @@ export function getCourseByCode(code: string): Course | undefined {
 export function getCourseHref(code: string): string | undefined {
     const course = getCourseByCode(code);
 
-    return course && `/education/coursework#${getCourseSlug(course)}`;
+    return course && `/education/coursework/#${getCourseSlug(course)}`;
 }
 
 /**
@@ -583,7 +583,7 @@ function getSkillSlug(name: string): string {
  * @return Link to the skill's row
  */
 export function getSkillHref(name: string): string {
-    return `/skills#${getSkillSlug(name)}`;
+    return `/skills/#${getSkillSlug(name)}`;
 }
 
 /**
@@ -623,15 +623,15 @@ function buildSkillIndex(): SkillEntry[] {
 
     for (const course of courseCategories.flatMap((entry) => entry.courses)) {
         addReference(course.skills, {
-            label: `${course.code} ${course.alias ?? course.name}`,
-            href: `/education/coursework#${getCourseSlug(course)}`,
+            label: `${course.code} ${course.name}`,
+            href: `/education/coursework/#${getCourseSlug(course)}`,
         });
     }
 
     for (const certification of visibleCertifications) {
         addReference(certification.skills, {
             label: certification.name,
-            href: `/education#${getCertificationSlug(certification)}`,
+            href: `/education/#${getCertificationSlug(certification)}`,
         });
     }
 

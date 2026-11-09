@@ -28,7 +28,7 @@ import GantryDelay from '../../../components/GantryDelay.astro';
 import GantryWeight from '../../../components/GantryWeight.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-My team built two controllers for one simulated crane. The first moves the load 1 m in just under 2 minutes with no overshoot. The second settles in under 4 seconds, and its phase margin drops from 48 degrees to 36.9 or 24.2 degrees. Phase margin is how much extra lag a loop can take before it goes unstable. Figures 8 and 9 run the second design in your browser.
+My team built two controllers for one simulated crane. The first moves the load 1 m in just under 2 minutes with no overshoot. The second settles in under 4 seconds, and its two versions have phase margins of 36.9 and 24.2 degrees, against the first design's 48. Phase margin is how much extra lag a loop can take before it goes unstable. Figures 8 and 9 run the second design in your browser.
 
 An operator on a gantry crane controls only the direction and speed, so where the load ends up depends on the operator's skill. This work comes from two projects in EENG 417. It all ran in MATLAB and Simulink, with no physical crane.
 
@@ -84,7 +84,7 @@ The real pair puts a zero outside the unit circle and turns the DC gain negative
 
 ### Swing
 
-The report gives a load swing of no more than 1 degree, about 3 inches on this cable. Its swing plot does show a brief first peak near 1.5 degrees.
+The report gives a load swing of no more than 1 degree. On this cable that is an arc of 6.4 cm, about 2.5 inches, which the report rounds to 3 inches. Its swing plot does show a brief first peak near 1.5 degrees.
 
 <Figure name="gantry/slow-swing" number={4} alt="Load swing angle decaying from a first peak near 1.5 degrees to zero over about 150 seconds.">
   Load swing over the same move.
@@ -95,10 +95,10 @@ The report gives a load swing of no more than 1 degree, about 3 inches on this c
 A phase margin $\phi_m$ turns into a delay limit at crossover $\omega_c$, the frequency where the loop gain is 1. A pure delay $\tau$ adds phase lag $\omega\tau$ without changing the gain, so:
 
 $$
-\omega_c \tau = \phi_m \quad\Rightarrow\quad \tau = \frac{48^\circ \cdot \pi / 180}{1.62} = 0.5\ \text{s}
+\omega_c \tau = \phi_m \quad\Rightarrow\quad \tau = \frac{48^\circ \cdot \pi / 180}{1.62} = 0.52\ \text{s}
 $$
 
-That is 25 samples at 50 Hz. We added a 25-sample delay to check. The instability was marginal, and the response never settled.
+That is about 26 samples at 50 Hz. The report rounds it to 0.5 s and 25 samples, and we added a 25-sample delay to check. The instability was marginal, and the response never settled.
 
 <Figure name="gantry/slow-delay" number={5} alt="Load position with a 25-sample delay. The response keeps oscillating around the reference and does not settle.">
   The same command with a 25-sample delay added.
@@ -115,7 +115,7 @@ That is 25 samples at 50 Hz. We added a 25-sample delay to check. The instabilit
 
 ### Simulation
 
-We rewrote the plant in control canonical form. MATLAB's `lqr` (a linear-quadratic regulator, which picks gains by minimizing a weighted cost) set the state feedback. It also set the estimator, the code that infers states we could not measure. The estimator's poles came out about 6 times faster than the controller's.
+We rewrote the plant in control canonical form. MATLAB's `lqr` (a linear-quadratic regulator, which picks gains by minimizing a weighted cost) set the state feedback. It also set the estimator, the code that infers states we could not measure. We aimed for estimator poles at least 4 times faster than the controller's, and they came out about 6 times faster.
 
 ```matlab title="Project 2/src/main.m"
 A = [0 1 0;0 0 1;0 -g/l 0];
@@ -165,7 +165,7 @@ Augmentation removes the overshoot and costs 12.7 degrees of phase margin. The r
 
 - An LQG design (an LQR with a noise-aware estimator) to reject the disturbance did not work.
 - The large $K_b$ may be sensitive to noise.
-- The `lqr` weights have no physical meaning, so the result is optimal only in that it met the spec.
+- The `lqr` weights have no physical meaning. The result is optimal only for the weights we picked, and we picked them to meet the spec.
 - A real crane would need these margins validated before anyone ran this controller on it.
 
 ## Changing the LQR weight

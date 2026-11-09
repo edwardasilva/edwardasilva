@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
  * Every skill, listed with the work it came from. A skill only appears here if a role, project,
  * course, or certification on this site names it.
@@ -33,7 +33,7 @@ import { itemListSchema, jsonLdHeadTag } from '../data/structured-data';
 
 const schema = itemListSchema(
     'Technical Skills Directory',
-    skillIndex.map((skill) => ({ name: skill.name, path: `/skills#${skill.slug}` })),
+    skillIndex.map((skill) => ({ name: skill.name, path: `/skills/#${skill.slug}` })),
     Astro.site ?? Astro.url
 );
 ---
