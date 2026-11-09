@@ -1,0 +1,62 @@
+---
+/**
+ * src/components/SiteTitle.astro
+ * Site Title
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 09 November, 2026
+ *
+ * The site icon and the name as live text in the heading font, the way eeprep's header shows its
+ * mark beside its wordmark. The icon is public/favicon.svg, which carries its own light and dark
+ * colors.
+ *
+ * File Structure:
+ * - Link back to the home page, with the icon and the name
+ *
+ * Where this file is used within the repository:
+ * - Starlight SiteTitle override, set in astro.config.mjs
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import { resume } from '../data/resume';
+
+const { siteTitleHref } = Astro.locals.starlightRoute;
+---
+
+<a href={siteTitleHref} class="site-title sl-flex">
+    <img class="es-mark print:hidden" src="/favicon.svg" alt="" width="32" height="32" />
+    <span class="es-wordmark" translate="no">{resume.personal.name}</span>
+</a>
+
+<style>
+    @layer starlight.core {
+        .site-title {
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--es-ink);
+            text-decoration: none;
+            white-space: nowrap;
+            min-width: 0;
+        }
+    }
+
+    .es-mark {
+        width: 1.75rem;
+        height: 1.75rem;
+        flex: none;
+    }
+
+    .es-wordmark {
+        font: 600 1.375rem/1 var(--es-font-serif);
+        font-variation-settings: 'opsz' 72;
+        letter-spacing: -0.01em;
+    }
+</style>

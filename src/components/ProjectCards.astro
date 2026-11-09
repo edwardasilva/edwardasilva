@@ -1,0 +1,80 @@
+---
+/**
+ * src/components/ProjectCards.astro
+ * Project Cards
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 09 November, 2026
+ *
+ * A row of project cards. A card shows a figure from the work when resume-data.json names one. An
+ * SVG plot switches to its dark copy in dark mode. A raster plot or a photo shows as it is.
+ *
+ * File Structure:
+ * - Props: project pages
+ * - Card with figure, title, and one line
+ *
+ * Where this file is used within the repository:
+ * - src/pages/index.astro and src/pages/projects.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import { getDarkFigure, getFigure } from '../data/figures';
+import type { ProjectPage } from '../data/projects';
+import { asSentence } from '../data/resume';
+
+interface Props {
+    pages: ProjectPage[];
+}
+
+const { pages } = Astro.props;
+---
+
+<ul class="es-cards not-content">
+    {
+        pages.map(({ entry, project, href }) => {
+            const figure = project.figure ? getFigure(project.figure) : undefined;
+            const dark = project.figure ? getDarkFigure(project.figure) : undefined;
+
+            return (
+                <li>
+                    <a href={href}>
+                        {figure && (
+                            <span class:list={['es-card-figure', { 'es-card-plate': !dark }]}>
+                                <img
+                                    class:list={{ 'dark:sl-hidden': dark }}
+                                    src={figure.src}
+                                    width={figure.width}
+                                    height={figure.height}
+                                    alt={project.figureAlt ?? ''}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                                {dark && (
+                                    <img
+                                        class="light:sl-hidden"
+                                        src={dark.src}
+                                        width={dark.width}
+                                        height={dark.height}
+                                        alt={project.figureAlt ?? ''}
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
+                                )}
+                            </span>
+                        )}
+                        <strong>{entry.data.title}</strong>
+                        <span class="es-card-dek">{project.dek && asSentence(project.dek)}</span>
+                    </a>
+                </li>
+            );
+        })
+    }
+</ul>

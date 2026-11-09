@@ -1,0 +1,72 @@
+% scripts/resume-template.tex
+% Resume Template
+%
+% Author: Edward Silva
+% Creation Date: 07 November, 2026
+% Last Update: 08 November, 2026
+%
+% The fixed part of the resume, based on information/.agents/docs/templates/template.tex: XCharter, pdflatex, Unicode
+% mapping for applicant tracking systems, PDF metadata, and bookmarks. scripts/build-resume.js
+% copies it next to two generated files before each compile: settings.tex holds the font size,
+% margins, and spacing for one layout, and body.tex holds the metadata and content.
+%
+% File Structure:
+% - Packages and page setup
+% - Section and list style, with the spacing read from settings.tex
+% - Measurement macro the fitting script reads from the log
+%
+% Where this file is used within the repository:
+% - Compiled by scripts/build-resume.js
+%
+% Usage:
+% $ `npm run build:resume` : Fits and compiles the resume
+%
+% Copyright (c) 2026 Edward Silva. All rights reserved.
+% NOTICE: This file contains personal biographical data.
+% It is strictly excluded from the repository's MIT License and
+% may not be reproduced, distributed, or modified without permission.
+
+\documentclass[11pt]{article}
+\input{settings}
+\usepackage[letterpaper,margin=\resumemargin]{geometry}
+\usepackage{XCharter}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
+\usepackage{titlesec}
+\usepackage[protrusion=true,expansion=true]{microtype}
+\raggedright
+\raggedbottom
+\pagestyle{empty}
+\urlstyle{same}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% No hyphenated line breaks: a word split across lines cannot be found by a keyword search.
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+
+% Every glyph maps to real Unicode text, so the PDF stays machine-readable.
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+% One gap size between every pair of sections, grown with the rest of the spacing.
+\titleformat{\section}{\bfseries\large}{}{0pt}{}[\vspace{2pt}\titlerule]
+\titlespacing*{\section}{0pt}{\sectiongap}{\sectionafter}
+
+\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
+\setlist[itemize]{leftmargin=12pt,topsep=\listtop,itemsep=\listitem,parsep=0pt,partopsep=0pt}
+
+% The fitting script reads this line from the log after each compile.
+\newcommand{\measure}[1]{%
+  \typeout{RESUME-#1 page=\thepage\space used=\the\pagetotal\space
+    goal=\the\pagegoal\space line=\the\baselineskip}}
+
+\begin{document}
+\resumefont
+\thispagestyle{empty}
+\input{body}
+\par\measure{END}
+\end{document}

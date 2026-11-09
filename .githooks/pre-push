@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+set -e
+
+node scripts/scrub-private.js push
+node scripts/information.js check
+echo "[pre-push] information/ points at its main branch. Proceeding with push."

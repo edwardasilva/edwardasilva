@@ -1,0 +1,101 @@
+---
+/**
+ * src/components/SidebarTree.astro
+ * Sidebar Tree
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Starlight's sidebar list with parent-page groups: the first link is the group's label and a separate
+ * button opens and closes its sub-pages. One size for every top-level row, and one for every nested
+ * row. Adapted from eeprep.com.
+ *
+ * File Structure:
+ * - Props: entries and depth
+ * - Link, parent group, and plain group branches
+ * - Styles: every size comes from the two sidebar tokens
+ *
+ * Where this file is used within the repository:
+ * - src/components/Sidebar.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import { Icon } from '@astrojs/starlight/components';
+import SidebarRestorePoint from '@astrojs/starlight/components/SidebarRestorePoint.astro';
+import { hasCurrent, splitParentGroup, type Entry } from '../data/sidebar-parents';
+
+interface Props {
+    sublist: Entry[];
+    nested?: boolean;
+}
+
+const { sublist, nested = false } = Astro.props;
+---
+
+<ul class:list={['es-side', { 'es-side-top': !nested }]}>
+    {
+        sublist.map((entry) => {
+            const split = splitParentGroup(entry);
+            const open = entry.type === 'group' && (hasCurrent(entry) || !entry.collapsed);
+
+            if (entry.type === 'link') {
+                return (
+                    <li>
+                        <a
+                            href={entry.href}
+                            aria-current={entry.isCurrent ? 'page' : undefined}
+                            class="es-side-link"
+                            {...entry.attrs}
+                        >
+                            {entry.label}
+                        </a>
+                    </li>
+                );
+            }
+
+            if (split) {
+                return (
+                    <li class="es-side-parent">
+                        <a
+                            href={split.parent.href}
+                            aria-current={split.parent.isCurrent ? 'page' : undefined}
+                            class="es-side-link"
+                            {...split.parent.attrs}
+                        >
+                            {split.parent.label}
+                        </a>
+                        <details open={open}>
+                            <summary class="es-side-toggle">
+                                <span class="sr-only">{split.parent.label} sub-pages</span>
+                                <Icon name="right-caret" class="es-side-caret" size="1.125rem" />
+                            </summary>
+                            <SidebarRestorePoint />
+                            <Astro.self sublist={split.children} nested />
+                        </details>
+                    </li>
+                );
+            }
+
+            return (
+                <li>
+                    <details open={open}>
+                        <summary class="es-side-group">
+                            <span>{entry.label}</span>
+                            <Icon name="right-caret" class="es-side-caret" size="1.125rem" />
+                        </summary>
+                        <SidebarRestorePoint />
+                        <Astro.self sublist={entry.entries} nested />
+                    </details>
+                </li>
+            );
+        })
+    }
+</ul>

@@ -1,0 +1,22 @@
+# The guide doesn't give visa, immigration, or clearance advice. Keep that
+# content out. The disclaimer sentence passes, and the Roadmap is excluded in
+# .vale.ini so it can list the topic as future work.
+extends: existence
+message: "Remove '%s'. The guide doesn't cover visas or clearances. See the Roadmap."
+level: error
+ignorecase: true
+tokens:
+  - '\bvisas?\b(?!, immigration, or security clearance advice)'
+  - '\b(?<!security )clearances?\b'
+  - '\bsecurity clearances?\b(?! advice)'
+  - '\bsponsorship\b'
+  - '\bwork authori[sz]ation\b'
+  - '\bwork status\b'
+  - '\bnon-?citizens?\b'
+  - '\bcitizenship\b'
+  - '\bH-1B\b'
+  - '(?-i:\bOPT\b)'
+  - '(?-i:\bCPT\b)'
+  - '\bgreen cards?\b'
+  - '\bU\.S\. persons?\b'
+  - '(?-i:\bITAR\b)'

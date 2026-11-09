@@ -1,0 +1,57 @@
+---
+/**
+ * src/components/VideoEmbed.astro
+ * Video Embed
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * A numbered YouTube video with a caption. It uses the privacy-enhanced player and loads lazily, and
+ * the caption carries a plain link for readers who block embeds.
+ *
+ * File Structure:
+ * - Props: video id, number, and title
+ * - Player and caption
+ *
+ * Where this file is used within the repository:
+ * - Project pages
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import ExternalLink from './ExternalLink.astro';
+
+interface Props {
+    id: string;
+    number: number;
+    title: string;
+}
+
+const { id, number, title } = Astro.props;
+---
+
+<figure class="es-fig es-video">
+    <iframe
+        src={`https://www.youtube-nocookie.com/embed/${id}`}
+        title={title}
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    <figcaption>
+        <span class="es-fignum">Figure {number}</span>
+        <span>
+            <slot />
+            <ExternalLink href={`https://www.youtube.com/watch?v=${id}`}
+                >Watch on YouTube</ExternalLink
+            >.
+        </span>
+    </figcaption>
+</figure>
