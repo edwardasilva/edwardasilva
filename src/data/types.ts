@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 08 November, 2026
  *
  * Types for the normalized resume data the site renders. Field names match
  * resume-data.json, and fields only the resume generator reads are left out.
@@ -172,10 +172,7 @@ export interface Site {
         occupation: string;
         knowsAbout: string[];
     };
-    pages: Record<
-        'home' | 'projects' | 'experiences' | 'coursework' | 'skills' | 'resume',
-        PageCopy
-    >;
+    pages: Record<'home' | 'projects' | 'experiences' | 'coursework' | 'skills', PageCopy>;
 }
 
 export interface ResumeData {
