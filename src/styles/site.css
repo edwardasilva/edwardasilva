@@ -348,13 +348,18 @@ body {
         --es-gutter: 1.5rem;
     }
 }
-/* Starlight ends the column at the table of contents minus the page padding, so the
-   column sits one padding width left of the window center. Narrowing it by two paddings
-   puts its center on the window center. A page without a table of contents gets end
-   padding equal to the left sidebar, so its column sits on the window center too. */
+/* With a table of contents, the column is centered between the left sidebar and the
+   rail. Starlight sizes the main pane from --sl-content-width and pushes the column to
+   its end by default, so a narrow width and auto margins split the spare width evenly.
+   A page without a table of contents gets end padding equal to the left sidebar, so its
+   column sits on the window center. */
 @media (min-width: 72rem) {
-    :root[data-has-sidebar][data-has-toc] .sl-container {
-        max-width: calc(var(--sl-content-width) - 2 * var(--sl-content-pad-x));
+    :root[data-has-sidebar][data-has-toc] {
+        --sl-content-width: 38rem;
+    }
+
+    :root[data-has-sidebar][data-has-toc] .main-pane {
+        --sl-content-margin-inline: auto;
     }
 
     :root[data-has-sidebar]:not([data-has-toc]) .content-panel {
