@@ -45,6 +45,8 @@ $$
 m\ddot{z} = F_{in} - kz - K_v\dot{z} - K_m h \tanh(\alpha\dot{z})
 $$
 
+### The coil
+
 Field intensity $h$ follows the coil current $i$ with a first-order lag:
 
 $$
@@ -97,6 +99,8 @@ The extended Kalman filter (EKF) linearizes the dynamics at each step. It propag
 da_dzd  = -(Kv/m) - (Km/m)*h_hat*alpha*(sech(alpha*zd_hat))^2;
 da_dh   = -(Km/m)*tanh(alpha*zd_hat);
 ```
+
+### Results
 
 The EKF tracked displacement, velocity, and the low-frequency terrain, and its errors stayed inside the $\pm 3\sigma$ bounds (three standard deviations) for the whole 3 s run. The force estimate lags slightly, and the report attributes that to the 8 Hz chatter.
 

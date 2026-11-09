@@ -12,7 +12,7 @@ slug: projects/MCD-project
   Creation Date: 07 November, 2026
   Last Update: 09 November, 2026
 
-  Built from the two gantry crane reports in src/assets/MCD and the project repository. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
+  Built from the two gantry crane reports in src/assets/MCD and the project repository. Figures are the repository's own files, except Figures 6 and 7, which scripts/digitize-gantry-pulse.py redraws from the report's PNGs as SVG. Written to the rules in eeprep's .github/STYLE.md.
 
   Usage:
   $ `npm run dev` : Renders at /projects/MCD-project
@@ -34,11 +34,15 @@ An operator on a gantry crane controls only the direction and speed, so where th
 
 ## Finding the cable length
 
+### Fitting the data
+
 The project gave us measured crane data and no cable length. We tried a range of lengths, compared each one's steady-state oscillation to the data, and narrowed the range. The answer was $\ell = 3.6644$ m, which the reports round to 3.7 m.
 
 <Figure name="gantry/cable-length" number={1} alt="Experimental data overlaid with the linear and nonlinear model responses. All three nearly coincide over ten seconds.">
   The measured response against the nonlinear model and its small-angle linearization.
 </Figure>
+
+### The linearized plant
 
 With small-angle approximations, the plant from cart velocity to load position is
 
@@ -54,7 +58,11 @@ That is an integrator and an undamped pair of poles at $s = \pm j\sqrt{2.6771}$.
 
 ## Part 1: the slow controller
 
+### Specs and the z-domain design
+
 We assumed a heavy load and traded time for safety. The specs were zero overshoot, settling within 120 s, and hoist velocity at or below 1 m/s. We discretized the plant at 50 Hz and designed directly in the z-domain, the discrete-time form of a transfer function. The Simulink model has a zero pair at $z = 0.9993 \pm 0.0171j$ and three poles at 0.8225, 0.6689, and 0.9273.
+
+### Rounding in the report
 
 Equation (7) in the report rounds these coefficients, and the rounding changes the zeros from complex to real. The model's numerator is $z^2 - 1.9986z + 0.9989$, and its discriminant is negative:
 
@@ -74,11 +82,15 @@ The real pair puts a zero outside the unit circle and turns the DC gain negative
   Load position for a 1 m command.
 </Figure>
 
+### Swing
+
 The report gives a load swing of no more than 1 degree, about 3 inches on this cable. Its swing plot does show a brief first peak near 1.5 degrees.
 
 <Figure name="gantry/slow-swing" number={4} alt="Load swing angle decaying from a first peak near 1.5 degrees to zero over about 150 seconds.">
   Load swing over the same move.
 </Figure>
+
+### Delay tolerance
 
 A phase margin $\phi_m$ turns into a delay limit at crossover $\omega_c$, the frequency where the loop gain is 1. A pure delay $\tau$ adds phase lag $\omega\tau$ without changing the gain, so:
 
@@ -101,6 +113,8 @@ That is 25 samples at 50 Hz. We added a 25-sample delay to check. The instabilit
 | Velocity limit | 1 m/s, met by the design | 1 m/s, met by actuator saturation |
 | Method | z-domain | State space with an estimator |
 
+### Simulation
+
 We rewrote the plant in control canonical form. MATLAB's `lqr` (a linear-quadratic regulator, which picks gains by minimizing a weighted cost) set the state feedback. It also set the estimator, the code that infers states we could not measure. The estimator's poles came out about 6 times faster than the controller's.
 
 ```matlab title="Project 2/src/main.m"
@@ -114,6 +128,8 @@ C = [1 0 0];
 % same method with observer matrices, but 4x faster than system
 [Lopt, Soptobs, Poptobs] = lqr(A',C',500000*(B*B'),1)
 ```
+
+### Reference scaling against state augmentation
 
 We compared two ways to remove steady-state error. Reference scaling multiplies the input by a factor $N$. On this plant the factor has a short proof. At steady state the load sits at the reference, the velocity and acceleration are zero, and the estimate equals the state, so $x = [r,\ 0,\ 0]^T$. The integrator needs $u = 0$ to hold still:
 
@@ -136,12 +152,14 @@ State augmentation adds an integrated error state. That design needed anti-windu
 The report's text labels the gain margins 3.18 and 2.02 dB. The repository's script computes `Kunst = 20*log10(gmr)`, so those two numbers are ratios, and the table gives both forms.
 
 <Figure name="gantry/reference-scaling" number={6} alt="Reference-scaling response to a 2 meter pulse with a small step disturbance at 10 seconds. The load overshoots slightly and settles.">
-  Reference scaling on a pulse, with a step disturbance at 10 s. Part 2 report, Fig. 3.
+  Reference scaling on a 2 m pulse, with a 0.1 step disturbance at 10 s. Redrawn from the Part 2 report, Fig. 3, so it follows the site theme.
 </Figure>
 
 <Figure name="gantry/augmented" number={7} alt="State-augmented response to the same pulse. The load reaches the reference without overshoot.">
-  State augmentation on the same pulse. Part 2 report, Fig. 5.
+  State augmentation on the same pulse. Redrawn from the Part 2 report, Fig. 5.
 </Figure>
+
+### What the report left open
 
 Augmentation removes the overshoot and costs 12.7 degrees of phase margin. The report also records four things we did not solve:
 

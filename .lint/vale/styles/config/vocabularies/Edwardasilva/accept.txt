@@ -6,3 +6,5 @@ Simulink
 Arduino
 EMBR
 I2C
+FFT
+CFD

@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
  * Defines site, base path, redirects, the Markdown pipeline, and the Starlight integration that
  * supplies search, navigation, table of contents, dark mode, and the sitemap. Copies the PDF.js
@@ -286,8 +286,8 @@ export default defineConfig({
                     label: 'Projects',
                     items: [
                         { label: 'Projects', link: '/projects/' },
-                        ...projectLinks('project'),
-                        { label: 'Personal projects', items: projectLinks('personal') },
+                        { label: 'Personal', items: projectLinks('personal') },
+                        { label: 'Academic', items: projectLinks('project') },
                     ],
                 },
                 {

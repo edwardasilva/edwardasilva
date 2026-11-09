@@ -67,6 +67,8 @@ EMBR V2 moves the coil inside the pressure tube onto a steel piston, which chann
   The V2 concept. Critical design report, Fig. 14.
 </Figure>
 
+### The flow model
+
 The team modeled the gap as flow between two flat plates. That gives a pressure gradient, and the pressure drop pushes on the piston head:
 
 $$
@@ -104,6 +106,8 @@ Two accelerometers track the motion of the uppers against the lowers, and an Ard
 
 ## How we checked it
 
+### Flow model against CFD
+
 The team compared a flow model of the gap against Ansys Fluent computational fluid dynamics (CFD) at three axle velocities. The difference shrinks as velocity rises.
 
 | Axle velocity | Flow model | Fluent CFD | Difference |
@@ -111,6 +115,8 @@ The team compared a flow model of the gap against Ansys Fluent computational flu
 | 2 m/s | 20 N | 16 N | 16.5% |
 | 4 m/s | 45 N | 40 N | 10.9% |
 | 6 m/s | 80 N | 74 N | 7.2% |
+
+### Dynamometer
 
 A dynamometer then measured damper performance against velocity. The final numbers can't be made public.
 
