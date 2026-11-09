@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
  * Syncs assets, generates the resume, and fits it on one page. The fitting method comes from
  * resume-generator (github.com/edwardasilva/resume-generator): compile, measure the real page, step
@@ -46,13 +46,11 @@ const TEMPLATE_PATH = path.join(ROOT_DIR, 'scripts', 'resume-template.tex');
 const C_JOB_NAME = 'Edward_Silva_Resume';
 
 // Layouts to try, roomiest first: font size in points and margin in inches. The floors are the
-// repository's rules in information/.agents/docs/resume_rules.md: 10.5 pt text and 0.4 in margins.
+// repository's rules in information/.agents/docs/resume_rules.md: 10.5 pt text and 0.5 in margins.
 const C_LAYOUTS = [
     [11.0, 0.5],
     [10.75, 0.5],
     [10.5, 0.5],
-    [10.5, 0.45],
-    [10.5, 0.4],
 ];
 
 // Each range runs from compact to roomy. A page with room left grows all of them together, in
@@ -291,7 +289,7 @@ function fit() {
     const lines = tightest ? Math.ceil(overflow(tightest) / tightest.line) : 'some';
 
     throw new Error(
-        `[ERROR] The resume does not fit at 10.5 pt with 0.4 in margins. Cut about ${lines} lines: drop a coursework item first, then the weakest bullet, or set a project's Visibility to "Site".`
+        `[ERROR] The resume does not fit at 10.5 pt with 0.5 in margins. Cut about ${lines} lines: drop a coursework item first, then the weakest bullet, or set a project's Visibility to "Site".`
     );
 }
 

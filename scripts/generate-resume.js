@@ -40,14 +40,16 @@ const C_DATA_PATH = path.join(ROOT_DIR, 'information', 'resume-data.json');
 
 export const C_BUILD_DIR = path.join(ROOT_DIR, 'build', 'resume');
 
-// r/EngineeringResumes month style. May, June, and July stay as written.
+// Three-letter months on the PDF, where the space is tight. May is already three letters.
 const C_MONTH_ABBREVIATIONS = {
     January: 'Jan',
     February: 'Feb',
     March: 'Mar',
     April: 'Apr',
+    June: 'Jun',
+    July: 'Jul',
     August: 'Aug',
-    September: 'Sept',
+    September: 'Sep',
     October: 'Oct',
     November: 'Nov',
     December: 'Dec',
