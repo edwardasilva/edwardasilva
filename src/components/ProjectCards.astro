@@ -26,6 +26,7 @@
  * may not be reproduced, distributed, or modified without permission.
  */
 
+import { Picture } from 'astro:assets';
 import { getDarkFigure, getFigure } from '../data/figures';
 import type { ProjectPage } from '../data/projects';
 import { asSentence } from '../data/resume';
@@ -48,15 +49,27 @@ const { pages, class: className } = Astro.props;
                 <a href={href}>
                     {figure && (
                         <span class:list={['es-card-figure', { 'es-card-plate': !dark }]}>
-                            <img
-                                class:list={{ 'dark:sl-hidden': dark }}
-                                src={figure.src}
-                                width={figure.width}
-                                height={figure.height}
-                                alt={project.figureAlt ?? ''}
-                                loading="lazy"
-                                decoding="async"
-                            />
+                            {figure.format === 'svg' ? (
+                                <img
+                                    class:list={{ 'dark:sl-hidden': dark }}
+                                    src={figure.src}
+                                    width={figure.width}
+                                    height={figure.height}
+                                    alt={project.figureAlt ?? ''}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            ) : (
+                                <Picture
+                                    src={figure}
+                                    formats={['avif', 'webp']}
+                                    widths={[320, 640]}
+                                    sizes="320px"
+                                    alt={project.figureAlt ?? ''}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            )}
                             {dark && (
                                 <img
                                     class="light:sl-hidden"
