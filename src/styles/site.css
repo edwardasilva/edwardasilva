@@ -446,15 +446,30 @@ a.external-link .es-ext-last::after {
     height: 10rem;
     object-fit: contain;
 }
-/* A report plot drawn for a white page keeps a white plate. An SVG plot has a dark copy instead,
-   so it sits straight on the card. */
+/* An SVG plot has a dark copy and sits straight on the card. A photo fills the frame. A drawing on
+   white paper blends into the card, and inverts to light lines in dark mode. */
 .es-card-figure {
     display: block;
     padding: 0.5rem;
     border-radius: var(--es-radius);
 }
-.es-card-plate {
-    background: #fff;
+.es-card-photo {
+    padding: 0;
+    overflow: hidden;
+}
+.es-card-photo img {
+    object-fit: cover;
+    object-position: center;
+}
+.es-card-photo[data-figure='robot/front'] img {
+    object-position: center 40%;
+}
+.es-card-drawing img {
+    mix-blend-mode: multiply;
+}
+:root[data-theme='dark'] .es-card-drawing img {
+    filter: invert(1) hue-rotate(180deg);
+    mix-blend-mode: screen;
 }
 .es-card-dek {
     color: var(--es-ink-2);
