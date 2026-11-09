@@ -22,10 +22,7 @@
  * Usage:
  * $ `npm run dev` : Applied to every page
  *
- * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
+ * Copyright (c) 2026 Edward Silva. MIT License.
  */
 
 .es-nav {
@@ -96,17 +93,6 @@
     }
     .es-nav {
         gap: 1.25rem;
-    }
-}
-
-/* Small phones: one size down and a tighter gap, so all six section links fit on a 390px
-   screen. At 360px the row still scrolls sideways. */
-@media (max-width: 26rem) {
-    .es-nav {
-        gap: 0.375rem;
-    }
-    .es-nav a {
-        font-size: 0.75rem;
     }
 }
 
@@ -304,6 +290,20 @@ button[data-open-modal] kbd {
     .es-hero h1 {
         font-size: clamp(1.875rem, 5vw + 0.75rem, 2.25rem);
         line-height: 1.12;
+    }
+}
+
+/* Small phones: one size down and no gap, so all six section links fit from 360px. Below
+   that the row scrolls sideways. This block must come after the 50rem block above, which
+   sets the gap and the minimum link width. */
+@media (max-width: 26rem) {
+    .es-nav {
+        gap: 0;
+        justify-content: space-between;
+    }
+    .es-nav a {
+        min-width: 0;
+        font-size: 0.75rem;
     }
 }
 
