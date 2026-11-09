@@ -1,6 +1,6 @@
 ## Issue
 
-Part of edwardasilva/information#
+Part of #
 
 ## Summary
 
