@@ -39,7 +39,9 @@ if (!experience) {
 }
 ---
 
-<dl class="es-facts">
+{/* The page body repeats these facts. Left out of search, the labels and values no longer
+    run together in excerpts ("WhenOngoing"). */}
+<dl class="es-facts" data-pagefind-ignore>
     <div>
         <dt>Role</dt>
         <dd>{experience.title}</dd>
