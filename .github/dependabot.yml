@@ -1,9 +1,11 @@
+# Monthly and grouped, so each ecosystem opens at most one pull request a month and CI runs
+# once for it. Security updates still open on their own when an advisory lands.
 version: 2
 updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     target-branch: main
     labels:
       - dependencies
@@ -12,12 +14,15 @@ updates:
         patterns:
           - astro
           - '@astrojs/*'
+      npm:
+        patterns:
+          - '*'
   - package-ecosystem: github-actions
     directories:
       - /
       - /.github/actions/information
     schedule:
-      interval: weekly
+      interval: monthly
     target-branch: main
     labels:
       - dependencies
