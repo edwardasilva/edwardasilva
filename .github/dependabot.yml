@@ -6,6 +6,8 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
     target-branch: main
     labels:
       - dependencies
@@ -29,6 +31,8 @@ updates:
       - /.github/actions/information
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
     target-branch: main
     labels:
       - dependencies
