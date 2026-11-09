@@ -107,10 +107,9 @@ const C_HOME_FALLBACK: Record<string, HomeGroup | false> = {
     'EKF-project': 'selected',
     'dsp-final': 'selected',
     'capstone-project': 'selected',
-    'MCD-project': 'selected',
+    'MCD-project': 'more',
     'seed-robot': 'more',
     'ram-pump': 'more',
-    'solar-tracker': false,
 };
 
 const C_HOME_FALLBACK_ORDER = Object.keys(C_HOME_FALLBACK);
