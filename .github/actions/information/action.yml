@@ -11,10 +11,7 @@
 # Usage:
 # $ `uses: ./.github/actions/information` : Run after actions/checkout, with ssh-key set
 #
-# Copyright (c) 2026 Edward Silva. All rights reserved.
-# NOTICE: This file contains personal biographical data.
-# It is strictly excluded from the repository's MIT License and
-# may not be reproduced, distributed, or modified without permission.
+# Copyright (c) 2026 Edward Silva. MIT License.
 
 name: Information checkout
 description: Check out resume-data.json from edwardasilva/information at the submodule commit.
