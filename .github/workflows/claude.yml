@@ -18,12 +18,6 @@ on:
 permissions:
   contents: read
 
-# Runs only on the explicit triggers above, never on every push or pull request, to save usage.
-# A newer @claude on the same issue or pull request cancels the older run.
-concurrency:
-  group: claude-${{ github.event.issue.number || github.event.pull_request.number }}
-  cancel-in-progress: true
-
 jobs:
   claude:
     name: Claude
@@ -40,6 +34,13 @@ jobs:
         contains(github.event.review.body, '@claude'))
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Runs only on the explicit triggers above, never on every push or pull request, to save
+    # usage. A newer @claude on the same issue or pull request cancels the older run. This sits
+    # on the job, not the workflow, so a skipped event such as Claude's own progress comment
+    # never joins the group and cannot cancel the run that is working.
+    concurrency:
+      group: claude-${{ github.event.issue.number || github.event.pull_request.number }}
+      cancel-in-progress: true
     # The same build switches CI uses. The resume PDF needs TeX, which the runner does not have.
     env:
       SKIP_RESUME_PDF_BUILD: '1'
