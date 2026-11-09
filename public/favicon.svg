@@ -16,13 +16,13 @@
   <defs>
     <style>
       .oscilloscope { fill: none; stroke: #16233a; stroke-width: 2; }
-      .screen { fill: #ffffff; stroke: #16233a; stroke-width: 1.5; }
-      .grid { stroke: #64748b; stroke-width: 0.5; opacity: 0.6; }
+      .screen { fill: #fbfbfc; stroke: #16233a; stroke-width: 1.5; }
+      .grid { stroke: #838c9a; stroke-width: 0.5; opacity: 0.6; }
       .waveform { stroke: #a3201d; stroke-width: 1.5; fill: none; }
       @media (prefers-color-scheme: dark) {
         .oscilloscope { stroke: #eceef2; }
         .screen { fill: #0d1524; stroke: #eceef2; }
-        .grid { stroke: #94a3b8; }
+        .grid { stroke: #76808f; }
         .waveform { stroke: #e06a5f; }
       }
     </style>
