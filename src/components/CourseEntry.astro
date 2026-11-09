@@ -46,31 +46,29 @@ const projects = getProjectsForCourse(course);
     </summary>
     <div class="es-course-body">
         <p>{course.Summary ? asSentence(course.Summary) : course.description}</p>
-        {
-            (course.skills.length > 0 || projects.length > 0) && (
-                <dl class="es-facts">
-                    {course.skills.length > 0 && (
-                        <div>
-                            <dt>Skills</dt>
-                            <dd>
-                                <SkillLinks skills={course.skills} />
-                            </dd>
-                        </div>
-                    )}
-                    {projects.length > 0 && (
-                        <div>
-                            <dt>{projects.length === 1 ? 'Project' : 'Projects'}</dt>
-                            <dd class="es-facts-links">
-                                {projects.map((project) => (
-                                    <a href={getProjectHref(project)}>
-                                        {getDisplayTitle(getProjectHref(project), project.title)}
-                                    </a>
-                                ))}
-                            </dd>
-                        </div>
-                    )}
-                </dl>
-            )
-        }
+        {(course.skills.length > 0 || projects.length > 0) && (
+            <dl class="es-facts">
+                {course.skills.length > 0 && (
+                    <div>
+                        <dt>Skills</dt>
+                        <dd>
+                            <SkillLinks skills={course.skills} />
+                        </dd>
+                    </div>
+                )}
+                {projects.length > 0 && (
+                    <div>
+                        <dt>{projects.length === 1 ? 'Project' : 'Projects'}</dt>
+                        <dd class="es-facts-links">
+                            {projects.map((project) => (
+                                <a href={getProjectHref(project)}>
+                                    {getDisplayTitle(getProjectHref(project), project.title)}
+                                </a>
+                            ))}
+                        </dd>
+                    </div>
+                )}
+            </dl>
+        )}
     </div>
 </details>

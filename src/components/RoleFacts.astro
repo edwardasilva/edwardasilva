@@ -51,40 +51,32 @@ if (!experience) {
         <dt>When</dt>
         <dd>{experience.duration}</dd>
     </div>
-    {
-        experience.employmentType && (
-            <div>
-                <dt>Type</dt>
-                <dd>{experience.employmentType}</dd>
-            </div>
-        )
-    }
-    {
-        experience.location && (
-            <div>
-                <dt>Where</dt>
-                <dd>{experience.location}</dd>
-            </div>
-        )
-    }
-    {
-        experience.skills.length > 0 && (
-            <div>
-                <dt>Tools</dt>
-                <dd>
-                    <SkillLinks skills={experience.skills} />
-                </dd>
-            </div>
-        )
-    }
-    {
-        experience.companyUrl && (
-            <div>
-                <dt>Links</dt>
-                <dd class="es-facts-links">
-                    <ExternalLink href={experience.companyUrl}>{experience.company}</ExternalLink>
-                </dd>
-            </div>
-        )
-    }
+    {experience.employmentType && (
+        <div>
+            <dt>Type</dt>
+            <dd>{experience.employmentType}</dd>
+        </div>
+    )}
+    {experience.location && (
+        <div>
+            <dt>Where</dt>
+            <dd>{experience.location}</dd>
+        </div>
+    )}
+    {experience.skills.length > 0 && (
+        <div>
+            <dt>Tools</dt>
+            <dd>
+                <SkillLinks skills={experience.skills} />
+            </dd>
+        </div>
+    )}
+    {experience.companyUrl && (
+        <div>
+            <dt>Links</dt>
+            <dd class="es-facts-links">
+                <ExternalLink href={experience.companyUrl}>{experience.company}</ExternalLink>
+            </dd>
+        </div>
+    )}
 </dl>

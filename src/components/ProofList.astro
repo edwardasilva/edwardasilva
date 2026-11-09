@@ -37,14 +37,12 @@ const { only } = Astro.props;
 const project = resume.projects.find((candidate) => getProjectSlug(candidate) === Astro.props.slug);
 ---
 
-{
-    project && project.proof.length > 0 && (
-        <div class="es-proof-list not-content">
-            {project.proof
-                .filter((proof) => !only || proof.type === only)
-                .map((proof) => (
-                    <ProofRenderer proof={proof} />
-                ))}
-        </div>
-    )
-}
+{project && project.proof.length > 0 && (
+    <div class="es-proof-list not-content">
+        {project.proof
+            .filter((proof) => !only || proof.type === only)
+            .map((proof) => (
+                <ProofRenderer proof={proof} />
+            ))}
+    </div>
+)}

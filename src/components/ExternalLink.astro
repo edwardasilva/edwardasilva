@@ -32,9 +32,12 @@ const text = (await Astro.slots.render('default')).trim();
 const [head, tail] = splitTail(text);
 ---
 
-<a class:list={['external-link', className]} target="_blank" rel={rel} {...attributes}
-    ><span class="es-ext-text"
-        ><Fragment set:html={head} /><span class="es-ext-last"><Fragment set:html={tail} /></span
-        ></span
-    ><span class="sr-only"> (opens in a new tab)</span></a
->
+<a class:list={['external-link', className]} target="_blank" rel={rel} {...attributes}>
+    <span class="es-ext-text">
+        <Fragment set:html={head} />
+        <span class="es-ext-last">
+            <Fragment set:html={tail} />
+        </span>
+    </span>
+    <span class="sr-only"> (opens in a new tab)</span>
+</a>

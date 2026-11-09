@@ -72,10 +72,18 @@ const start = measure(response);
             data-slider
         />
         <div class="es-live-presets">
-            <button type="button" data-preset="1">Q = 1</button>
-            <button type="button" data-preset="20">Q = 20, the report's value</button>
-            <button type="button" data-preset="100">Q = 100</button>
-            <button type="button" data-preset="500">Q = 500</button>
+            <button type="button" data-preset="1">
+                Q = 1
+            </button>
+            <button type="button" data-preset="20">
+                Q = 20, the report's value
+            </button>
+            <button type="button" data-preset="100">
+                Q = 100
+            </button>
+            <button type="button" data-preset="500">
+                Q = 500
+            </button>
         </div>
         <label class="es-live-check">
             <input type="checkbox" data-saturate checked />
@@ -84,9 +92,15 @@ const start = measure(response);
     </div>
 
     <ul class="es-live-legend not-content" aria-hidden="true">
-        <li><span class="es-swatch es-swatch-live"></span>This weight</li>
-        <li><span class="es-swatch es-swatch-base"></span>Q = 20</li>
-        <li><span class="es-swatch es-swatch-ref"></span>1 m reference</li>
+        <li>
+            <span class="es-swatch es-swatch-live"></span>This weight
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-base"></span>Q = 20
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-ref"></span>1 m reference
+        </li>
     </ul>
 
     <Plot
@@ -105,9 +119,9 @@ const start = measure(response);
     />
 
     <p class="es-live-read" aria-live="polite" data-read>
-        Q = {C_REPORT_Q}. K = [{gain.map((value) => value.toFixed(2)).join(', ')}]. Overshoot {
-            start.overshoot.toFixed(1)
-        }%. It settles in {start.settling?.toFixed(2)} s. Phase margin {margin.margin.toFixed(1)} degrees.
+        Q = {C_REPORT_Q}. K = [{gain.map((value) => value.toFixed(2)).join(', ')}]. Overshoot{' '}
+        {start.overshoot.toFixed(1)}%. It settles in {start.settling?.toFixed(2)} s. Phase margin{' '}
+        {margin.margin.toFixed(1)} degrees.
     </p>
     <noscript>
         <p>The slider needs JavaScript. The curve above is the report's weight.</p>

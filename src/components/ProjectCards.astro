@@ -38,43 +38,41 @@ const { pages } = Astro.props;
 ---
 
 <ul class="es-cards not-content">
-    {
-        pages.map(({ entry, project, href }) => {
-            const figure = project.figure ? getFigure(project.figure) : undefined;
-            const dark = project.figure ? getDarkFigure(project.figure) : undefined;
+    {pages.map(({ entry, project, href }) => {
+        const figure = project.figure ? getFigure(project.figure) : undefined;
+        const dark = project.figure ? getDarkFigure(project.figure) : undefined;
 
-            return (
-                <li>
-                    <a href={href}>
-                        {figure && (
-                            <span class:list={['es-card-figure', { 'es-card-plate': !dark }]}>
+        return (
+            <li>
+                <a href={href}>
+                    {figure && (
+                        <span class:list={['es-card-figure', { 'es-card-plate': !dark }]}>
+                            <img
+                                class:list={{ 'dark:sl-hidden': dark }}
+                                src={figure.src}
+                                width={figure.width}
+                                height={figure.height}
+                                alt={project.figureAlt ?? ''}
+                                loading="lazy"
+                                decoding="async"
+                            />
+                            {dark && (
                                 <img
-                                    class:list={{ 'dark:sl-hidden': dark }}
-                                    src={figure.src}
-                                    width={figure.width}
-                                    height={figure.height}
+                                    class="light:sl-hidden"
+                                    src={dark.src}
+                                    width={dark.width}
+                                    height={dark.height}
                                     alt={project.figureAlt ?? ''}
                                     loading="lazy"
                                     decoding="async"
                                 />
-                                {dark && (
-                                    <img
-                                        class="light:sl-hidden"
-                                        src={dark.src}
-                                        width={dark.width}
-                                        height={dark.height}
-                                        alt={project.figureAlt ?? ''}
-                                        loading="lazy"
-                                        decoding="async"
-                                    />
-                                )}
-                            </span>
-                        )}
-                        <strong>{entry.data.title}</strong>
-                        <span class="es-card-dek">{project.dek && asSentence(project.dek)}</span>
-                    </a>
-                </li>
-            );
-        })
-    }
+                            )}
+                        </span>
+                    )}
+                    <strong>{entry.data.title}</strong>
+                    <span class="es-card-dek">{project.dek && asSentence(project.dek)}</span>
+                </a>
+            </li>
+        );
+    })}
 </ul>

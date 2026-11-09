@@ -36,12 +36,10 @@ const splash = entry.data.template === 'splash';
 const project = getPageProject(entry.id);
 ---
 
-{
-    !splash && (
-        <h1 id="_top" data-pagefind-meta="title">
-            {entry.data.title}
-        </h1>
-    )
-}
+{!splash && (
+    <h1 id="_top" data-pagefind-meta="title">
+        {entry.data.title}
+    </h1>
+)}
 {project && <ProjectFacts />}
 {entry.data.role && <RoleFacts slug={entry.data.role} />}

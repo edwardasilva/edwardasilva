@@ -36,21 +36,19 @@ const { hasSidebar } = Astro.locals.starlightRoute;
 <Default>
     <Fragment slot="header">
         <slot name="header" />
-        {
-            !hasSidebar && (
-                <nav
-                    class="es-splash-menu md:sl-hidden print:hidden"
-                    aria-label={Astro.locals.t('sidebarNav.accessibleLabel')}
-                >
-                    <MobileMenuToggle />
-                    <sl-sidebar-pane popover="auto" id="starlight__sidebar" class="es-splash-pane">
-                        <div class="es-splash-content sidebar-content">
-                            <Sidebar />
-                        </div>
-                    </sl-sidebar-pane>
-                </nav>
-            )
-        }
+        {!hasSidebar && (
+            <nav
+                class="es-splash-menu md:sl-hidden print:hidden"
+                aria-label={Astro.locals.t('sidebarNav.accessibleLabel')}
+            >
+                <MobileMenuToggle />
+                <sl-sidebar-pane popover="auto" id="starlight__sidebar" class="es-splash-pane">
+                    <div class="es-splash-content sidebar-content">
+                        <Sidebar />
+                    </div>
+                </sl-sidebar-pane>
+            </nav>
+        )}
     </Fragment>
     <slot name="sidebar" slot="sidebar" />
     <slot />

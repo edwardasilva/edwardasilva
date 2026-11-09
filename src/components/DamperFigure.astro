@@ -81,15 +81,25 @@ const speeds = [0, C_MAX_V];
             data-length
         />
         <div class="es-live-presets">
-            <button type="button" data-preset="v1">V1 geometry</button>
-            <button type="button" data-preset="v2">V2 geometry</button>
+            <button type="button" data-preset="v1">
+                V1 geometry
+            </button>
+            <button type="button" data-preset="v2">
+                V2 geometry
+            </button>
         </div>
     </div>
 
     <ul class="es-live-legend not-content" aria-hidden="true">
-        <li><span class="es-swatch es-swatch-live"></span>This piston</li>
-        <li><span class="es-swatch es-swatch-base"></span>V2 geometry</li>
-        <li><span class="es-swatch es-swatch-ref"></span>V1 geometry</li>
+        <li>
+            <span class="es-swatch es-swatch-live"></span>This piston
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-base"></span>V2 geometry
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-ref"></span>V1 geometry
+        </li>
     </ul>
 
     <Plot
@@ -132,8 +142,8 @@ const speeds = [0, C_MAX_V];
     />
 
     <p class="es-live-read" aria-live="polite" data-read>
-        Gap {(radialGap(C_V2) * 1000).toFixed(2)} mm, length {C_V2.length * 1000} mm. At 8 m/s the model
-        gives {v2Force.toFixed(0)} N.
+        Gap {(radialGap(C_V2) * 1000).toFixed(2)} mm, length {C_V2.length * 1000} mm. At 8 m/s the
+        model gives {v2Force.toFixed(0)} N.
     </p>
     <noscript>
         <p>The sliders need JavaScript. The solid line is the V2 geometry.</p>

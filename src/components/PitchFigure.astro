@@ -95,17 +95,24 @@ const thresholdD = `M${xAt(0, acfPlot)} ${yAt(0.2, acfPlot)}L${xAt(40, acfPlot)}
             data-slider
         />
         <div class="es-live-presets">
-            <button type="button" data-preset="440">440 Hz</button>
-            <button type="button" data-preset="1500">1500 Hz</button>
-            <button type="button" data-preset="1800">1800 Hz</button>
-            <button type="button" data-preset="2300">2300 Hz</button>
+            <button type="button" data-preset="440">
+                440 Hz
+            </button>
+            <button type="button" data-preset="1500">
+                1500 Hz
+            </button>
+            <button type="button" data-preset="1800">
+                1800 Hz
+            </button>
+            <button type="button" data-preset="2300">
+                2300 Hz
+            </button>
         </div>
     </div>
 
     <p class="es-live-read" aria-live="polite" data-read>
-        Tone {C_START} Hz. FFT {start.fft.frequency.toFixed(1)} Hz. ACF {
-            start.acf.frequency.toFixed(1)
-        } Hz.
+        Tone {C_START} Hz. FFT {start.fft.frequency.toFixed(1)} Hz. ACF{' '}
+        {start.acf.frequency.toFixed(1)} Hz.
     </p>
 
     <p class="es-live-title">FFT magnitude, with a line at the tone</p>

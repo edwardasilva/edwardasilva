@@ -41,61 +41,59 @@ const { sublist, nested = false } = Astro.props;
 ---
 
 <ul class:list={['es-side', { 'es-side-top': !nested }]}>
-    {
-        sublist.map((entry) => {
-            const split = splitParentGroup(entry);
-            const open = entry.type === 'group' && (hasCurrent(entry) || !entry.collapsed);
+    {sublist.map((entry) => {
+        const split = splitParentGroup(entry);
+        const open = entry.type === 'group' && (hasCurrent(entry) || !entry.collapsed);
 
-            if (entry.type === 'link') {
-                return (
-                    <li>
-                        <a
-                            href={entry.href}
-                            aria-current={entry.isCurrent ? 'page' : undefined}
-                            class="es-side-link"
-                            {...entry.attrs}
-                        >
-                            {entry.label}
-                        </a>
-                    </li>
-                );
-            }
-
-            if (split) {
-                return (
-                    <li class="es-side-parent">
-                        <a
-                            href={split.parent.href}
-                            aria-current={split.parent.isCurrent ? 'page' : undefined}
-                            class="es-side-link"
-                            {...split.parent.attrs}
-                        >
-                            {split.parent.label}
-                        </a>
-                        <details open={open}>
-                            <summary class="es-side-toggle">
-                                <span class="sr-only">{split.parent.label} sub-pages</span>
-                                <Icon name="right-caret" class="es-side-caret" size="1.125rem" />
-                            </summary>
-                            <SidebarRestorePoint />
-                            <Astro.self sublist={split.children} nested />
-                        </details>
-                    </li>
-                );
-            }
-
+        if (entry.type === 'link') {
             return (
                 <li>
+                    <a
+                        href={entry.href}
+                        aria-current={entry.isCurrent ? 'page' : undefined}
+                        class="es-side-link"
+                        {...entry.attrs}
+                    >
+                        {entry.label}
+                    </a>
+                </li>
+            );
+        }
+
+        if (split) {
+            return (
+                <li class="es-side-parent">
+                    <a
+                        href={split.parent.href}
+                        aria-current={split.parent.isCurrent ? 'page' : undefined}
+                        class="es-side-link"
+                        {...split.parent.attrs}
+                    >
+                        {split.parent.label}
+                    </a>
                     <details open={open}>
-                        <summary class="es-side-group">
-                            <span>{entry.label}</span>
+                        <summary class="es-side-toggle">
+                            <span class="sr-only">{split.parent.label} sub-pages</span>
                             <Icon name="right-caret" class="es-side-caret" size="1.125rem" />
                         </summary>
                         <SidebarRestorePoint />
-                        <Astro.self sublist={entry.entries} nested />
+                        <Astro.self sublist={split.children} nested />
                     </details>
                 </li>
             );
-        })
-    }
+        }
+
+        return (
+            <li>
+                <details open={open}>
+                    <summary class="es-side-group">
+                        <span>{entry.label}</span>
+                        <Icon name="right-caret" class="es-side-caret" size="1.125rem" />
+                    </summary>
+                    <SidebarRestorePoint />
+                    <Astro.self sublist={entry.entries} nested />
+                </details>
+            </li>
+        );
+    })}
 </ul>

@@ -45,39 +45,33 @@ import {
     }}
 >
     <ul class="es-roles">
-        {
-            visibleExperiences.map((experience) => (
-                <li>
-                    <a href={getExperienceHref(experience)}>{experience.company}</a>,{' '}
-                    {experience.title}. <span class="es-role-meta">{experience.duration}.</span>
-                </li>
-            ))
-        }
+        {visibleExperiences.map((experience) => (
+            <li>
+                <a href={getExperienceHref(experience)}>{experience.company}</a>, {experience.title}
+                . <span class="es-role-meta">{experience.duration}.</span>
+            </li>
+        ))}
     </ul>
 
-    {
-        visibleOrganizations.length > 0 && (
-            <>
-                <h2 id="organizations">Organizations</h2>
-                <ul class="es-roles">
-                    {visibleOrganizations.map((organization) => (
-                        <li>
-                            {organization.url ? (
-                                <ExternalLink href={organization.url}>
-                                    {organization.name}
-                                </ExternalLink>
-                            ) : (
-                                organization.name
-                            )}
-                            {organization.chapter && `, ${organization.chapter}`}.{' '}
-                            <span class="es-role-meta">
-                                {organization.role}, {organization.duration}.
-                            </span>
-                            {organization.Summary && ` ${asSentence(organization.Summary)}`}
-                        </li>
-                    ))}
-                </ul>
-            </>
-        )
-    }
+    {visibleOrganizations.length > 0 && (
+        <>
+            <h2 id="organizations">Organizations</h2>
+            <ul class="es-roles">
+                {visibleOrganizations.map((organization) => (
+                    <li>
+                        {organization.url ? (
+                            <ExternalLink href={organization.url}>{organization.name}</ExternalLink>
+                        ) : (
+                            organization.name
+                        )}
+                        {organization.chapter && `, ${organization.chapter}`}.{' '}
+                        <span class="es-role-meta">
+                            {organization.role}, {organization.duration}.
+                        </span>
+                        {organization.Summary && ` ${asSentence(organization.Summary)}`}
+                    </li>
+                ))}
+            </ul>
+        </>
+    )}
 </StarlightPage>
