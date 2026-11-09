@@ -23,10 +23,7 @@
  * Usage:
  * $ `npm run dev` : Generates share images during a local build
  *
- * Copyright (c) 2026 Edward Silva. All rights reserved.
- * NOTICE: This file contains personal biographical data.
- * It is strictly excluded from the repository's MIT License and
- * may not be reproduced, distributed, or modified without permission.
+ * Copyright (c) 2026 Edward Silva. MIT License.
  */
 
 import fs from 'node:fs/promises';
@@ -39,6 +36,8 @@ import { asSentence, resume } from '../../data/resume';
 
 const C_WIDTH = 1200;
 const C_HEIGHT = 630;
+// satori needs static .woff files, which only @fontsource/source-serif-4 ships. The site font is the
+// variable package, @fontsource-variable/source-serif-4, so both stay.
 const C_FONT_DIR = path.resolve('node_modules/@fontsource/source-serif-4/files');
 
 const C_FONTS = Promise.all(

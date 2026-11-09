@@ -12,10 +12,7 @@
 # Usage:
 # $ `gh workflow run links.yml` : Checks every outside link on the current main
 #
-# Copyright (c) 2026 Edward Silva. All rights reserved.
-# NOTICE: This file contains personal biographical data.
-# It is strictly excluded from the repository's MIT License and
-# may not be reproduced, distributed, or modified without permission.
+# Copyright (c) 2026 Edward Silva. MIT License.
 
 name: Outside links
 
@@ -34,6 +31,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - uses: ./.github/actions/information
         with:
