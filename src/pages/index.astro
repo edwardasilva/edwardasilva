@@ -7,13 +7,12 @@
  * Creation Date: 16 March, 2026
  * Last Update: 09 November, 2026
  *
- * Who this is, personal projects, academic projects, and long-term plans.
+ * Who this is, personal projects, and academic projects.
  *
  * File Structure:
  * - Hero
  * - Personal projects
  * - Academic projects
- * - Long-term plans, from about.future in resume-data.json
  *
  * Where this file is used within the repository:
  * - Route: /
@@ -60,15 +59,4 @@ const { home } = resume.site.pages;
     <h2>Academic projects</h2>
     <ProjectCards pages={academic} />
     <p><a href="/projects/">All projects</a></p>
-
-    {
-        resume.about.future.length > 0 && (
-            <>
-                <h2>Long-term plans</h2>
-                {resume.about.future.map((line) => (
-                    <p>{asSentence(line)}</p>
-                ))}
-            </>
-        )
-    }
 </StarlightPage>
