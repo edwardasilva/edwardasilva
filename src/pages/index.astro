@@ -65,55 +65,47 @@ const next = resume.about.future.slice(0, 2);
     <h2>Selected work</h2>
     <ProjectCards pages={selected} />
 
-    {
-        visibleExperiences.length > 0 && (
-            <>
-                <h2>Experience</h2>
-                <ul class="es-roles">
-                    {visibleExperiences.map((experience) => (
-                        <li>
-                            <a href={getExperienceHref(experience)}>{experience.title}</a>,{' '}
-                            {experience.company}.{' '}
-                            <span class="es-role-meta">
-                                {experience.duration.replace(' - ', '–')}.
-                            </span>
-                        </li>
-                    ))}
-                </ul>
-                <p>
-                    <a href="/experiences/">All experience</a>
-                </p>
-            </>
-        )
-    }
-
-    {
-        writing.length > 0 && (
-            <>
-                <h2>Writing and tools</h2>
-                <ProjectCards pages={writing} />
-            </>
-        )
-    }
-
-    {
-        more.length > 0 && (
-            <>
-                <h2>More projects</h2>
-                <ProjectCards pages={more} />
-            </>
-        )
-    }
-    <p><a href="/projects/">All projects</a></p>
-
-    {
-        next.length > 0 && (
-            <>
-                <h2>Next</h2>
-                {next.map((line) => (
-                    <p>{asSentence(line)}</p>
+    {visibleExperiences.length > 0 && (
+        <>
+            <h2>Experience</h2>
+            <ul class="es-roles">
+                {visibleExperiences.map((experience) => (
+                    <li>
+                        <a href={getExperienceHref(experience)}>{experience.title}</a>,{' '}
+                        {experience.company}.{' '}
+                        <span class="es-role-meta">{experience.duration.replace(' - ', '–')}.</span>
+                    </li>
                 ))}
-            </>
-        )
-    }
+            </ul>
+            <p>
+                <a href="/experiences/">All experience</a>
+            </p>
+        </>
+    )}
+
+    {writing.length > 0 && (
+        <>
+            <h2>Writing and tools</h2>
+            <ProjectCards pages={writing} />
+        </>
+    )}
+
+    {more.length > 0 && (
+        <>
+            <h2>More projects</h2>
+            <ProjectCards pages={more} />
+        </>
+    )}
+    <p>
+        <a href="/projects/">All projects</a>
+    </p>
+
+    {next.length > 0 && (
+        <>
+            <h2>Next</h2>
+            {next.map((line) => (
+                <p>{asSentence(line)}</p>
+            ))}
+        </>
+    )}
 </StarlightPage>
