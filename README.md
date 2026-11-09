@@ -11,7 +11,7 @@ This is a personal site. Outside issues and pull requests are not accepted.
 
 ## This repo
 
-This is the Astro and Starlight source of [edwardasilva.com](https://edwardasilva.com). The site reads its data from a private submodule, so outside clones can read the code but cannot build the full site. To report a broken link or a typo, open an issue. The content is personal, so pull requests that change it are not accepted.
+This is the Astro and Starlight source of [edwardasilva.com](https://edwardasilva.com). The site reads its data from a private submodule, so outside clones can read the code but cannot build the full site.
 
 ## License
 
