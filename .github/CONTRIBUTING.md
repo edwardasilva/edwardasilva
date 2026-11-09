@@ -1,5 +1,3 @@
 # Contributing
 
-This is a personal site. Outside issues and pull requests are not accepted.
-
-For the team: changes go through an issue and a squash-merged pull request into `main`.
+This repository does not take outside contributions. To report a problem with the site, [open an issue](https://github.com/edwardasilva/edwardasilva/issues/new).
