@@ -57,7 +57,7 @@ const C_FONTS = Promise.all(
  * @return Route params and card contents for Astro static path generation
  */
 export async function getStaticPaths() {
-    const pages = [...(await getProjectPages('project')), ...(await getProjectPages('personal'))];
+    const pages = [...(await getProjectPages('personal')), ...(await getProjectPages('project'))];
 
     return [
         {

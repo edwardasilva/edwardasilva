@@ -5,12 +5,12 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
  * Name, section links, search, and theme toggle. Adapted from eeprep.com.
  *
  * File Structure:
- * - Links: sections in the sidebar's order, with About added once it is published
+ * - Links: sections in the sidebar's order, About first once it is published
  * - Suggested pages in the empty search dialog
  *
  * Where this file is used within the repository:
@@ -35,12 +35,12 @@ const shouldRenderSearch =
     config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
 
 const links = [
+    ...(hasAboutContent ? [{ href: '/about/', label: 'About' }] : []),
     { href: '/projects/', label: 'Projects' },
     { href: '/experiences/', label: 'Experience' },
     { href: '/education/', label: 'Education' },
     { href: '/skills/', label: 'Skills' },
     { href: '/resume/viewer/', label: 'Resume' },
-    ...(hasAboutContent ? [{ href: '/about/', label: 'About' }] : []),
 ];
 
 const suggestions = [

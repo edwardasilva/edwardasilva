@@ -7,11 +7,12 @@
  * Creation Date: 16 March, 2026
  * Last Update: 09 November, 2026
  *
- * Every project, then personal projects.
+ * Every project, personal first and then academic, each kind under its own heading and ranked by
+ * date within the kind.
  *
  * File Structure:
- * - Projects
  * - Personal projects
+ * - Academic projects
  *
  * Where this file is used within the repository:
  * - Route: /projects
@@ -37,7 +38,7 @@ const site = Astro.site ?? Astro.url;
 
 const schema = itemListSchema(
     'Projects',
-    [...projects, ...personal].map(({ entry }) => ({
+    [...personal, ...projects].map(({ entry }) => ({
         name: entry.data.title,
         path: `/projects/${getPageSlug(entry.id)}`,
     })),
@@ -55,8 +56,9 @@ const schema = itemListSchema(
 >
     <p>The <a href="/skills/">skills page</a> lists the same projects under the tools they used.</p>
 
-    <ProjectCards pages={projects} />
-
-    <h2>Personal projects</h2>
+    <h2 id="personal">Personal projects</h2>
     <ProjectCards pages={personal} />
+
+    <h2 id="academic">Academic projects</h2>
+    <ProjectCards pages={projects} />
 </StarlightPage>

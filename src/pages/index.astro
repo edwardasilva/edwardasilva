@@ -5,14 +5,14 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
- * Who this is, three selected projects, personal projects, and long-term plans.
+ * Who this is, personal projects, academic projects, and long-term plans.
  *
  * File Structure:
  * - Hero
- * - Project cards
  * - Personal projects
+ * - Academic projects
  * - Long-term plans, from about.future in resume-data.json
  *
  * Where this file is used within the repository:
@@ -32,8 +32,8 @@ import ProjectCards from '../components/ProjectCards.astro';
 import { getProjectPages } from '../data/projects';
 import { asSentence, resume } from '../data/resume';
 
-const caseStudies = (await getProjectPages('project')).slice(0, 3);
 const personal = await getProjectPages('personal');
+const academic = await getProjectPages('project');
 const { home } = resume.site.pages;
 ---
 
@@ -54,12 +54,12 @@ const { home } = resume.site.pages;
         {home.intro && <p class="es-lede">{asSentence(home.intro)}</p>}
     </section>
 
-    <h2>Selected projects</h2>
-    <ProjectCards pages={caseStudies} />
-    <p><a href="/projects/">All projects</a></p>
-
     <h2>Personal projects</h2>
     <ProjectCards pages={personal} />
+
+    <h2>Academic projects</h2>
+    <ProjectCards pages={academic} />
+    <p><a href="/projects/">All projects</a></p>
 
     {
         resume.about.future.length > 0 && (
