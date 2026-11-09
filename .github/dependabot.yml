@@ -9,6 +9,12 @@ updates:
     target-branch: main
     labels:
       - dependencies
+    # typescript-eslint 8.x only accepts TypeScript below 6.1. A major bump in the
+    # grouped npm pull request breaks npm ci. Keep patch and minor TypeScript updates.
+    ignore:
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
     groups:
       astro-starlight:
         patterns:
