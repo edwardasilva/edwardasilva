@@ -14,7 +14,7 @@
  *
  * File Structure:
  * - Layout constants: the size and margin ladder and the spacing ranges
- * - syncAssets: copies src/assets into public/assets
+ * - syncAssets: copies src/assets into public/assets, minus proofs no page shows
  * - Compiling: settings, one pdflatex run, error reporting
  * - Fitting: measure, overflow, fit, fillPage
  * - Checks: text layer in reading order, empty lines, short bullets
@@ -34,11 +34,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { C_BUILD_DIR, expectedText, writeResumeBody } from './generate-resume.js';
+import { listShownProofs } from './shown-proofs.js';
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUTPUT_DIR = path.join(ROOT_DIR, 'public', 'resume');
 const ASSET_SOURCE_DIR = path.join(ROOT_DIR, 'src', 'assets');
 const ASSET_OUTPUT_DIR = path.join(ROOT_DIR, 'public', 'assets');
+const RESUME_DATA = path.join(ROOT_DIR, 'information', 'resume-data.json');
 const TEMPLATE_PATH = path.join(ROOT_DIR, 'scripts', 'resume-template.tex');
 const C_JOB_NAME = 'Edward_Silva_Resume';
 
@@ -72,14 +74,26 @@ const C_TEXT_JUNK = /\(cid:\d+\)|[�ﬀ-ﬆ-]/g;
 /**
  * @brief Syncs assets from source to public directory
  * @return Nothing
- * @details Creates public/assets and recursively copies all files from src/assets
+ * @details Creates public/assets and recursively copies src/assets, leaving out the proof files
+ *          that no page shows
  */
 function syncAssets() {
     if (fs.existsSync(ASSET_SOURCE_DIR)) {
         console.log(`[RUN] Syncing assets from ${ASSET_SOURCE_DIR} to ${ASSET_OUTPUT_DIR}`);
         fs.rmSync(ASSET_OUTPUT_DIR, { recursive: true, force: true });
         fs.mkdirSync(path.dirname(ASSET_OUTPUT_DIR), { recursive: true });
-        fs.cpSync(ASSET_SOURCE_DIR, ASSET_OUTPUT_DIR, { recursive: true, force: true });
+
+        const data = JSON.parse(fs.readFileSync(RESUME_DATA, 'utf8'));
+        const { hidden } = listShownProofs(data);
+
+        fs.cpSync(ASSET_SOURCE_DIR, ASSET_OUTPUT_DIR, {
+            recursive: true,
+            force: true,
+            filter: (source) => {
+                const relative = path.relative(ASSET_SOURCE_DIR, source).split(path.sep).join('/');
+                return !hidden.has(`/assets/${relative}`);
+            },
+        });
     } else {
         console.log(`[RUN] No src/assets directory at ${ASSET_SOURCE_DIR}, skipping asset sync`);
     }

@@ -348,13 +348,19 @@ body {
         --es-gutter: 1.5rem;
     }
 }
-/* Starlight ends the column at the table of contents minus the page padding, so the
-   column sits one padding width left of the window center. Narrowing it by two paddings
-   puts its center on the window center. A page without a table of contents gets end
-   padding equal to the left sidebar, so its column sits on the window center too. */
+/* Starlight makes the right sidebar wider than the left one. With a table of contents,
+   the rail gets the same width as the left sidebar and the main pane takes the rest, so
+   the column sits centered between them. A page without a table of contents gets end
+   padding equal to the left sidebar, so its column sits on the window center. */
 @media (min-width: 72rem) {
-    :root[data-has-sidebar][data-has-toc] .sl-container {
-        max-width: calc(var(--sl-content-width) - 2 * var(--sl-content-pad-x));
+    :root[data-has-sidebar][data-has-toc] .right-sidebar-container {
+        width: var(--sl-sidebar-width);
+    }
+
+    :root[data-has-sidebar][data-has-toc] .main-pane {
+        --sl-content-margin-inline: auto;
+
+        width: calc(100% - var(--sl-sidebar-width));
     }
 
     :root[data-has-sidebar]:not([data-has-toc]) .content-panel {
@@ -440,15 +446,30 @@ a.external-link .es-ext-last::after {
     height: 10rem;
     object-fit: contain;
 }
-/* A report plot drawn for a white page keeps a white plate. An SVG plot has a dark copy instead,
-   so it sits straight on the card. */
+/* An SVG plot has a dark copy and sits straight on the card. A photo fills the frame. A drawing on
+   white paper blends into the card, and inverts to light lines in dark mode. */
 .es-card-figure {
     display: block;
     padding: 0.5rem;
     border-radius: var(--es-radius);
 }
-.es-card-plate {
-    background: #fff;
+.es-card-photo {
+    padding: 0;
+    overflow: hidden;
+}
+.es-card-photo img {
+    object-fit: cover;
+    object-position: center;
+}
+.es-card-photo[data-figure='robot/front'] img {
+    object-position: center 40%;
+}
+.es-card-drawing img {
+    mix-blend-mode: multiply;
+}
+:root[data-theme='dark'] .es-card-drawing img {
+    filter: invert(1) hue-rotate(180deg);
+    mix-blend-mode: screen;
 }
 .es-card-dek {
     color: var(--es-ink-2);
@@ -914,8 +935,13 @@ figure.es-fig-narrow > img {
 
 /* Sidebar. Every top-level row has one size and weight, and every nested row has another. */
 :root {
-    --es-side-top-size: 0.9375rem;
+    --es-side-top-size: 1rem;
     --es-side-sub-size: 0.875rem;
+}
+@media (max-width: 50rem) {
+    :root {
+        --es-side-top-size: 1.125rem;
+    }
 }
 .es-side {
     margin: 0;
