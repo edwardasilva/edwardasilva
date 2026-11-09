@@ -14,6 +14,7 @@
  *
  * File Structure:
  * - Props: figure name, alt text, number, plate, narrow, wide
+ * - A raster image goes through Picture for AVIF and WebP, and an SVG stays a plain img
  * - One image per theme when a dark copy exists, otherwise one image
  * - Caption from the default slot
  *
@@ -26,6 +27,7 @@
  * Copyright (c) 2026 Edward Silva. MIT License.
  */
 
+import { Picture } from 'astro:assets';
 import { getDarkFigure, getFigure } from '../data/figures';
 
 interface Props {
@@ -41,6 +43,7 @@ const { name, alt, number, plate = true, narrow = false, wide = false } = Astro.
 const figure = getFigure(name);
 const dark = getDarkFigure(name);
 const onPlate = plate && !dark;
+const isRaster = figure.format !== 'svg';
 ---
 
 <figure
@@ -72,6 +75,16 @@ const onPlate = plate && !dark;
                     decoding="async"
                 />
             </>
+        ) : isRaster ? (
+            <Picture
+                src={figure}
+                formats={['avif', 'webp']}
+                widths={[630, 1260]}
+                sizes="(min-width: 50rem) 630px, 100vw"
+                alt={alt}
+                loading="lazy"
+                decoding="async"
+            />
         ) : (
             <img
                 src={figure.src}
