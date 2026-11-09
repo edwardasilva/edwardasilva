@@ -8,7 +8,8 @@
  * Last Update: 09 November, 2026
  *
  * A row of project cards. A card shows a figure from the work when resume-data.json names one. An
- * SVG plot switches to its dark copy in dark mode. A raster plot or a photo shows as it is.
+ * SVG plot switches to its dark copy in dark mode. A photo fills the frame. A paper drawing blends
+ * into the card.
  *
  * File Structure:
  * - Props: project pages
@@ -35,6 +36,8 @@ interface Props {
     class?: string;
 }
 
+const C_DRAWINGS = new Set(['pump/sketch']);
+
 const { pages, class: className } = Astro.props;
 ---
 
@@ -47,7 +50,16 @@ const { pages, class: className } = Astro.props;
             <li>
                 <a href={href}>
                     {figure && (
-                        <span class:list={['es-card-figure', { 'es-card-plate': !dark }]}>
+                        <span
+                            class:list={[
+                                'es-card-figure',
+                                {
+                                    'es-card-photo': !dark && !C_DRAWINGS.has(project.figure ?? ''),
+                                    'es-card-drawing': !dark && C_DRAWINGS.has(project.figure ?? ''),
+                                },
+                            ]}
+                            data-figure={project.figure}
+                        >
                             <img
                                 class:list={{ 'dark:sl-hidden': dark }}
                                 src={figure.src}
