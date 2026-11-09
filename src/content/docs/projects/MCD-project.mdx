@@ -28,7 +28,7 @@ import GantryDelay from '../../../components/GantryDelay.astro';
 import GantryWeight from '../../../components/GantryWeight.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-My team built two controllers for one simulated crane. The first moves the load 1 m in just under 2 minutes with no overshoot. The second settles in under 4 seconds, and its phase margin drops from 48 degrees to 36.9 or 24.2. Phase margin is how much extra lag a loop can take before it goes unstable. Figures 8 and 9 run the second design in your browser.
+My team built two controllers for one simulated crane. The first moves the load 1 m in just under 2 minutes with no overshoot. The second settles in under 4 seconds, and its phase margin drops from 48 degrees to 36.9 or 24.2 degrees. Phase margin is how much extra lag a loop can take before it goes unstable. Figures 8 and 9 run the second design in your browser.
 
 An operator on a gantry crane controls only the direction and speed, so where the load ends up depends on the operator's skill. This work comes from two projects in EENG 417. It all ran in MATLAB and Simulink, with no physical crane.
 
@@ -92,7 +92,7 @@ That is 25 samples at 50 Hz. We added a 25-sample delay to check. The instabilit
   The same command with a 25-sample delay added.
 </Figure>
 
-## Part 2: the same crane with harder specs
+## Part 2: the state-space controller
 
 | Spec | Part 1 | Part 2 |
 | --- | --- | --- |
