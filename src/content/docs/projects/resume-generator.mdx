@@ -10,7 +10,7 @@ slug: projects/resume-generator
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 08 November, 2026
+  Last Update: 09 November, 2026
 
   Short description of resume-generator, from its public README. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -27,7 +27,7 @@ You write your resume in one JSON file, and the script lays it out on one page b
 
 ## How it fits one page
 
-The script runs LuaLaTeX and reads the page measurements back from its log.
+The Python script runs LuaLaTeX and reads the page measurements back from its log.
 
 1. It starts at 11 pt text with 0.5 in margins. It steps the text down to 10 pt, then the margins down to 0.4 in, and keeps the first layout that fits.
 2. It grows line spacing and the section and entry gaps together until the page is full. Spacing never shrinks below its compact values.

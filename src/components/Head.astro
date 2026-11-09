@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
  * Adds the share image, author, llms.txt link, structured data, and font preload to the head
  * Starlight builds.
@@ -13,6 +13,7 @@
  * File Structure:
  * - Author and llms.txt link
  * - Share image from the OG route
+ * - No canonical link on the 404 page
  * - Structured data: page, site, and breadcrumbs
  *
  * Where this file is used within the repository:
@@ -48,12 +49,14 @@ const cardSlug = isHome
     : getPageProject(route.entry.id)?.kind
       ? pathname.split('/').at(-1)
       : undefined;
+const isNotFound = route.entry.id === '404';
 
 route.head = route.head.filter(
     (tag) =>
         !(
             (tag.tag === 'meta' && tag.attrs?.name === 'twitter:card') ||
-            (tag.tag === 'meta' && tag.attrs?.property === 'og:type')
+            (tag.tag === 'meta' && tag.attrs?.property === 'og:type') ||
+            (isNotFound && tag.tag === 'link' && tag.attrs?.rel === 'canonical')
         )
 );
 route.head.push(

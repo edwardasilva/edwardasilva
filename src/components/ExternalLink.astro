@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 06 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 09 November, 2026
  *
  * A link that opens in a new tab, with the arrow and screen-reader hint Markdown links get.
  *
@@ -27,16 +27,12 @@
 
 import { splitTail } from '../plugins/external-link-tail.js';
 
-const { class: className, ...attributes } = Astro.props;
+const { class: className, rel = 'noopener noreferrer', ...attributes } = Astro.props;
 const text = (await Astro.slots.render('default')).trim();
 const [head, tail] = splitTail(text);
 ---
 
-<a
-    class:list={['external-link', className]}
-    target="_blank"
-    rel="noopener noreferrer"
-    {...attributes}
+<a class:list={['external-link', className]} target="_blank" rel={rel} {...attributes}
     ><span class="es-ext-text"
         ><Fragment set:html={head} /><span class="es-ext-last"><Fragment set:html={tail} /></span
         ></span
