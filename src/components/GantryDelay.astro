@@ -96,12 +96,18 @@ function settlingText(settling: number | null): string {
             data-slider
         />
         <div class="es-live-presets">
-            <button type="button" data-preset="0">None</button>
-            <button type="button" data-preset="0.18">0.18 s</button>
+            <button type="button" data-preset="0">
+                None
+            </button>
+            <button type="button" data-preset="0.18">
+                0.18 s
+            </button>
             <button type="button" data-preset={C_PREDICTED_LIMIT_S}>
                 0.1878 s, the predicted limit
             </button>
-            <button type="button" data-preset="0.25">0.25 s</button>
+            <button type="button" data-preset="0.25">
+                0.25 s
+            </button>
         </div>
         <label class="es-live-check">
             <input type="checkbox" data-saturate />
@@ -110,9 +116,15 @@ function settlingText(settling: number | null): string {
     </div>
 
     <ul class="es-live-legend not-content" aria-hidden="true">
-        <li><span class="es-swatch es-swatch-live"></span>With the delay</li>
-        <li><span class="es-swatch es-swatch-base"></span>No delay</li>
-        <li><span class="es-swatch es-swatch-ref"></span>1 m reference</li>
+        <li>
+            <span class="es-swatch es-swatch-live"></span>With the delay
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-base"></span>No delay
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-ref"></span>1 m reference
+        </li>
     </ul>
 
     <Plot
@@ -131,9 +143,8 @@ function settlingText(settling: number | null): string {
     />
 
     <p class="es-live-read" aria-live="polite" data-read>
-        Delay {C_START_DELAY.toFixed(3)} s. Overshoot {start.overshoot.toFixed(1)}%. {
-            settlingText(start.settling)
-        }
+        Delay {C_START_DELAY.toFixed(3)} s. Overshoot {start.overshoot.toFixed(1)}%.{' '}
+        {settlingText(start.settling)}
     </p>
     <noscript>
         <p>The slider needs JavaScript. The curve above is the 0.15 s case.</p>

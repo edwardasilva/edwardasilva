@@ -92,33 +92,45 @@ const filters = [
             data-slider
         />
         <div class="es-live-presets">
-            <button type="button" data-preset={C_REPORT_KM}>0.005, the report's value</button>
-            <button type="button" data-preset="50">50</button>
-            <button type="button" data-preset="500">500</button>
-            <button type="button" data-seed>New noise</button>
+            <button type="button" data-preset={C_REPORT_KM}>
+                0.005, the report's value
+            </button>
+            <button type="button" data-preset="50">
+                50
+            </button>
+            <button type="button" data-preset="500">
+                500
+            </button>
+            <button type="button" data-seed>
+                New noise
+            </button>
         </div>
         <div class="es-live-presets" role="radiogroup" aria-label="Filter drawn on the plot">
-            {
-                filters.map((filter, index) => (
-                    <label class="es-live-check">
-                        <input
-                            type="radio"
-                            name="estimation-filter"
-                            value={filter.key}
-                            checked={index === 0}
-                            data-filter
-                        />
-                        {filter.label}
-                    </label>
-                ))
-            }
+            {filters.map((filter, index) => (
+                <label class="es-live-check">
+                    <input
+                        type="radio"
+                        name="estimation-filter"
+                        value={filter.key}
+                        checked={index === 0}
+                        data-filter
+                    />
+                    {filter.label}
+                </label>
+            ))}
         </div>
     </div>
 
     <ul class="es-live-legend not-content" aria-hidden="true">
-        <li><span class="es-swatch es-swatch-live"></span>Estimated force</li>
-        <li><span class="es-swatch es-swatch-base"></span>True force</li>
-        <li><span class="es-swatch es-swatch-band"></span>3 sigma bound</li>
+        <li>
+            <span class="es-swatch es-swatch-live"></span>Estimated force
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-base"></span>True force
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-band"></span>3 sigma bound
+        </li>
     </ul>
 
     <Plot
@@ -154,29 +166,27 @@ const filters = [
                 </tr>
             </thead>
             <tbody>
-                {
-                    filters.map((filter) => {
-                        const result = summarize(
-                            plant,
-                            filter.key === 'ekf'
-                                ? run
-                                : runUkf(
-                                      plant,
-                                      C_DEFAULT_QS,
-                                      filter.key === 'ukf' ? C_DEFAULT_ALPHA_UKF : 1
-                                  )
-                        );
+                {filters.map((filter) => {
+                    const result = summarize(
+                        plant,
+                        filter.key === 'ekf'
+                            ? run
+                            : runUkf(
+                                  plant,
+                                  C_DEFAULT_QS,
+                                  filter.key === 'ukf' ? C_DEFAULT_ALPHA_UKF : 1
+                              )
+                    );
 
-                        return (
-                            <tr data-row={filter.key}>
-                                <td>{filter.label}</td>
-                                <td data-cell="rmse">{result.rmse.toFixed(1)} N</td>
-                                <td data-cell="bound">{result.bound.toFixed(0)} N</td>
-                                <td data-cell="inside">{(result.inside * 100).toFixed(0)}%</td>
-                            </tr>
-                        );
-                    })
-                }
+                    return (
+                        <tr data-row={filter.key}>
+                            <td>{filter.label}</td>
+                            <td data-cell="rmse">{result.rmse.toFixed(1)} N</td>
+                            <td data-cell="bound">{result.bound.toFixed(0)} N</td>
+                            <td data-cell="inside">{(result.inside * 100).toFixed(0)}%</td>
+                        </tr>
+                    );
+                })}
             </tbody>
         </table>
     </div>

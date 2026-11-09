@@ -49,21 +49,19 @@ const schema = itemListSchema(
     <p>Each skill links to the role, project, course, or certification where I used it.</p>
 
     <ul class="es-skills not-content">
-        {
-            skillIndex.map((skill) => (
-                <li id={skill.slug}>
-                    <strong>{skill.name}</strong>
-                    <ul>
-                        {skill.references.map((reference) => (
-                            <li>
-                                <a href={reference.href}>
-                                    {getDisplayTitle(reference.href, reference.label)}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </li>
-            ))
-        }
+        {skillIndex.map((skill) => (
+            <li id={skill.slug}>
+                <strong>{skill.name}</strong>
+                <ul>
+                    {skill.references.map((reference) => (
+                        <li>
+                            <a href={reference.href}>
+                                {getDisplayTitle(reference.href, reference.label)}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </li>
+        ))}
     </ul>
 </StarlightPage>

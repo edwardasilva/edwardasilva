@@ -45,48 +45,40 @@ const pdfThumbUrl = `/assets/thumbs/${proof.url
     .replace(/\//g, '-')}`;
 ---
 
-{
-    isDocument && (
-        <ExternalLink href={proof.url} class="es-proof-card">
-            {label}
-        </ExternalLink>
-    )
-}
+{isDocument && (
+    <ExternalLink href={proof.url} class="es-proof-card">
+        {label}
+    </ExternalLink>
+)}
 
-{
-    proof.type === 'pdf' && (
-        <div class="es-proof-report">
-            <a
-                href={proof.url}
-                class="es-proof-pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Open ${label} as a PDF (opens in a new tab)`}
-            >
-                <img src={pdfThumbUrl} alt="" loading="lazy" decoding="async" />
-                <span>{label}, PDF</span>
-            </a>
-            <PdfViewer url={proof.url} label={label} />
-        </div>
-    )
-}
+{proof.type === 'pdf' && (
+    <div class="es-proof-report">
+        <a
+            href={proof.url}
+            class="es-proof-pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${label} as a PDF (opens in a new tab)`}
+        >
+            <img src={pdfThumbUrl} alt="" loading="lazy" decoding="async" />
+            <span>{label}, PDF</span>
+        </a>
+        <PdfViewer url={proof.url} label={label} />
+    </div>
+)}
 
-{
-    proof.type === 'image' && (
-        <figure class="es-proof-media">
-            <img src={proof.url} alt={label} loading="lazy" decoding="async" />
-            <figcaption>{label}</figcaption>
-        </figure>
-    )
-}
+{proof.type === 'image' && (
+    <figure class="es-proof-media">
+        <img src={proof.url} alt={label} loading="lazy" decoding="async" />
+        <figcaption>{label}</figcaption>
+    </figure>
+)}
 
-{
-    proof.type === 'video' && (
-        <figure class="es-proof-media es-proof-video">
-            <video controls preload="metadata">
-                <source src={proof.url} />
-            </video>
-            <figcaption>{label}</figcaption>
-        </figure>
-    )
-}
+{proof.type === 'video' && (
+    <figure class="es-proof-media es-proof-video">
+        <video controls preload="metadata">
+            <source src={proof.url} />
+        </video>
+        <figcaption>{label}</figcaption>
+    </figure>
+)}
