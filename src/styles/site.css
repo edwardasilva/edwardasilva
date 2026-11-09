@@ -348,18 +348,19 @@ body {
         --es-gutter: 1.5rem;
     }
 }
-/* With a table of contents, the column is centered between the left sidebar and the
-   rail. Starlight sizes the main pane from --sl-content-width and pushes the column to
-   its end by default, so a narrow width and auto margins split the spare width evenly.
-   A page without a table of contents gets end padding equal to the left sidebar, so its
-   column sits on the window center. */
+/* Starlight makes the right sidebar wider than the left one. With a table of contents,
+   the rail gets the same width as the left sidebar and the main pane takes the rest, so
+   the column sits centered between them. A page without a table of contents gets end
+   padding equal to the left sidebar, so its column sits on the window center. */
 @media (min-width: 72rem) {
-    :root[data-has-sidebar][data-has-toc] {
-        --sl-content-width: 38rem;
+    :root[data-has-sidebar][data-has-toc] .right-sidebar-container {
+        width: var(--sl-sidebar-width);
     }
 
     :root[data-has-sidebar][data-has-toc] .main-pane {
         --sl-content-margin-inline: auto;
+
+        width: calc(100% - var(--sl-sidebar-width));
     }
 
     :root[data-has-sidebar]:not([data-has-toc]) .content-panel {
@@ -919,8 +920,13 @@ figure.es-fig-narrow > img {
 
 /* Sidebar. Every top-level row has one size and weight, and every nested row has another. */
 :root {
-    --es-side-top-size: 0.9375rem;
+    --es-side-top-size: 1rem;
     --es-side-sub-size: 0.875rem;
+}
+@media (max-width: 50rem) {
+    :root {
+        --es-side-top-size: 1.125rem;
+    }
 }
 .es-side {
     margin: 0;
