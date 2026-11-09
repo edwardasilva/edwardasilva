@@ -17,7 +17,7 @@
  * - readLabels: parses the label list
  *
  * Where this file is used within the repository:
- * - .github/workflows/pr-body.yml
+ * - .github/workflows/ci.yml (the PR body step in the Checks job)
  *
  * Usage:
  * $ `PR_BODY="Part of #12" node scripts/check-pr-body.js` : Checks a body by hand

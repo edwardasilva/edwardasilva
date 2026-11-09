@@ -1,7 +1,8 @@
 name: CI
 
-# Every change reaches main through a pull request, and this workflow checks each one.
-# The "Part of #" check is in pr-body.yml, so editing the body or a label does not restart it.
+# Every change reaches main through a pull request, and this workflow checks each one,
+# including the "Part of #" line in its body. Edit the body before the last push, because
+# editing it alone does not start a new run.
 on:
   pull_request:
     branches: [main]
@@ -61,6 +62,17 @@ jobs:
         with:
           node-version: 24
           cache: npm
+
+      # The body names its issue on a line of its own. Dependabot and no-epic pull requests are
+      # exempt.
+      - name: PR body
+        if: ${{ !cancelled() }}
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          PR_ACTOR: ${{ github.event.pull_request.user.login }}
+          PR_SENDER: ${{ github.actor }}
+        run: node scripts/check-pr-body.js
 
       # --ignore-scripts skips prepare, which writes git hook config.
       - name: npm ci
