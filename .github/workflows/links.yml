@@ -1,0 +1,56 @@
+# .github/workflows/links.yml
+# Outside Links
+#
+# Author: Edward Silva
+# Creation Date: 09 November, 2026
+# Last Update: 09 November, 2026
+#
+# Builds the site and fetches every link that leaves it, then lists the ones that no longer
+# answer in the run summary. Outside sites go down on their own schedule, so this runs weekly
+# and by hand, never on a pull request.
+#
+# Usage:
+# $ `gh workflow run links.yml` : Checks every outside link on the current main
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+# NOTICE: This file contains personal biographical data.
+# It is strictly excluded from the repository's MIT License and
+# may not be reproduced, distributed, or modified without permission.
+
+name: Outside links
+
+on:
+  schedule:
+    - cron: '41 11 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    name: Outside links
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: ./.github/actions/information
+        with:
+          ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - name: Build
+        env:
+          SKIP_RESUME_PDF_BUILD: '1'
+          SKIP_RESUME_GENERATE: '1'
+        run: npm run build
+
+      - name: Check every outside link
+        run: npm run check:external-links -- --report

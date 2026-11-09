@@ -99,10 +99,14 @@
     }
 }
 
-/* Small phones: one size down, so all five section links fit on a 360px screen. */
-@media (max-width: 24rem) {
+/* Small phones: one size down and a tighter gap, so all six section links fit on a 390px
+   screen. At 360px the row still scrolls sideways. */
+@media (max-width: 26rem) {
+    .es-nav {
+        gap: 0.375rem;
+    }
     .es-nav a {
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
     }
 }
 

@@ -5,13 +5,14 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 09 November, 2026
  *
  * The long version of how I got here. Held back by site.aboutPublished in resume-data.json until
  * the narrative is written. Anything still marked [INSERT ...] is stripped first.
  *
  * File Structure:
  * - Route: a single path, or none while held back
+ * - headingId, headings: ids for the chapter headings, so the table of contents lists them
  * - The story, one section per chapter in about.chapters
  * - Long-term plans
  * - Before engineering: the jobs list, kept after the story so it does not interrupt it
@@ -45,7 +46,33 @@ const { Summary: earlyWorkSummary, roles } = about.earlyWork;
 const narrativeSections = [
     ...about.chapters,
     { title: 'Long-term plans', paragraphs: about.future },
-].filter((section) => section.paragraphs.length > 0);
+]
+    .filter((section) => section.paragraphs.length > 0)
+    .map((section) => ({ ...section, id: headingId(section.title) }));
+
+const C_BEFORE_ENGINEERING = 'Before engineering';
+const hasEarlyWork = Boolean(earlyWorkSummary) || roles.length > 0;
+
+// The chapter headings, so the page's table of contents lists them.
+const headings = [
+    ...narrativeSections.map((section) => ({ depth: 2, slug: section.id, text: section.title })),
+    ...(hasEarlyWork
+        ? [{ depth: 2, slug: headingId(C_BEFORE_ENGINEERING), text: C_BEFORE_ENGINEERING }]
+        : []),
+];
+
+/**
+ * @brief Builds a heading id from its text, the way Markdown headings get theirs
+ * @param text Heading text
+ * @return Lowercase id with hyphens for spaces and no punctuation
+ */
+function headingId(text: string): string {
+    return text
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
+}
 ---
 
 <StarlightPage
@@ -53,13 +80,14 @@ const narrativeSections = [
         title: 'About',
         description: about.Summary ?? about.Highlights,
     }}
+    headings={headings}
 >
     {about.intro.map((paragraph) => <p class="es-lede">{asSentence(paragraph)}</p>)}
 
     {
         narrativeSections.map((section) => (
             <>
-                <h2>{section.title}</h2>
+                <h2 id={section.id}>{section.title}</h2>
                 {section.paragraphs.map((paragraph) => (
                     <p>{asSentence(paragraph)}</p>
                 ))}
@@ -68,9 +96,9 @@ const narrativeSections = [
     }
 
     {
-        (earlyWorkSummary || roles.length > 0) && (
+        hasEarlyWork && (
             <>
-                <h2>Before engineering</h2>
+                <h2 id={headingId(C_BEFORE_ENGINEERING)}>{C_BEFORE_ENGINEERING}</h2>
                 {earlyWorkSummary && <p>{asSentence(earlyWorkSummary)}</p>}
                 {roles.length > 0 && (
                     <ul>
