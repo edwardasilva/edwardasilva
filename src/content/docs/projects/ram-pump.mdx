@@ -1,0 +1,44 @@
+---
+title: Hydraulic ram pump
+description: A first-year design project using a PVC hydraulic ram pump and a limestone filter to treat acid mine drainage at legacy mines.
+slug: projects/ram-pump
+---
+
+{/*
+  src/content/docs/projects/ram-pump.mdx
+  Project write-up
+
+  Author: Edward Silva
+  Creation Date: 07 November, 2026
+  Last Update: 08 November, 2026
+
+  Built from the cornerstone poster in src/assets/Cornerstone and the project entry in resume-data.json. Written to the rules in eeprep's .github/STYLE.md.
+
+  Usage:
+  $ `npm run dev` : Renders at /projects/ram-pump
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+  NOTICE: This file contains personal biographical data.
+  It is strictly excluded from the repository's MIT License and
+  may not be reproduced, distributed, or modified without permission.
+*/}
+
+import Figure from '../../../components/Figure.astro';
+
+We built a working PVC prototype for under \$100, and in testing, its filter moved water from pH 5 to pH 9. The poster estimates a full-scale version at \$23,000. The team presented to a panel of industry professionals and received the Subject Matter Expert Award.
+
+Acid forms in old, minimally regulated legacy mines and leaks into waterways. Our proposal collects water from a local source, raises its pH through limestone in the pressure chamber, and pumps it into the mine. A ram pump runs on the flow of the water itself, so it needs no external energy.
+
+<Figure
+    name="pump/sketch"
+    number={1}
+    alt="Hand-drawn pump layout: a drive pipe from the water source, a swing check valve and pressure valve, a spring check valve, a pressure chamber with limestone, and a delivery tube up to the mine."
+>
+    The system as we sketched it on the poster.
+</Figure>
+
+## Poster
+
+<Figure name="pump/poster" number={2} wide plate={false} alt="The Hydraulic Ram Pump poster, covering the background on acid mine drainage, the proposal, the cost table, benefits, and validation.">
+  The team's poster.
+</Figure>

@@ -1,0 +1,29 @@
+name: PR body
+
+# The body check runs on its own, so editing the "Part of #" line or a label re-runs only this
+# check, not the whole CI run.
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, edited, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-body-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pr-body:
+    name: PR body
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Require an issue line
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          PR_ACTOR: ${{ github.event.pull_request.user.login }}
+          PR_SENDER: ${{ github.actor }}
+        run: node scripts/check-pr-body.js

@@ -1,0 +1,74 @@
+---
+/**
+ * src/pages/index.astro
+ * Home Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 09 November, 2026
+ *
+ * Who this is, personal projects, academic projects, and long-term plans.
+ *
+ * File Structure:
+ * - Hero
+ * - Personal projects
+ * - Academic projects
+ * - Long-term plans, from about.future in resume-data.json
+ *
+ * Where this file is used within the repository:
+ * - Route: /
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ProjectCards from '../components/ProjectCards.astro';
+import { getProjectPages } from '../data/projects';
+import { asSentence, resume } from '../data/resume';
+
+const personal = await getProjectPages('personal');
+const academic = await getProjectPages('project');
+const { home } = resume.site.pages;
+---
+
+<StarlightPage
+    frontmatter={{
+        title: resume.personal.name,
+        description: asSentence(home.description),
+        head: [{ tag: 'title', content: resume.personal.name }],
+        template: 'splash',
+        pagefind: false,
+        prev: false,
+        next: false,
+    }}
+    hasSidebar={false}
+>
+    <section class="es-hero">
+        <h1 id="_top">{resume.personal.name}</h1>
+        {home.intro && <p class="es-lede">{asSentence(home.intro)}</p>}
+    </section>
+
+    <h2>Personal projects</h2>
+    <ProjectCards pages={personal} />
+
+    <h2>Academic projects</h2>
+    <ProjectCards pages={academic} />
+    <p><a href="/projects/">All projects</a></p>
+
+    {
+        resume.about.future.length > 0 && (
+            <>
+                <h2>Long-term plans</h2>
+                {resume.about.future.map((line) => (
+                    <p>{asSentence(line)}</p>
+                ))}
+            </>
+        )
+    }
+</StarlightPage>

@@ -1,0 +1,101 @@
+---
+/**
+ * src/components/PdfViewer.astro
+ * PDF Viewer
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * A report on the page: closed by default. PDF.js loads and draws it the first time a reader opens it.
+ *
+ * File Structure:
+ * - Props: file URL and label
+ * - Details element
+ * - Script: draws each page once
+ *
+ * Where this file is used within the repository:
+ * - src/components/ProofRenderer.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+interface Props {
+    url: string;
+    label: string;
+}
+
+const { url, label } = Astro.props;
+---
+
+<details class="es-pdf not-content" data-pdf={url}>
+    <summary>Read {label.toLowerCase()} on this page</summary>
+    <p data-pdf-status hidden>Loading.</p>
+    <div data-pdf-pages></div>
+</details>
+
+<script is:inline type="module">
+    /**
+     * @brief Draws every page of a PDF into its viewer
+     * @param viewer Details element holding the viewer
+     * @return {Promise<void>} Resolves when every page has been painted
+     */
+    async function drawPdf(viewer) {
+        const status = viewer.querySelector('[data-pdf-status]');
+        const host = viewer.querySelector('[data-pdf-pages]');
+
+        status.hidden = false;
+
+        try {
+            const { getDocument, GlobalWorkerOptions } = await import('/vendor/pdf.min.mjs');
+
+            GlobalWorkerOptions.workerSrc = '/vendor/pdf.worker.min.mjs';
+
+            const pdf = await getDocument({ url: viewer.dataset.pdf }).promise;
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+            for (let number = 1; number <= pdf.numPages; number += 1) {
+                const page = await pdf.getPage(number);
+                const base = page.getViewport({ scale: 1 });
+                const viewport = page.getViewport({
+                    scale: (host.clientWidth / base.width) * pixelRatio,
+                });
+                const canvas = document.createElement('canvas');
+
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                canvas.setAttribute('role', 'img');
+                canvas.setAttribute('aria-label', `Page ${number} of ${pdf.numPages}`);
+                host.append(canvas);
+
+                await page.render({
+                    canvasContext: canvas.getContext('2d'),
+                    viewport,
+                    canvas,
+                }).promise;
+            }
+
+            status.hidden = true;
+        } catch {
+            status.textContent = 'The file could not be drawn. Use the link to open it.';
+        }
+    }
+
+    // This script runs once per report on the page, so each viewer is bound only once.
+    for (const viewer of document.querySelectorAll('[data-pdf]:not([data-pdf-bound])')) {
+        viewer.dataset.pdfBound = 'true';
+        viewer.addEventListener(
+            'toggle',
+            () => {
+                drawPdf(viewer);
+            },
+            { once: true }
+        );
+    }
+</script>

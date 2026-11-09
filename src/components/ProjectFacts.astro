@@ -1,0 +1,109 @@
+---
+/**
+ * src/components/ProjectFacts.astro
+ * Project Facts
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 08 November, 2026
+ *
+ * When, which course, who was on the team, and which part was mine, under a project title. This is
+ * what a profile page flattens. Every fact comes from the page's entry in resume-data.json. A page
+ * with no entry, or one marked Hide, fails the build.
+ *
+ * File Structure:
+ * - Match the page to resume-data.json by slug
+ * - Definition list of facts
+ *
+ * Where this file is used within the repository:
+ * - src/components/PageTitle.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ * NOTICE: This file contains personal biographical data.
+ * It is strictly excluded from the repository's MIT License and
+ * may not be reproduced, distributed, or modified without permission.
+ */
+
+import ExternalLink from './ExternalLink.astro';
+import SkillLinks from './SkillLinks.astro';
+import { asSentence, getCourseByCode, getCourseHref } from '../data/resume';
+import { getPageProject } from '../data/projects';
+
+const { id } = Astro.locals.starlightRoute;
+const project = getPageProject(id);
+
+if (!project) {
+    throw new Error(`[ERROR] ${id} is not a project write-up`);
+}
+
+const { course: courseCode, duration: dates, team, myPart, skills } = project;
+const course = courseCode ? getCourseByCode(courseCode) : undefined;
+const courseHref = courseCode ? getCourseHref(courseCode) : undefined;
+const allLinks = [
+    ...project.links,
+    ...(project.github ? [{ label: 'Source on GitHub', href: project.github }] : []),
+];
+---
+
+<dl class="es-facts">
+    {
+        dates && (
+            <div>
+                <dt>When</dt>
+                <dd>{dates}</dd>
+            </div>
+        )
+    }
+    {
+        courseCode && (
+            <div>
+                <dt>Course</dt>
+                <dd>
+                    {courseHref ? <a href={courseHref}>{courseCode}</a> : courseCode}
+                    {course && `, ${course.name}`}
+                </dd>
+            </div>
+        )
+    }
+    {
+        team && (
+            <div>
+                <dt>Team</dt>
+                <dd>{team}</dd>
+            </div>
+        )
+    }
+    {
+        myPart && (
+            <div>
+                <dt>My part</dt>
+                <dd>{asSentence(myPart)}</dd>
+            </div>
+        )
+    }
+    {
+        skills.length > 0 && (
+            <div>
+                <dt>Tools</dt>
+                <dd>
+                    <SkillLinks skills={skills} />
+                </dd>
+            </div>
+        )
+    }
+    {
+        allLinks.length > 0 && (
+            <div>
+                <dt>Links</dt>
+                <dd class="es-facts-links">
+                    {allLinks.map((link) => (
+                        <ExternalLink href={link.href}>{link.label}</ExternalLink>
+                    ))}
+                </dd>
+            </div>
+        )
+    }
+</dl>

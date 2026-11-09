@@ -1,0 +1,7 @@
+extends: existence
+message: 'No semicolons. Write two sentences, or use because, but, or so.'
+level: error
+scope: sentence
+nonword: true
+tokens:
+  - ';'

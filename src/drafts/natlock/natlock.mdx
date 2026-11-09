@@ -1,0 +1,121 @@
+---
+title: natlock medication dispenser
+description: My first project, from a two-week Cisco externship in 2021. A ten-person team designed a locking, portable pill dispenser, and I did the 3D modeling and electronics design.
+slug: projects/natlock
+---
+
+{/*
+  src/drafts/natlock/natlock.mdx
+  Project write-up, unpublished
+
+  Author: Edward Silva
+  Creation Date: 07 November, 2026
+  Last Update: 08 November, 2026
+
+  Built from the capstone deck, its speaker notes, and the cisco-extern entry in resume-data.json. Written to the rules in eeprep's .github/STYLE.md. See README.md in this folder for how to publish it.
+
+  Usage:
+  $ `npm run dev` : Renders at /projects/natlock once moved to src/content/docs/projects
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+  NOTICE: This file contains personal biographical data.
+  It is strictly excluded from the repository's MIT License and
+  may not be reproduced, distributed, or modified without permission.
+*/}
+
+import PdfViewer from '../../../components/PdfViewer.astro';
+import ModelViewer from '../../../drafts/natlock/ModelViewer.astro';
+import modelStill from '../../../drafts/natlock/model.png';
+import partsSlide from '../../../drafts/natlock/parts.svg';
+import modelUrl from '../../../drafts/natlock/model.glb?url';
+import deckPdfUrl from '../../../drafts/natlock/deck.pdf?url';
+import deckPptxUrl from '../../../drafts/natlock/Presentation.pptx?url';
+
+{/* [INSERT WHAT YOU WOULD DESIGN DIFFERENTLY NOW] */}
+{/* [INSERT WHETHER A PHYSICAL PROTOTYPE WAS EVER BUILT] */}
+{/* [INSERT WHAT THE SIM CARD CONNECTED TO] */}
+
+natlock is the first project I worked on. In June 2021, Cisco ran a two-week externship for high school students and rising college students, and the capstone theme was healthcare. Our group, Group 5, asked how technology could help older patients manage their medication schedules. The deck cites [AgingCare](https://www.agingcare.com/articles/medication-problems-elderly-people-have-146111.htm), which quotes the Department of Health and Human Services: 55 percent of the elderly do not follow their prescription orders.
+
+natlock reminds the patient when to take each dose, and it releases only the scheduled pills. A code chosen by the care team locks the rest away. The deck stops at the design. It has 3D models, a parts list, and a cost model, and it shows no built prototype.
+
+## The 3D model
+
+I modeled the dispenser and its capsules in SketchUp. This is the model embedded in the deck.
+
+<ModelViewer
+  src={modelUrl}
+  fallback={modelStill}
+  number={1}
+  alt="The natlock dispenser: a tall hexagonal body on a base, a recessed door above an SOS button, two capsules on top, and four capsules beside it."
+>
+  The natlock model from the deck. Drag to turn it, or focus it and use the arrow keys.
+</ModelViewer>
+
+The design has six refillable capsules. The model shows two on top and four beside the dispenser. The deck gives the capsule size as 2 1/4 in by 1 in.
+
+## The electronics
+
+<figure class="es-fig es-fig-plate">
+  <img
+    src={partsSlide.src}
+    width={partsSlide.width}
+    height={partsSlide.height}
+    alt="Labeled SketchUp view of the dispenser: LCD screen and Raspberry Pi, temperature and humidity sensor with LED, push-to-open top, magnet lock door, SOS button with protective cover, on-board GPS, and six refillable capsules."
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>
+    <span class="es-fignum">Figure 2</span>
+    <span>Where each part sits, from slide 13 of the deck.</span>
+  </figcaption>
+</figure>
+
+The costs below are the deck's per-dispenser prices after a 10% bulk discount.
+
+| Part | Job in the design | Cost |
+| --- | --- | --- |
+| Raspberry Pi Zero | Runs the touchscreen | \$4.50 |
+| Mini touchscreen | Shows reminders and takes the PIN | \$13.50 |
+| Speakers | Play the sound alerts | \$4.50 |
+| Magnetic strip | Locks the door | \$45.00 |
+| Meraki temperature sensor | Watches the conditions that preserve the medication | \$27.00 |
+| GPS sensor | Tracks the dispenser | \$36.00 |
+| SIM card | Not stated in the deck | \$4.50 |
+| D batteries | Power, with up to 36 hours on an overnight charge | \$2.25 |
+| Biodegradable filament | The 3D-printed body | \$22.50 |
+
+An SOS button sits under a protective cover and notifies the care team. Tia Kachalia's speaker notes say the patient can point it at a chosen person or at 911.
+
+## The cost model
+
+Bella Gigoux presented these numbers. The parts add up to \$159.75 per dispenser. At a price of \$192, each one earns \$32.25, and the closest competitors sell for \$150 to \$600.
+
+The deck's one investment is a \$20,000 industrial 3D printer, so break-even is about 621 units. At 1,000 units, the deck shows \$32,250 in profit, a 161.3% return on the printer. The notes treat labor, warehousing, and logistics as already inside the part prices.
+
+The slide calls \$32.25 a 20% profit margin. That is 20% of the cost and 17% of the price.
+
+## Who presented what
+
+The speaker notes name a presenter for each slide.
+
+| Presenter | Slides |
+| --- | --- |
+| Bella Gigoux | Opening, agenda, and cost model |
+| Dylan Halim | The question and the objective |
+| Sasha Humeniuk | Patient challenges and energy use |
+| Marcus Robles | Statistics |
+| Ameer Sulyans | The solution and the name |
+| Edward Silva | Primary features and the technology |
+| Rushil Gupta | Touchscreen flow |
+| Tia Kachalia | How to use natlock, and how it compares |
+| Kevin Shim | Competitors and product improvements |
+| Jeffrey Wei | Platform expansion and the close |
+
+The deck gives special thanks to Nicholle Pelletier, Peter Fischer, Nora Marcos, Randy Benn, Sujata Singhal, and Sweetie Browne.
+
+## The deck
+
+This view is a PDF export. The <a href={deckPptxUrl}>original PPTX</a> is 17 MB and has the speaker notes and the 3D models.
+
+<PdfViewer url={deckPdfUrl} label="The deck" />

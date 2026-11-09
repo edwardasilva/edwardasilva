@@ -1,0 +1,107 @@
+name: CI
+
+# Every change reaches main through a pull request, and this workflow checks each one.
+# The "Part of #" check is in pr-body.yml, so editing the body or a label does not restart it.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  # The same Vale release eeprep's CI pins. Update both together.
+  VALE_VERSION: '3.25.1'
+
+# A newer push to the same pull request cancels the older run.
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+# The ruleset for main in edwardasilva/information#23 requires Build and Lint by name, so keep
+# these job names.
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: ./.github/actions/information
+        with:
+          ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      # --ignore-scripts skips prepare, which writes git hook config.
+      - run: npm ci --ignore-scripts
+
+      - name: Build
+        env:
+          SKIP_RESUME_PDF_BUILD: '1'
+          SKIP_RESUME_GENERATE: '1'
+        run: npm run build
+
+      # Every link to this site in the built pages reaches a page and a heading that exist.
+      - name: Links in the build
+        run: npm run check:links
+
+  # A failed check does not stop the others, so one run lists every problem.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Type checking reads src/data/resume.ts, which imports resume-data.json.
+      - uses: ./.github/actions/information
+        with:
+          ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: npm ci
+        id: install
+        run: npm ci --ignore-scripts
+
+      - name: Lint (ESLint)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run lint
+
+      - name: Format (Prettier)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run format
+
+      # tsc reads the astro:content and import.meta.glob types from .astro/, which a fresh
+      # checkout does not have until astro sync generates them.
+      - name: Type check
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npx astro sync && npm run typecheck
+
+      # Every SVG plot under src/figures has a dark copy that matches its source.
+      - name: Dark figure copies
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run figures:check
+
+      # The project pages follow eeprep's plain-English style. .lint/vale/styles/Eeprep is a copy of
+      # eeprep's rules, refreshed with npm run prose:sync, and .lint/vale/ adds this site's proper nouns.
+      - name: Install Vale
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 3 -o /tmp/vale.tar.gz "https://github.com/vale-cli/vale/releases/download/v$VALE_VERSION/vale_${VALE_VERSION}_Linux_64-bit.tar.gz"
+          echo "4bf5c5176b682b1da0830f471584d3494f1c2e27ee3029e1ad6f6661d4962182  /tmp/vale.tar.gz" | sha256sum -c -
+          mkdir -p "$HOME/vale"
+          tar -xzf /tmp/vale.tar.gz -C "$HOME/vale" vale
+          echo "$HOME/vale" >> "$GITHUB_PATH"
+      - name: Prose (Vale)
+        if: ${{ !cancelled() }}
+        run: npm run prose

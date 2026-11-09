@@ -1,0 +1,10 @@
+extends: substitution
+message: "Use a straight quote instead of '%s'."
+level: error
+scope: raw
+nonword: true
+swap:
+  '“': '"'
+  '”': '"'
+  '‘': "'"
+  '’': "'"
