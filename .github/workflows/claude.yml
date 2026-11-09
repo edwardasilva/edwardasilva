@@ -1,0 +1,97 @@
+name: Claude
+
+# Claude Code works an issue and answers review feedback. Add the claude label to an issue, or
+# comment @claude on an issue, a pull request, or a review. Only the repo owner's comments start
+# it, so a stranger cannot run it on a public repo. Claude works on a claude/ branch and opens a
+# pull request. It never pushes to main, merges, tags, or releases. Workflows run from main, so
+# this file does nothing until it merges.
+on:
+  issues:
+    types: [labeled]
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: read
+
+# One run at a time per issue or pull request. A second @claude waits for the first to finish.
+concurrency:
+  group: claude-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  claude:
+    name: Claude
+    if: >-
+      (github.event_name == 'issues' && github.event.label.name == 'claude') ||
+      (github.event_name == 'issue_comment' &&
+        github.event.comment.user.login == github.repository_owner &&
+        contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' &&
+        github.event.comment.user.login == github.repository_owner &&
+        contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' &&
+        github.event.review.user.login == github.repository_owner &&
+        contains(github.event.review.body, '@claude'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # The same build switches CI uses. The resume PDF needs TeX, which the runner does not have.
+    env:
+      SKIP_RESUME_PDF_BUILD: '1'
+      SKIP_RESUME_GENERATE: '1'
+    # id-token lets the action trade the run's OIDC token for a Claude GitHub App token.
+    # actions: read lets Claude read CI results on its pull requests.
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+
+      # The site reads resume-data.json from the private information submodule, and the agent
+      # rules for this repo live in information/.agents. Check out only those, at the commit this
+      # repo points at. The deploy key is read-only and is not kept on the runner.
+      - name: Find the information commit this repo points at
+        id: pointer
+        run: echo "sha=$(git ls-tree HEAD information | awk '$2 == "commit" { print $3 }')" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: edwardasilva/information
+          ref: ${{ steps.pointer.outputs.sha }}
+          ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
+          path: information
+          filter: blob:none
+          sparse-checkout: |
+            resume-data.json
+            .agents/
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: anthropics/claude-code-action@9eb012b6d0900c2b9eede65ee1758cec4d2973e9 # v1.0.270
+        with:
+          # A Claude Max login made with `claude setup-token`, not an API key.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          label_trigger: claude
+          branch_prefix: claude/
+          # Only the owner's comments, Claude's own, and Bugbot's reach Claude as context.
+          include_comments_by_actor: ${{ github.repository_owner }},claude[bot],cursor[bot]
+          additional_permissions: |
+            actions: read
+          claude_args: |
+            --allowedTools "Bash(npm ci --ignore-scripts),Bash(npm run:*),Bash(npx astro sync),Bash(gh pr create:*),Bash(gh pr view:*),Bash(gh pr edit:*),Bash(gh pr diff:*),Bash(gh pr checks:*),Bash(gh issue view:*)"
+            --disallowedTools "Bash(gh pr merge:*),Bash(gh release:*),Bash(git tag:*),Bash(git push origin main:*),Bash(git push -f:*),Bash(git push --force:*),Bash(git rebase:*)"
+            --append-system-prompt 'You are the Claude Code GitHub Action, working in edwardasilva, the public repo for edwardasilva.com. Read information/.agents/AGENTS.md and information/.agents/STYLE.md before you change anything, and follow them. Work only on your own claude/ branch, or on the branch of the pull request you were called on. Never push to main, never force-push, never rebase, never merge a pull request, never create or push a tag, and never create a release. A merge is always a squash merge, and the repo owner does it. A release is cut only when the owner asks. When you start from an issue, finish by opening a pull request into main with gh pr create. Fill in .github/pull_request_template.md if the repo has one. The body must name the issue on a line of its own as Part of edwardasilva/information#N, and must also have the line Closes edwardasilva/information#N. When you are called on a pull request, push the fix to that pull request branch, and answer every question in your comment. Keep each pull request to one change. Run the checks the rules name before you push. Do not use emojis anywhere. Keep examples neutral, such as Alex Doe with they and them. Issues are off in this repo, so its issues live in edwardasilva/information. You can read information/ here but cannot change it. If the change needs information/, say so in your comment. Run npm ci --ignore-scripts, then npm run lint and npm run build, before you push.'
