@@ -5,9 +5,9 @@
  *
  * Author: Edward Silva
  * Creation Date: 08 November, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 10 November, 2026
  *
- * The role, dates, employment type, place, and tools under a role page title, in the same block
+ * The role, dates, employment type, place, and skills under a role page title, in the same block
  * the project pages use.
  *
  * File Structure:
@@ -64,7 +64,7 @@ if (!experience) {
     )}
     {experience.skills.length > 0 && (
         <div>
-            <dt>Tools</dt>
+            <dt>Skills</dt>
             <dd>
                 <SkillLinks skills={experience.skills} />
             </dd>

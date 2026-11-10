@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
  * The long version of how I got here. Held back by site.aboutPublished in resume-data.json until
  * the narrative is written. Anything still marked [INSERT ...] is stripped first.
@@ -27,7 +27,8 @@
  */
 
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import { asSentence, hasAboutContent, resume } from '../../data/resume';
+import LinkedSentence from '../../components/LinkedSentence.astro';
+import { hasAboutContent, resume } from '../../data/resume';
 
 /**
  * @brief Returns the route for the about page
@@ -80,14 +81,18 @@ function headingId(text: string): string {
     headings={headings}
 >
     {about.intro.map((paragraph) => (
-        <p>{asSentence(paragraph)}</p>
+        <p>
+            <LinkedSentence text={paragraph} />
+        </p>
     ))}
 
     {narrativeSections.map((section) => (
         <>
             <h2 id={section.id}>{section.title}</h2>
             {section.paragraphs.map((paragraph) => (
-                <p>{asSentence(paragraph)}</p>
+                <p>
+                    <LinkedSentence text={paragraph} />
+                </p>
             ))}
         </>
     ))}
@@ -95,7 +100,11 @@ function headingId(text: string): string {
     {hasEarlyWork && (
         <>
             <h2 id={headingId(C_BEFORE_ENGINEERING)}>{C_BEFORE_ENGINEERING}</h2>
-            {earlyWorkSummary && <p>{asSentence(earlyWorkSummary)}</p>}
+            {earlyWorkSummary && (
+                <p>
+                    <LinkedSentence text={earlyWorkSummary} />
+                </p>
+            )}
             {roles.length > 0 && (
                 <ul>
                     {roles.map((role) => (
@@ -103,7 +112,12 @@ function headingId(text: string): string {
                             {role.title}, {role.employer}
                             {role.location && `, ${role.location}`}
                             {role.duration && `. ${role.duration}`}
-                            {role.Summary && `. ${asSentence(role.Summary)}`}
+                            {role.Summary && (
+                                <>
+                                    {'. '}
+                                    <LinkedSentence text={role.Summary} />
+                                </>
+                            )}
                         </li>
                     ))}
                 </ul>

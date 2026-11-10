@@ -8,8 +8,11 @@
  *
  * Copies eeprep's Vale style, .github/vale/styles/Eeprep in the eeprep repo, into
  * .lint/vale/styles/Eeprep here, so the project pages are checked against the same plain-English
- * rules as eeprep.com. The eeprep repo is private, so CI cannot fetch the rules at run time and
- * the copy is committed instead. The rules are config files that Edward owns.
+ * rules as eeprep.com. The rules were written in Edward Silva's eeprep repo, by him and by
+ * automation he runs there. eeprep publishes them under the MIT License; this copy is kept here
+ * under this repo's all rights reserved terms, and it is committed so CI does not need a second
+ * checkout. If anyone else ever contributes to eeprep's rules, add eeprep's MIT notice beside this
+ * copy.
  * Run this after a rule changes in eeprep, from a machine that has both repos checked out side by
  * side, or point EEPREP_DIR at the eeprep checkout.
  *
