@@ -133,3 +133,8 @@ jobs:
       - name: Links in the build
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: npm run check:links
+
+      # Date ranges in the built pages use an unspaced en dash, not a spaced hyphen.
+      - name: Date ranges in the build
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: npm run check:dates
