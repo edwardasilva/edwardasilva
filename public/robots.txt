@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://edwardasilva.com/sitemap-index.xml
+
+# Page index for language models: https://edwardasilva.com/llms.txt

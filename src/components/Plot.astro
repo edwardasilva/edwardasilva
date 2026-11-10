@@ -1,0 +1,122 @@
+---
+/**
+ * src/components/Plot.astro
+ * Plot
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * One SVG plot: grid, axis labels, and named paths. The figure that owns it fills in the paths and
+ * redraws them in the browser.
+ *
+ * File Structure:
+ * - Props: configuration, ticks, labels, and paths
+ * - Clipped path group, with the hover line
+ * - Readout element
+ *
+ * Where this file is used within the repository:
+ * - The live figures
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import { xAt, yAt, type PlotConfig } from '../lib/plot';
+
+interface Path {
+    key: string;
+    class: string;
+    d?: string;
+}
+
+interface Props {
+    id: string;
+    plot: PlotConfig;
+    xTicks: number[];
+    yTicks: number[];
+    xLabel: string;
+    yLabel: string;
+    label: string;
+    paths: Path[];
+    formatY?: (value: number) => string;
+}
+
+const { id, plot, xTicks, yTicks, xLabel, yLabel, label, paths, formatY = String } = Astro.props;
+const { width, height, left, right, top, bottom } = plot;
+const middleY = top + (height - top - bottom) / 2;
+---
+
+<div class="es-live-plot" data-plot={id}>
+    <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label}>
+        <defs>
+            <clipPath id={`${id}-clip`}>
+                <rect
+                    x={left}
+                    y={top}
+                    width={width - left - right}
+                    height={height - top - bottom}
+                ></rect>
+            </clipPath>
+        </defs>
+        {yTicks.map((tick) => (
+            <g>
+                <line
+                    class="es-grid"
+                    x1={left}
+                    x2={width - right}
+                    y1={yAt(tick, plot)}
+                    y2={yAt(tick, plot)}
+                />
+                <text
+                    class="es-tick"
+                    x={left - 8}
+                    y={yAt(tick, plot)}
+                    text-anchor="end"
+                    dominant-baseline="middle"
+                >
+                    {formatY(tick)}
+                </text>
+            </g>
+        ))}
+        {xTicks.map((tick) => (
+            <text class="es-tick" x={xAt(tick, plot)} y={height - bottom + 20} text-anchor="middle">
+                {tick}
+            </text>
+        ))}
+        <text
+            class="es-tick"
+            x={left + (width - left - right) / 2}
+            y={height - 6}
+            text-anchor="middle"
+        >
+            {xLabel}
+        </text>
+        <text
+            class="es-tick"
+            x="14"
+            y={middleY}
+            text-anchor="middle"
+            transform={`rotate(-90 14 ${middleY})`}
+        >
+            {yLabel}
+        </text>
+        <g clip-path={`url(#${id}-clip)`}>
+            {paths.map((path) => (
+                <path class={path.class} d={path.d ?? ''} data-path={path.key} />
+            ))}
+            <line
+                class="es-cross"
+                y1={top}
+                y2={height - bottom}
+                x1="0"
+                x2="0"
+                data-cross
+                hidden
+            ></line>
+        </g>
+    </svg>
+    <div class="es-live-tip" data-tip hidden></div>
+</div>

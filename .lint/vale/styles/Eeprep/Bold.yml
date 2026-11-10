@@ -1,0 +1,7 @@
+extends: existence
+message: 'No bold for emphasis.'
+level: error
+scope: raw
+nonword: true
+tokens:
+  - '\*\*[^*\n]+\*\*'

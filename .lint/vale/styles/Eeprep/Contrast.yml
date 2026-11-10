@@ -1,0 +1,8 @@
+# Dramatic contrast lines. "not just", "not only" and "rather than" are in CutWords.
+extends: existence
+message: "Drop the dramatic contrast '%s'. Say the point directly."
+level: error
+ignorecase: true
+tokens:
+  - "\\bit's not\\b[^.!?]*\\bit's\\b"
+  - '\bno [^,.!?]+, no [^,.!?]+, just\b'

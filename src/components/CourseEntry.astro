@@ -1,0 +1,71 @@
+---
+/**
+ * src/components/CourseEntry.astro
+ * Course Entry
+ *
+ * Author: Edward Silva
+ * Creation Date: 06 November, 2026
+ * Last Update: 08 November, 2026
+ *
+ * One row of the coursework ledger. The closed row shows the code and name. Opened, it shows the
+ * description, then the skills and any project from the course as a label and value grid.
+ *
+ * File Structure:
+ * - Props: course
+ * - Details element: summary row, then the description and facts grid
+ *
+ * Where this file is used within the repository:
+ * - src/pages/education/coursework.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import SkillLinks from './SkillLinks.astro';
+import { getDisplayTitle } from '../data/projects';
+import { asSentence, getCourseSlug, getProjectHref, getProjectsForCourse } from '../data/resume';
+import type { Course } from '../data/types';
+
+interface Props {
+    course: Course;
+}
+
+const { course } = Astro.props;
+const projects = getProjectsForCourse(course);
+---
+
+<details id={getCourseSlug(course)} class="es-course">
+    <summary>
+        <code>{course.code}</code>
+        <span class="es-course-name">{course.name}</span>
+    </summary>
+    <div class="es-course-body">
+        <p>{course.Summary ? asSentence(course.Summary) : course.description}</p>
+        {(course.skills.length > 0 || projects.length > 0) && (
+            <dl class="es-facts">
+                {course.skills.length > 0 && (
+                    <div>
+                        <dt>Skills</dt>
+                        <dd>
+                            <SkillLinks skills={course.skills} />
+                        </dd>
+                    </div>
+                )}
+                {projects.length > 0 && (
+                    <div>
+                        <dt>{projects.length === 1 ? 'Project' : 'Projects'}</dt>
+                        <dd class="es-facts-links">
+                            {projects.map((project) => (
+                                <a href={getProjectHref(project)}>
+                                    {getDisplayTitle(getProjectHref(project), project.title)}
+                                </a>
+                            ))}
+                        </dd>
+                    </div>
+                )}
+            </dl>
+        )}
+    </div>
+</details>

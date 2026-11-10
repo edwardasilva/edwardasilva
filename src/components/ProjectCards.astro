@@ -1,0 +1,102 @@
+---
+/**
+ * src/components/ProjectCards.astro
+ * Project Cards
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 09 November, 2026
+ *
+ * A row of project cards. A card shows a figure from the work when resume-data.json names one. An
+ * SVG plot switches to its dark copy in dark mode. A photo fills the frame. A paper drawing blends
+ * into the card.
+ *
+ * File Structure:
+ * - Props: project pages
+ * - Card with figure, title, and one line
+ *
+ * Where this file is used within the repository:
+ * - src/pages/index.astro and src/pages/projects.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import { Picture } from 'astro:assets';
+import { getDarkFigure, getFigure } from '../data/figures';
+import type { ProjectPage } from '../data/projects';
+import { asSentence } from '../data/resume';
+
+interface Props {
+    pages: ProjectPage[];
+    class?: string;
+}
+
+const C_DRAWINGS = new Set(['pump/sketch']);
+
+const { pages, class: className } = Astro.props;
+---
+
+<ul class:list={['es-cards', 'not-content', className]}>
+    {pages.map(({ entry, project, href }) => {
+        const figure = project.figure ? getFigure(project.figure) : undefined;
+        const dark = project.figure ? getDarkFigure(project.figure) : undefined;
+
+        return (
+            <li>
+                <a href={href}>
+                    {figure && (
+                        <span
+                            class:list={[
+                                'es-card-figure',
+                                {
+                                    'es-card-photo': !dark && !C_DRAWINGS.has(project.figure ?? ''),
+                                    'es-card-drawing':
+                                        !dark && C_DRAWINGS.has(project.figure ?? ''),
+                                },
+                            ]}
+                            data-figure={project.figure}
+                        >
+                            {figure.format === 'svg' ? (
+                                <img
+                                    class:list={{ 'dark:sl-hidden': dark }}
+                                    src={figure.src}
+                                    width={figure.width}
+                                    height={figure.height}
+                                    alt={project.figureAlt ?? ''}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            ) : (
+                                <Picture
+                                    src={figure}
+                                    formats={['avif', 'webp']}
+                                    widths={[320, 640]}
+                                    sizes="320px"
+                                    alt={project.figureAlt ?? ''}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            )}
+                            {dark && (
+                                <img
+                                    class="light:sl-hidden"
+                                    src={dark.src}
+                                    width={dark.width}
+                                    height={dark.height}
+                                    alt={project.figureAlt ?? ''}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            )}
+                        </span>
+                    )}
+                    <strong>{entry.data.title}</strong>
+                    <span class="es-card-dek">{project.dek && asSentence(project.dek)}</span>
+                </a>
+            </li>
+        );
+    })}
+</ul>

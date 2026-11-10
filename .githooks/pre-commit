@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -e
+
+echo "[pre-commit] Building resume PDF locally..."
+npm run --silent build:resume
+git add public/resume/Edward_Silva_Resume.pdf
+
+node scripts/scrub-private.js staged
+echo "[pre-commit] Resume built and staged. Proceeding with commit."
