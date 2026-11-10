@@ -186,12 +186,13 @@ function darkColor(value) {
  * @param svg The light file's text
  * @return The dark copy's text
  * @details Covers fill, stroke, and stop-color as attributes and inside style attributes. The
- * MATLAB and matplotlib exports here use attributes only, so the style branch is a safeguard.
+ * attributes may use double quotes (MATLAB, matplotlib) or single quotes (dvisvgm). The exports
+ * here use attributes only, so the style branch is a safeguard.
  */
 export function themeSvg(svg) {
     return svg
-        .replace(/\b(fill|stroke|stop-color)="([^"]*)"/g, (_, name, value) => {
-            return `${name}="${darkColor(value)}"`;
+        .replace(/\b(fill|stroke|stop-color)=(["'])([^"']*)\2/g, (_, name, quote, value) => {
+            return `${name}=${quote}${darkColor(value)}${quote}`;
         })
         .replace(/\b(fill|stroke|stop-color)\s*:\s*([^;"']+)/g, (_, name, value) => {
             return `${name}:${darkColor(value)}`;
