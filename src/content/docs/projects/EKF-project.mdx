@@ -24,7 +24,7 @@ import EstimationFigure from '../../../components/EstimationFigure.astro';
 import Figure from '../../../components/Figure.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-The unscented filter pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sampling spread, it cut the force error from 625 N to 401 N. It also kept every sample inside its bounds. At the report's parameters the two filters agree to within 0.4 N.
+The unscented filter pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sampling spread, it cut the force error from 624 N to 401 N. It also kept every sample inside its bounds. At the report's parameters the two filters agree to within 0.4 N.
 
 A Kalman filter estimates values a sensor cannot read by combining a model with noisy measurements. This was my final project for EENG 519. It ran in MATLAB and Simulink, and nothing here ran on the bike.
 
@@ -153,7 +153,7 @@ Raising $K_m$ makes that term matter. Over eight noise seeds at $K_m = 500$, whe
 
 | Filter at $K_m = 500$ | RMS error | Samples inside $\pm 3\sigma$ |
 | --- | --- | --- |
-| EKF | 625 N | 58% |
+| EKF | 624 N | 58% |
 | UKF, $\alpha = 0.001$ | 675 N | 74% |
 | UKF, $\alpha = 1$ | 401 N | 100% |
 
