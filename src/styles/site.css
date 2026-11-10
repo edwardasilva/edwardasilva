@@ -543,6 +543,10 @@ a.external-link .es-ext-last::after {
     font-size: 0.9375rem;
     line-height: 1.5;
 }
+.es-skills ul a {
+    display: inline-block;
+    min-height: 1.5rem;
+}
 .es-skills > li {
     scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
 }
