@@ -2,8 +2,8 @@
 # Prettier Ignore Rules
 #
 # Author: Edward Silva
-# Creation Date: [INSERT CREATION DATE HERE]
-# Last Update: 08 November, 2026
+# Creation Date: 09 November, 2026
+# Last Update: 10 November, 2026
 #
 # Lists the paths Prettier skips. MDX is skipped because Prettier breaks its multi-line comments.
 # The Vale rules under .lint/vale/styles/Eeprep/ are an exact copy of eeprep's, so they are not
