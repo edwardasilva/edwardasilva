@@ -1,0 +1,14 @@
+# public/_headers
+# Cloudflare Pages response headers
+#
+# Author: Edward Silva
+# Creation Date: 10 November, 2026
+# Last Update: 10 November, 2026
+#
+# Astro fingerprints every file in /_astro/, so a changed file gets a new
+# name and the old URL can be cached for a year.
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
