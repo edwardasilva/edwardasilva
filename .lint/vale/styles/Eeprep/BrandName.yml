@@ -1,0 +1,15 @@
+# The site name is eeprep, in lowercase. Quoted sources may keep another form, so wrap them in an inline code span or add a Vale off comment.
+extends: substitution
+message: "Use '%s' instead of '%s'."
+level: error
+ignorecase: false
+swap:
+  'EE Prep': eeprep
+  'EE prep': eeprep
+  'Ee Prep': eeprep
+  'EEPrep': eeprep
+  'EEprep': eeprep
+  'Eeprep': eeprep
+  'EEPREP': eeprep
+  'EE-Prep': eeprep
+  'ee prep': eeprep
