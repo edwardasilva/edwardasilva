@@ -124,7 +124,7 @@ export function getHomeProjectPages(group: HomeGroup): ProjectPage[] {
 }
 
 const C_PAGE_TITLES = new Map(
-    C_DOCS.map((entry) => [`/projects/${getPageSlug(entry.id)}`, entry.data.title])
+    C_DOCS.map((entry) => [`/projects/${getPageSlug(entry.id)}/`, entry.data.title])
 );
 
 /**

@@ -100,7 +100,7 @@ export const GET: APIRoute = async ({ site }) => {
         ...visibleExperiences.map((experience) =>
             linkLine(
                 `${experience.title}, ${experience.company}`,
-                `${getExperienceHref(experience)}/`,
+                getExperienceHref(experience),
                 origin,
                 experience.duration
             )

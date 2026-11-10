@@ -537,13 +537,13 @@ font-family="MS Shell Dlg 2" font-size="7.8" font-weight="400" font-style="norma
 <polyline fill="none" vector-effect="none" points="311,1038 311.037,1038 311.224,1038 312.155,1038 316.812,1038 340.097,1037.53 377.177,1032.51 414.257,1017.74 451.337,989.171 488.417,944.26 525.497,882.096 562.577,803.432 599.657,710.662 636.737,607.705 673.817,499.687 681.429,477.408 718.509,372.179 755.589,280.903 792.669,212.976 829.749,174.389 866.829,168.024 903.909,194.316 940.989,251.394 978.069,334.551 1015.15,435.684 1052.23,543.66 1089.31,646.037 1126.39,731.454 1163.47,791.456 1200.55,821.009 1237.63,817.986 1274.71,782.594 1311.79,717.438 1348.87,628.164 1385.95,523.84 1423.03,416.197 1460.11,317.611 1497.19,238.749 1534.27,187.078 1571.35,166.729 1608.43,179.122 1645.51,223.408 1682.59,296.183 1719.67,390.828 1756.75,497.372 1793.83,603.655 1830.91,697.567 1867.99,769.265 1905.07,812.272 1942.15,823.304 1979.23,801.608 2016.31,748.702 2053.39,668.846 2090.47,569.653 2127.55,461.898 2164.63,357.98 2165,357.001 2165,357.001 2165,357.001 2165,357.001 " />
 </g>
 
-<g fill="none" stroke="#8a8aff" stroke-opacity="1" stroke-dasharray="8,8" stroke-dashoffset="0" stroke-width="2.66667" stroke-linecap="butt" stroke-linejoin="round" transform="matrix(0.610824,0,0,0.613461,-112.011,-17.9006)"
+<g fill="none" stroke="#eceef2" stroke-opacity="1" stroke-dasharray="8,8" stroke-dashoffset="0" stroke-width="2.66667" stroke-linecap="butt" stroke-linejoin="round" transform="matrix(0.610824,0,0,0.613461,-112.011,-17.9006)"
 font-family="MS Shell Dlg 2" font-size="7.8" font-weight="400" font-style="normal" 
 >
 <polyline fill="none" vector-effect="none" points="311,1038 311.037,1038 311.224,1038 312.155,1038 316.812,1038 340.097,1037.55 377.177,1032.72 414.257,1018.38 451.337,990.297 488.417,945.598 525.497,883.117 562.577,803.568 599.657,709.537 636.737,605.242 673.817,496.086 710.897,388.703 742.693,305.738 779.773,228.703 816.853,180.6 853.933,166.536 891.013,188.003 928.093,242.723 965.173,324.888 1002.25,425.778 1039.33,534.685 1076.41,640.051 1113.49,730.692 1150.57,796.99 1187.65,831.907 1224.73,831.737 1261.81,796.5 1298.89,729.934 1335.97,639.105 1373.05,533.652 1410.13,424.767 1447.21,324.007 1484.29,242.066 1521.37,187.639 1558.45,166.504 1595.53,180.903 1632.61,229.309 1669.69,306.583 1706.77,404.525 1743.85,512.74 1780.93,619.743 1818.01,714.176 1855.09,786.019 1892.17,827.645 1929.25,834.638 1966.33,806.254 2003.41,745.507 2040.49,658.843 2077.57,555.461 2114.65,446.333 2151.73,343.04 2165,309.638 " />
 </g>
 
-<g fill="none" stroke="#ff6161" stroke-opacity="1" stroke-dasharray="8,2,4,2" stroke-dashoffset="0" stroke-width="2.66667" stroke-linecap="butt" stroke-linejoin="round" transform="matrix(0.610824,0,0,0.613461,-112.011,-17.9006)"
+<g fill="none" stroke="#7fb3d9" stroke-opacity="1" stroke-dasharray="8,2,4,2" stroke-dashoffset="0" stroke-width="2.66667" stroke-linecap="butt" stroke-linejoin="round" transform="matrix(0.610824,0,0,0.613461,-112.011,-17.9006)"
 font-family="MS Shell Dlg 2" font-size="7.8" font-weight="400" font-style="normal" 
 >
 <polyline fill="none" vector-effect="none" points="311,1038 311,1038 311.037,1038 311.224,1038 312.155,1038 316.812,1038 340.097,1037.52 377.177,1032.45 414.257,1017.55 451.337,988.733 488.417,943.467 525.497,880.867 562.577,801.736 599.657,708.537 636.737,605.275 673.817,497.167 710.897,390.942 742.644,309.684 779.724,235.011 816.804,188.624 853.884,174.146 890.964,192.578 928.044,242.635 965.124,320.326 1002.2,418.291 1039.28,525.877 1076.36,630.594 1113.44,720.519 1150.52,786.397 1187.6,822.451 1224.68,826.004 1261.76,796.813 1298.84,736.987 1335.92,651.574 1373,549.101 1410.08,441.059 1447.16,340.028 1484.24,257.227 1521.32,200.777 1558.4,175.345 1595.48,182.743 1632.56,222.465 1669.64,291.511 1706.72,383.702 1743.8,489.401 1780.88,596.492 1817.96,692.586 1855.04,767.364 1892.12,813.879 1929.2,828.495 1966.28,810.199 2003.36,760.27 2040.44,682.682 2077.52,584.782 2114.6,477.212 2151.68,372.458 2165,337.881 " />
@@ -561,13 +561,13 @@ font-family="MS Shell Dlg 2" font-size="7.8" font-weight="400" font-style="norma
 <polyline fill="none" vector-effect="none" points="1910.01,950.637 1960.06,950.637 " />
 </g>
 
-<g fill="#8a8aff" fill-opacity="1" stroke="#8a8aff" stroke-opacity="1" stroke-dasharray="8,8" stroke-dashoffset="0" stroke-width="2.66667" stroke-linecap="butt" stroke-linejoin="round" transform="matrix(0.610824,0,0,0.613461,-112.011,-17.9006)"
+<g fill="#eceef2" fill-opacity="1" stroke="#eceef2" stroke-opacity="1" stroke-dasharray="8,8" stroke-dashoffset="0" stroke-width="2.66667" stroke-linecap="butt" stroke-linejoin="round" transform="matrix(0.610824,0,0,0.613461,-112.011,-17.9006)"
 font-family="MS Shell Dlg 2" font-size="7.8" font-weight="400" font-style="normal" 
 >
 <polyline fill="none" vector-effect="none" points="1910.01,979.5 1960.06,979.5 " />
 </g>
 
-<g fill="#ff6161" fill-opacity="1" stroke="#ff6161" stroke-opacity="1" stroke-dasharray="8,2,4,2" stroke-dashoffset="0" stroke-width="2.66667" stroke-linecap="butt" stroke-linejoin="round" transform="matrix(0.610824,0,0,0.613461,-112.011,-17.9006)"
+<g fill="#7fb3d9" fill-opacity="1" stroke="#7fb3d9" stroke-opacity="1" stroke-dasharray="8,2,4,2" stroke-dashoffset="0" stroke-width="2.66667" stroke-linecap="butt" stroke-linejoin="round" transform="matrix(0.610824,0,0,0.613461,-112.011,-17.9006)"
 font-family="MS Shell Dlg 2" font-size="7.8" font-weight="400" font-style="normal" 
 >
 <polyline fill="none" vector-effect="none" points="1910.01,1008.36 1960.06,1008.36 " />

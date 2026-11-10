@@ -468,7 +468,7 @@ export function getExperienceSlug(experience: Experience): string {
  * @return Route path for the project
  */
 export function getProjectHref(project: Project): string {
-    return `/projects/${getProjectSlug(project)}`;
+    return `/projects/${getProjectSlug(project)}/`;
 }
 
 /**
@@ -477,7 +477,7 @@ export function getProjectHref(project: Project): string {
  * @return Route path for the experience
  */
 export function getExperienceHref(experience: Experience): string {
-    return `/experiences/${getExperienceSlug(experience)}`;
+    return `/experiences/${getExperienceSlug(experience)}/`;
 }
 
 /**

@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Header, cards, external link marks, page lists, the project facts block, figures, the live
  * figures, and the sidebar. Adapted from eeprep.com.
@@ -543,6 +543,10 @@ a.external-link .es-ext-last::after {
     font-size: 0.9375rem;
     line-height: 1.5;
 }
+.es-skills ul a {
+    display: inline-block;
+    min-height: 1.5rem;
+}
 .es-skills > li {
     scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
 }
@@ -703,7 +707,7 @@ a.external-link .es-ext-last::after {
     object-fit: contain;
     object-position: top;
     border: var(--es-border);
-    background: #fff;
+    background: var(--es-plate);
 }
 @media (hover: hover) {
     .es-proof-pdf:hover {
@@ -723,16 +727,35 @@ a.external-link .es-ext-last::after {
     border: var(--es-border);
     border-radius: var(--es-radius);
 }
+.es-proof-media {
+    container: es-proof-media / inline-size;
+}
 .es-proof-media figcaption {
-    margin-top: var(--es-space-2);
-    color: var(--es-ink-2);
+    display: flex;
+    gap: var(--es-space-3);
+    margin-top: 1.125rem;
+    padding-top: 0.875rem;
+    border-top: var(--es-border);
     font-size: var(--es-text-caption);
+    line-height: 1.55;
+    color: var(--es-ink-2);
+}
+.es-proof-media figcaption .es-fignum {
+    font: 600 var(--es-text-eyebrow)/1.9 var(--es-font-serif);
+    color: var(--es-mute);
+    white-space: nowrap;
+}
+@container es-proof-media (max-width: 25rem) {
+    .es-proof-media figcaption {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
 }
 
 figure.es-fig-plate > img {
     padding: 0.75rem;
     border-radius: var(--es-radius);
-    background: #fff;
+    background: var(--es-plate);
 }
 figure.es-fig > img {
     display: block;
@@ -778,7 +801,7 @@ figure.es-fig-narrow > img {
     height: auto;
     border: var(--es-border);
     border-radius: var(--es-radius);
-    background: #fff;
+    background: var(--es-plate);
 }
 
 /* The live figures. */
@@ -1043,7 +1066,7 @@ details[open] > summary .es-side-caret {
     height: auto;
     margin-top: var(--es-space-3);
     border: var(--es-border);
-    background: #fff;
+    background: var(--es-plate);
 }
 figure.es-fig-wide > img {
     max-width: none;
@@ -1057,7 +1080,7 @@ figure.es-fig-wide > img {
     height: 0.75rem;
     border-top: 0;
     background: var(--es-ink);
-    opacity: 0.12;
+    opacity: 0.08;
 }
 .es-live-title {
     margin: var(--es-space-4) 0 var(--es-space-1);

@@ -241,11 +241,16 @@ export default defineConfig({
             head: [
                 {
                     tag: 'link',
+                    attrs: { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+                },
+                {
+                    tag: 'link',
                     attrs: {
                         rel: 'icon',
                         type: 'image/png',
                         sizes: '32x32',
                         href: '/favicon-32.png',
+                        media: '(prefers-color-scheme: light)',
                     },
                 },
                 {
@@ -255,6 +260,27 @@ export default defineConfig({
                         type: 'image/png',
                         sizes: '16x16',
                         href: '/favicon-16.png',
+                        media: '(prefers-color-scheme: light)',
+                    },
+                },
+                {
+                    tag: 'link',
+                    attrs: {
+                        rel: 'icon',
+                        type: 'image/png',
+                        sizes: '32x32',
+                        href: '/favicon-dark-32.png',
+                        media: '(prefers-color-scheme: dark)',
+                    },
+                },
+                {
+                    tag: 'link',
+                    attrs: {
+                        rel: 'icon',
+                        type: 'image/png',
+                        sizes: '16x16',
+                        href: '/favicon-dark-16.png',
+                        media: '(prefers-color-scheme: dark)',
                     },
                 },
                 {
