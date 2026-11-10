@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Live figure: drag a transport delay into the position measurement of the reference-scaling crane
  * controller and watch it lose stability. The build fails if the simulation drifts more than 5 percent
@@ -198,6 +198,33 @@ function settlingText(settling: number | null): string {
 
     const C_SECONDS = 30;
 
+    /**
+     * @brief Runs a setup once, when the figure first nears the viewport
+     * @param root Figure element to watch
+     * @param run Setup to run
+     * @return Nothing
+     * @details The prerendered figure already shows the starting state, so the first run can wait.
+     */
+    const whenVisible = (root: HTMLElement, run: () => void) => {
+        if (!('IntersectionObserver' in window)) {
+            run();
+
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    observer.disconnect();
+                    run();
+                }
+            },
+            { rootMargin: '100px' }
+        );
+
+        observer.observe(root);
+    };
+
     for (const root of document.querySelectorAll<HTMLElement>('[data-gantry-delay]')) {
         const plot = JSON.parse(root.dataset.plotConfig ?? '{}') as PlotConfig;
         const slider = root.querySelector<HTMLInputElement>('[data-slider]')!;
@@ -259,6 +286,6 @@ function settlingText(settling: number | null): string {
                 `${time.toFixed(1)} s: ${positionAt(livePositions, time)} m with the delay, ${positionAt(basePositions, time)} m without`
         );
 
-        update();
+        whenVisible(root, update);
     }
 </script>
