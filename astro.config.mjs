@@ -47,7 +47,7 @@ const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
  * @typedef {object} SiteData The parts of resume-data.json this file reads
  * @property {{ name: string, website: string }} personal
  * @property {{ description: string, aboutPublished?: boolean }} site
- * @property {{ intro?: string[], chapters?: object[], Visibility?: string }} [about]
+ * @property {{ intro?: string[], chapters?: object[], future?: object[], earlyWork?: { roles?: object[], Summary?: string }, Visibility?: string }} [about]
  * @property {SiteEntry[]} experiences
  * @property {SiteProject[]} projects
  */
