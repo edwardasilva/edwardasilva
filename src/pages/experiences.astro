@@ -11,7 +11,7 @@
  * Edward belongs to.
  *
  * File Structure:
- * - Roles: company, title, and dates, linking to the role page
+ * - Roles: title, company, and dates, linking to the role page
  * - Organizations
  *
  * Where this file is used within the repository:
@@ -44,7 +44,7 @@ import {
     <ul class="es-roles">
         {visibleExperiences.map((experience) => (
             <li>
-                <a href={getExperienceHref(experience)}>{experience.company}</a>, {experience.title}
+                <a href={getExperienceHref(experience)}>{experience.title}</a>, {experience.company}
                 . <span class="es-role-meta">{experience.duration}.</span>
             </li>
         ))}
