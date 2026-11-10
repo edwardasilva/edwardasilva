@@ -118,11 +118,20 @@ function projectLinks(group) {
         .map((project) => ({ label: navLabel(project), slug: `projects/${project.slug}` }));
 }
 
-/** The about page is held back until the switch is on and the story has at least one paragraph. */
+/**
+ * The about page is held back until the switch is on and the page has content: an intro, chapters,
+ * a future list, early work roles, or an early work summary. hasAboutContent in src/data/resume.ts
+ * is the twin of this rule, so change both together. This copy reads the raw JSON, so it does not
+ * drop placeholder text, blank strings, or roles and chapters missing a title the way the twin does.
+ */
 const C_HAS_ABOUT = Boolean(
     C_RESUME.site?.aboutPublished &&
     isVisibleOnSite(C_RESUME.about ?? {}) &&
-    (C_RESUME.about?.intro?.length || C_RESUME.about?.chapters?.length)
+    (C_RESUME.about?.intro?.length ||
+        C_RESUME.about?.chapters?.length ||
+        C_RESUME.about?.future?.length ||
+        C_RESUME.about?.earlyWork?.roles?.length ||
+        C_RESUME.about?.earlyWork?.Summary)
 );
 
 const C_ROLE_LINKS = C_RESUME.experiences.filter(isVisibleOnSite).map((experience) => ({
