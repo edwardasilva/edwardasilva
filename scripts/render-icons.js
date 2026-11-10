@@ -40,7 +40,7 @@ const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const C_PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const C_TILE_COLOR = '#fbfbfc';
 const C_TILE_SIZE = 180;
-const C_MARGIN = 27;
+const C_MARGIN = 18;
 const C_MARK_SIZE = 32;
 
 /**
@@ -102,7 +102,8 @@ function buildIco(images) {
  * @brief Builds the Apple touch icon SVG from the favicon markup
  * @param svg The favicon SVG markup
  * @return {string} A 180 by 180 SVG with the mark centered on an opaque tile
- * @details The 32 unit mark scales to 126 px, which leaves a 27 px margin on every side.
+ * @details The 32 unit mark scales to 144 px, which leaves an 18 px margin on every side. The mark's own 2 unit margin adds
+ * 9 px, so the visible padding is 27 px, 15% of the tile.
  */
 function touchIconSvg(svg) {
     const inner = svg.replace(/<!--[\s\S]*?-->/g, '').match(/<svg[^>]*>([\s\S]*)<\/svg>/)[1];
@@ -143,7 +144,9 @@ function main() {
         renderPng(touchIconSvg(favicon), C_TILE_SIZE)
     );
 
-    console.log('[SUCCESS] Wrote the light and dark favicon PNGs, favicon.ico, and the Apple touch icon');
+    console.log(
+        '[SUCCESS] Wrote the light and dark favicon PNGs, favicon.ico, and the Apple touch icon'
+    );
 }
 
 main();

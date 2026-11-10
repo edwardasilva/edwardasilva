@@ -24,6 +24,6 @@
     </style>
   </defs>
 
-  <rect class="screen" x="3" y="5" width="26" height="22" rx="3"/>
-  <path class="waveform" d="M7 17 Q11.5 9 16 17 T25 17"/>
+  <rect class="screen" x="3" y="3" width="26" height="26" rx="3"/>
+  <path class="waveform" d="M7 16 Q11.5 6 16 16 T25 16"/>
 </svg>
