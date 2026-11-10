@@ -12,7 +12,7 @@
  *
  * File Structure:
  * - Roles: title, company, and dates, linking to the role page
- * - Other experience: organization, role, and dates, with no role page
+ * - Other experience: title, company, and dates, with no role page
  * - Organizations
  *
  * Where this file is used within the repository:
@@ -58,7 +58,7 @@ import {
             <ul class="es-roles">
                 {otherExperiences.map((experience) => (
                     <li>
-                        {experience.company}, {experience.title}.{' '}
+                        {experience.title}, {experience.company}.{' '}
                         <span class="es-role-meta">{experience.duration}.</span>
                     </li>
                 ))}
