@@ -56,6 +56,7 @@
     "pdf-to-img": "7.0.2",
     "prettier": "3.9.10",
     "prettier-plugin-astro": "1.1.2",
+    "sharp": "0.35.5",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.1"
   },
