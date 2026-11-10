@@ -113,7 +113,7 @@ jobs:
         uses: google-github-actions/run-gemini-cli@f77273f4c914e4bf38440cf36a0369cb64a37489 # v0.1.22
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          GEMINI_TRUST_WORKSPACE: 'true'
+          GEMINI_CLI_TRUST_WORKSPACE: 'true'
           TITLE: ${{ github.event.pull_request.title || github.event.issue.title }}
           DESCRIPTION: ${{ github.event.pull_request.body || github.event.issue.body }}
           EVENT_NAME: ${{ github.event_name }}
