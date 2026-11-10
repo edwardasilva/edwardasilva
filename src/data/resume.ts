@@ -420,6 +420,7 @@ export const visibleOrganizations = resume.organizations.filter((entry) =>
 
 // The about route and its header link both read this, so the link cannot outlive the page.
 // site.aboutPublished holds the page back until its narrative is written.
+// C_HAS_ABOUT in astro.config.mjs is the twin of this rule for the sidebar, so change both together.
 export const hasAboutContent =
     resume.site.aboutPublished &&
     isVisibleOnSite(resume.about.Visibility) &&
