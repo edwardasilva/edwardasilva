@@ -3,40 +3,27 @@
   Site Icon
 
   Author: Edward Silva
-  Last Update: 07 November, 2026
+  Last Update: 10 November, 2026
 
-  Browser tab icon, with light and dark colors. Set as favicon in astro.config.mjs. The PNG icons
-  are rendered from this file by scripts/render-icons.js.
+  Browser tab icon, with light and dark colors. A rounded oscilloscope screen with the red waveform,
+  drawn to fill the 32 by 32 box with a 2 px margin. Stroke centers sit on odd coordinates so the
+  2 px strokes stay sharp at 16 px. Set as favicon in astro.config.mjs. The PNG and ICO icons are
+  rendered from this file by scripts/render-icons.js.
 
   Copyright (c) 2026 Edward Silva. All rights reserved.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <defs>
     <style>
-      .oscilloscope { fill: none; stroke: #16233a; stroke-width: 2; }
-      .screen { fill: #fbfbfc; stroke: #16233a; stroke-width: 1.5; }
-      .grid { stroke: #838c9a; stroke-width: 0.5; opacity: 0.6; }
-      .waveform { stroke: #a3201d; stroke-width: 1.5; fill: none; }
-      .dot { fill: #a3201d; }
+      .screen { fill: #fbfbfc; stroke: #16233a; stroke-width: 2; }
+      .waveform { stroke: #a3201d; stroke-width: 2; fill: none; stroke-linecap: round; }
       @media (prefers-color-scheme: dark) {
-        .oscilloscope { stroke: #eceef2; }
         .screen { fill: #0d1524; stroke: #eceef2; }
-        .grid { stroke: #76808f; }
         .waveform { stroke: #e06a5f; }
-        .dot { fill: #e06a5f; }
       }
     </style>
   </defs>
 
-  <rect class="screen" x="6" y="6" width="20" height="14" rx="1"/>
-  <path class="grid" d="M10 7v12 M14 7v12 M18 7v12 M22 7v12"/>
-  <path class="grid" d="M7 10h18 M7 13h18 M7 16h18"/>
-  <path class="waveform" d="M7 13 Q10 9 14 13 T21 13 Q23 11 25 13"/>
-  <circle class="oscilloscope" cx="8" cy="24" r="2"/>
-  <circle class="oscilloscope" cx="16" cy="24" r="2"/>
-  <circle class="oscilloscope" cx="24" cy="24" r="2"/>
-  <path class="oscilloscope" d="M8 22v1"/>
-  <path class="oscilloscope" d="M16 22v1"/>
-  <path class="oscilloscope" d="M24 22v1"/>
-  <circle class="dot" cx="28" cy="8" r="1"/>
+  <rect class="screen" x="3" y="3" width="26" height="26" rx="3"/>
+  <path class="waveform" d="M7 16 Q11.5 6 16 16 T25 16"/>
 </svg>
