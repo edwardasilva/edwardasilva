@@ -231,6 +231,7 @@ export default defineConfig({
             title: C_RESUME.personal.name,
             description: /[.!?]$/.test(C_DESCRIPTION) ? C_DESCRIPTION : `${C_DESCRIPTION}.`,
             credits: false,
+            lastUpdated: true,
             favicon: '/favicon.svg',
             customCss: [
                 './src/styles/fonts.css',
