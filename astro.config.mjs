@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Defines site, base path, redirects, the Markdown pipeline, and the Starlight integration that
  * supplies search, navigation, table of contents, dark mode, and the sitemap. Copies the PDF.js
@@ -43,7 +43,7 @@ const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @typedef {{ title: string, slug?: string, navLabel?: string, Visibility?: string }} SiteEntry
- * @typedef {SiteEntry & { kind?: 'project' | 'personal', order?: number }} SiteProject
+ * @typedef {SiteEntry & { kind?: 'project' | 'personal', order?: number, home?: 'selected' | 'writing' | 'more' | false }} SiteProject
  * @typedef {object} SiteData The parts of resume-data.json this file reads
  * @property {{ name: string, website: string }} personal
  * @property {{ description: string, aboutPublished?: boolean }} site
@@ -95,13 +95,25 @@ function navLabel(entry) {
 }
 
 /**
- * @brief Lists the sidebar links to the project pages of one kind
- * @param {'project' | 'personal'} kind Project or personal project
+ * @brief Lists the sidebar links to the projects in one home page group
+ * @param {'selected' | 'writing' | 'more'} group Home page group
  * @return {{ label: string, slug: string }[]} Links in the order resume-data.json gives
+ * @details Mirrors getHomeProjectPages in src/data/projects.ts. A personal project with no home
+ * field falls under writing, and a project with home set to false stays out.
  */
-function projectLinks(kind) {
+function projectLinks(group) {
     return C_RESUME.projects
-        .filter((project) => isVisibleOnSite(project) && project.kind === kind)
+        .filter((project) => {
+            if (!isVisibleOnSite(project)) {
+                return false;
+            }
+
+            if (project.home === undefined) {
+                return group === 'writing' && project.kind === 'personal';
+            }
+
+            return project.home === group;
+        })
         .sort((left, right) => (left.order ?? 0) - (right.order ?? 0))
         .map((project) => ({ label: navLabel(project), slug: `projects/${project.slug}` }));
 }
@@ -328,8 +340,9 @@ export default defineConfig({
                     label: 'Projects',
                     items: [
                         { label: 'Projects', link: '/projects/' },
-                        { label: 'Personal', items: projectLinks('personal') },
-                        { label: 'Academic', items: projectLinks('project') },
+                        { label: 'Selected work', items: projectLinks('selected') },
+                        { label: 'Writing and tools', items: projectLinks('writing') },
+                        { label: 'More projects', items: projectLinks('more') },
                     ],
                 },
                 {
