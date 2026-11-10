@@ -121,14 +121,14 @@ function skillList(value: unknown): string[] {
 /**
  * @brief Reads a visibility scope, hiding anything unrecognized
  * @param value Raw visibility value from content
- * @return One of All, Site, or Hide
+ * @return One of All, Site, List, or Hide
  */
 function visibilityScope(value: unknown): VisibilityScope {
-    return value === 'All' || value === 'Site' ? value : 'Hide';
+    return value === 'All' || value === 'Site' || value === 'List' ? value : 'Hide';
 }
 
 /**
- * @brief Checks whether a scope should appear on the website
+ * @brief Checks whether a scope should appear as a write-up page on the website
  * @param scope Visibility scope to evaluate
  * @return True when scope is All or Site
  */
@@ -410,6 +410,7 @@ export const primaryEducation: Education | undefined = resume.education[0];
 export const visibleExperiences = resume.experiences.filter((entry) =>
     isVisibleOnSite(entry.Visibility)
 );
+export const otherExperiences = resume.experiences.filter((entry) => entry.Visibility === 'List');
 export const visibleProjects = resume.projects.filter((entry) => isVisibleOnSite(entry.Visibility));
 export const visibleCertifications = resume.certifications.filter((entry) =>
     isVisibleOnSite(entry.Visibility)
