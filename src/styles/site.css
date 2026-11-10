@@ -1062,7 +1062,7 @@ figure.es-fig-wide > img {
     height: 0.75rem;
     border-top: 0;
     background: var(--es-ink);
-    opacity: 0.12;
+    opacity: 0.08;
 }
 .es-live-title {
     margin: var(--es-space-4) 0 var(--es-space-1);
