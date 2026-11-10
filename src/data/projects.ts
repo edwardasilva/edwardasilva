@@ -105,7 +105,7 @@ function toProjectPage(project: Project): ProjectPage {
 
 /**
  * @brief Lists the projects for one group on the home page
- * @param group Selected work, writing and tools, or more projects
+ * @param group Selected work, more projects, or the unused writing group
  * @return Pages in home order
  * @details Reads the home field in resume-data.json. Projects of the personal kind without the
  * field fall under writing, and projects with the field set to false stay off the home page.
