@@ -12,7 +12,7 @@
 # Usage:
 # $ `gh workflow run links.yml` : Checks every outside link on the current main
 #
-# Copyright (c) 2026 Edward Silva. MIT License.
+# Copyright (c) 2026 Edward Silva. All rights reserved.
 
 name: Outside links
 
