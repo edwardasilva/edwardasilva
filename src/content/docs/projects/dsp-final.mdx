@@ -30,7 +30,7 @@ An FFT finds the pitch by looking for the strongest frequency bin. Autocorrelati
 
 ## The signal chain
 
-The pipeline is two files. `Main.m` runs the test or live input, and `Run.m` does the calculation once per frame: filtering, decimation, both detectors, and the timing.
+The pipeline is two files. `Main.m` runs the test or live input, and `Run.m` does the calculation once per frame: filtering, decimation, both detectors, and the timing. The code isn't public because it was course or sponsor work.
 
 Audio comes in at 48 kHz and goes through a cascaded Butterworth band-pass filter that keeps the vocal range. Decimation keeps every Nth sample, and two stages, by 3 and then by 2, bring the rate down to 8 kHz.
 
