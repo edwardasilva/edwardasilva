@@ -101,13 +101,12 @@ export function websiteSchema(site: URL) {
  * @param pathname Page path, with no trailing slash
  * @param site Site origin
  * @param title Page title, used for the last crumb
- * @return BreadcrumbList schema, or undefined on the home page and the 404 page
+ * @return BreadcrumbList schema, or undefined on the home page
  */
 export function breadcrumbSchema(pathname: string, site: URL, title: string) {
     const segments = pathname.split('/').filter(Boolean);
 
-    // The 404 page is built as /404.html and has no URL of its own to list.
-    if (segments.length === 0 || segments[0] === '404') {
+    if (segments.length === 0) {
         return undefined;
     }
 
