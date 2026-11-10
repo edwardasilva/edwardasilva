@@ -34,7 +34,7 @@ The pipeline is two files. `Main.m` runs the test or live input, and `Run.m` doe
 
 Audio comes in at 48 kHz and goes through a cascaded Butterworth band-pass filter that keeps the vocal range. Decimation keeps every Nth sample, and two stages, by 3 and then by 2, bring the rate down to 8 kHz.
 
-<Figure name="pitch/filters" number={1} alt="Block diagram: a high-pass Butterworth filter with a 30 hertz stop band and 60 hertz pass band, followed by a low-pass Butterworth filter with a 2000 hertz stop band and 1500 hertz pass band. Both have 80 decibel attenuation and 1 decibel ripple.">
+<Figure name="pitch/filters" number={1} narrow alt="Block diagram: a high-pass Butterworth filter with a 30 hertz stop band and 60 hertz pass band, followed by a low-pass Butterworth filter with a 2000 hertz stop band and 1500 hertz pass band. Both have 80 decibel attenuation and 1 decibel ripple.">
   The band-pass filter. Report Fig. 2.
 </Figure>
 

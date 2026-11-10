@@ -34,6 +34,6 @@ These two have no generator line. They were converted from a plot in a report PD
 
 `gantry/augmented.svg` and `gantry/reference-scaling.svg` are written by `scripts/digitize-gantry-pulse.py`. That script reads each curve back out of the report's PNG screenshots, which are not committed. See its header for the details.
 
-## Other files
+## Built from TikZ
 
-`pitch/filters.svg` has no MATLAB generator line and uses glyph paths, so it looks like another converted PDF. The issue that started this file does not list it. Its source is [INSERT SOURCE].
+`pitch/filters.svg` is built from `pitch/filters.tex` with XeLaTeX and dvisvgm. The commands are in the header of the `.tex` file. It is set in Source Serif 4 and uses glyph paths, not text.
