@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Turns resume-data.json into the LaTeX body of the resume, and into the list of text the finished
  * PDF has to contain. Only entries marked Visibility "All" reach the resume. A field with the wrong
@@ -36,6 +36,9 @@ const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const C_DATA_PATH = path.join(ROOT_DIR, 'information', 'resume-data.json');
 
 export const C_BUILD_DIR = path.join(ROOT_DIR, 'build', 'resume');
+
+// Set to false to drop the phone number from the public PDF. The text check follows this switch.
+const C_SHOW_PHONE = true;
 
 // Three-letter months on the PDF, where the space is tight. May is already three letters.
 const C_MONTH_ABBREVIATIONS = {
@@ -337,7 +340,7 @@ function renderContact({ linkedin, website, email, phone }) {
         parts.push(`\\href{mailto:${escapeUrl(email)}}{${escapeLatex(email)}}`);
     }
 
-    if (phone) {
+    if (C_SHOW_PHONE && phone) {
         parts.push(`\\href{tel:${phone.replace(/\D/g, '')}}{${escapeLatex(phone)}}`);
     }
 
@@ -417,7 +420,7 @@ export function expectedText(data) {
         name,
         ...[linkedin, website].filter(Boolean).map(shortUrl),
         email,
-        phone,
+        ...(C_SHOW_PHONE && phone ? [phone] : []),
         ...(profile ? ['Profile', profile] : []),
         'Experience',
         ...onResume(data.experiences).flatMap((entry) => [
