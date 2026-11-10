@@ -2,8 +2,8 @@
 # Git Ignore Rules
 #
 # Author: Edward Silva
-# Creation Date: [INSERT CREATION DATE HERE]
-# Last Update: 08 November, 2026
+# Creation Date: 09 November, 2026
+# Last Update: 10 November, 2026
 #
 # Lists the files Git leaves untracked, including build output, secrets, and the private resume and agent files that the hooks keep off GitHub.
 #
