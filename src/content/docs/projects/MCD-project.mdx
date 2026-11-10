@@ -112,7 +112,7 @@ That is about 26 samples at 50 Hz. The report rounds it to 0.5 s and 25 samples,
 
 ### Simulation
 
-We rewrote the plant in control canonical form. MATLAB's `lqr` (a linear-quadratic regulator, which picks gains by minimizing a weighted cost) set the state feedback. It also set the estimator, the code that infers states we could not measure. We aimed for estimator poles at least 4 times faster than the controller's, and they came out about 6 times faster.
+We rewrote the plant in control canonical form. MATLAB's `lqr` (a linear-quadratic regulator, which picks gains by minimizing a weighted cost) set the state feedback. It also set the estimator, the code that infers states we could not measure. We aimed for estimator poles at least 4 times faster than the controller's, and they came out about 6 times faster. The code isn't public because it was course or sponsor work.
 
 ```matlab title="Project 2/src/main.m"
 A = [0 1 0;0 0 1;0 -g/l 0];
