@@ -39,7 +39,10 @@ const projects = getProjectsForCourse(course);
 <details id={getCourseSlug(course)} class="es-course">
     <summary>
         <code>{course.code}</code>
-        <span class="es-course-name">{course.name}{course.alias && ` (${course.alias})`}</span>
+        <span class="es-course-name">
+            {course.name}
+            {course.alias && ` (${course.alias})`}
+        </span>
     </summary>
     <div class="es-course-body">
         <p>{course.Summary ? asSentence(course.Summary) : course.description}</p>
