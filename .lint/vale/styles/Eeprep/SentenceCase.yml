@@ -14,6 +14,7 @@ exceptions:
   - GitHub
   - SPI
   - RC
+  - RF
   - KaTeX
   - MOSI
   - MISO
