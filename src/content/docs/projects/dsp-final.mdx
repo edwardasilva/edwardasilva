@@ -76,7 +76,7 @@ The retuning stage picks the nearest note in 12-tone equal temperament, the stan
 
 ## Latency
 
-On paper the FFT is $O(n \log n)$ and the ACF is $O(n^2)$. I timed each detector with `tic` and `toc` around its own block on every frame. The FFT was faster and more consistent:
+On paper the FFT is $O(n \log n)$ and the ACF is $O(n^2)$. I timed each detector with `tic` and `toc` around its own block on every frame. The FFT was faster and more consistent. I did not record the computer, the MATLAB release, or how many frames I timed, so read these as a comparison between the two detectors, not as absolute speeds:
 
 | Per frame | FFT | ACF |
 | --- | --- | --- |
@@ -86,7 +86,7 @@ On paper the FFT is $O(n \log n)$ and the ACF is $O(n^2)$. I timed each detector
 
 The report's table labels the second row variance, but `latencyplots.m` computes it with `std`, so it is a standard deviation in milliseconds.
 
-<Figure name="pitch/latency" number={2} alt="Latency per frame across 2000 frames. ACF sits higher than FFT, with spikes up to about 3 milliseconds.">
+<Figure name="pitch/latency" number={2} alt="Latency per frame across the test run. ACF sits higher than FFT, with spikes up to about 3 milliseconds.">
   Latency for each frame across the test run.
 </Figure>
 
