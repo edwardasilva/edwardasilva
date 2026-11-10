@@ -26,7 +26,13 @@
 
 import type { APIRoute } from 'astro';
 import { getHomeProjectPages } from '../data/projects';
-import { getExperienceHref, hasAboutContent, resume, visibleExperiences } from '../data/resume';
+import {
+    getExperienceHref,
+    hasAboutContent,
+    otherExperiences,
+    resume,
+    visibleExperiences,
+} from '../data/resume';
 import type { HomeGroup } from '../data/types';
 
 const C_SECTION_PAGES = [
@@ -99,6 +105,17 @@ export const GET: APIRoute = async ({ site }) => {
                 experience.duration
             )
         ),
+        ...(otherExperiences.length > 0
+            ? [
+                  '',
+                  '## Other experience',
+                  '',
+                  ...otherExperiences.map(
+                      (experience) =>
+                          `- ${experience.company}, ${experience.title}. ${experience.duration}`
+                  ),
+              ]
+            : []),
         '',
         '## Pages',
         '',
