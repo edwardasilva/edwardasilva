@@ -3,7 +3,8 @@ name: Deploy to Cloudflare Pages
 # A merge to main deploys the dev site, the "dev" preview branch of the edwardasilva Pages project.
 # A version tag, such as v0.1.0, deploys edwardasilva.com and creates its GitHub release. Edward
 # cuts a tag only when he says so.
-# A manual run picks either target. information/.agents/docs/site_notes.md has the release steps.
+# A manual run can deploy dev from any ref. A manual production run must start from a release
+# tag on main, such as --ref v0.1.0. information/.agents/docs/site_notes.md has the release steps.
 on:
   push:
     branches: [main]
@@ -40,7 +41,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
+
+      # Production deploys only from a vX.Y.Z tag whose commit is on main, so a branch or an
+      # unmerged tagged commit cannot reach edwardasilva.com.
+      - name: Production only from a release tag on main
+        if: env.TARGET == 'production'
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$REF" =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Production deploys only from a vX.Y.Z tag. This run is on $REF."
+            exit 1
+          fi
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::The tagged commit $GITHUB_SHA is not on main."
+            exit 1
+          fi
 
       # resume-data.json stays off this public repo. It lives in information/, a submodule that points
       # at the private repo edwardasilva/information. INFORMATION_REPO_KEY is the private half of a
