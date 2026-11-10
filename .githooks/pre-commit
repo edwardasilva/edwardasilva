@@ -1,9 +1,26 @@
 #!/usr/bin/env sh
 set -e
 
+PDF=public/resume/Edward_Silva_Resume.pdf
+
 echo "[pre-commit] Building resume PDF locally..."
 npm run --silent build:resume
-git add public/resume/Edward_Silva_Resume.pdf
+
+# A different TeX distribution changes the PDF bytes with no content change, so the hook keeps
+# the committed file when the text matches HEAD and stages the rebuild only when the text differs.
+if command -v pdftotext >/dev/null 2>&1 && git cat-file -e "HEAD:$PDF" 2>/dev/null; then
+  old_text=$(git show "HEAD:$PDF" | pdftotext -layout - - | cksum)
+  new_text=$(pdftotext -layout "$PDF" - | cksum)
+
+  if [ "$old_text" = "$new_text" ]; then
+    git checkout HEAD -- "$PDF"
+    echo "[pre-commit] Resume text unchanged. Kept the committed PDF."
+  else
+    git add "$PDF"
+  fi
+else
+  git add "$PDF"
+fi
 
 node scripts/scrub-private.js staged
-echo "[pre-commit] Resume built and staged. Proceeding with commit."
+echo "[pre-commit] Resume check done. Proceeding with commit."
