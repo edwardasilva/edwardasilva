@@ -5,13 +5,13 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Renders one proof file by type: a report with its whole first page and an on-page viewer, a document
  * card, an image, or a video.
  *
  * File Structure:
- * - Props: proof entry
+ * - Props: proof entry, and an optional figure number for an image or video caption
  * - One branch per file type
  *
  * Where this file is used within the repository:
@@ -29,9 +29,10 @@ import type { Proof } from '../data/types';
 
 interface Props {
     proof: Proof;
+    number?: number;
 }
 
-const { proof } = Astro.props;
+const { proof, number } = Astro.props;
 const isDocument = proof.type === 'file' || proof.type === 'link';
 const label = proof.title.charAt(0) + proof.title.slice(1).toLowerCase();
 
@@ -74,7 +75,10 @@ const pdfThumbUrl = `/assets/thumbs/${proof.url
 {proof.type === 'image' && (
     <figure class="es-proof-media">
         <img src={proof.url} alt={label} loading="lazy" decoding="async" />
-        <figcaption>{label}</figcaption>
+        <figcaption>
+            {number !== undefined && <span class="es-fignum">Figure {number}</span>}
+            <span>{label}.</span>
+        </figcaption>
     </figure>
 )}
 
@@ -83,6 +87,9 @@ const pdfThumbUrl = `/assets/thumbs/${proof.url
         <video controls preload="metadata">
             <source src={proof.url} />
         </video>
-        <figcaption>{label}</figcaption>
+        <figcaption>
+            {number !== undefined && <span class="es-fignum">Figure {number}</span>}
+            <span>{label}.</span>
+        </figcaption>
     </figure>
 )}
