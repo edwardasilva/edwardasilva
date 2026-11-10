@@ -1,0 +1,1090 @@
+/**
+ * src/styles/site.css
+ * Site Chrome
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 09 November, 2026
+ *
+ * Header, cards, external link marks, page lists, the project facts block, figures, the live
+ * figures, and the sidebar. Adapted from eeprep.com.
+ *
+ * File Structure:
+ * - Header and search
+ * - Hero, cards, and phone layout
+ * - External link marks
+ * - Page parts: lists, facts, proof, figures, chart
+ * - Text wrapping and long-list rendering
+ *
+ * Where this file is used within the repository:
+ * - Loaded through customCss in astro.config.mjs
+ *
+ * Usage:
+ * $ `npm run dev` : Applied to every page
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+.es-nav {
+    display: flex;
+    gap: 1.75rem;
+    align-items: center;
+    min-width: 0;
+}
+.es-nav a {
+    font: 500 0.875rem/1 var(--es-font-sans);
+    color: var(--es-ink);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.es-nav a[aria-current='page'] {
+    color: var(--es-ink);
+    box-shadow: inset 0 -1.5px 0 var(--es-accent);
+}
+@media (hover: hover) {
+    .es-nav a:hover {
+        color: var(--es-accent);
+    }
+}
+
+.es-theme {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: var(--es-border);
+    border-radius: var(--es-radius);
+    background: transparent;
+    color: var(--es-ink);
+    cursor: pointer;
+}
+.es-theme svg {
+    width: 1.05rem;
+    height: 1.05rem;
+}
+.es-theme .icon-sun {
+    display: none;
+}
+:root[data-theme='light'] .es-theme .icon-moon {
+    display: none;
+}
+:root[data-theme='light'] .es-theme .icon-sun {
+    display: block;
+}
+
+/* Desktop top bar: a taller band and wider gaps between items. */
+@media (min-width: 50rem) {
+    :root,
+    :root[data-theme='light'] {
+        --sl-nav-height: 4rem;
+        --sl-nav-gap: 1.5rem;
+    }
+    .header .site-title img {
+        height: 2.25rem;
+    }
+}
+
+/* Narrow desktops: the name and the five section links keep their width, and the search box
+   takes what is left. Without this, the search box keeps its full width and squeezes the name. */
+@media (min-width: 50rem) and (max-width: 72rem) {
+    div.header {
+        grid-template-columns: auto auto minmax(0, 1fr) auto;
+    }
+    .es-nav {
+        gap: 1.25rem;
+    }
+}
+
+/* Suggested pages in the search dialog, shown only while the query is empty. */
+.es-suggest {
+    margin-top: 1rem;
+}
+.es-suggest[hidden] {
+    display: none;
+}
+.es-suggest p {
+    margin: 0 0 0.5rem;
+    font: 600 0.75rem/1 var(--es-font-sans);
+    color: var(--es-ink-2);
+}
+.es-suggest ul {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.es-suggest a {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.75rem;
+    border: var(--es-border);
+    border-radius: var(--es-radius);
+    color: var(--es-ink);
+    text-decoration: none;
+}
+@media (hover: hover) {
+    .es-suggest a:hover {
+        color: var(--es-accent);
+    }
+}
+
+.es-hero {
+    padding: 2.5rem 0 1rem;
+    max-width: 46rem;
+}
+.es-hero h1 {
+    font-family: var(--es-font-serif);
+    font-weight: 500;
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: var(--es-track-h1);
+    color: var(--es-ink);
+    font-variation-settings: 'opsz' 72;
+    margin: 0.75rem 0 1rem;
+}
+/* Starlight sets the shortcut in the UI font. The theme's code font is mono. */
+button[data-open-modal] kbd {
+    font-family: var(--es-font-mono);
+}
+.es-cards {
+    list-style: none;
+    padding: 0;
+    margin: 2.5rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1rem;
+}
+/* Selected work on the home page: 1 / 2 / 4 columns so four cards sit
+   one-up on phone, 2x2 at tablet, and four across on desktop. Writing and
+   tools and More projects keep the auto-fit row above. */
+.es-cards--selected {
+    grid-template-columns: 1fr;
+}
+@media (min-width: 40rem) {
+    .es-cards--selected {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (min-width: 64rem) {
+    .es-cards--selected {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+/* Starlight adds 0.25rem above every list item after the first. In this row
+   that drops cards 2 and 3 by 4px and shortens them by the same amount. */
+.es-cards > li {
+    margin-top: 0;
+}
+.es-cards a {
+    display: grid;
+    gap: 0.4rem;
+    height: 100%;
+    padding: 1.1rem 1.15rem 1.2rem;
+    border: var(--es-border);
+    border-radius: var(--es-radius-lg);
+    background: var(--es-surface);
+    color: inherit;
+    text-decoration: none;
+    grid-template-rows: auto auto 1fr;
+    align-content: start;
+}
+@media (hover: hover) {
+    .es-cards a:hover {
+        border-color: var(--es-accent);
+    }
+}
+.es-cards strong {
+    font: 550 1.35rem/1.2 var(--es-font-serif);
+    color: var(--es-ink);
+}
+.es-cards span:last-child {
+    color: var(--es-ink-2);
+    font-size: 0.9375rem;
+}
+/* Phone header: two fixed rows inside Starlight's header, so nothing spills
+   onto the page or the "On this page" bar below it.
+   Row 1: logo, search, theme toggle (and Starlight's menu button, which is
+   fixed in the same band). Row 2: the section nav. Every control is a 44px
+   tap target. --sl-nav-height covers both rows, and Starlight offsets the
+   page and the sticky table-of-contents bar by it. */
+@media (max-width: 50rem) {
+    :root,
+    :root[data-theme='light'] {
+        --es-tap: 2.75rem;
+        --sl-nav-pad-y: 0.625rem;
+        --sl-nav-height: calc(2 * var(--sl-nav-pad-y) + 2 * var(--es-tap) + 0.25rem);
+        --sl-menu-button-size: var(--es-tap);
+    }
+    /* Starlight pads the header for its menu button only on pages with a
+	   sidebar, which moves the theme toggle and narrows the nav. Reserve the
+	   button's column on every page instead, so the header is the same
+	   everywhere. */
+    header.header {
+        padding-inline-end: var(--sl-nav-pad-x);
+    }
+    div.header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto var(--sl-menu-button-size);
+        grid-template-rows: var(--es-tap) var(--es-tap);
+        column-gap: 0.75rem;
+        row-gap: 0.25rem;
+        align-items: center;
+    }
+    .site-title {
+        min-height: var(--es-tap);
+    }
+    .site-title img {
+        height: 2rem;
+    }
+    .es-nav {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-content: space-between;
+        gap: 0.5rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .es-nav a {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        min-width: var(--es-tap);
+        min-height: var(--es-tap);
+        padding-inline: 0;
+    }
+    .es-nav a[aria-current='page'] {
+        box-shadow: inset 0 -2px 0 var(--es-accent);
+    }
+    .es-theme,
+    .header button[data-open-modal] {
+        width: var(--es-tap);
+        height: var(--es-tap);
+        min-width: var(--es-tap);
+    }
+
+    /* Starlight centers the menu button in the full header height, between
+	   the two rows. Put it in the first row and paint it like .es-theme. */
+    .sl-menu-button {
+        top: var(--sl-nav-pad-y);
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: var(--es-border);
+        border-radius: var(--es-radius);
+        background: transparent;
+        color: var(--es-ink);
+        box-shadow: none;
+    }
+    .sl-menu-button:focus-visible {
+        outline: 2px solid var(--es-accent);
+        outline-offset: 2px;
+    }
+
+    .es-hero {
+        padding-top: 1.5rem;
+    }
+    .es-hero h1 {
+        font-size: clamp(1.875rem, 5vw + 0.75rem, 2.25rem);
+        line-height: 1.12;
+    }
+}
+
+/* Small phones: one size down and no gap, so all six section links fit from 360px. Below
+   that the row scrolls sideways. This block must come after the 50rem block above, which
+   sets the gap and the minimum link width. */
+@media (max-width: 26rem) {
+    .es-nav {
+        gap: 0;
+        justify-content: space-between;
+    }
+    .es-nav a {
+        min-width: 0;
+        font-size: 0.75rem;
+    }
+}
+
+/* Balanced headings, and no single word left alone on the last line of a paragraph. */
+h1,
+h2,
+h3,
+h4 {
+    text-wrap: balance;
+}
+p,
+li,
+blockquote {
+    text-wrap: pretty;
+}
+
+/* The coursework and skills lists are long, so the browser skips laying them out offscreen. */
+.es-courses,
+.es-skills {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 350px;
+}
+
+/* Keep the end of the page above Safari's bottom bar (viewport-fit=cover). */
+body {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* One gutter between the left sidebar, the content and the right sidebar. */
+:root,
+:root[data-theme='light'] {
+    --es-gutter: 1rem;
+    /* With viewport-fit=cover, a phone in landscape keeps text clear of the notch. */
+    --es-safe-x: max(env(safe-area-inset-left), env(safe-area-inset-right));
+    --sl-content-pad-x: max(var(--es-gutter), var(--es-safe-x));
+    --sl-sidebar-pad-x: var(--es-gutter);
+    --sl-nav-pad-x: max(var(--es-gutter), var(--es-safe-x));
+}
+@media (min-width: 50rem) {
+    :root,
+    :root[data-theme='light'] {
+        --es-gutter: 1.5rem;
+    }
+}
+/* Starlight makes the right sidebar wider than the left one. With a table of contents,
+   the rail gets the same width as the left sidebar and the main pane takes the rest, so
+   the column sits centered between them. A page without a table of contents gets end
+   padding equal to the left sidebar, so its column sits on the window center. */
+@media (min-width: 72rem) {
+    :root[data-has-sidebar][data-has-toc] .right-sidebar-container {
+        width: var(--sl-sidebar-width);
+    }
+
+    :root[data-has-sidebar][data-has-toc] .main-pane {
+        --sl-content-margin-inline: auto;
+
+        width: calc(100% - var(--sl-sidebar-width));
+    }
+
+    :root[data-has-sidebar]:not([data-has-toc]) .content-panel {
+        padding-inline-end: calc(var(--sl-content-pad-x) + var(--sl-sidebar-width));
+    }
+}
+
+/* Phones: 16px inputs stop iOS from zooming on focus, and no grey tap flash. */
+input,
+select,
+textarea {
+    font-size: max(1rem, 16px);
+}
+html {
+    -webkit-tap-highlight-color: transparent;
+    scrollbar-gutter: stable;
+}
+
+/* Keep the header in the same place on every page. Short pages have no
+   vertical scrollbar and long pages do, so without a reserved gutter the
+   viewport, and the fixed header with it, changes width between pages. */
+
+/* The splash page has no title, which leaves an empty bordered band at the top. */
+.content-panel:has(> .sl-container:empty) {
+    display: none;
+}
+
+/* Links to other sites open in a new tab. The arrow is decoration, and the
+   screen-reader hint inside the link says the same thing in words. It is an
+   SVG mask filled with the link color, not a text glyph, so no platform can
+   swap in an emoji. Body links and figure caption links share this rule.
+   The arrow follows the link's last word, which sits in its own span that
+   doesn't wrap, so the arrow never starts a line by itself. The link, and a
+   wrapper around it and any period or comma right after it, don't wrap
+   either, so the punctuation stays with the arrow. The link text sits in a
+   span that wraps as usual, so a long link still wraps at its spaces. This
+   nesting is the one that keeps all three together in Chrome, Firefox and
+   Safari. The markup comes from the rehype-external-links plugin and
+   ExternalLink.astro. */
+a.external-link,
+a.external-link .es-ext-last,
+.es-ext {
+    white-space: nowrap;
+}
+a.external-link > .es-ext-text {
+    white-space: normal;
+}
+a.external-link .es-ext-last::after {
+    --es-external-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9L9 3M4.25 3H9V7.75'/%3E%3C/svg%3E");
+    content: '';
+    display: inline-block;
+    width: 0.75em;
+    height: 0.75em;
+    margin-inline-start: 0.15em;
+    vertical-align: baseline;
+    background-color: currentColor;
+    forced-color-adjust: none;
+    -webkit-mask: var(--es-external-arrow) no-repeat center / contain;
+    mask: var(--es-external-arrow) no-repeat center / contain;
+}
+
+/* The skip link shows on keyboard focus; it uses the ink role too. */
+.sl-skip-link {
+    color: var(--es-ink);
+    background: var(--es-paper);
+}
+
+/* Page parts. */
+.es-lede {
+    max-width: var(--es-measure);
+    font-size: var(--es-text-lede);
+    line-height: 1.4;
+    color: var(--es-ink-2);
+    font-variation-settings: 'opsz' 28;
+}
+.es-hero .es-lede {
+    margin-top: 0;
+}
+
+.es-cards img {
+    display: block;
+    width: 100%;
+    height: 10rem;
+    object-fit: contain;
+}
+/* An SVG plot has a dark copy and sits straight on the card. A photo fills the frame. A drawing on
+   white paper blends into the card, and inverts to light lines in dark mode. */
+.es-card-figure {
+    display: block;
+    padding: 0.5rem;
+    border-radius: var(--es-radius);
+}
+.es-card-photo {
+    padding: 0;
+    overflow: hidden;
+}
+.es-card-photo img {
+    object-fit: cover;
+    object-position: center;
+}
+.es-card-photo[data-figure='robot/front'] img {
+    object-position: center 40%;
+}
+.es-card-drawing img {
+    mix-blend-mode: multiply;
+}
+:root[data-theme='dark'] .es-card-drawing img {
+    filter: invert(1) hue-rotate(180deg);
+    mix-blend-mode: screen;
+}
+.es-card-dek {
+    color: var(--es-ink-2);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+.es-facts {
+    display: grid;
+    gap: 0.375rem;
+    margin: var(--es-space-5) 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+.es-facts > div {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: var(--es-space-3);
+}
+.es-facts dt {
+    font-weight: 400;
+    color: var(--es-ink-2);
+}
+.es-facts dd {
+    margin: 0;
+    color: var(--es-ink);
+}
+.es-facts-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+}
+.es-facts a,
+.es-footer a,
+.es-roles a,
+.es-skills a,
+.es-courses a,
+.es-ledger a {
+    color: var(--es-ink);
+    text-decoration-line: underline;
+    text-decoration-color: var(--es-silver);
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+}
+@media (hover: hover) {
+    .es-facts a:hover,
+    .es-footer a:hover,
+    .es-roles a:hover,
+    .es-skills a:hover,
+    .es-courses a:hover,
+    .es-ledger a:hover {
+        color: var(--es-accent);
+        text-decoration-color: currentColor;
+    }
+}
+
+.es-role-meta {
+    color: var(--es-ink-2);
+}
+
+.es-skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: var(--es-space-6) var(--es-space-7);
+    margin: var(--es-space-6) 0 0;
+    padding: 0;
+    list-style: none;
+}
+.es-skills strong {
+    font-weight: 600;
+}
+.es-skills ul {
+    margin: var(--es-space-1) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+.es-skills > li {
+    scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
+}
+.es-skills > li:target strong {
+    color: var(--es-accent);
+}
+
+/* Ledgers: the coursework rows and the lists on the education page share the hairline rows, the
+   code column, and the name weight. */
+.es-courses,
+.es-ledger {
+    border-bottom: var(--es-border);
+}
+.es-course,
+.es-ledger-row {
+    border-top: var(--es-border);
+    scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
+}
+.es-course summary {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr) 0.75rem;
+    gap: var(--es-space-3);
+    align-items: baseline;
+    padding-block: var(--es-space-2);
+    list-style: none;
+    color: var(--es-ink);
+    cursor: pointer;
+}
+.es-course summary::-webkit-details-marker {
+    display: none;
+}
+.es-course summary code,
+.es-ledger-row code {
+    padding: 0;
+    background: none;
+    color: var(--es-ink-2);
+    font: 0.8125rem/1.5 var(--es-font-mono);
+    white-space: nowrap;
+}
+.es-course-name,
+.es-ledger-name {
+    font-weight: 500;
+    line-height: 1.45;
+}
+/* Chevron at the end of the row. It points down when closed and up when open. */
+.es-course summary::after {
+    --es-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+    content: '';
+    align-self: center;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: var(--es-silver);
+    forced-color-adjust: none;
+    -webkit-mask: var(--es-chevron) no-repeat center / contain;
+    mask: var(--es-chevron) no-repeat center / contain;
+}
+.es-course[open] summary::after {
+    transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: no-preference) {
+    .es-course summary::after {
+        transition: transform 0.15s ease-out;
+    }
+}
+.es-course:target .es-course-name,
+.es-course summary:focus-visible .es-course-name {
+    color: var(--es-accent);
+}
+@media (hover: hover) {
+    .es-course summary:hover .es-course-name {
+        color: var(--es-accent);
+    }
+    .es-course summary:hover::after {
+        background-color: var(--es-accent);
+    }
+}
+/* The open course lines up under the name, so the codes stay a clean column. */
+.es-course-body {
+    padding: 0 calc(0.75rem + var(--es-space-3)) var(--es-space-4) calc(5.5rem + var(--es-space-3));
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+.es-course-body p {
+    max-width: var(--es-measure);
+    margin: 0;
+    color: var(--es-ink-2);
+}
+.es-course-body .es-facts {
+    margin-top: var(--es-space-3);
+}
+.es-course-body .es-facts > div {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+}
+/* Phones: a narrower code column, and the open course uses the full width. */
+@media (max-width: 30rem) {
+    .es-course summary {
+        grid-template-columns: 4.5rem minmax(0, 1fr) 0.75rem;
+        gap: var(--es-space-2);
+    }
+    .es-course-body {
+        padding-inline: 0;
+    }
+}
+
+.es-ledger-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) min(15rem, 35%);
+    gap: var(--es-space-1) var(--es-space-3);
+    align-items: baseline;
+    padding-block: var(--es-space-2);
+}
+.es-ledger-coded {
+    grid-template-columns: 5.5rem minmax(0, 1fr) min(15rem, 35%);
+}
+.es-ledger-detail {
+    color: var(--es-ink-2);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+.es-ledger-row:target .es-ledger-name,
+.es-ledger-row:target .es-ledger-name a {
+    color: var(--es-accent);
+}
+/* Phones: the detail drops under the name. */
+@media (max-width: 30rem) {
+    .es-ledger-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .es-ledger-coded {
+        grid-template-columns: 4.5rem minmax(0, 1fr);
+        column-gap: var(--es-space-2);
+    }
+    .es-ledger-coded .es-ledger-detail {
+        grid-column: 2;
+    }
+}
+
+.es-proof-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--es-space-4);
+    margin-top: var(--es-space-5);
+}
+.es-proof-pdf {
+    display: grid;
+    gap: var(--es-space-2);
+    width: 12rem;
+    padding: var(--es-space-3);
+    border: var(--es-border);
+    border-radius: var(--es-radius-lg);
+    background: var(--es-surface);
+    color: var(--es-ink);
+    text-decoration: none;
+}
+.es-proof-pdf img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: top;
+    border: var(--es-border);
+    background: #fff;
+}
+@media (hover: hover) {
+    .es-proof-pdf:hover {
+        border-color: var(--es-accent);
+    }
+}
+.es-proof-media {
+    width: 100%;
+    max-width: var(--es-measure);
+    margin: 0;
+}
+.es-proof-media img,
+.es-proof-media video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--es-border);
+    border-radius: var(--es-radius);
+}
+.es-proof-media figcaption {
+    margin-top: var(--es-space-2);
+    color: var(--es-ink-2);
+    font-size: var(--es-text-caption);
+}
+
+figure.es-fig-plate > img {
+    padding: 0.75rem;
+    border-radius: var(--es-radius);
+    background: #fff;
+}
+figure.es-fig > img {
+    display: block;
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    margin: 0 auto;
+}
+figure.es-fig-narrow > img {
+    max-width: 320px;
+}
+/* A plot with a dark copy carries both images, one per theme. Starlight's own light: and dark:
+   utilities sit in a layer, and the unlayered figure rules above would beat them, so the pair is
+   repeated here. The hidden image is lazy, so the browser never fetches it. */
+[data-theme='light'] .light\:sl-hidden,
+[data-theme='dark'] .dark\:sl-hidden {
+    display: none;
+}
+
+.es-table-wrap {
+    overflow-x: auto;
+}
+
+.es-footer {
+    margin-top: var(--es-space-6);
+    padding-top: var(--es-space-4);
+    border-top: var(--es-border);
+    font-size: 0.875rem;
+    color: var(--es-ink-2);
+}
+.es-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+}
+.es-footer p {
+    margin-top: var(--es-space-3);
+}
+
+.es-resume canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--es-border);
+    border-radius: var(--es-radius);
+    background: #fff;
+}
+
+/* The live figures. */
+.es-live-controls {
+    display: grid;
+    gap: var(--es-space-3);
+    margin-bottom: var(--es-space-5);
+}
+.es-live-controls[hidden] {
+    display: none;
+}
+.es-live-controls input {
+    accent-color: var(--es-ink);
+}
+.es-live-controls input[type='range'] {
+    width: 100%;
+}
+.es-live-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--es-space-2);
+}
+.es-live-presets button {
+    min-height: 2.25rem;
+    padding: 0.25rem 0.75rem;
+    border: var(--es-border);
+    border-radius: var(--es-radius);
+    background: transparent;
+    color: var(--es-ink);
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+@media (hover: hover) {
+    .es-live-presets button:hover {
+        border-color: var(--es-accent);
+        color: var(--es-accent);
+    }
+}
+.es-live-check {
+    display: flex;
+    gap: var(--es-space-2);
+    align-items: center;
+    font-size: 0.9375rem;
+}
+.es-live-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--es-space-5);
+    margin: 0 0 var(--es-space-2);
+    padding: 0;
+    list-style: none;
+    font-size: 0.875rem;
+    color: var(--es-ink-2);
+}
+.es-live-legend li {
+    display: flex;
+    gap: var(--es-space-2);
+    align-items: center;
+    margin: 0;
+}
+.es-swatch {
+    display: inline-block;
+    width: 1.5rem;
+    height: 0;
+    border-top: 2px solid var(--es-ink);
+}
+.es-swatch-base {
+    border-top: 2px dashed var(--es-silver);
+}
+.es-swatch-ref {
+    border-top: 1px dotted var(--es-ink-2);
+}
+.es-live-plot {
+    position: relative;
+    touch-action: pan-y;
+}
+.es-live-plot svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+.es-grid {
+    stroke: var(--es-dg-grid);
+    stroke-width: 1;
+}
+.es-tick {
+    fill: var(--es-ink-2);
+    font: 400 12px var(--es-font-serif);
+}
+.es-ref {
+    fill: none;
+    stroke: var(--es-ink-2);
+    stroke-width: 1;
+    stroke-dasharray: 1 3;
+}
+.es-line-live,
+.es-line-base {
+    fill: none;
+    stroke-width: 2;
+    stroke-linejoin: round;
+}
+.es-line-live {
+    stroke: var(--es-ink);
+}
+.es-line-base {
+    stroke: var(--es-silver);
+    stroke-dasharray: 6 4;
+}
+.es-cross {
+    stroke: var(--es-ink-2);
+    stroke-width: 1;
+}
+.es-live-tip {
+    position: absolute;
+    top: 0;
+    max-width: 15rem;
+    padding: 0.25rem 0.5rem;
+    border: var(--es-border);
+    border-radius: var(--es-radius);
+    background: var(--es-surface);
+    color: var(--es-ink);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    pointer-events: none;
+}
+.es-live-read {
+    margin: var(--es-space-3) 0 var(--es-space-5);
+    font-variant-numeric: tabular-nums;
+}
+
+.es-cards li + li {
+    margin-top: 0;
+}
+
+/* The chart scales down with its column, so phone widths need larger text in SVG units. */
+.es-grid,
+.es-ref,
+.es-cross,
+.es-line-live,
+.es-line-base {
+    vector-effect: non-scaling-stroke;
+}
+@media (max-width: 40rem) {
+    .es-tick {
+        font-size: 22px;
+    }
+}
+
+/* Sidebar. Every top-level row has one size and weight, and every nested row has another. */
+:root {
+    --es-side-top-size: 1rem;
+    --es-side-sub-size: 0.875rem;
+}
+@media (max-width: 50rem) {
+    :root {
+        --es-side-top-size: 1.125rem;
+    }
+}
+.es-side {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.es-side li {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+.es-side-top > li + li {
+    margin-top: 0.25rem;
+}
+.es-side .es-side li {
+    margin-inline-start: 0.5rem;
+    padding-inline-start: 0.5rem;
+    border-inline-start: 1px solid var(--es-rule);
+}
+.sidebar-content .es-side-link,
+.es-side-group {
+    display: block;
+    padding: 0.3rem 0.5rem;
+    border-radius: var(--es-radius-sm);
+    color: var(--es-ink);
+    font-family: var(--es-font-sans);
+    font-size: var(--es-side-sub-size);
+    font-weight: 400;
+    line-height: 1.4;
+    text-decoration: none;
+}
+.sidebar-content .es-side-top > li > .es-side-link,
+.es-side-top > li > details > .es-side-group {
+    font-size: var(--es-side-top-size);
+    font-weight: 600;
+}
+.es-side .es-side .es-side-group {
+    color: var(--es-ink-2);
+    font-weight: 600;
+}
+.es-side-group,
+.es-side-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+.es-side-group::marker,
+.es-side-toggle::marker,
+.es-side-group::-webkit-details-marker,
+.es-side-toggle::-webkit-details-marker {
+    display: none;
+}
+.es-side-parent {
+    position: relative;
+}
+.es-side-parent > .es-side-link {
+    padding-inline-end: 2.25rem;
+}
+.es-side-toggle {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    block-size: 1.9rem;
+    padding: 0 0.25rem;
+    color: var(--es-ink-2);
+}
+.es-side-caret {
+    flex-shrink: 0;
+    transition: transform 0.2s ease-out;
+}
+details[open] > summary .es-side-caret {
+    transform: rotate(90deg);
+}
+.sidebar-content .es-side-link[aria-current='page'] {
+    color: var(--es-accent);
+    font-weight: 600;
+    background: transparent;
+    box-shadow: inset 2px 0 0 var(--es-accent);
+    border-radius: 0;
+}
+@media (hover: hover) {
+    .sidebar-content .es-side-link:hover,
+    .es-side-group:hover,
+    .es-side-toggle:hover {
+        color: var(--es-accent);
+    }
+}
+
+/* Reports: the first page, and the on-page viewer below it. */
+.es-proof-report {
+    display: grid;
+    gap: var(--es-space-3);
+    width: 100%;
+    max-width: var(--es-measure);
+}
+.es-pdf summary {
+    cursor: pointer;
+    color: var(--es-ink);
+}
+.es-pdf canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: var(--es-space-3);
+    border: var(--es-border);
+    background: #fff;
+}
+figure.es-fig-wide > img {
+    max-width: none;
+}
+.es-band {
+    fill: var(--es-ink);
+    fill-opacity: 0.08;
+    stroke: none;
+}
+.es-swatch-band {
+    height: 0.75rem;
+    border-top: 0;
+    background: var(--es-ink);
+    opacity: 0.12;
+}
+.es-live-title {
+    margin: var(--es-space-4) 0 var(--es-space-1);
+    font-size: 0.875rem;
+    color: var(--es-ink-2);
+}
+
+/* Video. Reserves its shape so the page does not shift while the player loads. */
+.es-video iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: var(--es-radius);
+}
+
+/* Phones: tables shrink a step so four columns fit. */
+@media (max-width: 30rem) {
+    .sl-markdown-content table {
+        font-size: 0.8125rem;
+    }
+    .sl-markdown-content :is(th, td) {
+        padding-inline-end: 0.5rem;
+    }
+}

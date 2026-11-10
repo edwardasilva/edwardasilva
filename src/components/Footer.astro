@@ -1,0 +1,46 @@
+---
+/**
+ * src/components/Footer.astro
+ * Page Footer
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 09 November, 2026
+ *
+ * Starlight previous and next links, then contact links and the all rights reserved line.
+ *
+ * File Structure:
+ * - Default footer
+ * - Contact links
+ * - License notice
+ *
+ * Where this file is used within the repository:
+ * - Starlight Footer override, set in astro.config.mjs
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import Default from '@astrojs/starlight/components/Footer.astro';
+import ExternalLink from './ExternalLink.astro';
+import { resume } from '../data/resume';
+
+const { email, github, linkedin, name } = resume.personal;
+---
+
+<Default />
+<div class="es-footer">
+    <nav aria-label="Contact and other pages">
+        <a href={`mailto:${email}`}>{email}</a>
+        <ExternalLink href={linkedin} rel="me noopener noreferrer">
+            LinkedIn
+        </ExternalLink>
+        <ExternalLink href={github} rel="me noopener noreferrer">
+            GitHub
+        </ExternalLink>
+        <a href="/skills/">Skills</a>
+    </nav>
+    <p>Copyright {name}. All rights reserved.</p>
+</div>

@@ -1,0 +1,66 @@
+---
+/**
+ * src/pages/experiences/[slug].astro
+ * Role Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 08 November, 2026
+ * Last Update: 08 November, 2026
+ *
+ * One page per role marked for the site, laid out like a project page: the facts block under
+ * the title, then the summary and highlights. The text comes only from the Summary and
+ * Highlights in resume-data.json, which stay at resume level.
+ *
+ * File Structure:
+ * - getStaticPaths: one route per visible experience
+ * - Summary, then highlights
+ *
+ * Where this file is used within the repository:
+ * - Route: /experiences/<slug>, listed in the sidebar by astro.config.mjs from resume-data.json
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { asSentence, getExperienceSlug, visibleExperiences } from '../../data/resume';
+import type { Experience } from '../../data/types';
+
+/**
+ * @brief Lists a route for every role shown on the site
+ * @return Route params and the experience for each page
+ */
+export function getStaticPaths() {
+    return visibleExperiences.map((experience) => ({
+        params: { slug: getExperienceSlug(experience) },
+        props: { experience },
+    }));
+}
+
+interface Props {
+    experience: Experience;
+}
+
+const { experience } = Astro.props;
+const slug = getExperienceSlug(experience);
+---
+
+<StarlightPage
+    frontmatter={{
+        title: experience.company,
+        description: `${experience.title} at ${experience.company}, ${experience.duration}.`,
+        role: slug,
+        tableOfContents: false,
+    }}
+>
+    {experience.Summary && <p>{asSentence(experience.Summary)}</p>}
+    {experience.Highlights.length > 0 && (
+        <ul>
+            {experience.Highlights.map((highlight) => (
+                <li>{asSentence(highlight)}</li>
+            ))}
+        </ul>
+    )}
+</StarlightPage>

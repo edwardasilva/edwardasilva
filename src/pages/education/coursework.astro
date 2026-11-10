@@ -1,0 +1,64 @@
+---
+/**
+ * src/pages/education/coursework.astro
+ * Coursework Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 08 November, 2026
+ *
+ * The full course list, one level down from Education.
+ *
+ * File Structure:
+ * - One group per department, each a ledger of course rows
+ * - Script: opens the course a link points at
+ *
+ * Where this file is used within the repository:
+ * - Route: /education/coursework
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import CourseEntry from '../../components/CourseEntry.astro';
+import { asSentence, courseCategories, resume } from '../../data/resume';
+---
+
+<StarlightPage
+    frontmatter={{
+        title: 'Coursework',
+        description: asSentence(resume.site.pages.coursework.description),
+        tableOfContents: false,
+    }}
+>
+    {courseCategories.map((entry) => (
+        <>
+            <h2>{entry.category}</h2>
+            <div class="es-courses not-content">
+                {entry.courses.map((course) => (
+                    <CourseEntry course={course} />
+                ))}
+            </div>
+        </>
+    ))}
+</StarlightPage>
+
+<script>
+    /**
+     * @brief Opens the course the address points at, so a link from another page lands on it open
+     * @return Nothing
+     */
+    function openTargetCourse(): void {
+        const target = document.getElementById(location.hash.slice(1));
+
+        if (target instanceof HTMLDetailsElement && target.classList.contains('es-course')) {
+            target.open = true;
+        }
+    }
+
+    openTargetCourse();
+    window.addEventListener('hashchange', openTargetCourse);
+</script>

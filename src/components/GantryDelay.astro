@@ -1,0 +1,264 @@
+---
+/**
+ * src/components/GantryDelay.astro
+ * Gantry Delay Figure
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Live figure: drag a transport delay into the position measurement of the reference-scaling crane
+ * controller and watch it lose stability. The build fails if the simulation drifts more than 5 percent
+ * from any number in the report, or if the instability moves away from the predicted delay.
+ *
+ * File Structure:
+ * - Build-time gate against the report
+ * - Controls, prerendered plot at 0.15 s, readout, and comparison table
+ * - Script: redraws on slider, preset, and saturation changes
+ *
+ * Where this file is used within the repository:
+ * - src/content/docs/projects/MCD-project.mdx
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import Plot from './Plot.astro';
+import { C_PREDICTED_LIMIT_S, C_REPORT, measure, sampleResponse, simulate } from '../lib/gantry';
+import { linePath, makePlot } from '../lib/plot';
+
+interface Props {
+    number: number;
+}
+
+const C_START_DELAY = 0.15;
+const C_MAX_DRIFT = 0.05;
+const C_SECONDS = 30;
+
+const linear = measure(simulate({ delay: 0, saturate: false }));
+const saturated = measure(simulate({ delay: 0, saturate: true }));
+const justBefore = measure(simulate({ delay: 0.18, saturate: false }));
+const justAfter = measure(simulate({ delay: 0.19, saturate: false }));
+const start = measure(simulate({ delay: C_START_DELAY, saturate: false }));
+
+/**
+ * @brief Fails the build when a simulated number drifts from the report
+ * @param simulated Value from the simulation
+ * @param reported Value from the report
+ * @return Nothing
+ */
+function assertClose(simulated: number | null, reported: number): void {
+    if (simulated === null || Math.abs(simulated - reported) / reported > C_MAX_DRIFT) {
+        throw new Error(`[ERROR] Gantry figure drifted: ${simulated} against report ${reported}`);
+    }
+}
+
+assertClose(linear.overshoot, C_REPORT.linear.overshoot);
+assertClose(linear.settling, C_REPORT.linear.settling);
+assertClose(saturated.overshoot, C_REPORT.saturated.overshoot);
+assertClose(saturated.settling, C_REPORT.saturated.settling);
+
+if (justBefore.settling === null || justAfter.settling !== null) {
+    throw new Error('[ERROR] Gantry figure no longer loses stability near 0.1878 s');
+}
+
+const plot = makePlot(0, C_SECONDS, -0.5, 2.5);
+const base = sampleResponse(simulate({ delay: 0, saturate: false }), C_SECONDS);
+const live = sampleResponse(simulate({ delay: C_START_DELAY, saturate: false }), C_SECONDS);
+
+/**
+ * @brief Formats a settling time for the readout
+ * @param settling Settling time in seconds, or null
+ * @return Sentence for the readout
+ */
+function settlingText(settling: number | null): string {
+    return settling === null
+        ? 'It does not settle within 60 s.'
+        : `It settles in ${settling.toFixed(2)} s.`;
+}
+---
+
+<figure class="es-fig es-live" data-gantry-delay data-plot-config={JSON.stringify(plot)}>
+    <div class="es-live-controls not-content" data-controls hidden>
+        <label for="gantry-delay">Delay added to the position measurement</label>
+        <input
+            id="gantry-delay"
+            type="range"
+            min="0"
+            max="0.3"
+            step="0.002"
+            value={C_START_DELAY}
+            data-slider
+        />
+        <div class="es-live-presets">
+            <button type="button" data-preset="0">
+                None
+            </button>
+            <button type="button" data-preset="0.18">
+                0.18 s
+            </button>
+            <button type="button" data-preset={C_PREDICTED_LIMIT_S}>
+                0.1878 s, the predicted limit
+            </button>
+            <button type="button" data-preset="0.25">
+                0.25 s
+            </button>
+        </div>
+        <label class="es-live-check">
+            <input type="checkbox" data-saturate />
+            Limit the actuator to 1 m/s
+        </label>
+    </div>
+
+    <ul class="es-live-legend not-content" aria-hidden="true">
+        <li>
+            <span class="es-swatch es-swatch-live"></span>With the delay
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-base"></span>No delay
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-ref"></span>1 m reference
+        </li>
+    </ul>
+
+    <Plot
+        id="gantry-delay-plot"
+        plot={plot}
+        xTicks={[0, 10, 20, 30]}
+        yTicks={[0, 1, 2]}
+        xLabel="Time (s)"
+        yLabel="Position (m)"
+        label="Load position against time for a 1 meter step, with and without the added delay"
+        paths={[
+            { key: 'ref', class: 'es-ref', d: linePath([0, C_SECONDS], [1, 1], plot) },
+            { key: 'base', class: 'es-line-base', d: linePath(base.times, base.values, plot) },
+            { key: 'live', class: 'es-line-live', d: linePath(live.times, live.values, plot) },
+        ]}
+    />
+
+    <p class="es-live-read" aria-live="polite" data-read>
+        Delay {C_START_DELAY.toFixed(3)} s. Overshoot {start.overshoot.toFixed(1)}%.{' '}
+        {settlingText(start.settling)}
+    </p>
+    <noscript>
+        <p>The slider needs JavaScript. The curve above is the 0.15 s case.</p>
+    </noscript>
+
+    <div class="es-table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">No added delay</th>
+                    <th scope="col">Report</th>
+                    <th scope="col">This figure</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Overshoot, no saturation</td>
+                    <td>{C_REPORT.linear.overshoot.toFixed(2)}%</td>
+                    <td>{linear.overshoot.toFixed(2)}%</td>
+                </tr>
+                <tr>
+                    <td>Settling time, no saturation</td>
+                    <td>{C_REPORT.linear.settling.toFixed(2)} s</td>
+                    <td>{linear.settling?.toFixed(2)} s</td>
+                </tr>
+                <tr>
+                    <td>Overshoot, 1 m/s limit</td>
+                    <td>{C_REPORT.saturated.overshoot.toFixed(2)}%</td>
+                    <td>{saturated.overshoot.toFixed(2)}%</td>
+                </tr>
+                <tr>
+                    <td>Settling time, 1 m/s limit</td>
+                    <td>{C_REPORT.saturated.settling.toFixed(2)} s</td>
+                    <td>{saturated.settling?.toFixed(2)} s</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <figcaption>
+        <span class="es-fignum">Figure {Astro.props.number}</span>
+        <span>
+            A 1 m step on the reference-scaling controller, run in your browser. It uses the gains
+            from the Part 2 report on the linearized plant. The report's Simulink model used the
+            nonlinear plant, so the two columns differ slightly. The 2% settling band matches the
+            report's. A run still outside the band in its last second counts as not settled.
+        </span>
+    </figcaption>
+</figure>
+
+<script>
+    import { measure, positionAt, sampleResponse, simulate } from '../lib/gantry';
+    import { attachCrosshair, linePath, type PlotConfig } from '../lib/plot';
+
+    const C_SECONDS = 30;
+
+    for (const root of document.querySelectorAll<HTMLElement>('[data-gantry-delay]')) {
+        const plot = JSON.parse(root.dataset.plotConfig ?? '{}') as PlotConfig;
+        const slider = root.querySelector<HTMLInputElement>('[data-slider]')!;
+        const saturate = root.querySelector<HTMLInputElement>('[data-saturate]')!;
+        const live = root.querySelector<SVGPathElement>('[data-path="live"]')!;
+        const base = root.querySelector<SVGPathElement>('[data-path="base"]')!;
+        const read = root.querySelector<HTMLElement>('[data-read]')!;
+        let delay = Number(slider.value);
+        let livePositions: number[] = [];
+        let basePositions: number[] = [];
+
+        root.querySelector<HTMLElement>('[data-controls]')!.hidden = false;
+
+        /**
+         * @brief Reruns both simulations and redraws the chart and readout
+         * @return Nothing
+         */
+        const update = () => {
+            const limited = saturate.checked;
+
+            livePositions = simulate({ delay, saturate: limited });
+            basePositions = simulate({ delay: 0, saturate: limited });
+
+            const livePoints = sampleResponse(livePositions, C_SECONDS);
+            const basePoints = sampleResponse(basePositions, C_SECONDS);
+
+            live.setAttribute('d', linePath(livePoints.times, livePoints.values, plot));
+            base.setAttribute('d', linePath(basePoints.times, basePoints.values, plot));
+
+            const { overshoot, settling } = measure(livePositions);
+            const settled =
+                settling === null
+                    ? 'It does not settle within 60 s.'
+                    : `It settles in ${settling.toFixed(2)} s.`;
+            const digits = delay === 0.1878 ? 4 : 3;
+            const peak = overshoot > 1000 ? 'over 1000' : overshoot.toFixed(1);
+
+            read.textContent = `Delay ${delay.toFixed(digits)} s. Overshoot ${peak}%. ${settled}`;
+        };
+
+        slider.addEventListener('input', () => {
+            delay = Number(slider.value);
+            update();
+        });
+        saturate.addEventListener('change', update);
+
+        for (const button of root.querySelectorAll<HTMLButtonElement>('[data-preset]')) {
+            button.addEventListener('click', () => {
+                delay = Number(button.dataset.preset);
+                slider.value = String(delay);
+                update();
+            });
+        }
+
+        attachCrosshair(
+            root.querySelector<HTMLElement>('[data-plot]')!,
+            plot,
+            (time) =>
+                `${time.toFixed(1)} s: ${positionAt(livePositions, time)} m with the delay, ${positionAt(basePositions, time)} m without`
+        );
+
+        update();
+    }
+</script>
