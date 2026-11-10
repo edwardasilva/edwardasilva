@@ -23,7 +23,7 @@ slug: projects/seed-robot
 import Figure from '../../../components/Figure.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-Our robot had the second-fastest final run in the class. The vision code finds ArUco markers (printed square codes a camera can locate) and works out the angle and distance to each one. It reads a green or red arrow beside the marker to pick left or right. It sends those over I2C to the team's Arduino motor controller.
+Our robot had the second-fastest final run in the class. The exact run times and the class size were not recorded, so I have no figures to give. The vision code finds ArUco markers (printed square codes a camera can locate) and works out the angle and distance to each one. It reads a green or red arrow beside the marker to pick left or right. It sends those over I2C to the team's Arduino motor controller.
 
 <Figure name="robot/front" number={1} narrow plate={false} alt="The robot from the front, showing its two large wheels, drive motors, and electronics.">
   The robot from the front.
@@ -62,7 +62,7 @@ Calibration gave us the most trouble. We calibrated the camera with checkerboard
 
 ## Speeding up the Python
 
-The Python was far too slow at first. I split it into threads for capture, processing, display, and the LCD, so each stage of the 640x480 video ran on its own. Processing got much faster, and the Arduino stopped waiting on the Python.
+The Python was far too slow at first. I split it into threads for capture, processing, display, and the LCD, so each stage of the 640x480 video ran on its own. Processing got much faster, and the Arduino stopped waiting on the Python. I did not record the frame rate or loop time before and after, so the speedup has no number.
 
 ### Dropping stale frames
 
