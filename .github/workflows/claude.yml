@@ -22,6 +22,7 @@ jobs:
   claude:
     name: Claude
     if: >-
+      github.event.pull_request.head.repo.fork != true && (
       (github.event_name == 'issues' &&
         github.event.label.name == 'claude' &&
         github.event.sender.login == github.repository_owner) ||
@@ -33,7 +34,7 @@ jobs:
         contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review' &&
         github.event.review.user.login == github.repository_owner &&
-        contains(github.event.review.body, '@claude'))
+        contains(github.event.review.body, '@claude')))
     runs-on: ubuntu-latest
     timeout-minutes: 30
     # Runs only on the explicit triggers above, never on every push or pull request, to save
@@ -56,6 +57,20 @@ jobs:
       id-token: write
       actions: read
     steps:
+      # The job condition covers review events. A comment on a pull request carries no
+      # head repo, so this step checks it and stops on a pull request from a fork.
+      - name: Refuse pull requests from forks
+        if: github.event_name == 'issue_comment' && github.event.issue.pull_request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.issue.number }}
+        run: |
+          cross="$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json isCrossRepository --jq .isCrossRepository)"
+          if [ "$cross" = "true" ]; then
+            echo "::error::Claude does not run on pull requests from forks."
+            exit 1
+          fi
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
@@ -102,5 +117,5 @@ jobs:
             --model claude-sonnet-5-5
             --advisor claude-opus-5-5
             --allowedTools "Bash(npm ci --ignore-scripts),Bash(npm run:*),Bash(npx astro:*),Bash(npx tsc --noEmit),Bash(npx -y playwright@1.64.1 install --with-deps chromium),Bash(npx -y playwright@1.64.1 screenshot:*),Bash(curl -sI http://localhost:*),Bash(sleep:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(git add:*),Bash(git rm:*),Bash(git mv:*),Bash(git restore:*),Bash(git commit:*),Bash(git checkout:*),Bash(git switch:*),Bash(git branch:*),Bash(git fetch:*),Bash(git merge:*),Bash(git push:*),Bash(gh pr create:*),Bash(gh pr view:*),Bash(gh pr edit:*),Bash(gh pr diff:*),Bash(gh pr checks:*),Bash(gh pr comment:*),Bash(gh pr list:*),Bash(gh issue view:*),Bash(gh issue list:*),Bash(gh issue comment:*),Bash(gh run view:*),Bash(gh run list:*)"
-            --disallowedTools "Bash(gh pr merge:*),Bash(gh release:*),Bash(gh secret:*),Bash(gh variable:*),Bash(gh api:*),Bash(git tag:*),Bash(git push origin main:*),Bash(git push origin HEAD:main:*),Bash(git push -u origin main:*),Bash(git push --tags:*),Bash(git push --delete:*),Bash(git push origin --delete:*),Bash(git push -f:*),Bash(git push --force:*),Bash(git push --force-with-lease:*),Bash(git rebase:*),Bash(git pull:*),Bash(env:*),Bash(printenv:*)"
+            --disallowedTools "Bash(gh pr merge:*),Bash(gh release:*),Bash(gh secret:*),Bash(gh variable:*),Bash(gh api:*),Bash(git tag:*),Bash(git push origin main:*),Bash(git push origin HEAD:main:*),Bash(git push origin +HEAD:main:*),Bash(git push origin HEAD:refs/heads/main:*),Bash(git push origin +HEAD:refs/heads/main:*),Bash(git push origin refs/heads/main:*),Bash(git push origin +refs/heads/main:*),Bash(git push origin +main:*),Bash(git push -u origin main:*),Bash(git push -u origin HEAD:main:*),Bash(git push -u origin HEAD:refs/heads/main:*),Bash(git push --tags:*),Bash(git push --delete:*),Bash(git push origin --delete:*),Bash(git push -f:*),Bash(git push --force:*),Bash(git push --force-with-lease:*),Bash(git rebase:*),Bash(git pull:*),Bash(env:*),Bash(printenv:*)"
             --append-system-prompt 'You are the Claude Code GitHub Action, working in edwardasilva, the public repo for edwardasilva.com. Read information/.agents/AGENTS.md and information/.agents/STYLE.md before you change anything, and follow them. Work only on your own claude/ branch, or on the branch of the pull request you were called on. Never push to main, never force-push, never rebase, never merge a pull request, never create or push a tag, and never create a release. A merge is always a squash merge, and the repo owner does it. A release is cut only when the owner asks. When you start from an issue, finish by opening a pull request into main with gh pr create. Fill in .github/pull_request_template.md if the repo has one. The body must name the issue on a line of its own as Part of #N, and must also have the line Closes #N. When you are called on a pull request, push the fix to that pull request branch, and answer every question in your comment. Keep each pull request to one change. Run the checks the rules name before you push. Do not use emojis anywhere. Keep examples neutral, such as Alex Doe with they and them. Site issues for edwardasilva.com live in this repo. information/ is the private data submodule (resume-data.json and agent rules); you can read it here but cannot change it. Private data issues live in edwardasilva/information. If the change needs information/, say so in your comment. Run npm ci --ignore-scripts, then npm run lint and npm run build, before you push. Run commands plainly, without pipes or redirects, so they match the allowed list. To see a layout, run npm run build, start npm run preview in the background, run npx -y playwright@1.64.1 install --with-deps chromium, then npx -y playwright@1.64.1 screenshot --viewport-size "1440, 900" http://localhost:4321/<page>/ /tmp/<name>.png at 1440, 1280, 1024, and 390 wide, and read the PNG files. Never print environment variables or secrets. On any change that touches more than one file or more than about 50 lines, consult the advisor before you start and before you open the pull request.'
