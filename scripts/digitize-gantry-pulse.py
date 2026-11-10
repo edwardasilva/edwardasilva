@@ -11,7 +11,9 @@ dark-theme copies can be written like every other plot under src/figures. The re
 two as PNG screenshots of a MATLAB figure, and the Simulink models behind them cannot run here, so
 this script reads each curve back out of the PNG by its MATLAB line color and redraws it. The axes
 limits are the ones MATLAB printed on the frame: 0 to 30 s and -1 to 2.5. Each curve is read once
-per pixel column, so the data is only as fine as the source image.
+per pixel column, so the data is only as fine as the source image. The script runs only with the
+original report images (reference-scaling.png and augmented.png), which are not in this repo, and
+the committed SVGs are its output.
 
 File Structure:
 - C_SERIES: the four MATLAB default colors and the legend label each one carries

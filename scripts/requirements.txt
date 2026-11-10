@@ -1,0 +1,23 @@
+# scripts/requirements.txt
+# Python Requirements
+#
+# Author: Edward Silva
+# Creation Date: 10 November, 2026
+# Last Update: 10 November, 2026
+#
+# Pins the two Python packages that scripts/digitize-gantry-pulse.py imports.
+#
+# File Structure:
+# - numpy: reads the curve pixels as arrays
+# - Pillow: opens the source PNGs
+#
+# Where this file is used within the repository:
+# - Read only by scripts/digitize-gantry-pulse.py. No npm script installs it.
+#
+# Usage:
+# $ `python3 -m pip install -r scripts/requirements.txt` : Installs the pinned packages
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
+numpy==2.3.5
+Pillow==12.0.0
