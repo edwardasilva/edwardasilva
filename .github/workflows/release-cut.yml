@@ -44,6 +44,11 @@ jobs:
           ref: ${{ steps.pointer.outputs.sha }}
           ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
           path: information
+          filter: blob:none
+          sparse-checkout: |
+            resume-data.json
+            .agents/
+          sparse-checkout-cone-mode: false
           persist-credentials: false
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -75,7 +80,7 @@ jobs:
             --model claude-opus-5-5
             --allowedTools "Bash(npm ci --ignore-scripts),Bash(npm run:*),Bash(npx astro:*),Bash(npx tsc --noEmit),Bash(npx -y playwright@1.64.1 install --with-deps chromium),Bash(npx -y playwright@1.64.1 screenshot:*),Bash(curl -sI http://localhost:*),Bash(sleep:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr checks:*),Bash(gh pr list:*),Bash(gh issue view:*),Bash(gh issue list:*),Bash(gh issue comment:*),Bash(gh issue create:*),Bash(gh run view:*),Bash(gh run list:*)"
             --disallowedTools "Bash(gh pr merge:*),Bash(gh release:*),Bash(gh secret:*),Bash(gh variable:*),Bash(gh api:*),Bash(git tag:*),Bash(git push origin main:*),Bash(git push origin HEAD:main:*),Bash(git push -u origin main:*),Bash(git push --tags:*),Bash(git push --delete:*),Bash(git push origin --delete:*),Bash(git push -f:*),Bash(git push --force:*),Bash(git push --force-with-lease:*),Bash(git rebase:*),Bash(git pull:*),Bash(env:*),Bash(printenv:*)"
-            --append-system-prompt 'You are running a release-cut sweep in edwardasilva. This job is read only: do not commit, push, open a pull request, merge, tag, or release. Sweep the whole repository and its checked-out submodules, looking for bugs, broken links, stale docs, licensing and notice gaps, secrets or private data, and slop. For each distinct finding, open one GitHub issue with label release-sweep. Put file paths and line numbers in the issue body. Before opening an issue, list open issues with label release-sweep and skip any finding that already has one. Do not use emojis. Never print environment variables or secrets. When finished, stop. Do not open a pull request.'
+            --append-system-prompt 'You are running a release-cut sweep in edwardasilva. This job is read only: do not commit, push, open a pull request, merge, tag, or release. Sweep this repository. information/ is private: read it to build the site, but never quote it, name its files, or open an issue about it here. Report a problem in information/ as one line saying the private repo needs a look, looking for bugs, broken links, stale docs, licensing and notice gaps, secrets or private data, and slop. For each distinct finding, open one GitHub issue with label release-sweep. Put file paths and line numbers in the issue body. Before opening an issue, list open issues with label release-sweep and skip any finding that already has one. Do not use emojis. Never print environment variables or secrets. When finished, stop. Do not open a pull request.'
 
       - name: Collect new release-sweep issues
         id: collect
