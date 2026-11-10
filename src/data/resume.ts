@@ -48,6 +48,9 @@ import type {
 
 const C_SITE_COURSE_PREFIXES = new Set(['CSCI', 'EENG']);
 const C_PLACEHOLDER_PATTERN = /\[INSERT[^\]]*\]/i;
+const C_DATE_WORD =
+    '(?:\\d{4}|Present|January|February|March|April|May|June|July|August|September|October|November|December|Spring|Summer|Fall|Winter)';
+const C_RANGE_HYPHEN_PATTERN = new RegExp(`(${C_DATE_WORD}) - (?=${C_DATE_WORD}\\b)`, 'g');
 
 // Every file under src/assets, keyed by the /assets/ URL it is served from. Lazy glob, so
 // nothing is bundled. It only answers whether a referenced file is in the repo.
@@ -69,6 +72,28 @@ function filledText(value: unknown): string | undefined {
 
     const trimmed = value.trim();
     return trimmed && !C_PLACEHOLDER_PATTERN.test(trimmed) ? trimmed : undefined;
+}
+
+/**
+ * @brief Joins a date range with an unspaced en dash
+ * @param value Text such as July 2026 - Present, or an honor that starts with 2023 - 2024
+ * @return The text with each spaced hyphen between two dates replaced by an en dash
+ * @details The data file spells ranges with a spaced hyphen, and the site style is an unspaced
+ * en dash. Only a hyphen between two dates, months, semesters, or Present is changed, so a
+ * title such as Project Report - Part 1 is left alone.
+ */
+function dashRange(value: string): string {
+    return value.replace(C_RANGE_HYPHEN_PATTERN, '$1–');
+}
+
+/**
+ * @brief Returns a date range as filled text, joined with an en dash
+ * @param value Unknown duration from content
+ * @return Range with an en dash, or undefined when empty or a placeholder
+ */
+function filledRange(value: unknown): string | undefined {
+    const text = filledText(value);
+    return text === undefined ? undefined : dashRange(text);
 }
 
 /**
@@ -155,6 +180,7 @@ function normalizeWork<T extends WorkEntry>(entry: T): T {
     return {
         ...entry,
         navLabel: filledText(entry.navLabel),
+        duration: filledRange(entry.duration) ?? entry.duration,
         Summary: filledText(entry.Summary),
         skills: skillList([...filledList(entry.skills), ...filledList(entry.siteSkills)]),
         Resume: filledList(entry.Resume),
@@ -207,8 +233,8 @@ function normalizeProject(project: Project): Project {
 function normalizeEducation(education: Education): Education {
     return {
         ...education,
-        honors: filledList(education.honors),
-        scholarships: filledList(education.scholarships),
+        honors: filledList(education.honors).map(dashRange),
+        scholarships: filledList(education.scholarships).map(dashRange),
         courses: Object.fromEntries(
             Object.entries(education.courses ?? {}).map(([category, courses]) => [
                 category,
@@ -248,7 +274,7 @@ function normalizeCertification(certification: Certification): Certification {
 function normalizeOrganization(organization: Organization): Organization | null {
     const name = filledText(organization?.name);
     const role = filledText(organization?.role);
-    const duration = filledText(organization?.duration);
+    const duration = filledRange(organization?.duration);
 
     if (!name || !role || !duration) {
         return null;
@@ -282,7 +308,7 @@ function normalizeAboutRole(role: AboutRole): AboutRole | null {
         title,
         employer,
         location: filledText(role.location),
-        duration: filledText(role.duration),
+        duration: filledRange(role.duration),
         Summary: filledText(role.Summary),
     };
 }
