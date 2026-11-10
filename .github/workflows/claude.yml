@@ -86,6 +86,12 @@ jobs:
           cache: npm
 
       - uses: anthropics/claude-code-action@9eb012b6d0900c2b9eede65ee1758cec4d2973e9 # v1.0.270
+
+        env:
+
+          # Subagents Claude starts run on Haiku.
+
+          CLAUDE_CODE_SUBAGENT_MODEL: haiku
         with:
           # A Claude Max login made with `claude setup-token`, not an API key.
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -96,6 +102,7 @@ jobs:
           additional_permissions: |
             actions: read
           claude_args: |
+            --model claude-sonnet-5-5
             --advisor claude-opus-5-5
             --allowedTools "Bash(npm ci --ignore-scripts),Bash(npm run:*),Bash(npx astro:*),Bash(npx tsc --noEmit),Bash(npx -y playwright@1.64.1 install --with-deps chromium),Bash(npx -y playwright@1.64.1 screenshot:*),Bash(curl -sI http://localhost:*),Bash(sleep:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(git add:*),Bash(git rm:*),Bash(git mv:*),Bash(git restore:*),Bash(git commit:*),Bash(git checkout:*),Bash(git switch:*),Bash(git branch:*),Bash(git fetch:*),Bash(git merge:*),Bash(git push:*),Bash(gh pr create:*),Bash(gh pr view:*),Bash(gh pr edit:*),Bash(gh pr diff:*),Bash(gh pr checks:*),Bash(gh pr comment:*),Bash(gh pr list:*),Bash(gh issue view:*),Bash(gh issue list:*),Bash(gh issue comment:*),Bash(gh run view:*),Bash(gh run list:*)"
             --disallowedTools "Bash(gh pr merge:*),Bash(gh release:*),Bash(gh secret:*),Bash(gh variable:*),Bash(gh api:*),Bash(git tag:*),Bash(git push origin main:*),Bash(git push origin HEAD:main:*),Bash(git push -u origin main:*),Bash(git push --tags:*),Bash(git push --delete:*),Bash(git push origin --delete:*),Bash(git push -f:*),Bash(git push --force:*),Bash(git push --force-with-lease:*),Bash(git rebase:*),Bash(git pull:*),Bash(env:*),Bash(printenv:*)"
