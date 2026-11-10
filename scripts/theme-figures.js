@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 09 November, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Writes a dark-theme copy of every SVG plot under src/figures. The plots come from MATLAB and
  * matplotlib reports drawn for a white page, so Figure.astro used to put them on a white plate in
@@ -15,6 +15,7 @@
  *
  * File Structure:
  * - C_DARK: the theme colours the dark copy uses
+ * - C_SERIES: the four data series colours and their dark values
  * - parseColor, luminance, lighten: colour maths
  * - darkColor: maps one colour from the light file to the dark copy
  * - themeSvg: rewrites every fill, stroke, and stop-color in one file
@@ -47,6 +48,15 @@ const C_DARK = {
     ink: [0xec, 0xee, 0xf2],
     silver: [0x76, 0x80, 0x8f],
     rule: [0x3b, 0x43, 0x52],
+};
+
+// The four series colours in the light plots and the dark value each one takes. These bypass the
+// generic lighten step. Keep them in step with the series palette in the issue that set it.
+const C_SERIES = {
+    '#16233a': '#eceef2',
+    '#1d5f8a': '#7fb3d9',
+    '#3f6b22': '#9cc77a',
+    '#838c9a': '#76808f',
 };
 
 // The smallest relative luminance a coloured line or marker keeps on navy paper.
@@ -145,6 +155,12 @@ function darkColor(value) {
 
     if (!channels) {
         return value;
+    }
+
+    const series = C_SERIES[toHex(channels)];
+
+    if (series) {
+        return series;
     }
 
     const lum = luminance(channels);
