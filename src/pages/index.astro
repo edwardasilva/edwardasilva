@@ -5,16 +5,15 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
- * Who this is, the strongest technical work first, then experience, writing and tools, more
- * projects, and what comes next.
+ * Who this is, the strongest technical work first, then experience, more projects, and what
+ * comes next.
  *
  * File Structure:
  * - Hero
  * - Selected work
  * - Experience
- * - Writing and tools
  * - More projects
  * - Next, from about.future in resume-data.json
  *
@@ -33,7 +32,6 @@ import { getHomeProjectPages } from '../data/projects';
 import { asSentence, getExperienceHref, resume, visibleExperiences } from '../data/resume';
 
 const selected = getHomeProjectPages('selected');
-const writing = getHomeProjectPages('writing');
 const more = getHomeProjectPages('more');
 const { home } = resume.site.pages;
 const C_FOCUS_FALLBACK = 'My projects are in state estimation, signal processing, and control';
@@ -77,13 +75,6 @@ const next = resume.about.future.slice(0, 2);
             <p>
                 <a href="/experiences/">All experience</a>
             </p>
-        </>
-    )}
-
-    {writing.length > 0 && (
-        <>
-            <h2>Writing and tools</h2>
-            <ProjectCards pages={writing} />
         </>
     )}
 

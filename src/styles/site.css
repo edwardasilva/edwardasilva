@@ -158,8 +158,7 @@ button[data-open-modal] kbd {
     gap: 1rem;
 }
 /* Selected work on the home page has three cards: 1 column on phones, 3
-   across from 640 px. Writing and tools and More projects keep the
-   auto-fit row above. */
+   across from 640 px. More projects keeps the auto-fit row above. */
 .es-cards--selected {
     grid-template-columns: 1fr;
 }
