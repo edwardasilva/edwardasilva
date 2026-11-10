@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Adds the share image, author, llms.txt link, structured data, and font preload to the head
  * Starlight builds.
@@ -13,7 +13,7 @@
  * File Structure:
  * - Author and llms.txt link
  * - Share image from the OG route
- * - No canonical link on the 404 page
+ * - No canonical link, og:url, or page and breadcrumb data on the 404 page, which gets a noindex
  * - Structured data: page, site, and breadcrumbs
  *
  * Where this file is used within the repository:
@@ -82,13 +82,23 @@ if (cardSlug) {
     );
 }
 
-const breadcrumbs = breadcrumbSchema(pathname, site, title);
+// The 404 page is served for every missing URL, so it has no URL of its own to publish.
+if (isNotFound) {
+    route.head = route.head.filter(
+        (tag) => !(tag.tag === 'meta' && tag.attrs?.property === 'og:url')
+    );
+    route.head.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex' } });
+}
+
+const breadcrumbs = isNotFound ? undefined : breadcrumbSchema(pathname, site, title);
 ---
 
 <Default />
-<JsonLd
-    data={pageSchema({ url: canonicalUrl, title, description: pageDescription, isHome }, site)}
-/>
+{!isNotFound && (
+    <JsonLd
+        data={pageSchema({ url: canonicalUrl, title, description: pageDescription, isHome }, site)}
+    />
+)}
 <JsonLd data={websiteSchema(site)} />
 {breadcrumbs && <JsonLd data={breadcrumbs} />}
 <link rel="preload" href={serifUrl} as="font" type="font/woff2" crossorigin />
