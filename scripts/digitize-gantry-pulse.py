@@ -183,8 +183,8 @@ def write_svg(path, series, title):
         lines.append(f'<line x1="{left}" y1="{y:.1f}" x2="{left + 8}" y2="{y:.1f}" stroke="#262626" stroke-width="1"/>')
         lines.append(f'<text x="{left - 12}" y="{y + 8:.1f}" font-family="Helvetica, Arial, sans-serif" font-size="22" text-anchor="end" fill="#262626">{tick:g}</text>')
 
-    lines.append(f'<text x="{(left + right) / 2:.1f}" y="{height - 12}" font-family="Helvetica, Arial, sans-serif" font-size="24" text-anchor="middle" fill="#262626">Time (seconds)</text>')
-    lines.append(f'<text x="24" y="{(top + bottom) / 2:.1f}" font-family="Helvetica, Arial, sans-serif" font-size="24" text-anchor="middle" fill="#262626" transform="rotate(-90 24 {(top + bottom) / 2:.1f})">data</text>')
+    lines.append(f'<text x="{(left + right) / 2:.1f}" y="{height - 12}" font-family="Helvetica, Arial, sans-serif" font-size="24" text-anchor="middle" fill="#262626">Time (s)</text>')
+    lines.append(f'<text x="24" y="{(top + bottom) / 2:.1f}" font-family="Helvetica, Arial, sans-serif" font-size="24" text-anchor="middle" fill="#262626" transform="rotate(-90 24 {(top + bottom) / 2:.1f})">Position (m), velocity (m/s)</text>')
     lines.append(f'<text x="{(left + right) / 2:.1f}" y="22" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#262626">{title}</text>')
 
     for (label, color), points in zip(C_SERIES, series):
