@@ -112,7 +112,7 @@ export const GET: APIRoute = async ({ site }) => {
                   '',
                   ...otherExperiences.map(
                       (experience) =>
-                          `- ${experience.title} at ${experience.company}: ${experience.duration}`
+                          `- ${experience.company}, ${experience.title}. ${experience.duration}`
                   ),
               ]
             : []),
