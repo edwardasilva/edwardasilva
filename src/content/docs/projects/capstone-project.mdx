@@ -91,7 +91,7 @@ The gap is cubed, so it dominates. V1's gap was 1.94 mm and V2's is 0.5 mm, whic
 
 The fluid only resists flow if the field crosses the gap perpendicular to the flow. That was the problem I worked on, with limits on space, power draw, and heat.
 
-The coil is about 250 turns of 26 AWG copper on a 9 mm steel core. It runs at 2 A from a 40 V DC supply. I modeled it in Python by summing the field of each loop, since a coil this short does not match the infinite solenoid approximation. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
+The coil is about 250 turns of 26 AWG copper on a 9 mm steel core. It runs at 2 A. I modeled it in Python by summing the field of each loop, since a coil this short does not match the infinite solenoid approximation. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
 
 $$
 B_z = \frac{\mu_0 I}{2\pi}\frac{1}{\sqrt{(a+r)^2 + z^2}}\left[K + \frac{a^2 - r^2 - z^2}{(a-r)^2 + z^2}E\right]
