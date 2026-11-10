@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Reads information/resume-data.json once, cleans it for the site, and exports what the pages render.
  * That file is the only source of the site's data, including the site-only fields and the site
@@ -48,6 +48,9 @@ import type {
 
 const C_SITE_COURSE_PREFIXES = new Set(['CSCI', 'EENG']);
 const C_PLACEHOLDER_PATTERN = /\[INSERT[^\]]*\]/i;
+const C_DATE_WORD =
+    '(?:\\d{4}|Present|January|February|March|April|May|June|July|August|September|October|November|December|Spring|Summer|Fall|Winter)';
+const C_RANGE_HYPHEN_PATTERN = new RegExp(`(${C_DATE_WORD}) - (?=${C_DATE_WORD}\\b)`, 'g');
 
 // Every file under src/assets, keyed by the /assets/ URL it is served from. Lazy glob, so
 // nothing is bundled. It only answers whether a referenced file is in the repo.
@@ -69,6 +72,28 @@ function filledText(value: unknown): string | undefined {
 
     const trimmed = value.trim();
     return trimmed && !C_PLACEHOLDER_PATTERN.test(trimmed) ? trimmed : undefined;
+}
+
+/**
+ * @brief Joins a date range with an unspaced en dash
+ * @param value Text such as July 2026 - Present, or an honor that starts with 2023 - 2024
+ * @return The text with each spaced hyphen between two dates replaced by an en dash
+ * @details The data file spells ranges with a spaced hyphen, and the site style is an unspaced
+ * en dash. Only a hyphen between two dates, months, semesters, or Present is changed, so a
+ * title such as Project Report - Part 1 is left alone.
+ */
+function dashRange(value: string): string {
+    return value.replace(C_RANGE_HYPHEN_PATTERN, '$1–');
+}
+
+/**
+ * @brief Returns a date range as filled text, joined with an en dash
+ * @param value Unknown duration from content
+ * @return Range with an en dash, or undefined when empty or a placeholder
+ */
+function filledRange(value: unknown): string | undefined {
+    const text = filledText(value);
+    return text === undefined ? undefined : dashRange(text);
 }
 
 /**
@@ -96,14 +121,14 @@ function skillList(value: unknown): string[] {
 /**
  * @brief Reads a visibility scope, hiding anything unrecognized
  * @param value Raw visibility value from content
- * @return One of All, Site, or Hide
+ * @return One of All, Site, List, or Hide
  */
 function visibilityScope(value: unknown): VisibilityScope {
-    return value === 'All' || value === 'Site' ? value : 'Hide';
+    return value === 'All' || value === 'Site' || value === 'List' ? value : 'Hide';
 }
 
 /**
- * @brief Checks whether a scope should appear on the website
+ * @brief Checks whether a scope should appear as a write-up page on the website
  * @param scope Visibility scope to evaluate
  * @return True when scope is All or Site
  */
@@ -155,6 +180,7 @@ function normalizeWork<T extends WorkEntry>(entry: T): T {
     return {
         ...entry,
         navLabel: filledText(entry.navLabel),
+        duration: filledRange(entry.duration) ?? entry.duration,
         Summary: filledText(entry.Summary),
         skills: skillList([...filledList(entry.skills), ...filledList(entry.siteSkills)]),
         Resume: filledList(entry.Resume),
@@ -207,8 +233,8 @@ function normalizeProject(project: Project): Project {
 function normalizeEducation(education: Education): Education {
     return {
         ...education,
-        honors: filledList(education.honors),
-        scholarships: filledList(education.scholarships),
+        honors: filledList(education.honors).map(dashRange),
+        scholarships: filledList(education.scholarships).map(dashRange),
         courses: Object.fromEntries(
             Object.entries(education.courses ?? {}).map(([category, courses]) => [
                 category,
@@ -248,7 +274,7 @@ function normalizeCertification(certification: Certification): Certification {
 function normalizeOrganization(organization: Organization): Organization | null {
     const name = filledText(organization?.name);
     const role = filledText(organization?.role);
-    const duration = filledText(organization?.duration);
+    const duration = filledRange(organization?.duration);
 
     if (!name || !role || !duration) {
         return null;
@@ -282,7 +308,7 @@ function normalizeAboutRole(role: AboutRole): AboutRole | null {
         title,
         employer,
         location: filledText(role.location),
-        duration: filledText(role.duration),
+        duration: filledRange(role.duration),
         Summary: filledText(role.Summary),
     };
 }
@@ -384,6 +410,7 @@ export const primaryEducation: Education | undefined = resume.education[0];
 export const visibleExperiences = resume.experiences.filter((entry) =>
     isVisibleOnSite(entry.Visibility)
 );
+export const otherExperiences = resume.experiences.filter((entry) => entry.Visibility === 'List');
 export const visibleProjects = resume.projects.filter((entry) => isVisibleOnSite(entry.Visibility));
 export const visibleCertifications = resume.certifications.filter((entry) =>
     isVisibleOnSite(entry.Visibility)
@@ -394,6 +421,7 @@ export const visibleOrganizations = resume.organizations.filter((entry) =>
 
 // The about route and its header link both read this, so the link cannot outlive the page.
 // site.aboutPublished holds the page back until its narrative is written.
+// C_HAS_ABOUT in astro.config.mjs is the twin of this rule for the sidebar, so change both together.
 export const hasAboutContent =
     resume.site.aboutPublished &&
     isVisibleOnSite(resume.about.Visibility) &&
@@ -440,7 +468,7 @@ export function getExperienceSlug(experience: Experience): string {
  * @return Route path for the project
  */
 export function getProjectHref(project: Project): string {
-    return `/projects/${getProjectSlug(project)}`;
+    return `/projects/${getProjectSlug(project)}/`;
 }
 
 /**
@@ -449,7 +477,7 @@ export function getProjectHref(project: Project): string {
  * @return Route path for the experience
  */
 export function getExperienceHref(experience: Experience): string {
-    return `/experiences/${getExperienceSlug(experience)}`;
+    return `/experiences/${getExperienceSlug(experience)}/`;
 }
 
 /**
@@ -644,4 +672,72 @@ export const skillIndex = buildSkillIndex();
  */
 export function asSentence(text: string): string {
     return /[.!?]$/.test(text) ? text : `${text}.`;
+}
+
+export interface LinkedTextPart {
+    text: string;
+    href?: string;
+}
+
+/**
+ * @brief Splits a sentence into plain text and links to visible project pages
+ * @param text Sentence to scan
+ * @return Parts in order, with an href on each project name that has a page
+ * @details Matches a visible project's slug, navLabel, or title as a whole word, longest
+ * first. The about page uses this because chapter paragraphs arrive as plain strings.
+ */
+export function linkProjectNames(text: string): LinkedTextPart[] {
+    const terms = new Map<string, string>();
+
+    for (const project of visibleProjects) {
+        const href = `/projects/${getProjectSlug(project)}/`;
+
+        for (const label of [project.slug, project.navLabel, project.title]) {
+            const name = label?.trim();
+
+            if (name && !terms.has(name.toLowerCase())) {
+                terms.set(name.toLowerCase(), href);
+            }
+        }
+    }
+
+    const names = [...terms.keys()].sort((left, right) => right.length - left.length);
+
+    if (names.length === 0 || text.length === 0) {
+        return [{ text }];
+    }
+
+    const pattern = new RegExp(
+        `(?<![A-Za-z0-9])(${names.map(escapeRegExp).join('|')})(?![A-Za-z0-9])`,
+        'gi'
+    );
+    const parts: LinkedTextPart[] = [];
+    let cursor = 0;
+
+    for (const match of text.matchAll(pattern)) {
+        const index = match.index ?? 0;
+        const name = match[0];
+
+        if (index > cursor) {
+            parts.push({ text: text.slice(cursor, index) });
+        }
+
+        parts.push({ text: name, href: terms.get(name.toLowerCase()) });
+        cursor = index + name.length;
+    }
+
+    if (cursor < text.length) {
+        parts.push({ text: text.slice(cursor) });
+    }
+
+    return parts.length > 0 ? parts : [{ text }];
+}
+
+/**
+ * @brief Escapes a string for use in a regular expression
+ * @param value Literal text
+ * @return Text with regex metacharacters escaped
+ */
+function escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

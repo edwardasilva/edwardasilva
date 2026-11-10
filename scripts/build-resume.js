@@ -163,7 +163,7 @@ function latexError(log) {
  * @param fill Spacing position
  * @return Page count and log text
  * @details SOURCE_DATE_EPOCH pins pdflatex's timestamps so the PDF is byte-identical across
- * rebuilds when the content is unchanged.
+ * rebuilds on the same TeX distribution when the content is unchanged.
  */
 function compileOnce(font, margin, fill) {
     writeSettings(font, margin, fill);

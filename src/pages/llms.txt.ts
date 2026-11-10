@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 08 November, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Writes /llms.txt, a Markdown index of the site in the llmstxt.org format, so language models
  * and other crawlers can find each page and what it covers. It reads the same project pages and
@@ -25,8 +25,15 @@
  */
 
 import type { APIRoute } from 'astro';
-import { getProjectPages } from '../data/projects';
-import { getExperienceHref, hasAboutContent, resume, visibleExperiences } from '../data/resume';
+import { getHomeProjectPages } from '../data/projects';
+import {
+    getExperienceHref,
+    hasAboutContent,
+    otherExperiences,
+    resume,
+    visibleExperiences,
+} from '../data/resume';
+import type { HomeGroup } from '../data/types';
 
 const C_SECTION_PAGES = [
     ...(hasAboutContent
@@ -64,8 +71,8 @@ function linkLine(title: string, href: string, site: URL, note?: string): string
  */
 export const GET: APIRoute = async ({ site }) => {
     const origin = site ?? new URL(resume.personal.website);
-    const projectLines = async (kind: 'project' | 'personal') =>
-        (await getProjectPages(kind)).map(({ entry, href }) =>
+    const projectLines = (group: HomeGroup) =>
+        getHomeProjectPages(group).map(({ entry, href }) =>
             linkLine(entry.data.title, href, origin, entry.data.description)
         );
 
@@ -76,24 +83,39 @@ export const GET: APIRoute = async ({ site }) => {
         '',
         'Write-ups of school and personal engineering projects, with the equations, the measured results, who did which part, and the reports behind them.',
         '',
-        '## Personal projects',
+        '## Selected work',
         '',
-        ...(await projectLines('personal')),
+        ...projectLines('selected'),
         '',
-        '## Academic projects',
+        '## Writing and tools',
         '',
-        ...(await projectLines('project')),
+        ...projectLines('writing'),
+        '',
+        '## More projects',
+        '',
+        ...projectLines('more'),
         '',
         '## Experience',
         '',
         ...visibleExperiences.map((experience) =>
             linkLine(
                 `${experience.title}, ${experience.company}`,
-                `${getExperienceHref(experience)}/`,
+                getExperienceHref(experience),
                 origin,
                 experience.duration
             )
         ),
+        ...(otherExperiences.length > 0
+            ? [
+                  '',
+                  '## Other experience',
+                  '',
+                  ...otherExperiences.map(
+                      (experience) =>
+                          `- ${experience.title}, ${experience.company}. ${experience.duration}`
+                  ),
+              ]
+            : []),
         '',
         '## Pages',
         '',
