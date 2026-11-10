@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Pairs each project in resume-data.json with its write-up in the docs collection. The kind, the
  * order, and the card fields come from resume-data.json. The write-up holds the page title,
@@ -119,8 +119,8 @@ const C_HOME_FALLBACK_ORDER = Object.keys(C_HOME_FALLBACK);
  * @param group Selected work, writing and tools, or more projects
  * @return Pages in home order
  * @details Reads the home field in resume-data.json. While no project has that field, a slug
- * list stands in for it. Personal projects without the field fall under writing, and projects
- * with the field set to false stay off the home page.
+ * list stands in for it. Projects of the personal kind without the field fall under writing, and
+ * projects with the field set to false stay off the home page.
  */
 export function getHomeProjectPages(group: HomeGroup): ProjectPage[] {
     const hasHomeField = visibleProjects.some((project) => project.home !== undefined);
