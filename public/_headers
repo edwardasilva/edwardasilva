@@ -1,0 +1,25 @@
+# public/_headers
+# Response Headers for Cloudflare Pages
+#
+# Author: Edward Silva
+# Creation Date: 10 November, 2026
+# Last Update: 10 November, 2026
+#
+# Keeps the edwardasilva.pages.dev production hostname out of search indexes. Cloudflare adds noindex
+# to preview aliases such as dev.edwardasilva.pages.dev by itself, but never to the project hostname.
+# The hostname stays reachable on purpose, and the dev site stays untouched.
+#
+# File Structure:
+# - One host-scoped rule: the URL pattern, then its indented headers
+#
+# Where this file is used within the repository:
+# - Astro copies public/ into dist/, and Cloudflare Pages reads dist/_headers on deploy
+# - Not applied by astro dev or astro preview
+#
+# Usage:
+# $ `curl -D - https://edwardasilva.pages.dev/` : Shows x-robots-tag: noindex
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
+https://edwardasilva.pages.dev/*
+  X-Robots-Tag: noindex
