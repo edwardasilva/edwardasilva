@@ -6,7 +6,7 @@
  * Creation Date: 16 March, 2026
  * Last Update: 10 November, 2026
  *
- * Defines site, base path, redirects, the Markdown pipeline, and the Starlight integration that
+ * Defines site, base path, the Markdown pipeline, and the Starlight integration that
  * supplies search, navigation, table of contents, dark mode, and the sitemap. Copies the PDF.js
  * viewer scripts into public/vendor when the dev server or build starts. The site's origin, title,
  * description, and the sidebar's role and project links come from information/resume-data.json.
@@ -206,15 +206,6 @@ export default defineConfig({
     // The site serves from the domain root. ASTRO_SITE overrides the canonical origin if needed.
     site: process.env.ASTRO_SITE || C_RESUME.personal.website,
     output: 'static',
-    // Legacy routes that used to exist as standalone pages
-    redirects: {
-        '/experience': '/experiences',
-        '/classes': '/education/coursework',
-        '/coursework': '/education/coursework',
-        '/portfolio': '/projects',
-        '/profile': '/',
-        '/resume/viewer.html': '/resume/viewer',
-    },
     vite: {
         plugins: [pdfViewerAssets(), devAssets()],
     },
