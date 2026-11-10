@@ -28,7 +28,7 @@ These two have no generator line. They were converted from a plot in a report PD
 | File | Report | Conversion |
 | --- | --- | --- |
 | `damper/v1-dyno.svg` | [INSERT REPORT] | [INSERT HOW IT WAS CONVERTED] |
-| `gantry/slow-delay.svg` | [INSERT REPORT] | [INSERT HOW IT WAS CONVERTED] |
+| `gantry/slow-delay.svg` | Part 1 report, `src/assets/MCD/MCD_P1.pdf`, Fig. 10 | Re-exported from the report's vector figure with a tight crop of the full frame, then the two data-series colors were mapped as in #119. |
 
 ## Generated in this repo
 
