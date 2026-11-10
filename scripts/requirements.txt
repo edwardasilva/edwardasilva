@@ -12,7 +12,7 @@
 # - Pillow: opens the source PNGs
 #
 # Where this file is used within the repository:
-# - Read only by scripts/digitize-gantry-pulse.py. No npm script installs it.
+# - Lists the packages scripts/digitize-gantry-pulse.py imports. No npm script installs it.
 #
 # Usage:
 # $ `python3 -m pip install -r scripts/requirements.txt` : Installs the pinned packages

@@ -4,7 +4,7 @@ Gantry Pulse Figures
 
 Author: Edward Silva
 Creation Date: 09 November, 2026
-Last Update: 09 November, 2026
+Last Update: 10 November, 2026
 
 Rebuilds the two pulse-response plots from the Part 2 gantry crane report as SVG files, so the
 dark-theme copies can be written like every other plot under src/figures. The report left these
