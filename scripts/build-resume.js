@@ -26,7 +26,7 @@
  * Usage:
  * $ `npm run build:resume` : Fits the resume and writes public/resume/Edward_Silva_Resume.pdf
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import { spawnSync } from 'node:child_process';

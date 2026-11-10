@@ -29,7 +29,7 @@
  * $ `npm run figures` : Writes src/figures/**\/<name>-dark.svg for every plot
  * $ `npm run figures:check` : Exits 1 if any dark copy differs from what the script would write
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

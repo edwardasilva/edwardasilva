@@ -10,7 +10,7 @@
 # Usage:
 # $ `git status` : Shows the working tree without the ignored paths
 #
-# Copyright (c) 2026 Edward Silva. MIT License.
+# Copyright (c) 2026 Edward Silva. All rights reserved.
 
 # dependencies
 node_modules/

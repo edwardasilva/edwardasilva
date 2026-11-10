@@ -12,7 +12,7 @@
 # Usage:
 # $ `npm run format` : Checks formatting on every path not listed here
 #
-# Copyright (c) 2026 Edward Silva. MIT License.
+# Copyright (c) 2026 Edward Silva. All rights reserved.
 
 node_modules/
 dist/

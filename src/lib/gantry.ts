@@ -23,7 +23,7 @@
  * Usage:
  * $ `import { simulate, measure } from '../lib/gantry'` : Imported by the gantry figure
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 const C_GRAVITY = 9.81;

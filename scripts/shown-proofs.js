@@ -24,7 +24,7 @@
  * Usage:
  * $ `import { listShownProofs } from './shown-proofs.js'` : Called by the build scripts
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

@@ -23,7 +23,7 @@
  * Usage:
  * $ `npm run dev` : Generates share images during a local build
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs/promises';

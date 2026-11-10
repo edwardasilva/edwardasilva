@@ -1,6 +1,6 @@
 {
   "name": "edwardasilva.com",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "type": "module",
   "version": "0.0.1",
   "prettier": "./.lint/.prettierrc.json",

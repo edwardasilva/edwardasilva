@@ -23,7 +23,7 @@
  * $ `npm run scrub:private` : Remove private paths from the index. Files stay on disk.
  * $ `node scripts/scrub-private.js push` : Block if a pushed tip or new commit contains them.
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';

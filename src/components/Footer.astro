@@ -7,7 +7,7 @@
  * Creation Date: 16 March, 2026
  * Last Update: 09 November, 2026
  *
- * Starlight previous and next links, then contact links and the code and content license line.
+ * Starlight previous and next links, then contact links and the all rights reserved line.
  *
  * File Structure:
  * - Default footer
@@ -20,7 +20,7 @@
  * Usage:
  * $ `npm run dev` : Renders in the local development server
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import Default from '@astrojs/starlight/components/Footer.astro';
@@ -42,5 +42,5 @@ const { email, github, linkedin, name } = resume.personal;
         </ExternalLink>
         <a href="/skills/">Skills</a>
     </nav>
-    <p>Code is MIT licensed. Writing, reports, and photos are copyright {name}.</p>
+    <p>Copyright {name}. All rights reserved.</p>
 </div>

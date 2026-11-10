@@ -25,7 +25,7 @@
  * $ `npm run dev` : Runs local Astro development server
  * $ `npm run build` : Builds static site into dist/
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 // @ts-check

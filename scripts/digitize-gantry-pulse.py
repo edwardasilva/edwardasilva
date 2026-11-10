@@ -28,7 +28,7 @@ Where this file is used within the repository:
 Usage:
 $ `python3 -I scripts/digitize-gantry-pulse.py` : Rewrites the two SVGs from the PNGs in the same folder
 
-Copyright (c) 2026 Edward Silva. MIT License.
+Copyright (c) 2026 Edward Silva. All rights reserved.
 """
 
 from pathlib import Path

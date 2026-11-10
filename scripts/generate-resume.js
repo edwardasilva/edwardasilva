@@ -25,7 +25,7 @@
  * Usage:
  * $ `node scripts/generate-resume.js` : Writes build/resume/body.tex from resume-data.json
  *
- * Copyright (c) 2026 Edward Silva. MIT License.
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
 
 import fs from 'node:fs';
