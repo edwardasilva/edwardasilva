@@ -1,0 +1,36 @@
+---
+/**
+ * src/components/LinkedSentence.astro
+ * Linked Sentence
+ *
+ * Author: Edward Silva
+ * Creation Date: 10 November, 2026
+ * Last Update: 10 November, 2026
+ *
+ * Renders a sentence from resume-data.json, turning visible project names into links
+ * to their pages. Chapter paragraphs are plain strings, so the link has to be added here.
+ *
+ * File Structure:
+ * - Props: the sentence
+ * - Plain text, with an anchor on each matched project name
+ *
+ * Where this file is used within the repository:
+ * - The about page
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import { asSentence, linkProjectNames } from '../data/resume';
+
+interface Props {
+    text: string;
+}
+
+const { text } = Astro.props;
+const parts = linkProjectNames(asSentence(text));
+---
+
+{parts.map((part) => (part.href ? <a href={part.href}>{part.text}</a> : part.text))}
