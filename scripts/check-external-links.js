@@ -20,7 +20,7 @@
  * - Main Logic: eight requests at a time, then a summary that separates dead pages from bot walls
  *
  * Where this file is used within the repository:
- * - .github/workflows/links.yml, weekly and on request
+ * - .github/workflows/links.yml, monthly and on request
  *
  * Usage:
  * $ `npm run check:external-links` : Fetches every outside link in dist/

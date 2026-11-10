@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Live figure: change the LQR weight on load position and see the gain, the step response, and the
  * phase margin follow. The build fails if the solver no longer recovers the report's gain at Q = 20.
@@ -140,6 +140,33 @@ const start = measure(response);
 
     const C_SECONDS = 15;
 
+    /**
+     * @brief Runs a setup once, when the figure first nears the viewport
+     * @param root Figure element to watch
+     * @param run Setup to run
+     * @return Nothing
+     * @details The prerendered figure already shows the starting state, so the first solve can wait.
+     */
+    const whenVisible = (root: HTMLElement, run: () => void) => {
+        if (!('IntersectionObserver' in window)) {
+            run();
+
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    observer.disconnect();
+                    run();
+                }
+            },
+            { rootMargin: '100px' }
+        );
+
+        observer.observe(root);
+    };
+
     for (const root of document.querySelectorAll<HTMLElement>('[data-gantry-weight]')) {
         const plot = JSON.parse(root.dataset.plotConfig ?? '{}') as PlotConfig;
         const slider = root.querySelector<HTMLInputElement>('[data-slider]')!;
@@ -147,7 +174,7 @@ const start = measure(response);
         const live = root.querySelector<SVGPathElement>('[data-path="live"]')!;
         const base = root.querySelector<SVGPathElement>('[data-path="base"]')!;
         const read = root.querySelector<HTMLElement>('[data-read]')!;
-        const reportGain = solveLqr(20);
+        let reportGain: ReturnType<typeof solveLqr> | null = null;
         let q = 10 ** Number(slider.value);
         let livePoints: { times: number[]; values: number[] } = { times: [], values: [] };
         let basePoints: { times: number[]; values: number[] } = { times: [], values: [] };
@@ -165,6 +192,7 @@ const start = measure(response);
             const { overshoot, settling } = measure(response);
             const { margin } = phaseMargin(gain);
 
+            reportGain ??= solveLqr(20);
             livePoints = sampleResponse(response, C_SECONDS);
             basePoints = sampleResponse(
                 simulate({ delay: 0, saturate: limited, gain: reportGain }),
@@ -215,6 +243,6 @@ const start = measure(response);
                 `${time.toFixed(1)} s: ${at(livePoints, time)} m at this weight, ${at(basePoints, time)} m at Q = 20`
         );
 
-        update();
+        whenVisible(root, update);
     }
 </script>
