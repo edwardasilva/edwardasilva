@@ -29,6 +29,9 @@ const { name, email, website, linkedin, github } = resume.personal;
 const { jobTitle, worksFor, occupation, knowsAbout } = resume.site.person;
 const [C_GIVEN_NAME, ...C_FAMILY_NAMES] = name.split(' ');
 
+/** Path segments that have no page of their own, so no crumb may link to them. */
+const C_NO_PAGE = new Set(['resume']);
+
 /**
  * @brief Builds the page and person schema shown on every page
  * @param page The page URL, title, description, and whether it is the home page
@@ -98,22 +101,26 @@ export function websiteSchema(site: URL) {
  * @param pathname Page path, with no trailing slash
  * @param site Site origin
  * @param title Page title, used for the last crumb
- * @return BreadcrumbList schema, or undefined on the home page
+ * @return BreadcrumbList schema, or undefined on the home page and the 404 page
  */
 export function breadcrumbSchema(pathname: string, site: URL, title: string) {
     const segments = pathname.split('/').filter(Boolean);
 
-    if (segments.length === 0) {
+    // The 404 page is built as /404.html and has no URL of its own to list.
+    if (segments.length === 0 || segments[0] === '404') {
         return undefined;
     }
 
-    const crumbs = segments.map((segment, index) => ({
-        name:
-            index === segments.length - 1
-                ? title
-                : segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
-        item: new URL(`/${segments.slice(0, index + 1).join('/')}`, site).href,
-    }));
+    const crumbs = segments
+        .map((segment, index) => ({ segment, index }))
+        .filter(({ segment, index }) => index === segments.length - 1 || !C_NO_PAGE.has(segment))
+        .map(({ segment, index }) => ({
+            name:
+                index === segments.length - 1
+                    ? title
+                    : segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
+            item: new URL(`/${segments.slice(0, index + 1).join('/')}/`, site).href,
+        }));
 
     return {
         '@context': 'https://schema.org',
