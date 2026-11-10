@@ -4,25 +4,29 @@
  *
  * Author: Edward Silva
  * Creation Date: 09 November, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
- * Renders public/favicon.svg to the PNG icons that browsers without SVG favicon support and iOS
- * "Add to Home Screen" need. resvg ignores the dark color media query, so every PNG comes out in
- * the light colors. The Apple touch icon puts the mark on an opaque #fbfbfc tile, because iOS fills
+ * Renders public/favicon.svg to the PNG and ICO icons that browsers without SVG favicon support and
+ * iOS "Add to Home Screen" need. resvg ignores the dark color media query, so the dark PNGs come
+ * from a copy of the SVG where the dark rules are unwrapped and override the light ones. The Apple
+ * touch icon puts the light mark on an opaque #fbfbfc tile with a 15% margin, because iOS fills
  * transparent areas with black.
  *
  * File Structure:
  * - Global Variables: paths, sizes, and the tile color
  * - renderPng: rasterizes an SVG string at a width
+ * - darkSvg: unwraps the dark color rules so they apply
+ * - buildIco: packs PNG buffers into one ICO file
  * - touchIconSvg: wraps the favicon markup in the 180 px tile
- * - main: reads the favicon and writes the three PNG files
+ * - main: reads the favicon and writes the PNG and ICO files
  *
  * Where this file is used within the repository:
- * - Writes public/favicon-16.png, public/favicon-32.png, and public/apple-touch-icon-180.png
- * - astro.config.mjs links the three files in the page head
+ * - Writes public/favicon-16.png, public/favicon-32.png, public/favicon-dark-16.png,
+ *   public/favicon-dark-32.png, public/favicon.ico, and public/apple-touch-icon-180.png
+ * - astro.config.mjs links the PNG files in the page head. Browsers ask for favicon.ico on their own
  *
  * Usage:
- * $ `npm run icons` : Rewrites the three PNG files from public/favicon.svg
+ * $ `npm run icons` : Rewrites the PNG and ICO files from public/favicon.svg
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
@@ -36,7 +40,7 @@ const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const C_PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const C_TILE_COLOR = '#fbfbfc';
 const C_TILE_SIZE = 180;
-const C_MARGIN = 30;
+const C_MARGIN = 27;
 const C_MARK_SIZE = 32;
 
 /**
@@ -50,10 +54,55 @@ function renderPng(svg, width) {
 }
 
 /**
+ * @brief Makes a copy of the favicon SVG that uses its dark colors
+ * @param svg The favicon SVG markup
+ * @return {string} The SVG with the dark media block unwrapped, so its rules override the light ones
+ */
+function darkSvg(svg) {
+    const block = /@media \(prefers-color-scheme: dark\) \{([\s\S]*?\})\s*\}/;
+    const match = svg.match(block);
+
+    if (!match) {
+        throw new Error('[ERROR] favicon.svg has no dark color block');
+    }
+
+    return svg.replace(block, match[1]);
+}
+
+/**
+ * @brief Packs square PNG images into one ICO file
+ * @param images PNG buffers with their pixel sizes
+ * @return {Buffer} The ICO file contents
+ * @details Each entry stores the PNG bytes as is, which every current browser reads.
+ */
+function buildIco(images) {
+    const header = Buffer.alloc(6);
+    const entries = Buffer.alloc(16 * images.length);
+    let offset = header.length + entries.length;
+
+    header.writeUInt16LE(1, 2);
+    header.writeUInt16LE(images.length, 4);
+
+    images.forEach(({ size, png }, index) => {
+        const at = 16 * index;
+
+        entries.writeUInt8(size, at);
+        entries.writeUInt8(size, at + 1);
+        entries.writeUInt16LE(1, at + 4);
+        entries.writeUInt16LE(32, at + 6);
+        entries.writeUInt32LE(png.length, at + 8);
+        entries.writeUInt32LE(offset, at + 12);
+        offset += png.length;
+    });
+
+    return Buffer.concat([header, entries, ...images.map(({ png }) => png)]);
+}
+
+/**
  * @brief Builds the Apple touch icon SVG from the favicon markup
  * @param svg The favicon SVG markup
  * @return {string} A 180 by 180 SVG with the mark centered on an opaque tile
- * @details The 32 unit mark scales to 120 px, which leaves a 30 px margin on every side.
+ * @details The 32 unit mark scales to 126 px, which leaves a 27 px margin on every side.
  */
 function touchIconSvg(svg) {
     const inner = svg.replace(/<!--[\s\S]*?-->/g, '').match(/<svg[^>]*>([\s\S]*)<\/svg>/)[1];
@@ -69,20 +118,32 @@ function touchIconSvg(svg) {
 }
 
 /**
- * @brief Writes the three PNG icons
+ * @brief Writes the PNG and ICO icons
  * @return {void}
  */
 function main() {
     const favicon = fs.readFileSync(path.join(C_PUBLIC_DIR, 'favicon.svg'), 'utf8');
+    const dark = darkSvg(favicon);
+    const light16 = renderPng(favicon, 16);
+    const light32 = renderPng(favicon, 32);
 
-    fs.writeFileSync(path.join(C_PUBLIC_DIR, 'favicon-32.png'), renderPng(favicon, 32));
-    fs.writeFileSync(path.join(C_PUBLIC_DIR, 'favicon-16.png'), renderPng(favicon, 16));
+    fs.writeFileSync(path.join(C_PUBLIC_DIR, 'favicon-32.png'), light32);
+    fs.writeFileSync(path.join(C_PUBLIC_DIR, 'favicon-16.png'), light16);
+    fs.writeFileSync(path.join(C_PUBLIC_DIR, 'favicon-dark-32.png'), renderPng(dark, 32));
+    fs.writeFileSync(path.join(C_PUBLIC_DIR, 'favicon-dark-16.png'), renderPng(dark, 16));
+    fs.writeFileSync(
+        path.join(C_PUBLIC_DIR, 'favicon.ico'),
+        buildIco([
+            { size: 16, png: light16 },
+            { size: 32, png: light32 },
+        ])
+    );
     fs.writeFileSync(
         path.join(C_PUBLIC_DIR, 'apple-touch-icon-180.png'),
         renderPng(touchIconSvg(favicon), C_TILE_SIZE)
     );
 
-    console.log('[SUCCESS] Wrote favicon-16.png, favicon-32.png, and apple-touch-icon-180.png');
+    console.log('[SUCCESS] Wrote the light and dark favicon PNGs, favicon.ico, and the Apple touch icon');
 }
 
 main();

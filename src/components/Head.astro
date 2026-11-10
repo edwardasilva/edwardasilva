@@ -5,10 +5,11 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Adds the share image, author, llms.txt link, structured data, and font preload to the head
- * Starlight builds.
+ * Starlight builds. Drops Starlight's rel="shortcut icon" link, because astro.config.mjs links the
+ * icons with rel="icon".
  *
  * File Structure:
  * - Author and llms.txt link
@@ -53,6 +54,7 @@ route.head = route.head.filter(
         !(
             (tag.tag === 'meta' && tag.attrs?.name === 'twitter:card') ||
             (tag.tag === 'meta' && tag.attrs?.property === 'og:type') ||
+            (tag.tag === 'link' && tag.attrs?.rel === 'shortcut icon') ||
             (isNotFound && tag.tag === 'link' && tag.attrs?.rel === 'canonical')
         )
 );
