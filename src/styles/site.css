@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Header, cards, external link marks, page lists, the project facts block, figures, the live
  * figures, and the sidebar. Adapted from eeprep.com.
@@ -728,10 +728,29 @@ a.external-link .es-ext-last::after {
     border: var(--es-border);
     border-radius: var(--es-radius);
 }
+.es-proof-media {
+    container: es-proof-media / inline-size;
+}
 .es-proof-media figcaption {
-    margin-top: var(--es-space-2);
-    color: var(--es-ink-2);
+    display: flex;
+    gap: var(--es-space-3);
+    margin-top: 1.125rem;
+    padding-top: 0.875rem;
+    border-top: var(--es-border);
     font-size: var(--es-text-caption);
+    line-height: 1.55;
+    color: var(--es-ink-2);
+}
+.es-proof-media figcaption .es-fignum {
+    font: 600 var(--es-text-eyebrow)/1.9 var(--es-font-serif);
+    color: var(--es-mute);
+    white-space: nowrap;
+}
+@container es-proof-media (max-width: 25rem) {
+    .es-proof-media figcaption {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
 }
 
 figure.es-fig-plate > img {
