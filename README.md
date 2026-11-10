@@ -17,4 +17,6 @@ This is the Astro and Starlight source of [edwardasilva.com](https://edwardasilv
 
 Everything in this repo, code and content, is all rights reserved. See [LICENSE](LICENSE).
 
+Third-party fonts and libraries keep their own licenses. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
 The `information` submodule is private.
