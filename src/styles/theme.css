@@ -60,6 +60,8 @@
     --es-radius: 4px;
     --es-radius-lg: 8px;
     --es-border: 1px solid var(--es-rule);
+    /* White plate behind PDF pages and light-only images. Same in both themes. */
+    --es-plate: #ffffff;
 }
 :root[data-theme='light'] {
     --es-paper: #fbfbfc;
