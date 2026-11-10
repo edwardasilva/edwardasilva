@@ -4,9 +4,9 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
- * Defines site, base path, redirects, the Markdown pipeline, and the Starlight integration that
+ * Defines site, base path, the Markdown pipeline, and the Starlight integration that
  * supplies search, navigation, table of contents, dark mode, and the sitemap. Copies the PDF.js
  * viewer scripts into public/vendor when the dev server or build starts. The site's origin, title,
  * description, and the sidebar's role and project links come from information/resume-data.json.
@@ -43,11 +43,11 @@ const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * @typedef {{ title: string, slug?: string, navLabel?: string, Visibility?: string }} SiteEntry
- * @typedef {SiteEntry & { kind?: 'project' | 'personal', order?: number }} SiteProject
+ * @typedef {SiteEntry & { kind?: 'project' | 'personal', order?: number, home?: string | false }} SiteProject
  * @typedef {object} SiteData The parts of resume-data.json this file reads
  * @property {{ name: string, website: string }} personal
  * @property {{ description: string, aboutPublished?: boolean }} site
- * @property {{ intro?: string[], chapters?: object[], Visibility?: string }} [about]
+ * @property {{ intro?: string[], chapters?: object[], future?: object[], earlyWork?: { roles?: object[], Summary?: string }, Visibility?: string }} [about]
  * @property {SiteEntry[]} experiences
  * @property {SiteProject[]} projects
  */
@@ -95,22 +95,43 @@ function navLabel(entry) {
 }
 
 /**
- * @brief Lists the sidebar links to the project pages of one kind
- * @param {'project' | 'personal'} kind Project or personal project
+ * @brief Lists the sidebar links to the project pages in one home page group
+ * @param {'selected' | 'writing' | 'more'} group Selected work, writing and tools, or more projects
  * @return {{ label: string, slug: string }[]} Links in the order resume-data.json gives
+ * @details Matches getHomeProjectPages in src/data/projects.ts. A personal project without a home
+ * field falls under writing, and a home value of false keeps a project out of every group.
  */
-function projectLinks(kind) {
+function projectLinks(group) {
     return C_RESUME.projects
-        .filter((project) => isVisibleOnSite(project) && project.kind === kind)
+        .filter((project) => {
+            if (!isVisibleOnSite(project)) {
+                return false;
+            }
+
+            if (project.home === undefined) {
+                return group === 'writing' && project.kind === 'personal';
+            }
+
+            return project.home === group;
+        })
         .sort((left, right) => (left.order ?? 0) - (right.order ?? 0))
         .map((project) => ({ label: navLabel(project), slug: `projects/${project.slug}` }));
 }
 
-/** The about page is held back until the switch is on and the story has at least one paragraph. */
+/**
+ * The about page is held back until the switch is on and the page has content: an intro, chapters,
+ * a future list, early work roles, or an early work summary. hasAboutContent in src/data/resume.ts
+ * is the twin of this rule, so change both together. This copy reads the raw JSON, so it does not
+ * drop placeholder text, blank strings, or roles and chapters missing a title the way the twin does.
+ */
 const C_HAS_ABOUT = Boolean(
     C_RESUME.site?.aboutPublished &&
     isVisibleOnSite(C_RESUME.about ?? {}) &&
-    (C_RESUME.about?.intro?.length || C_RESUME.about?.chapters?.length)
+    (C_RESUME.about?.intro?.length ||
+        C_RESUME.about?.chapters?.length ||
+        C_RESUME.about?.future?.length ||
+        C_RESUME.about?.earlyWork?.roles?.length ||
+        C_RESUME.about?.earlyWork?.Summary)
 );
 
 const C_ROLE_LINKS = C_RESUME.experiences.filter(isVisibleOnSite).map((experience) => ({
@@ -194,15 +215,6 @@ export default defineConfig({
     // The site serves from the domain root. ASTRO_SITE overrides the canonical origin if needed.
     site: process.env.ASTRO_SITE || C_RESUME.personal.website,
     output: 'static',
-    // Legacy routes that used to exist as standalone pages
-    redirects: {
-        '/experience': '/experiences',
-        '/classes': '/education/coursework',
-        '/coursework': '/education/coursework',
-        '/portfolio': '/projects',
-        '/profile': '/',
-        '/resume/viewer.html': '/resume/viewer',
-    },
     vite: {
         plugins: [pdfViewerAssets(), devAssets()],
     },
@@ -328,8 +340,9 @@ export default defineConfig({
                     label: 'Projects',
                     items: [
                         { label: 'Projects', link: '/projects/' },
-                        { label: 'Personal', items: projectLinks('personal') },
-                        { label: 'Academic', items: projectLinks('project') },
+                        { label: 'Selected work', items: projectLinks('selected') },
+                        { label: 'Writing and tools', items: projectLinks('writing') },
+                        { label: 'More projects', items: projectLinks('more') },
                     ],
                 },
                 {

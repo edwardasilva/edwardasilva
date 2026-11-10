@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 10 November, 2026
  *
  * Pairs each project in resume-data.json with its write-up in the docs collection. The kind, the
  * order, and the card fields come from resume-data.json. The write-up holds the page title,
@@ -103,48 +103,23 @@ function toProjectPage(project: Project): ProjectPage {
     return { entry, project, href: `/projects/${slug}/` };
 }
 
-const C_HOME_FALLBACK: Record<string, HomeGroup | false> = {
-    'EKF-project': 'selected',
-    'dsp-final': 'selected',
-    'capstone-project': 'selected',
-    'MCD-project': 'more',
-    'seed-robot': 'more',
-    'ram-pump': 'more',
-};
-
-const C_HOME_FALLBACK_ORDER = Object.keys(C_HOME_FALLBACK);
-
 /**
  * @brief Lists the projects for one group on the home page
  * @param group Selected work, writing and tools, or more projects
  * @return Pages in home order
- * @details Reads the home field in resume-data.json. While no project has that field, a slug
- * list stands in for it. Personal projects without the field fall under writing, and projects
- * with the field set to false stay off the home page.
+ * @details Reads the home field in resume-data.json. Projects of the personal kind without the
+ * field fall under writing, and projects with the field set to false stay off the home page.
  */
 export function getHomeProjectPages(group: HomeGroup): ProjectPage[] {
-    const hasHomeField = visibleProjects.some((project) => project.home !== undefined);
-
     return visibleProjects
         .filter((project) => {
-            const assigned = hasHomeField ? project.home : C_HOME_FALLBACK[getProjectSlug(project)];
-
-            if (assigned === undefined) {
+            if (project.home === undefined) {
                 return group === 'writing' && project.kind === 'personal';
             }
 
-            return assigned === group;
+            return project.home === group;
         })
-        .sort((left, right) => {
-            if (hasHomeField || left.kind === 'personal') {
-                return (left.order ?? 0) - (right.order ?? 0);
-            }
-
-            return (
-                C_HOME_FALLBACK_ORDER.indexOf(getProjectSlug(left)) -
-                C_HOME_FALLBACK_ORDER.indexOf(getProjectSlug(right))
-            );
-        })
+        .sort((left, right) => (left.order ?? 0) - (right.order ?? 0))
         .map(toProjectPage);
 }
 
