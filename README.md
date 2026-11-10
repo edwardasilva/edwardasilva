@@ -9,6 +9,8 @@ Electrical engineering grad from Colorado School of Mines (May 2026), now an emb
 - [resume-generator](https://github.com/edwardasilva/resume-generator): turns one JSON file into a one-page PDF resume.
 - [company-lists](https://github.com/edwardasilva/company-lists): a plain list of companies by region, starting with the Denver metro.
 
+Parts of the code and drafts were written with AI tools; I review everything.
+
 ## Contact
 
 - LinkedIn: [Edward Silva](https://www.linkedin.com/in/edwardasilva)
