@@ -14,7 +14,7 @@ Only the repository owner can start either workflow. Both work on a branch and o
 
 - Work on a branch. Never push to `main`.
 - Every change reaches `main` through a pull request, and every merge is a squash merge. Only Edward merges.
-- The pull request body names its issue on its own line, as `Part of #N`. Add `Closes #N` when the pull request finishes the issue.
+- When you work from an issue, name it in the pull request body on its own line, as `Part of #N`, and add `Closes #N` when the pull request finishes the issue. Outside contributors do not need an issue link. A short description is enough.
 - Keep each pull request to one change.
 - Do not create tags. Do not force-push or rewrite pushed history.
 - A release is cut only when Edward says so.
