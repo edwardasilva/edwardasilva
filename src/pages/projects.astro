@@ -5,14 +5,15 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 10 November, 2026
  *
- * Every project, personal first and then academic, each kind under its own heading and ranked by
- * date within the kind.
+ * Every project under the three headings the home page uses, in the same order: selected work,
+ * writing and tools, and more projects.
  *
  * File Structure:
- * - Personal projects
- * - Academic projects
+ * - Selected work
+ * - Writing and tools
+ * - More projects
  *
  * Where this file is used within the repository:
  * - Route: /projects
@@ -25,17 +26,18 @@
 
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import ProjectCards from '../components/ProjectCards.astro';
-import { getPageSlug, getProjectPages } from '../data/projects';
+import { getHomeProjectPages, getPageSlug } from '../data/projects';
 import { asSentence, resume } from '../data/resume';
 import { itemListSchema, jsonLdHeadTag } from '../data/structured-data';
 
-const projects = await getProjectPages('project');
-const personal = await getProjectPages('personal');
+const selected = getHomeProjectPages('selected');
+const writing = getHomeProjectPages('writing');
+const more = getHomeProjectPages('more');
 const site = Astro.site ?? Astro.url;
 
 const schema = itemListSchema(
     'Projects',
-    [...personal, ...projects].map(({ entry }) => ({
+    [...selected, ...writing, ...more].map(({ entry }) => ({
         name: entry.data.title,
         path: `/projects/${getPageSlug(entry.id)}`,
     })),
@@ -55,9 +57,12 @@ const schema = itemListSchema(
         The <a href="/skills/">skills page</a> lists the same projects under the tools they used.
     </p>
 
-    <h2 id="personal">Personal projects</h2>
-    <ProjectCards pages={personal} />
+    <h2 id="selected">Selected work</h2>
+    <ProjectCards pages={selected} />
 
-    <h2 id="academic">Academic projects</h2>
-    <ProjectCards pages={projects} />
+    <h2 id="writing">Writing and tools</h2>
+    <ProjectCards pages={writing} />
+
+    <h2 id="more">More projects</h2>
+    <ProjectCards pages={more} />
 </StarlightPage>
