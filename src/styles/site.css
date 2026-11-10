@@ -708,7 +708,7 @@ a.external-link .es-ext-last::after {
     object-fit: contain;
     object-position: top;
     border: var(--es-border);
-    background: #fff;
+    background: var(--es-plate);
 }
 @media (hover: hover) {
     .es-proof-pdf:hover {
@@ -737,7 +737,7 @@ a.external-link .es-ext-last::after {
 figure.es-fig-plate > img {
     padding: 0.75rem;
     border-radius: var(--es-radius);
-    background: #fff;
+    background: var(--es-plate);
 }
 figure.es-fig > img {
     display: block;
@@ -783,7 +783,7 @@ figure.es-fig-narrow > img {
     height: auto;
     border: var(--es-border);
     border-radius: var(--es-radius);
-    background: #fff;
+    background: var(--es-plate);
 }
 
 /* The live figures. */
@@ -1048,7 +1048,7 @@ details[open] > summary .es-side-caret {
     height: auto;
     margin-top: var(--es-space-3);
     border: var(--es-border);
-    background: #fff;
+    background: var(--es-plate);
 }
 figure.es-fig-wide > img {
     max-width: none;
