@@ -10,12 +10,13 @@
  * finished PDF has to contain. Entries with Visibility "All", "Site", "List", or "CV" reach the CV
  * and "Hide" stays off it. "cvHide": true keeps an entry off the CV without changing its
  * Visibility, and "cvTitle", "cvCompany", and "cvSkills" replace an entry's title, employer, and
- * skills on the CV only. The cv object sets the section order and titles, whether the cumulative
- * GPA prints, the categorized skills lines (cv.skills), and the coursework lines (cv.coursework).
- * The education entry's cvGraduateGpa and cvScholarships are CV-only. An entry's CV bullet list
- * is used when it has items, and its Resume list otherwise. Coursework prints by course name,
- * with no course codes. A field with the wrong kind of
- * value stops the build and names the field. Fitting the pages happens in scripts/build-cv.js.
+ * skills on the CV only. "cvLink" links a project's CV title, and "cvSection": "teaching" moves an
+ * experience under the Teaching heading. The cv object sets the section order and titles, whether
+ * the GPA prints, the categorized skills lines (cv.skills), and the coursework lines
+ * (cv.coursework). The education entry's gpaScale and cvScholarships are CV-only. An entry's CV
+ * bullet list is used when it has items, and its Resume list otherwise. Coursework prints by
+ * course name, with no course codes. A field with the wrong kind of value stops the build and
+ * names the field. Fitting the pages happens in scripts/build-cv.js.
  *
  * File Structure:
  * - Global Constants: file paths and the Visibility values the CV shows
@@ -103,6 +104,16 @@ function cvCompany(entry) {
  */
 function cvBullets(entry) {
     return entry.CV?.length > 0 ? entry.CV : (entry.Resume ?? []);
+}
+
+/**
+ * @brief Gets the CV-visible experiences under one CV heading
+ * @param data Resume data
+ * @param section "experience" or "teaching"
+ * @return Experiences whose cvSection matches, with no cvSection meaning experience
+ */
+function cvExperiences(data, section) {
+    return onCv(data.experiences).filter((entry) => (entry.cvSection ?? 'experience') === section);
 }
 
 /**
@@ -268,8 +279,8 @@ function validate(data) {
             'a list of text'
         );
         requireField(
-            entry.cvGraduateGpa === undefined || isText(entry.cvGraduateGpa),
-            `education[${index}].cvGraduateGpa`,
+            entry.gpaScale === undefined || isText(entry.gpaScale),
+            `education[${index}].gpaScale`,
             'text'
         );
     });
@@ -357,9 +368,16 @@ function renderExperience(experience) {
  * @return LaTeX for the entry, with no list when it has no bullets
  */
 function renderProject(project) {
-    const repository = project.github ? `\\href{${escapeUrl(project.github)}}{GitHub}` : '';
+    const title = `\\textbf{${escapeLatex(cvTitle(project))}}`;
+    // A project with its own site links the title there instead of adding a GitHub link.
+    const repository =
+        project.github && !project.cvLink ? `\\href{${escapeUrl(project.github)}}{GitHub}` : '';
     const label = joinParts(
-        [`\\textbf{${escapeLatex(cvTitle(project))}}`, renderList(project.skills), repository],
+        [
+            project.cvLink ? `\\href{${escapeUrl(project.cvLink)}}{${title}}` : title,
+            renderList(project.skills),
+            repository,
+        ],
         ', '
     );
     const bullets = cvBullets(project);
@@ -400,13 +418,8 @@ function renderEducation(education, data) {
         [`\\textbf{${escapeLatex(education.degree)}}`, escapeLatex(education.minor ?? '')],
         ', '
     );
-    const gpa = joinParts(
-        [
-            includeGpa && education.gpa ? `GPA: ${escapeLatex(education.gpa)}` : '',
-            education.cvGraduateGpa ? `Graduate GPA: ${escapeLatex(education.cvGraduateGpa)}` : '',
-        ],
-        ', '
-    );
+    const scale = education.gpaScale ? `/${escapeLatex(education.gpaScale)}` : '';
+    const gpa = includeGpa && education.gpa ? `GPA: ${escapeLatex(education.gpa)}${scale}` : '';
     const coursework = cvCourseGroups(education, data).map(
         ({ label, names }) => `\\textbf{${escapeLatex(label)}:} ${renderList(names)}`
     );
@@ -468,7 +481,10 @@ function renderOrganization(organization) {
  * string when the section has nothing to show.
  */
 const C_RENDERERS = {
-    experience: (data) => onCv(data.experiences).map(renderExperience).join('\n\\entrygap\n'),
+    experience: (data) =>
+        cvExperiences(data, 'experience').map(renderExperience).join('\n\\entrygap\n'),
+    teaching: (data) =>
+        cvExperiences(data, 'teaching').map(renderExperience).join('\n\\entrygap\n'),
     projects: (data) => onCv(data.projects).map(renderProject).join('\n\\entrygap\n'),
     skills: (data) =>
         cvSkillGroups(data)
@@ -539,7 +555,13 @@ export function expectedText(data) {
     const { name, linkedin, website, email, phone } = data.personal;
     const entries = {
         experience: () =>
-            onCv(data.experiences).flatMap((entry) => [
+            cvExperiences(data, 'experience').flatMap((entry) => [
+                cvTitle(entry),
+                cvCompany(entry),
+                ...cvBullets(entry),
+            ]),
+        teaching: () =>
+            cvExperiences(data, 'teaching').flatMap((entry) => [
                 cvTitle(entry),
                 cvCompany(entry),
                 ...cvBullets(entry),

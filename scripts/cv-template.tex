@@ -29,8 +29,9 @@
 \usepackage{XCharter}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-% The less-than-or-equal sign in a bullet, typeset from the math font.
+% The less-than-or-equal sign and sigma in a bullet, typeset from the math font.
 \DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{03C3}{\ensuremath{\sigma}}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
 \usepackage{bookmark}
@@ -60,8 +61,8 @@
 \titlespacing*{\section}{0pt}{\sectiongap}{\sectionafter}
 
 \renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
-% An entry heading never sits alone at the bottom of a page: no page break before its first bullet.
-\setlist[itemize]{leftmargin=12pt,topsep=\listtop,itemsep=\listitem,parsep=0pt,partopsep=0pt,beginpenalty=10000}
+% An entry never splits across a page: no page break before its first bullet or between bullets.
+\setlist[itemize]{leftmargin=12pt,topsep=\listtop,itemsep=\listitem,parsep=0pt,partopsep=0pt,beginpenalty=10000,midpenalty=10000}
 
 % The fitting script reads this line from the log after each compile.
 \newcommand{\measure}[1]{%
