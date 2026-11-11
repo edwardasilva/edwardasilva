@@ -1,0 +1,69 @@
+% scripts/cv-template.tex
+% CV Template
+%
+% Author: Edward Silva
+% Creation Date: 11 November, 2026
+% Last Update: 11 November, 2026
+%
+% The fixed part of the two-page CV, laid out like scripts/resume-template.tex: XCharter, pdflatex,
+% Unicode mapping, PDF metadata, and bookmarks. scripts/build-cv.js copies it next to two generated
+% files before each compile: settings.tex holds the font size, margins, and spacing for one layout,
+% and body.tex holds the metadata and content. It holds no CV text.
+%
+% File Structure:
+% - Packages and page setup
+% - Section and list style, with the spacing read from settings.tex
+% - Measurement macro the fitting script reads from the log
+%
+% Where this file is used within the repository:
+% - Compiled by scripts/build-cv.js
+%
+% Usage:
+% $ `npm run build:cv` : Fits and compiles the CV
+%
+% Copyright (c) 2026 Edward Silva. All rights reserved.
+
+\documentclass[11pt]{article}
+\input{settings}
+\usepackage[letterpaper,margin=\resumemargin]{geometry}
+\usepackage{XCharter}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
+\usepackage{titlesec}
+\usepackage[protrusion=true,expansion=true]{microtype}
+\raggedright
+\raggedbottom
+\pagestyle{empty}
+\urlstyle{same}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% No hyphenated line breaks: a word split across lines cannot be found by a keyword search.
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+
+% Every glyph maps to real Unicode text, so the PDF stays machine-readable.
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+% One gap size between every pair of sections, grown with the rest of the spacing.
+\titleformat{\section}{\bfseries\large}{}{0pt}{}[\vspace{2pt}\titlerule]
+\titlespacing*{\section}{0pt}{\sectiongap}{\sectionafter}
+
+\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
+\setlist[itemize]{leftmargin=12pt,topsep=\listtop,itemsep=\listitem,parsep=0pt,partopsep=0pt}
+
+% The fitting script reads this line from the log after each compile.
+\newcommand{\measure}[1]{%
+  \typeout{CV-#1 page=\thepage\space used=\the\pagetotal\space
+    goal=\the\pagegoal\space line=\the\baselineskip}}
+
+\begin{document}
+\resumefont
+\thispagestyle{empty}
+\input{body}
+\par\measure{END}
+\end{document}

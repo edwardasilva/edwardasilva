@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 11 November, 2026
  *
  * Turns resume-data.json into the LaTeX body of the resume, and into the list of text the finished
  * PDF has to contain. Only entries marked Visibility "All" reach the resume. A field with the wrong
@@ -38,7 +38,7 @@ const C_DATA_PATH = path.join(ROOT_DIR, 'information', 'resume-data.json');
 export const C_BUILD_DIR = path.join(ROOT_DIR, 'build', 'resume');
 
 // Set to false to drop the phone number from the public PDF. The text check follows this switch.
-const C_SHOW_PHONE = true;
+export const C_SHOW_PHONE = true;
 
 // Three-letter months on the PDF, where the space is tight. May is already three letters.
 const C_MONTH_ABBREVIATIONS = {
@@ -64,7 +64,7 @@ const C_SIGNALS_ALIASES = ['Signals and Systems I', 'Signals and Systems II'];
  * @details Control characters other than tab and newline are dropped first, since pdflatex
  * rejects them.
  */
-function escapeLatex(text) {
+export function escapeLatex(text) {
     const replacements = {
         '\\': '\\textbackslash{}',
         $: '\\$',
@@ -95,7 +95,7 @@ function escapeLatex(text) {
  * @param url Address to link to
  * @return The address with the characters hyperref treats specially escaped
  */
-function escapeUrl(url) {
+export function escapeUrl(url) {
     return String(url).replace(/[\\#%{}]/g, (character) => `\\${character}`);
 }
 
@@ -104,7 +104,7 @@ function escapeUrl(url) {
  * @param text Date or duration string
  * @return String with months abbreviated and spaced hyphens turned into en dashes
  */
-function formatDateRange(text) {
+export function formatDateRange(text) {
     const months = new RegExp(`\\b(${Object.keys(C_MONTH_ABBREVIATIONS).join('|')})\\b`, 'g');
 
     return text.replace(months, (month) => C_MONTH_ABBREVIATIONS[month]).replace(/\s-\s/g, ' – ');
@@ -254,7 +254,7 @@ function profileText(data) {
  * @param bullets Bullet strings
  * @return LaTeX itemize block
  */
-function renderBullets(bullets) {
+export function renderBullets(bullets) {
     const items = bullets.map((bullet) => `  \\item\\relax ${escapeLatex(bullet)}`).join('\n');
 
     return `\\begin{itemize}\n${items}\n\\end{itemize}`;
@@ -316,7 +316,7 @@ function renderEducation(education) {
  * @param url Full URL
  * @return URL with no scheme and no www.
  */
-function shortUrl(url) {
+export function shortUrl(url) {
     return url.replace(/^https?:\/\/(www\.)?/, '');
 }
 
@@ -325,7 +325,7 @@ function shortUrl(url) {
  * @param personal Personal details
  * @return LaTeX links separated by pipes
  */
-function renderContact({ linkedin, website, email, phone }) {
+export function renderContact({ linkedin, website, email, phone }) {
     const parts = [];
 
     if (linkedin) {
