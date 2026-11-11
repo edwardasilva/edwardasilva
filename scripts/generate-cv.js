@@ -340,6 +340,16 @@ function renderList(labels) {
 }
 
 /**
+ * @brief Renders one header line through the template's \\cvline macro
+ * @param left LaTeX for the left text
+ * @param right LaTeX for the right text, a date or a location, or an empty string
+ * @return LaTeX line with the right text flush with the right margin
+ */
+function cvLine(left, right) {
+    return `\\cvline{${left}}{${right}}`;
+}
+
+/**
  * @brief Renders one experience entry
  * @param experience Experience entry
  * @return LaTeX for the entry, with no list when it has no bullets
@@ -355,13 +365,14 @@ function renderExperience(experience) {
     // end of that line. A role without one, as in Teaching, moves the company down to that line
     // instead, so the location never sits on a line by itself.
     const stacked = location && !skills;
-    const head = stacked ? `${title} \\hfill ${dates}` : `${title}, ${company} \\hfill ${dates}`;
+    const head = cvLine(stacked ? title : `${title}, ${company}`, dates);
     const left = stacked ? company : skills;
-    const details = location ? `${left} \\hfill ${location}` : left;
+    const details = left || location ? cvLine(left, location) : '';
 
     return joinParts(
         [
-            details ? `${head} \\\\\n${details}` : head,
+            // No page break between the two header lines.
+            details ? `${head}\n\\nopagebreak\n${details}` : head,
             bullets.length > 0 ? renderBullets(bullets) : '',
         ],
         '\n'
@@ -387,7 +398,7 @@ function renderProject(project) {
 
     return joinParts(
         [
-            `${label} \\hfill ${escapeLatex(formatDateRange(project.duration))}`,
+            cvLine(label, escapeLatex(formatDateRange(project.duration))),
             bullets.length > 0 ? renderBullets(bullets) : '',
         ],
         '\n'
@@ -414,9 +425,7 @@ function renderLabelledLine(label, items) {
  */
 function renderEducation(education, data) {
     const includeGpa = data.cv.includeGpa === true;
-    const date = education.graduationDate
-        ? ` \\hfill ${escapeLatex(education.graduationDate)}`
-        : '';
+    const date = education.graduationDate ? escapeLatex(education.graduationDate) : '';
     const degree = joinParts(
         [`\\textbf{${escapeLatex(education.degree)}}`, escapeLatex(education.minor ?? '')],
         ', '
@@ -429,14 +438,11 @@ function renderEducation(education, data) {
 
     return joinParts(
         [
-            `\\textbf{${escapeLatex(education.institution)}}${date}`,
+            cvLine(`\\textbf{${escapeLatex(education.institution)}}`, date),
             // The location sits right-aligned under the graduation date, as on every entry.
-            joinParts(
-                [
-                    joinParts([degree, gpa], ', '),
-                    education.location ? escapeLatex(education.location) : '',
-                ],
-                ' \\hfill '
+            cvLine(
+                joinParts([degree, gpa], ', '),
+                education.location ? escapeLatex(education.location) : ''
             ),
             renderLabelledLine('Honors', education.honors),
             renderLabelledLine('Scholarships', education.cvScholarships ?? education.scholarships),
@@ -475,11 +481,9 @@ function renderOrganization(organization) {
         ],
         ', '
     );
-    const years = organization.duration
-        ? ` \\hfill ${escapeLatex(formatDateRange(organization.duration))}`
-        : '';
+    const years = organization.duration ? escapeLatex(formatDateRange(organization.duration)) : '';
 
-    return `${label}${years}`;
+    return cvLine(label, years);
 }
 
 /**
@@ -502,7 +506,7 @@ const C_RENDERERS = {
             .map((entry) => renderEducation(entry, data))
             .join('\n\\entrygap\n'),
     certifications: (data) => onCv(data.certifications).map(renderCertification).join(' \\\\\n'),
-    organizations: (data) => onCv(data.organizations).map(renderOrganization).join(' \\\\\n'),
+    organizations: (data) => onCv(data.organizations).map(renderOrganization).join('\n'),
 };
 
 /**

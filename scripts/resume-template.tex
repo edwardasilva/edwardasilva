@@ -30,6 +30,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
+\usepackage{array}
 \usepackage[hidelinks]{hyperref}
 \usepackage{bookmark}
 \usepackage{titlesec}
@@ -55,6 +56,33 @@
 
 \renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
 \setlist[itemize]{leftmargin=12pt,topsep=\listtop,itemsep=\listitem,parsep=0pt,partopsep=0pt}
+
+% One header line, the same macro as scripts/cv-template.tex: the left text, then the right text (a date or a location) flush with the right
+% edge of the text block. \raggedright gives the last line of a paragraph a stretchable
+% \parfillskip that can pull \hfill text off the margin, so the line sets \parfillskip to zero.
+% Character protrusion is off for that line, so a final letter such as the t in Present ends at
+% the margin, where the section rule ends, instead of hanging a fraction of a point past it.
+% When the left text and the right text do not fit on one line with a 2 em gap, the left text
+% wraps in its own column of a top-aligned tabular, and the right text stays on the first line. With no right text the left text prints as
+% a plain paragraph.
+\newlength{\cvleftwidth}
+\newlength{\cvrightwidth}
+\newcommand{\cvline}[2]{%
+  \par\noindent
+  \if\relax\detokenize{#2}\relax
+    #1%
+  \else
+    \settowidth{\cvleftwidth}{#1}%
+    \settowidth{\cvrightwidth}{#2}%
+    \ifdim\dimexpr\cvleftwidth+\cvrightwidth+2em\relax>\linewidth
+      \begin{tabular}[t]{@{}>{\raggedright\arraybackslash}p{\dimexpr\linewidth-\cvrightwidth-2em\relax}@{\hspace{2em}}r@{}}%
+        #1 & #2%
+      \end{tabular}%
+    \else
+      #1\hfill#2%
+    \fi
+  \fi
+  {\parfillskip=0pt\pdfprotrudechars=0\par}}
 
 % The fitting script reads this line from the log after each compile.
 \newcommand{\measure}[1]{%
