@@ -65,7 +65,7 @@ const C_EMPTY_LINES_NOTE = 3;
 
 // Characters that mean the text layer is broken: unmapped glyphs, the replacement character,
 // ligature code points, and private-use glyphs.
-const C_TEXT_JUNK = /\(cid:\d+\)|[�ﬀ-ﬆ-]/g;
+const C_TEXT_JUNK = /\(cid:\d+\)|[�ﬀ-ﬆ-]/g;
 
 /**
  * @brief Finds a value part way along a spacing range
