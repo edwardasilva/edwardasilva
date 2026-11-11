@@ -347,10 +347,17 @@ function renderList(labels) {
 function renderExperience(experience) {
     const skills = renderList(experience.cvSkills ?? experience.skills);
     const location = experience.location ? escapeLatex(experience.location) : '';
-    // The location always sits on the second line, right-aligned under the dates.
-    const details = location ? `${skills} \\hfill ${location}` : skills;
+    const title = `\\textbf{${escapeLatex(cvTitle(experience))}}`;
+    const company = escapeLatex(cvCompany(experience));
+    const dates = escapeLatex(formatDateRange(experience.duration));
     const bullets = cvBullets(experience);
-    const head = `\\textbf{${escapeLatex(cvTitle(experience))}}, ${escapeLatex(cvCompany(experience))} \\hfill ${escapeLatex(formatDateRange(experience.duration))}`;
+    // The location sits right-aligned under the dates. A role with a skills line puts it at the
+    // end of that line. A role without one, as in Teaching, moves the company down to that line
+    // instead, so the location never sits on a line by itself.
+    const stacked = location && !skills;
+    const head = stacked ? `${title} \\hfill ${dates}` : `${title}, ${company} \\hfill ${dates}`;
+    const left = stacked ? company : skills;
+    const details = location ? `${left} \\hfill ${location}` : left;
 
     return joinParts(
         [
