@@ -34,7 +34,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-    courseworkNames,
+    C_SHOW_PHONE,
     escapeLatex,
     escapeUrl,
     formatDateRange,
@@ -91,22 +91,20 @@ function cvEducation(data) {
 }
 
 /**
- * @brief Gets the CV-visible courses of one education entry, grouped by department
+ * @brief Gets the CV-visible courses of one education entry
  * @param education Education entry
- * @return List of department names with their courses ordered by Priority, then by code
+ * @return Course labels as "code name", ordered by Priority, then by code
+ * @details The one-page Signals and Systems merge does not apply here.
  */
-function cvCourseGroups(education) {
-    return Object.entries(education.courses ?? {})
-        .map(([department, courses]) => ({
-            department,
-            courses: onCv(courses).sort(
-                (left, right) =>
-                    (left.Priority ?? Number.MAX_SAFE_INTEGER) -
-                        (right.Priority ?? Number.MAX_SAFE_INTEGER) ||
-                    String(left.code).localeCompare(String(right.code))
-            ),
-        }))
-        .filter((group) => group.courses.length > 0);
+function cvCourseLabels(education) {
+    return onCv(Object.values(education.courses ?? {}).flat())
+        .sort(
+            (left, right) =>
+                (left.Priority ?? Number.MAX_SAFE_INTEGER) -
+                    (right.Priority ?? Number.MAX_SAFE_INTEGER) ||
+                String(left.code).localeCompare(String(right.code))
+        )
+        .map((course) => `${course.code} ${course.name}`);
 }
 
 /**
@@ -295,10 +293,7 @@ function renderEducation(education, includeGpa) {
         ', '
     );
     const gpa = includeGpa && education.gpa ? `GPA: ${escapeLatex(education.gpa)}` : '';
-    const coursework = cvCourseGroups(education).map(
-        ({ department, courses }) =>
-            `\\textbf{${escapeLatex(department)} Coursework:} ${escapeLatex(courseworkNames(courses).join(', '))}`
-    );
+    const coursework = cvCourseLabels(education);
 
     return joinParts(
         [
@@ -309,7 +304,9 @@ function renderEducation(education, includeGpa) {
             ),
             renderLabelledLine('Honors', education.honors),
             renderLabelledLine('Scholarships', education.scholarships),
-            coursework.join('\n\\par\\vspace{\\listitem}\n'),
+            coursework.length > 0
+                ? `\\textbf{Coursework:} ${coursework.map(escapeLatex).join(', ')}`
+                : '',
         ],
         '\n\\par\\vspace{\\listitem}\n'
     );
@@ -436,7 +433,7 @@ export function expectedText(data) {
                 entry.degree,
                 ...(entry.honors ?? []),
                 ...(entry.scholarships ?? []),
-                ...cvCourseGroups(entry).flatMap(({ courses }) => courseworkNames(courses)),
+                ...cvCourseLabels(entry),
             ]),
         certifications: () =>
             onCv(data.certifications).flatMap((entry) => [entry.name, entry.organization]),
@@ -447,7 +444,7 @@ export function expectedText(data) {
         name,
         ...[linkedin, website].filter(Boolean).map(shortUrl),
         email,
-        phone,
+        ...(C_SHOW_PHONE && phone ? [phone] : []),
         ...data.cv.sections
             .filter((section) => C_RENDERERS[section.id](data) !== '')
             .flatMap((section) => [section.title, ...entries[section.id]()]),

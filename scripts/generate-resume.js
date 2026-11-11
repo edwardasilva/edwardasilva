@@ -38,7 +38,7 @@ const C_DATA_PATH = path.join(ROOT_DIR, 'information', 'resume-data.json');
 export const C_BUILD_DIR = path.join(ROOT_DIR, 'build', 'resume');
 
 // Set to false to drop the phone number from the public PDF. The text check follows this switch.
-const C_SHOW_PHONE = true;
+export const C_SHOW_PHONE = true;
 
 // Three-letter months on the PDF, where the space is tight. May is already three letters.
 const C_MONTH_ABBREVIATIONS = {
@@ -230,7 +230,7 @@ function collectCourses(data) {
  * @param courses Courses marked for the resume
  * @return Display names, with both Signals and Systems courses merged into one
  */
-export function courseworkNames(courses) {
+function courseworkNames(courses) {
     const aliases = courses.map((course) => course.alias);
     const mergeSignals = C_SIGNALS_ALIASES.every((alias) => aliases.includes(alias));
     const names = courses

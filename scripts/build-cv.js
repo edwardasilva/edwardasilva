@@ -42,14 +42,11 @@ const C_JOB_NAME = 'Edward_Silva_CV';
 const C_MAX_PAGES = 2;
 
 // Layouts to try, roomiest first: font size in points and margin in inches. The floors match the
-// resume's 0.5 in margins. The CV carries every entry marked for it, so its text floor is 10 pt
-// instead of the resume's 10.5 pt.
+// resume's rules in information/.agents/docs/resume_rules.md: 10.5 pt text and 0.5 in margins.
 const C_LAYOUTS = [
     [11.0, 0.5],
     [10.75, 0.5],
     [10.5, 0.5],
-    [10.25, 0.5],
-    [10.0, 0.5],
 ];
 
 // Each range runs from compact to roomy. A CV with room left grows all of them together, in
@@ -270,7 +267,7 @@ function fit() {
     const lines = tightest ? Math.ceil(overflow(tightest) / tightest.line) : 'some';
 
     throw new Error(
-        `[ERROR] The CV does not fit in two pages at 10 pt with 0.5 in margins. It runs about ${lines} lines over. Trim a CV bullet in resume-data.json, or set an entry's Visibility to "Hide".`
+        `[ERROR] The CV does not fit in two pages at 10.5 pt with 0.5 in margins. It runs about ${lines} lines over. Trim a CV bullet in resume-data.json, or set an entry's Visibility to "Hide".`
     );
 }
 
