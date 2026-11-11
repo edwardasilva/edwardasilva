@@ -9,10 +9,12 @@
  * Turns resume-data.json into the LaTeX body of the two-page CV, and into the list of text the
  * finished PDF has to contain. Entries with Visibility "All", "Site", "List", or "CV" reach the CV
  * and "Hide" stays off it. "cvHide": true keeps an entry off the CV without changing its
- * Visibility, and "cvTitle" and "cvCompany" replace an entry's title and employer on the CV only.
- * The cv object sets the section order and titles and whether the GPA prints. An entry's CV
- * bullet list is used when it has items, and its Resume list otherwise. Coursework prints by
- * course name, one line per course group, with no course codes. A field with the wrong kind of
+ * Visibility, and "cvTitle", "cvCompany", and "cvSkills" replace an entry's title, employer, and
+ * skills on the CV only. The cv object sets the section order and titles, whether the cumulative
+ * GPA prints, the categorized skills lines (cv.skills), and the coursework lines (cv.coursework).
+ * The education entry's cvGraduateGpa and cvScholarships are CV-only. An entry's CV bullet list
+ * is used when it has items, and its Resume list otherwise. Coursework prints by course name,
+ * with no course codes. A field with the wrong kind of
  * value stops the build and names the field. Fitting the pages happens in scripts/build-cv.js.
  *
  * File Structure:
@@ -113,18 +115,43 @@ function cvEducation(data) {
 }
 
 /**
- * @brief Gets the CV-visible courses of one education entry, grouped as in the data
+ * @brief Gets the coursework lines of one education entry
  * @param education Education entry
- * @return One { group, names } per course group that has a course on the CV
+ * @param data Resume data
+ * @return One { label, names } per coursework line
  * @details Names only, with no course codes, because a reader outside the school does not know
- * the codes. The full course name prints, not the shorter alias the one-page resume uses. Courses
- * are ordered by Priority, then by code. The one-page Signals and Systems merge does not apply here.
+ * the codes. The full course name prints, not the shorter alias the one-page resume uses. When
+ * cv.coursework is set, it picks the lines, their labels, the courses by code, an optional
+ * grade, and an optional shorter name. Otherwise each course group in the data is one line of
+ * its CV-visible courses, ordered by Priority, then by code. The one-page Signals and Systems
+ * merge does not apply here.
  */
-function cvCourseGroups(education) {
+function cvCourseGroups(education, data) {
+    const courses = Object.values(education.courses ?? {}).flat();
+
+    if (Array.isArray(data.cv?.coursework)) {
+        return data.cv.coursework
+            .map(({ label, courses: picks }) => ({
+                label,
+                names: (picks ?? [])
+                    .map((pick) => ({
+                        pick,
+                        course: onCv(courses).find((course) => course.code === pick.code),
+                    }))
+                    .filter(({ course }) => course)
+                    .map(({ pick, course }) =>
+                        pick.grade
+                            ? `${pick.name ?? course.name} (${pick.grade})`
+                            : (pick.name ?? course.name)
+                    ),
+            }))
+            .filter(({ names }) => names.length > 0);
+    }
+
     return Object.entries(education.courses ?? {})
-        .map(([group, courses]) => ({
-            group,
-            names: onCv(courses)
+        .map(([group, listed]) => ({
+            label: `${group} Courses`,
+            names: onCv(listed)
                 .sort(
                     (left, right) =>
                         (left.Priority ?? Number.MAX_SAFE_INTEGER) -
@@ -134,15 +161,6 @@ function cvCourseGroups(education) {
                 .map((course) => course.name),
         }))
         .filter(({ names }) => names.length > 0);
-}
-
-/**
- * @brief Gets the label for one course group's coursework line
- * @param group Course group name from resume data
- * @return The label, such as "Electrical Engineering Courses"
- */
-function courseGroupLabel(group) {
-    return `${group} Courses`;
 }
 
 /**
@@ -163,6 +181,18 @@ function collectSkills(data) {
         seen.add(key);
         return true;
     });
+}
+
+/**
+ * @brief Gets the CV skills block
+ * @param data Resume data
+ * @return One { label, items } per line: cv.skills when set, otherwise one unlabelled line of
+ * TopSkills then ResumeSkills
+ */
+function cvSkillGroups(data) {
+    return Array.isArray(data.cv?.skills)
+        ? data.cv.skills
+        : [{ label: 'Skills', items: collectSkills(data) }];
 }
 
 /**
@@ -210,6 +240,7 @@ function validate(data) {
         requireField(isText(entry.duration), `${field}.duration`, 'text');
         requireField(isTextList(entry.CV), `${field}.CV`, 'a list of text');
         requireField(isTextList(entry.Resume), `${field}.Resume`, 'a list of text');
+        requireField(isTextList(entry.cvSkills), `${field}.cvSkills`, 'a list of text');
     });
 
     onCv(data.projects).forEach((entry, index) => {
@@ -231,7 +262,43 @@ function validate(data) {
             `education[${index}].scholarships`,
             'a list of text'
         );
+        requireField(
+            isTextList(entry.cvScholarships),
+            `education[${index}].cvScholarships`,
+            'a list of text'
+        );
+        requireField(
+            entry.cvGraduateGpa === undefined || isText(entry.cvGraduateGpa),
+            `education[${index}].cvGraduateGpa`,
+            'text'
+        );
     });
+
+    if (data.cv.skills !== undefined) {
+        requireField(
+            Array.isArray(data.cv.skills) &&
+                data.cv.skills.every(
+                    (group) =>
+                        isText(group.label) && Array.isArray(group.items) && isTextList(group.items)
+                ),
+            'cv.skills',
+            'a list of { label, items }'
+        );
+    }
+
+    if (data.cv.coursework !== undefined) {
+        requireField(
+            Array.isArray(data.cv.coursework) &&
+                data.cv.coursework.every(
+                    (group) =>
+                        isText(group.label) &&
+                        Array.isArray(group.courses) &&
+                        group.courses.every((pick) => isText(pick.code))
+                ),
+            'cv.coursework',
+            'a list of { label, courses: [{ code }] }'
+        );
+    }
 
     onCv(data.certifications).forEach((entry, index) => {
         requireField(isText(entry.name), `certifications[${index}].name`, 'text');
@@ -267,11 +334,13 @@ function renderList(labels) {
  * @return LaTeX for the entry, with no list when it has no bullets
  */
 function renderExperience(experience) {
-    const skills = renderList(experience.skills);
+    const skills = renderList(experience.cvSkills ?? experience.skills);
     const location = experience.location ? escapeLatex(experience.location) : '';
-    const details = skills && location ? `${skills} \\hfill ${location}` : skills || location;
+    // With no skills line, the location joins the title line instead of sitting on its own.
+    const details = skills ? joinParts([skills, location], ' \\hfill ') : '';
     const bullets = cvBullets(experience);
-    const head = `\\textbf{${escapeLatex(cvTitle(experience))}}, ${escapeLatex(cvCompany(experience))} \\hfill ${escapeLatex(formatDateRange(experience.duration))}`;
+    const where = joinParts([escapeLatex(cvCompany(experience)), skills ? '' : location], ', ');
+    const head = `\\textbf{${escapeLatex(cvTitle(experience))}}, ${where} \\hfill ${escapeLatex(formatDateRange(experience.duration))}`;
 
     return joinParts(
         [
@@ -319,10 +388,11 @@ function renderLabelledLine(label, items) {
 /**
  * @brief Renders one education entry
  * @param education Education entry
- * @param includeGpa True when the GPA may print
- * @return LaTeX for the school, degree, honors, scholarships, and coursework
+ * @param data Resume data, for cv.includeGpa and cv.coursework
+ * @return LaTeX for the school, degree, GPA, honors, scholarships, and coursework
  */
-function renderEducation(education, includeGpa) {
+function renderEducation(education, data) {
+    const includeGpa = data.cv.includeGpa === true;
     const date = education.graduationDate
         ? ` \\hfill ${escapeLatex(education.graduationDate)}`
         : '';
@@ -330,10 +400,15 @@ function renderEducation(education, includeGpa) {
         [`\\textbf{${escapeLatex(education.degree)}}`, escapeLatex(education.minor ?? '')],
         ', '
     );
-    const gpa = includeGpa && education.gpa ? `GPA: ${escapeLatex(education.gpa)}` : '';
-    const coursework = cvCourseGroups(education).map(
-        ({ group, names }) =>
-            `\\textbf{${escapeLatex(courseGroupLabel(group))}:} ${renderList(names)}`
+    const gpa = joinParts(
+        [
+            includeGpa && education.gpa ? `GPA: ${escapeLatex(education.gpa)}` : '',
+            education.cvGraduateGpa ? `Graduate GPA: ${escapeLatex(education.cvGraduateGpa)}` : '',
+        ],
+        ', '
+    );
+    const coursework = cvCourseGroups(education, data).map(
+        ({ label, names }) => `\\textbf{${escapeLatex(label)}:} ${renderList(names)}`
     );
 
     return joinParts(
@@ -344,7 +419,7 @@ function renderEducation(education, includeGpa) {
                 ', '
             ),
             renderLabelledLine('Honors', education.honors),
-            renderLabelledLine('Scholarships', education.scholarships),
+            renderLabelledLine('Scholarships', education.cvScholarships ?? education.scholarships),
             ...coursework,
         ],
         '\n\\par\\vspace{\\listitem}\n'
@@ -395,10 +470,13 @@ function renderOrganization(organization) {
 const C_RENDERERS = {
     experience: (data) => onCv(data.experiences).map(renderExperience).join('\n\\entrygap\n'),
     projects: (data) => onCv(data.projects).map(renderProject).join('\n\\entrygap\n'),
-    skills: (data) => `\\textbf{Skills:} ${renderList(collectSkills(data))}`,
+    skills: (data) =>
+        cvSkillGroups(data)
+            .map(({ label, items }) => `\\textbf{${escapeLatex(label)}:} ${renderList(items)}`)
+            .join(' \\\\\n'),
     education: (data) =>
         cvEducation(data)
-            .map((entry) => renderEducation(entry, data.cv.includeGpa === true))
+            .map((entry) => renderEducation(entry, data))
             .join('\n\\entrygap\n'),
     certifications: (data) => onCv(data.certifications).map(renderCertification).join(' \\\\\n'),
     organizations: (data) => onCv(data.organizations).map(renderOrganization).join(' \\\\\n'),
@@ -423,7 +501,9 @@ function generateBody(data) {
     const education = cvEducation(data)[0];
     const pdfKeywords = [
         name,
-        ...collectSkills(data).map(escapeLatex),
+        ...cvSkillGroups(data)
+            .flatMap(({ items }) => items)
+            .map(escapeLatex),
         ...[education?.institution, education?.degree, data.personal.citizenship]
             .filter(Boolean)
             .map(escapeLatex),
@@ -466,17 +546,14 @@ export function expectedText(data) {
             ]),
         projects: () =>
             onCv(data.projects).flatMap((entry) => [cvTitle(entry), ...cvBullets(entry)]),
-        skills: () => collectSkills(data),
+        skills: () => cvSkillGroups(data).flatMap(({ label, items }) => [label, ...items]),
         education: () =>
             cvEducation(data).flatMap((entry) => [
                 entry.institution,
                 entry.degree,
                 ...(entry.honors ?? []),
-                ...(entry.scholarships ?? []),
-                ...cvCourseGroups(entry).flatMap(({ group, names }) => [
-                    courseGroupLabel(group),
-                    ...names,
-                ]),
+                ...(entry.cvScholarships ?? entry.scholarships ?? []),
+                ...cvCourseGroups(entry, data).flatMap(({ label, names }) => [label, ...names]),
             ]),
         certifications: () =>
             onCv(data.certifications).flatMap((entry) => [entry.name, entry.organization]),
