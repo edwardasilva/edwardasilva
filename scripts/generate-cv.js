@@ -8,10 +8,12 @@
  *
  * Turns resume-data.json into the LaTeX body of the two-page CV, and into the list of text the
  * finished PDF has to contain. Entries with Visibility "All", "Site", "List", or "CV" reach the CV
- * and "Hide" stays off it. The cv object sets the section order and titles and whether the GPA
- * prints. An entry's CV bullet list is used when it has items, and its Resume list otherwise. A
- * field with the wrong kind of value stops the build and names the field. Fitting the pages
- * happens in scripts/build-cv.js.
+ * and "Hide" stays off it. "cvHide": true keeps an entry off the CV without changing its
+ * Visibility, and "cvTitle" and "cvCompany" replace an entry's title and employer on the CV only.
+ * The cv object sets the section order and titles and whether the GPA prints. An entry's CV
+ * bullet list is used when it has items, and its Resume list otherwise. Coursework prints by
+ * course name, one line per course group, with no course codes. A field with the wrong kind of
+ * value stops the build and names the field. Fitting the pages happens in scripts/build-cv.js.
  *
  * File Structure:
  * - Global Constants: file paths and the Visibility values the CV shows
@@ -66,10 +68,30 @@ function requireField(condition, field, expected) {
 /**
  * @brief Keeps the entries marked for the CV
  * @param entries Raw entries from resume data
- * @return Entries whose Visibility is All, Site, List, or CV
+ * @return Entries whose Visibility is All, Site, List, or CV, minus those with cvHide set
  */
 function onCv(entries) {
-    return (entries ?? []).filter((entry) => C_CV_VISIBILITY.includes(entry.Visibility));
+    return (entries ?? []).filter(
+        (entry) => C_CV_VISIBILITY.includes(entry.Visibility) && entry.cvHide !== true
+    );
+}
+
+/**
+ * @brief Gets the title an entry shows on the CV
+ * @param entry Experience or project entry
+ * @return cvTitle when set, otherwise title
+ */
+function cvTitle(entry) {
+    return entry.cvTitle ?? entry.title;
+}
+
+/**
+ * @brief Gets the employer an experience shows on the CV
+ * @param entry Experience entry
+ * @return cvCompany when set, otherwise company
+ */
+function cvCompany(entry) {
+    return entry.cvCompany ?? entry.company;
 }
 
 /**
@@ -91,20 +113,36 @@ function cvEducation(data) {
 }
 
 /**
- * @brief Gets the CV-visible courses of one education entry
+ * @brief Gets the CV-visible courses of one education entry, grouped as in the data
  * @param education Education entry
- * @return Course labels as "code name", ordered by Priority, then by code
- * @details The one-page Signals and Systems merge does not apply here.
+ * @return One { group, names } per course group that has a course on the CV
+ * @details Names only, with no course codes, because a reader outside the school does not know
+ * the codes. The full course name prints, not the shorter alias the one-page resume uses. Courses
+ * are ordered by Priority, then by code. The one-page Signals and Systems merge does not apply here.
  */
-function cvCourseLabels(education) {
-    return onCv(Object.values(education.courses ?? {}).flat())
-        .sort(
-            (left, right) =>
-                (left.Priority ?? Number.MAX_SAFE_INTEGER) -
-                    (right.Priority ?? Number.MAX_SAFE_INTEGER) ||
-                String(left.code).localeCompare(String(right.code))
-        )
-        .map((course) => `${course.code} ${course.name}`);
+function cvCourseGroups(education) {
+    return Object.entries(education.courses ?? {})
+        .map(([group, courses]) => ({
+            group,
+            names: onCv(courses)
+                .sort(
+                    (left, right) =>
+                        (left.Priority ?? Number.MAX_SAFE_INTEGER) -
+                            (right.Priority ?? Number.MAX_SAFE_INTEGER) ||
+                        String(left.code).localeCompare(String(right.code))
+                )
+                .map((course) => course.name),
+        }))
+        .filter(({ names }) => names.length > 0);
+}
+
+/**
+ * @brief Gets the label for one course group's coursework line
+ * @param group Course group name from resume data
+ * @return The label, such as "Electrical Engineering Courses"
+ */
+function courseGroupLabel(group) {
+    return `${group} Courses`;
 }
 
 /**
@@ -167,8 +205,8 @@ function validate(data) {
     onCv(data.experiences).forEach((entry, index) => {
         const field = `experiences[${index}]`;
 
-        requireField(isText(entry.title), `${field}.title`, 'text');
-        requireField(isText(entry.company), `${field}.company`, 'text');
+        requireField(isText(cvTitle(entry)), `${field}.title`, 'text');
+        requireField(isText(cvCompany(entry)), `${field}.company`, 'text');
         requireField(isText(entry.duration), `${field}.duration`, 'text');
         requireField(isTextList(entry.CV), `${field}.CV`, 'a list of text');
         requireField(isTextList(entry.Resume), `${field}.Resume`, 'a list of text');
@@ -233,7 +271,7 @@ function renderExperience(experience) {
     const location = experience.location ? escapeLatex(experience.location) : '';
     const details = skills && location ? `${skills} \\hfill ${location}` : skills || location;
     const bullets = cvBullets(experience);
-    const head = `\\textbf{${escapeLatex(experience.title)}}, ${escapeLatex(experience.company)} \\hfill ${escapeLatex(formatDateRange(experience.duration))}`;
+    const head = `\\textbf{${escapeLatex(cvTitle(experience))}}, ${escapeLatex(cvCompany(experience))} \\hfill ${escapeLatex(formatDateRange(experience.duration))}`;
 
     return joinParts(
         [
@@ -252,7 +290,7 @@ function renderExperience(experience) {
 function renderProject(project) {
     const repository = project.github ? `\\href{${escapeUrl(project.github)}}{GitHub}` : '';
     const label = joinParts(
-        [`\\textbf{${escapeLatex(project.title)}}`, renderList(project.skills), repository],
+        [`\\textbf{${escapeLatex(cvTitle(project))}}`, renderList(project.skills), repository],
         ', '
     );
     const bullets = cvBullets(project);
@@ -293,7 +331,10 @@ function renderEducation(education, includeGpa) {
         ', '
     );
     const gpa = includeGpa && education.gpa ? `GPA: ${escapeLatex(education.gpa)}` : '';
-    const coursework = cvCourseLabels(education);
+    const coursework = cvCourseGroups(education).map(
+        ({ group, names }) =>
+            `\\textbf{${escapeLatex(courseGroupLabel(group))}:} ${renderList(names)}`
+    );
 
     return joinParts(
         [
@@ -304,9 +345,7 @@ function renderEducation(education, includeGpa) {
             ),
             renderLabelledLine('Honors', education.honors),
             renderLabelledLine('Scholarships', education.scholarships),
-            coursework.length > 0
-                ? `\\textbf{Coursework:} ${coursework.map(escapeLatex).join(', ')}`
-                : '',
+            ...coursework,
         ],
         '\n\\par\\vspace{\\listitem}\n'
     );
@@ -421,11 +460,12 @@ export function expectedText(data) {
     const entries = {
         experience: () =>
             onCv(data.experiences).flatMap((entry) => [
-                entry.title,
-                entry.company,
+                cvTitle(entry),
+                cvCompany(entry),
                 ...cvBullets(entry),
             ]),
-        projects: () => onCv(data.projects).flatMap((entry) => [entry.title, ...cvBullets(entry)]),
+        projects: () =>
+            onCv(data.projects).flatMap((entry) => [cvTitle(entry), ...cvBullets(entry)]),
         skills: () => collectSkills(data),
         education: () =>
             cvEducation(data).flatMap((entry) => [
@@ -433,7 +473,10 @@ export function expectedText(data) {
                 entry.degree,
                 ...(entry.honors ?? []),
                 ...(entry.scholarships ?? []),
-                ...cvCourseLabels(entry),
+                ...cvCourseGroups(entry).flatMap(({ group, names }) => [
+                    courseGroupLabel(group),
+                    ...names,
+                ]),
             ]),
         certifications: () =>
             onCv(data.certifications).flatMap((entry) => [entry.name, entry.organization]),

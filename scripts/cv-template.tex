@@ -45,6 +45,10 @@
 \hyphenpenalty=10000
 \exhyphenpenalty=10000
 
+% No paragraph or bullet leaves a single line alone at the bottom or the top of a page.
+\clubpenalty=10000
+\widowpenalty=10000
+
 % Every glyph maps to real Unicode text, so the PDF stays machine-readable.
 \input{glyphtounicode}
 \pdfgentounicode=1
@@ -54,7 +58,8 @@
 \titlespacing*{\section}{0pt}{\sectiongap}{\sectionafter}
 
 \renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
-\setlist[itemize]{leftmargin=12pt,topsep=\listtop,itemsep=\listitem,parsep=0pt,partopsep=0pt}
+% An entry heading never sits alone at the bottom of a page: no page break before its first bullet.
+\setlist[itemize]{leftmargin=12pt,topsep=\listtop,itemsep=\listitem,parsep=0pt,partopsep=0pt,beginpenalty=10000}
 
 % The fitting script reads this line from the log after each compile.
 \newcommand{\measure}[1]{%
