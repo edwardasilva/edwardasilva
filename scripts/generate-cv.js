@@ -347,11 +347,10 @@ function renderList(labels) {
 function renderExperience(experience) {
     const skills = renderList(experience.cvSkills ?? experience.skills);
     const location = experience.location ? escapeLatex(experience.location) : '';
-    // With no skills line, the location joins the title line instead of sitting on its own.
-    const details = skills ? joinParts([skills, location], ' \\hfill ') : '';
+    // The location always sits on the second line, right-aligned under the dates.
+    const details = location ? `${skills} \\hfill ${location}` : skills;
     const bullets = cvBullets(experience);
-    const where = joinParts([escapeLatex(cvCompany(experience)), skills ? '' : location], ', ');
-    const head = `\\textbf{${escapeLatex(cvTitle(experience))}}, ${where} \\hfill ${escapeLatex(formatDateRange(experience.duration))}`;
+    const head = `\\textbf{${escapeLatex(cvTitle(experience))}}, ${escapeLatex(cvCompany(experience))} \\hfill ${escapeLatex(formatDateRange(experience.duration))}`;
 
     return joinParts(
         [
@@ -368,18 +367,15 @@ function renderExperience(experience) {
  * @return LaTeX for the entry, with no list when it has no bullets
  */
 function renderProject(project) {
-    const title = `\\textbf{${escapeLatex(cvTitle(project))}}`;
-    // A project with its own site links the title there instead of adding a GitHub link.
+    // A project with its own site shows that address, linked, in the title line, as in
+    // "eeprep (eeprep.com)", instead of a GitHub link.
+    const site = project.cvLink
+        ? ` (\\href{${escapeUrl(project.cvLink)}}{${escapeLatex(shortUrl(project.cvLink))}})`
+        : '';
+    const title = `\\textbf{${escapeLatex(cvTitle(project))}}${site}`;
     const repository =
         project.github && !project.cvLink ? `\\href{${escapeUrl(project.github)}}{GitHub}` : '';
-    const label = joinParts(
-        [
-            project.cvLink ? `\\href{${escapeUrl(project.cvLink)}}{${title}}` : title,
-            renderList(project.skills),
-            repository,
-        ],
-        ', '
-    );
+    const label = joinParts([title, renderList(project.skills), repository], ', ');
     const bullets = cvBullets(project);
 
     return joinParts(
@@ -427,9 +423,13 @@ function renderEducation(education, data) {
     return joinParts(
         [
             `\\textbf{${escapeLatex(education.institution)}}${date}`,
+            // The location sits right-aligned under the graduation date, as on every entry.
             joinParts(
-                [degree, education.location ? escapeLatex(education.location) : '', gpa],
-                ', '
+                [
+                    joinParts([degree, gpa], ', '),
+                    education.location ? escapeLatex(education.location) : '',
+                ],
+                ' \\hfill '
             ),
             renderLabelledLine('Honors', education.honors),
             renderLabelledLine('Scholarships', education.cvScholarships ?? education.scholarships),
@@ -567,7 +567,10 @@ export function expectedText(data) {
                 ...cvBullets(entry),
             ]),
         projects: () =>
-            onCv(data.projects).flatMap((entry) => [cvTitle(entry), ...cvBullets(entry)]),
+            onCv(data.projects).flatMap((entry) => [
+                entry.cvLink ? `${cvTitle(entry)} (${shortUrl(entry.cvLink)})` : cvTitle(entry),
+                ...cvBullets(entry),
+            ]),
         skills: () => cvSkillGroups(data).flatMap(({ label, items }) => [label, ...items]),
         education: () =>
             cvEducation(data).flatMap((entry) => [
