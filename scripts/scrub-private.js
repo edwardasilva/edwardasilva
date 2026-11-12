@@ -4,12 +4,12 @@
  *
  * Author: Edward Silva
  * Creation Date: 24 October, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 12 November, 2026
  *
  * Keeps local AI instructions and resume source off GitHub. .gitignore already
  * skips them on add. This script removes them from the index during commit and
  * rejects a push whose tip, or any commit not yet on a remote, contains them.
- * Working tree files are not deleted. .github/GEMINI.md is the public routing
+ * Working tree files are not deleted. .github/AGENTS.md is the public rules
  * file and stays in the repository.
  *
  * File Structure:
@@ -91,9 +91,9 @@ function isPrivatePath(filePath) {
         return false;
     }
 
-    // The public routing file is tracked on purpose. A GEMINI.md at the repo
+    // The public rules file is tracked on purpose. An AGENTS.md at the repo
     // root, or in any other folder, still stays local.
-    if (normalized === '.github/GEMINI.md') {
+    if (normalized === '.github/AGENTS.md') {
         return false;
     }
 
