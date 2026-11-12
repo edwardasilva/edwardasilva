@@ -3,8 +3,6 @@
   <img src=".github/brand/edwardasilva-lockup-outlined.svg" alt="edwardasilva" width="320">
 </picture>
 
-# Edward Silva
-
 Electrical engineering grad from Colorado School of Mines (May 2026), now an embedded software engineer at SpaceX.
 
 ## Projects
