@@ -3,7 +3,7 @@
 %
 % Author: Edward Silva
 % Creation Date: 07 November, 2026
-% Last Update: 08 November, 2026
+% Last Update: 12 November, 2026
 %
 % The fixed part of the resume, based on information/.agents/docs/templates/template.tex: XCharter, pdflatex, Unicode
 % mapping for applicant tracking systems, PDF metadata, and bookmarks. scripts/build-resume.js
@@ -29,6 +29,9 @@
 \usepackage{XCharter}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+% The less-than-or-equal sign and sigma in a bullet, typeset from the math font.
+\DeclareUnicodeCharacter{2264}{\ensuremath{\leq}}
+\DeclareUnicodeCharacter{03C3}{\ensuremath{\sigma}}
 \usepackage{enumitem}
 \usepackage{array}
 \usepackage[hidelinks]{hyperref}
