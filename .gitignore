@@ -30,6 +30,8 @@ out/
 
 # resume and local content artifacts
 public/resume/*.tex
+# The CV builds into build/cv and never ships with the site.
+public/cv/
 public/vendor/
 public/assets/
 previousjobs/

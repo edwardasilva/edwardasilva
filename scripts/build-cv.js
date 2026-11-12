@@ -4,27 +4,28 @@
  *
  * Author: Edward Silva
  * Creation Date: 11 November, 2026
- * Last Update: 11 November, 2026
+ * Last Update: 12 November, 2026
  *
  * Generates the CV and fits it on two pages with the same method as scripts/build-resume.js:
  * compile, measure the real page, step the size and margins down until it fits, then grow the
  * spacing to fill the second page. It checks the PDF text the way an applicant tracking system
  * reads it. A failed compile or a CV that will not fit in two pages stops with an error. No entry
  * is dropped to make it fit. This script has its own build directory, template, job name, and
- * output, and it does not touch the resume or public/assets.
+ * output, and it does not touch the resume or public/assets. The CV stays off the site: the PDF is
+ * written to build/cv, which is not committed or deployed.
  *
  * File Structure:
  * - Layout constants: the size and margin ladder, the spacing ranges, and the page ceiling
  * - Compiling: settings, one pdflatex run, error reporting
  * - Fitting: measure, overflow, fit, fillPage
  * - Checks: text layer in reading order
- * - SKIP_RESUME_GENERATE and SKIP_RESUME_PDF_BUILD: CI sets both and ships the committed PDF
+ * - SKIP_RESUME_GENERATE and SKIP_RESUME_PDF_BUILD: skip writing the body and compiling the PDF
  *
  * Where this file is used within the repository:
- * - npm run build:cv, called by npm run build
+ * - npm run build:cv, run by hand. npm run build does not run it.
  *
  * Usage:
- * $ `npm run build:cv` : Fits the CV and writes public/cv/Edward_Silva_CV.pdf
+ * $ `npm run build:cv` : Fits the CV and writes build/cv/Edward_Silva_CV.pdf
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
@@ -36,7 +37,6 @@ import { fileURLToPath } from 'node:url';
 import { C_BUILD_DIR, expectedText, writeCvBody } from './generate-cv.js';
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const OUTPUT_DIR = path.join(ROOT_DIR, 'public', 'cv');
 const TEMPLATE_PATH = path.join(ROOT_DIR, 'scripts', 'cv-template.tex');
 const C_JOB_NAME = 'Edward_Silva_CV';
 const C_MAX_PAGES = 2;
@@ -356,7 +356,7 @@ function reportChecks(pdfPath, data, { freeLines }) {
 }
 
 /**
- * @brief Fits the CV, compiles the final PDF, and copies it into public/cv
+ * @brief Fits the CV and compiles the final PDF in build/cv
  * @param data Resume data, or null when generation was skipped
  * @return Nothing
  */
@@ -382,10 +382,8 @@ function buildPdf(data) {
 
     reportChecks(pdfPath, data, layout);
 
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-    fs.copyFileSync(pdfPath, path.join(OUTPUT_DIR, `${C_JOB_NAME}.pdf`));
     console.log(
-        `[SUCCESS] CV fits ${pages} pages at ${layout.font} pt, ${layout.margin} in margins, ${Math.round(layout.fill * 100)}% spacing, ${layout.freeLines.toFixed(1)} lines free.`
+        `[SUCCESS] CV fits ${pages} pages at ${layout.font} pt, ${layout.margin} in margins, ${Math.round(layout.fill * 100)}% spacing, ${layout.freeLines.toFixed(1)} lines free. Wrote ${path.relative(ROOT_DIR, pdfPath)}.`
     );
 }
 

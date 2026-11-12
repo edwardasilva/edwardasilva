@@ -6,7 +6,7 @@
   "prettier": "./.lint/.prettierrc.json",
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run build:thumbs && npm run build:resume && npm run build:cv && astro build",
+    "build": "npm run build:thumbs && npm run build:resume && astro build",
     "build:thumbs": "node scripts/generate-pdf-thumbs.js",
     "build:resume": "node scripts/build-resume.js",
     "build:cv": "node scripts/build-cv.js",
