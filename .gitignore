@@ -150,6 +150,8 @@ CLAUDE.md
 SKILL.md
 docs/**
 resume-data.json
+# This repo's public rules file is tracked on purpose.
+!/.github/AGENTS.md
 
 # local editor settings
 .editorconfig

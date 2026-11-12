@@ -4,11 +4,9 @@ This is the public repo for edwardasilva.com. Agent rules live in the informatio
 
 ## Routing
 
-Use the `gemini` label, or comment `@gemini-cli`, for easy tasks: low severity, small, one or two files, docs, wording, config, tests, or polish.
+Use the `claude` label, or comment `@claude`, to hand an issue or pull request to the coding agent.
 
-Use the `claude` label, or comment `@claude`, for harder work: medium or high severity, multi-file changes, design, security, workflows, or anything that needs judgment.
-
-Only the repository owner can start either workflow. Both work on a branch and open a pull request. Neither pushes to `main`, merges, tags, or cuts a release.
+Only the repository owner can start the workflow. It works on a branch and opens a pull request. It never pushes to `main`, merges, tags, or cuts a release.
 
 ## Git
 
