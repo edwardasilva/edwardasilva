@@ -1,0 +1,10 @@
+# Filler words. Warning for now: existing pages still use them. "just" is left to review because it often carries meaning.
+extends: existence
+message: "Cut the filler word '%s'."
+level: warning
+ignorecase: true
+tokens:
+  - '\bvery\b'
+  - '\breally\b'
+  - '\bactually\b'
+  - '\bbasically\b'

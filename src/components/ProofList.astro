@@ -1,0 +1,46 @@
+---
+/**
+ * src/components/ProofList.astro
+ * Project Proof
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 10 November, 2026
+ *
+ * The reports, posters, photos, and video listed for a project in resume-data.json.
+ *
+ * File Structure:
+ * - Props: project slug, an optional file type to keep, and an optional figure number
+ * - One ProofRenderer per file
+ *
+ * Where this file is used within the repository:
+ * - Project pages
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import ProofRenderer from './ProofRenderer.astro';
+import { getProjectSlug, resume } from '../data/resume';
+
+interface Props {
+    slug: string;
+    only?: string;
+    number?: number;
+}
+
+const { only, number } = Astro.props;
+const project = resume.projects.find((candidate) => getProjectSlug(candidate) === Astro.props.slug);
+---
+
+{project && project.proof.length > 0 && (
+    <div class="es-proof-list not-content">
+        {project.proof
+            .filter((proof) => !only || proof.type === only)
+            .map((proof) => (
+                <ProofRenderer proof={proof} number={number} />
+            ))}
+    </div>
+)}

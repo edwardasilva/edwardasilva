@@ -1,0 +1,63 @@
+---
+/**
+ * src/pages/projects.astro
+ * Projects Index
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 10 November, 2026
+ *
+ * Every project under the headings the home page uses, in the same order: selected work, then
+ * more projects.
+ *
+ * File Structure:
+ * - Selected work
+ * - More projects
+ *
+ * Where this file is used within the repository:
+ * - Route: /projects
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ProjectCards from '../components/ProjectCards.astro';
+import { getHomeProjectPages, getPageSlug } from '../data/projects';
+import { asSentence, resume } from '../data/resume';
+import { itemListSchema, jsonLdHeadTag } from '../data/structured-data';
+
+const selected = getHomeProjectPages('selected');
+const more = getHomeProjectPages('more');
+const site = Astro.site ?? Astro.url;
+
+const schema = itemListSchema(
+    'Projects',
+    [...selected, ...more].map(({ entry }) => ({
+        name: entry.data.title,
+        path: `/projects/${getPageSlug(entry.id)}`,
+    })),
+    site
+);
+---
+
+<StarlightPage
+    frontmatter={{
+        title: 'Projects',
+        description: asSentence(resume.site.pages.projects.description),
+        head: [jsonLdHeadTag(schema)],
+        tableOfContents: false,
+    }}
+>
+    <p>
+        The <a href="/skills/">skills page</a> lists the same projects under the tools they used.
+    </p>
+
+    <h2 id="selected">Selected work</h2>
+    <ProjectCards pages={selected} />
+
+    <h2 id="more">More projects</h2>
+    <ProjectCards pages={more} />
+</StarlightPage>

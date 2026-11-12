@@ -1,0 +1,131 @@
+---
+title: Autonomous maze robot
+description: A four-person autonomous maze robot in EENG 350, with a Python and OpenCV vision stack talking to an Arduino motor controller over I2C.
+slug: projects/seed-robot
+---
+
+{/*
+  src/content/docs/projects/seed-robot.mdx
+  Project write-up
+
+  Author: Edward Silva
+  Creation Date: 07 November, 2026
+  Last Update: 10 November, 2026
+
+  Built from the project entry in resume-data.json and the team's repository. Written to the rules in eeprep's .github/STYLE.md.
+
+  Usage:
+  $ `npm run dev` : Renders at /projects/seed-robot
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+*/}
+
+import Figure from '../../../components/Figure.astro';
+import ProofList from '../../../components/ProofList.astro';
+
+Our robot had the second-fastest final run in the class. The exact run times and the class size were not recorded, so I have no figures to give. The vision code finds ArUco markers (printed square codes a camera can locate) and works out the angle and distance to each one. It reads a green or red arrow beside the marker to pick left or right. It sends those over I2C to the team's Arduino motor controller.
+
+<Figure name="robot/front" number={1} narrow plate={false} alt="The robot from the front, showing its two large wheels, drive motors, and electronics.">
+  The robot from the front.
+</Figure>
+
+## Angle and distance from one image
+
+A calibrated camera gives both from a single frame. The marker is 2 inches (0.0508 m) on a side, so its apparent size gives the distance by similar triangles. Here $f_x$ is the focal length in pixels, and $e$ is the marker's edge in pixels:
+
+$$
+d = \frac{f_x \cdot 0.0508}{e}
+$$
+
+The code isn't public because it was course or sponsor work.
+
+```python title="FinalDemo/src/main.py"
+# Calculate angle using calibrated focal length
+x = (undist[0, 0, 0] - cx) / fx
+
+# Convert to degrees
+angle = np.degrees(np.arctan2(x, 1.0))
+
+# DISTANCE:
+tl, tr, br, bl = corners
+
+wpx = np.linalg.norm(tr - tl)
+hpx = np.linalg.norm(br - tr)
+edgepx = 0.5 * (wpx + hpx)
+
+dist = (fx * 0.0508) / edgepx
+```
+
+The edge length is the average of the marker's width and height in pixels.
+
+### Calibration
+
+Calibration gave us the most trouble. We calibrated the camera with checkerboard and ChArUco scripts, and at first we did not have enough good photos of the markers to calibrate from. A larger set of sharper photos fixed it. The final code undistorts each marker's position with that calibration before it computes the angle.
+
+## Speeding up the Python
+
+The Python was far too slow at first. I split it into threads for capture, processing, display, and the LCD, so each stage of the 640x480 video ran on its own. Processing got much faster, and the Arduino stopped waiting on the Python. I did not record the frame rate or loop time before and after, so the speedup has no number.
+
+### Dropping stale frames
+
+The control loop needs the newest frame, so a full queue drops its oldest image.
+
+```python title="FinalDemo/src/main.py"
+try:
+    imageData.put((istream), timeout=0.01)
+except queue.Full:
+    # Remove oldest frame to keep queue fresh
+    try:
+        imageData.get_nowait()
+        imageData.put((istream), timeout=0.01)
+    except queue.Empty:
+        pass  # Queue was empty, just skip this frame
+```
+
+## Doubles over I2C
+
+The first I2C packets sent the angle and distance as doubles, which are 8 bytes in Python. The Arduino read only 4 bytes, the size of a float, for each value.
+
+```python title="Demo2/src/main.py, first version"
+struct.pack(">dd???", 13.0, 15.0, found, lr, LorR)
+```
+
+```cpp title="Demo2/src/robotPositionControl/robotPositionControl.ino"
+for(int i=0; i<4; i++){
+  bytes[i] = Wire.read();
+}
+memcpy(&desiredAngle,bytes,4);
+```
+
+### The fix
+
+We changed the packet to floats and the byte order to little-endian.
+
+```python title="FinalDemo/src/main.py"
+struct.pack("<ff???", angle_val, dist_val, found, lr, LorR)
+```
+
+I only knew how to debug this because of my internship at Kratos, where the SIMD work taught me a lot about registers and floating-point conversions.
+
+## Reading the arrows
+
+An HSV color mask (hue, saturation, and value, which separates color from brightness) finds each arrow in a region beside the marker.
+
+```python title="FinalDemo/src/main.py"
+def hsv_mask_green_bgr(img_bgr):
+    # Green mask to detect left arrow
+    hsv = cv.cvtColor(img_bgr, cv.COLOR_BGR2HSV)
+    # Broad green range
+    lower = np.array([35, 50, 50], dtype=np.uint8)
+    upper = np.array([85, 255, 255], dtype=np.uint8)
+    mask = cv.inRange(hsv, lower, upper)
+    return _clean_mask(mask)
+```
+
+<Figure name="robot/top" number={2} narrow plate={false} alt="The robot from above, showing the Raspberry Pi, the motor controller boards, and the wiring.">
+  The robot from above.
+</Figure>
+
+## Final demonstration
+
+<ProofList slug="seed-robot" only="video" number={3} />

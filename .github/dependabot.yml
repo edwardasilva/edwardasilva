@@ -1,0 +1,42 @@
+# Monthly and grouped, so each ecosystem opens at most one pull request a month and CI runs
+# once for it. Security updates still open on their own when an advisory lands.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    target-branch: main
+    labels:
+      - dependencies
+    # typescript-eslint 8.x only accepts TypeScript below 6.1. A major bump in the
+    # grouped npm pull request breaks npm ci. Keep patch and minor TypeScript updates.
+    ignore:
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
+    groups:
+      astro-starlight:
+        patterns:
+          - astro
+          - '@astrojs/*'
+      npm:
+        patterns:
+          - '*'
+  - package-ecosystem: github-actions
+    directories:
+      - /
+      - /.github/actions/information
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    target-branch: main
+    labels:
+      - dependencies
+    groups:
+      github-actions:
+        patterns:
+          - '*'
