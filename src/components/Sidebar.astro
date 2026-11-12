@@ -1,0 +1,34 @@
+---
+/**
+ * src/components/Sidebar.astro
+ * Sidebar
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * The site sidebar. Groups whose first link shares their label open with that page, so a section is
+ * its own landing page. Adapted from eeprep.com.
+ *
+ * File Structure:
+ * - SidebarPersister keeps scroll and open state between pages
+ * - SidebarTree draws the entries
+ *
+ * Where this file is used within the repository:
+ * - Starlight Sidebar override, set in astro.config.mjs
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
+import SidebarTree from './SidebarTree.astro';
+
+const { sidebar } = Astro.locals.starlightRoute;
+---
+
+<SidebarPersister>
+    <SidebarTree sublist={sidebar} />
+</SidebarPersister>

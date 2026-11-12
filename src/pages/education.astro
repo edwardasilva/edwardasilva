@@ -1,0 +1,159 @@
+---
+/**
+ * src/pages/education.astro
+ * Education Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 08 November, 2026
+ *
+ * The degree, which classes produced which projects, honors, and certifications. Each list is a
+ * ledger, the same rows as the coursework page.
+ *
+ * File Structure:
+ * - splitDetail: separates a trailing parenthetical so it can sit in the detail column
+ * - Degree
+ * - Course to project ledger
+ * - Honors and scholarships ledger
+ * - Certifications ledger
+ *
+ * Where this file is used within the repository:
+ * - Route: /education
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import { getDisplayTitle } from '../data/projects';
+import {
+    getCertificationSlug,
+    getCourseByCode,
+    getCourseHref,
+    getProjectHref,
+    primaryEducation,
+    visibleCertifications,
+    visibleProjects,
+} from '../data/resume';
+import { jsonLdHeadTag } from '../data/structured-data';
+
+const courseProjects = visibleProjects.flatMap((project) =>
+    project.course
+        ? [
+              {
+                  title: getDisplayTitle(getProjectHref(project), project.title),
+                  href: getProjectHref(project),
+                  code: project.course,
+              },
+          ]
+        : []
+);
+
+/**
+ * @brief Separates a trailing parenthetical from an honor or scholarship
+ * @param text Entry from resume-data.json, such as Dean's List (Fall 2022, Fall 2024)
+ * @return The name, and the text inside the parentheses when there is one
+ */
+function splitDetail(text: string): { name: string; detail?: string } {
+    const match = text.match(/^(.+?)\s*\(([^()]+)\)$/);
+
+    return match ? { name: match[1], detail: match[2] } : { name: text };
+}
+
+const honors = [...(primaryEducation?.honors ?? []), ...(primaryEducation?.scholarships ?? [])].map(
+    splitDetail
+);
+
+const description = primaryEducation
+    ? `${primaryEducation.degree} at ${primaryEducation.institution}, graduated ${primaryEducation.graduationDate}, and the classes behind each project.`
+    : 'Education details.';
+
+const head = primaryEducation
+    ? [
+          jsonLdHeadTag({
+              '@type': 'EducationalOccupationalCredential',
+              name: primaryEducation.degree,
+              credentialCategory: 'degree',
+              recognizedBy: {
+                  '@type': 'CollegeOrUniversity',
+                  name: primaryEducation.institution,
+                  sameAs: primaryEducation.url,
+              },
+          }),
+      ]
+    : [];
+---
+
+<StarlightPage frontmatter={{ title: 'Education', description, head, tableOfContents: false }}>
+    {primaryEducation && (
+        <p class="es-lede">
+            {primaryEducation.degree}
+            {primaryEducation.minor && `, ${primaryEducation.minor}`},{' '}
+            <ExternalLink href={primaryEducation.url}>{primaryEducation.institution}</ExternalLink>,{' '}
+            {primaryEducation.location}. Graduated {primaryEducation.graduationDate}
+            {primaryEducation.gpa && ` with a ${primaryEducation.gpa} GPA`}.
+        </p>
+    )}
+
+    <h2>Courses behind the projects</h2>
+    <div class="es-ledger not-content">
+        {courseProjects.map(({ title, href: projectHref, code }) => {
+            const course = getCourseByCode(code);
+            const href = getCourseHref(code);
+
+            return (
+                <div class="es-ledger-row es-ledger-coded">
+                    <code>{code}</code>
+                    <span class="es-ledger-name">
+                        {href ? <a href={href}>{course?.name}</a> : course?.name}
+                    </span>
+                    <span class="es-ledger-detail">
+                        <a href={projectHref}>{title}</a>
+                    </span>
+                </div>
+            );
+        })}
+    </div>
+    <p>
+        The rest are on the <a href="/education/coursework/">full coursework list</a>.
+    </p>
+
+    {honors.length > 0 && (
+        <>
+            <h2>Honors and scholarships</h2>
+            <div class="es-ledger not-content">
+                {honors.map(({ name, detail }) => (
+                    <div class="es-ledger-row">
+                        <span class="es-ledger-name">{name}</span>
+                        {detail && <span class="es-ledger-detail">{detail}</span>}
+                    </div>
+                ))}
+            </div>
+        </>
+    )}
+
+    {visibleCertifications.length > 0 && (
+        <>
+            <h2>Certifications</h2>
+            <div class="es-ledger not-content">
+                {visibleCertifications.map((certification) => (
+                    <div id={getCertificationSlug(certification)} class="es-ledger-row">
+                        <span class="es-ledger-name">
+                            {certification.link ? (
+                                <ExternalLink href={certification.link}>
+                                    {certification.name}
+                                </ExternalLink>
+                            ) : (
+                                certification.name
+                            )}
+                        </span>
+                        <span class="es-ledger-detail">{certification.organization}</span>
+                    </div>
+                ))}
+            </div>
+        </>
+    )}
+</StarlightPage>

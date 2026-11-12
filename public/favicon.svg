@@ -1,0 +1,29 @@
+<!--
+  public/favicon.svg
+  Site Icon
+
+  Author: Edward Silva
+  Last Update: 10 November, 2026
+
+  Browser tab icon, with light and dark colors. A rounded oscilloscope screen with the red waveform,
+  drawn to fill the 32 by 32 box with a 2 px margin. Stroke centers sit on odd coordinates so the
+  2 px strokes stay sharp at 16 px. Set as favicon in astro.config.mjs. The PNG and ICO icons are
+  rendered from this file by scripts/render-icons.js.
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <style>
+      .screen { fill: #fbfbfc; stroke: #16233a; stroke-width: 2; }
+      .waveform { stroke: #a3201d; stroke-width: 2; fill: none; stroke-linecap: round; }
+      @media (prefers-color-scheme: dark) {
+        .screen { fill: #0d1524; stroke: #eceef2; }
+        .waveform { stroke: #e06a5f; }
+      }
+    </style>
+  </defs>
+
+  <rect class="screen" x="3" y="3" width="26" height="26" rx="3"/>
+  <path class="waveform" d="M7 16 Q11.5 6 16 16 T25 16"/>
+</svg>

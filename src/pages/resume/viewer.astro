@@ -1,0 +1,104 @@
+---
+/**
+ * src/pages/resume/viewer.astro
+ * Resume Viewer
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 09 November, 2026
+ *
+ * Draws the resume PDF in the page with PDF.js, with a direct download link.
+ *
+ * File Structure:
+ * - Download link
+ * - Inline viewer script
+ *
+ * Where this file is used within the repository:
+ * - Route: /resume/viewer
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import { asSentence, resume } from '../../data/resume';
+
+const { resumePdfUrl } = resume.personal;
+const generatorUrl = resume.projects.find((project) => project.slug === 'resume-generator')?.github;
+
+if (!resumePdfUrl || !generatorUrl) {
+    throw new Error(
+        '[ERROR] resume-data.json needs personal.resumePdfUrl and the resume-generator github link'
+    );
+}
+
+const pdfName = resumePdfUrl.split('/').at(-1);
+---
+
+<StarlightPage
+    frontmatter={{
+        title: 'Resume',
+        description: asSentence(resume.site.pages.resume.description),
+        tableOfContents: false,
+        pagefind: false,
+    }}
+>
+    <p>
+        <a href={resumePdfUrl} download={pdfName}>
+            Download the PDF
+        </a>
+        . A script builds it from one data file with the same page-fitting method as{' '}
+        <ExternalLink href={generatorUrl}> resume-generator </ExternalLink>.
+    </p>
+
+    <p id="resume-status">Loading resume.</p>
+    <div id="resume-pages" data-pdf-url={resumePdfUrl} class="es-resume not-content"></div>
+
+    <script is:inline type="module">
+        import { getDocument, GlobalWorkerOptions } from '/vendor/pdf.min.mjs';
+
+        const status = document.getElementById('resume-status');
+        const host = document.getElementById('resume-pages');
+
+        GlobalWorkerOptions.workerSrc = '/vendor/pdf.worker.min.mjs';
+
+        /**
+         * @brief Draws each page of the resume PDF into the page
+         * @return {Promise<void>} Resolves when every page has been painted
+         * @details Scales each page to the content column and the screen pixel ratio.
+         */
+        async function renderResume() {
+            const pdf = await getDocument({ url: host.dataset.pdfUrl }).promise;
+            const cssWidth = host.clientWidth;
+
+            for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+                const page = await pdf.getPage(pageNumber);
+                const base = page.getViewport({ scale: 1 });
+                const scale = (cssWidth / base.width) * Math.min(window.devicePixelRatio || 1, 2);
+                const viewport = page.getViewport({ scale });
+                const canvas = document.createElement('canvas');
+
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                canvas.setAttribute('role', 'img');
+                canvas.setAttribute('aria-label', `Resume page ${pageNumber} of ${pdf.numPages}`);
+
+                host.append(canvas);
+                await page.render({
+                    canvasContext: canvas.getContext('2d'),
+                    viewport,
+                    canvas,
+                }).promise;
+            }
+
+            status.hidden = true;
+        }
+
+        renderResume().catch(() => {
+            status.textContent = 'The resume could not be drawn. Use the download link above.';
+        });
+    </script>
+</StarlightPage>

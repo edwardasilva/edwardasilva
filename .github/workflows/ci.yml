@@ -1,0 +1,127 @@
+name: CI
+
+# Every change reaches main through a pull request, and this workflow checks each one.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  # The same Vale release eeprep's CI pins. Update both together.
+  VALE_VERSION: '3.25.1'
+
+# A newer push to the same pull request cancels the older run.
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+# One job runs every check, so the information checkout and npm ci run once. A failed check
+# does not stop the others, so one run lists every problem. The protect-main ruleset requires
+# this job by its name, Checks, so keep the name.
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # Depth 2 fetches the merge commit and its first parent, the base branch, so the scope
+      # step can see which files the pull request changes.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      # A pull request that changes only repo docs, such as README.md or CLAUDE.md, skips the
+      # type check, the figure check and the build. Lint, Prettier and Vale still run, and the
+      # Checks job still reports, so the protect-main ruleset is satisfied.
+      - name: Find what the pull request changes
+        id: scope
+        run: |
+          set -euo pipefail
+          files="$(git diff --name-only HEAD^1 HEAD)"
+          printf '%s\n' "$files"
+          if [ -n "$files" ] && ! printf '%s\n' "$files" | grep -Evq \
+            '^([^/]+\.md|LICENSE[^/]*|\.github/(ISSUE_TEMPLATE/.*|pull_request_template\.md|[A-Z]+\.md))$'; then
+            echo "code=false" >> "$GITHUB_OUTPUT"
+            echo "Only repo docs changed, so the type check and the build are skipped." | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Type checking reads src/data/resume.ts, which imports resume-data.json, and the build
+      # renders it.
+      - uses: ./.github/actions/information
+        with:
+          ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      # --ignore-scripts skips prepare, which writes git hook config.
+      - name: npm ci
+        id: install
+        run: npm ci --ignore-scripts
+
+      - name: Lint (ESLint)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run lint
+
+      - name: Format (Prettier)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run format
+
+      # The project pages follow eeprep's plain-English style. .lint/vale/styles/Eeprep is a copy of
+      # eeprep's rules, refreshed with npm run prose:sync, and .lint/vale/ adds this site's proper nouns.
+      - name: Cache Vale
+        id: vale-cache
+        if: ${{ !cancelled() }}
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/vale-${{ env.VALE_VERSION }}
+          key: vale-${{ env.VALE_VERSION }}-linux-x64
+      - name: Install Vale
+        if: ${{ !cancelled() && steps.vale-cache.outputs.cache-hit != 'true' }}
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 3 -o /tmp/vale.tar.gz "https://github.com/vale-cli/vale/releases/download/v$VALE_VERSION/vale_${VALE_VERSION}_Linux_64-bit.tar.gz"
+          echo "4bf5c5176b682b1da0830f471584d3494f1c2e27ee3029e1ad6f6661d4962182  /tmp/vale.tar.gz" | sha256sum -c -
+          mkdir -p "$HOME/vale-$VALE_VERSION"
+          tar -xzf /tmp/vale.tar.gz -C "$HOME/vale-$VALE_VERSION" vale
+      - name: Prose (Vale)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          export PATH="$HOME/vale-$VALE_VERSION:$PATH"
+          npm run prose
+
+      # tsc reads the astro:content and import.meta.glob types from .astro/, which a fresh
+      # checkout does not have until astro sync generates them.
+      - name: Type check
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.scope.outputs.code == 'true' }}
+        run: npx astro sync && npm run typecheck
+
+      # Every SVG plot under src/figures has a dark copy that matches its source.
+      - name: Dark figure copies
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.scope.outputs.code == 'true' }}
+        run: npm run figures:check
+
+      - name: Build
+        id: build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.scope.outputs.code == 'true' }}
+        env:
+          SKIP_RESUME_PDF_BUILD: '1'
+          SKIP_RESUME_GENERATE: '1'
+        run: npm run build
+
+      # Every link to this site in the built pages reaches a page and a heading that exist.
+      - name: Links in the build
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: npm run check:links
+
+      # Date ranges in the built pages use an unspaced en dash, not a spaced hyphen.
+      - name: Date ranges in the build
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: npm run check:dates

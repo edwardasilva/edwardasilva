@@ -1,0 +1,106 @@
+---
+/**
+ * src/components/Head.astro
+ * Page Head
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 10 November, 2026
+ *
+ * Adds the share image, author, llms.txt link, structured data, and font preload to the head
+ * Starlight builds. Drops Starlight's rel="shortcut icon" link, because astro.config.mjs links the
+ * icons with rel="icon".
+ *
+ * File Structure:
+ * - Author and llms.txt link
+ * - Share image from the OG route
+ * - No canonical link, og:url, or page and breadcrumb data on the 404 page, which gets a noindex
+ * - Structured data: page, site, and breadcrumbs
+ *
+ * Where this file is used within the repository:
+ * - Starlight Head override, set in astro.config.mjs
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import Default from '@astrojs/starlight/components/Head.astro';
+import serifUrl from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-opsz-normal.woff2?url';
+import JsonLd from './JsonLd.astro';
+import { getPageProject } from '../data/projects';
+import { resume } from '../data/resume';
+import { breadcrumbSchema, pageSchema, websiteSchema } from '../data/structured-data';
+
+const site = Astro.site ?? new URL(resume.personal.website);
+const route = Astro.locals.starlightRoute;
+const { title, description } = route.entry.data;
+const pathname = Astro.url.pathname.replace(/\/$/, '');
+const isHome = pathname === '';
+const canonicalUrl = new URL(Astro.url.pathname, site).href;
+const pageDescription = description ?? resume.about.Highlights;
+
+// Project pages and the home page have a generated card. Other pages share as a plain link.
+const cardSlug = isHome
+    ? 'home'
+    : getPageProject(route.entry.id)?.kind
+      ? pathname.split('/').at(-1)
+      : undefined;
+const isNotFound = route.entry.id === '404';
+
+route.head = route.head.filter(
+    (tag) =>
+        !(
+            (tag.tag === 'meta' && tag.attrs?.name === 'twitter:card') ||
+            (tag.tag === 'meta' && tag.attrs?.property === 'og:type') ||
+            (tag.tag === 'link' && tag.attrs?.rel === 'shortcut icon') ||
+            (isNotFound && tag.tag === 'link' && tag.attrs?.rel === 'canonical')
+        )
+);
+route.head.push(
+    { tag: 'meta', attrs: { name: 'author', content: resume.personal.name } },
+    {
+        tag: 'link',
+        attrs: { rel: 'alternate', type: 'text/plain', href: '/llms.txt', title: 'llms.txt' },
+    },
+    { tag: 'meta', attrs: { property: 'og:type', content: isHome ? 'profile' : 'website' } },
+    {
+        tag: 'meta',
+        attrs: { name: 'twitter:card', content: cardSlug ? 'summary_large_image' : 'summary' },
+    }
+);
+
+if (cardSlug) {
+    const image = new URL(`/og/${cardSlug}.png`, site).href;
+
+    route.head.push(
+        { tag: 'meta', attrs: { property: 'og:image', content: image } },
+        { tag: 'meta', attrs: { property: 'og:image:alt', content: title } },
+        { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
+        { tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
+        { tag: 'meta', attrs: { property: 'og:image:type', content: 'image/png' } },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: image } }
+    );
+}
+
+// The 404 page is served for every missing URL, so it has no URL of its own to publish.
+if (isNotFound) {
+    route.head = route.head.filter(
+        (tag) => !(tag.tag === 'meta' && tag.attrs?.property === 'og:url')
+    );
+    route.head.push({ tag: 'meta', attrs: { name: 'robots', content: 'noindex' } });
+}
+
+const breadcrumbs = isNotFound ? undefined : breadcrumbSchema(pathname, site, title);
+---
+
+<Default />
+{!isNotFound && (
+    <JsonLd
+        data={pageSchema({ url: canonicalUrl, title, description: pageDescription, isHome }, site)}
+    />
+)}
+<JsonLd data={websiteSchema(site)} />
+{breadcrumbs && <JsonLd data={breadcrumbs} />}
+<link rel="preload" href={serifUrl} as="font" type="font/woff2" crossorigin />

@@ -1,0 +1,129 @@
+name: Deploy to Cloudflare Pages
+
+# A merge to main deploys the dev site, the "dev" preview branch of the edwardasilva Pages project.
+# A version tag, such as v0.1.0, deploys edwardasilva.com and creates its GitHub release. Edward
+# cuts a tag only when he says so.
+# A manual run can deploy dev from any ref. A manual production run must start from a release
+# tag on main, such as --ref v0.1.0. information/.agents/docs/site_notes.md has the release steps.
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Where to deploy
+        type: choice
+        options:
+          - dev
+          - production
+        default: dev
+
+permissions:
+  contents: read
+
+env:
+  TARGET: ${{ github.event_name == 'workflow_dispatch' && inputs.target || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'dev') }}
+
+# A deploy that has started runs to the end. A newer one waits for it.
+concurrency:
+  group: cloudflare-pages-${{ github.event_name == 'workflow_dispatch' && inputs.target || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'dev') }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy (${{ github.event_name == 'workflow_dispatch' && inputs.target || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'dev') }})
+    runs-on: ubuntu-latest
+    env:
+      # Optional repo-level variable: ASTRO_SITE (e.g. https://edwardasilva.com)
+      ASTRO_SITE: ${{ vars.ASTRO_SITE || 'https://edwardasilva.com' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Production deploys only from a vX.Y.Z tag whose commit is on main, so a branch or an
+      # unmerged tagged commit cannot reach edwardasilva.com.
+      - name: Production only from a release tag on main
+        if: env.TARGET == 'production'
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$REF" =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Production deploys only from a vX.Y.Z tag. This run is on $REF."
+            exit 1
+          fi
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::The tagged commit $GITHUB_SHA is not on main."
+            exit 1
+          fi
+
+      # resume-data.json stays off this public repo. It lives in information/, a submodule that points
+      # at the private repo edwardasilva/information. INFORMATION_REPO_KEY is the private half of a
+      # read-only deploy key on that repo.
+      - uses: ./.github/actions/information
+        with:
+          ssh-key: ${{ secrets.INFORMATION_REPO_KEY }}
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          # No dependency cache: the deploy builds what ships and must not restore a cache that a
+          # pull request run could have written.
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        env:
+          SKIP_RESUME_PDF_BUILD: '1'
+          SKIP_RESUME_GENERATE: '1'
+        run: npm run build
+
+      # Pages treats the main branch as production. Any other branch name is a preview, and the
+      # "dev" branch gets a stable preview alias. Cloudflare adds X-Robots-Tag: noindex to previews.
+      - name: Pick the Pages branch
+        id: branch
+        shell: bash
+        run: |
+          if [[ "$TARGET" == production ]]; then
+            echo "name=main" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=dev" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Uploads dist/ straight from this job, so the built site is never stored as a workflow artifact.
+      # Needs two repository secrets: CLOUDFLARE_API_TOKEN (Account > Cloudflare Pages > Edit) and CLOUDFLARE_ACCOUNT_ID.
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=edwardasilva --branch=${{ steps.branch.outputs.name }} --commit-hash=${{ github.sha }}
+
+  release:
+    name: GitHub release
+    needs: deploy
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create the release with generated notes, or keep an existing one
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        # A release published by hand before this job runs already exists. This workflow uploads
+        # no assets, so there is nothing to update in that case.
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $TAG already exists. No assets to upload, so it is left as it is."
+          else
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TAG" --generate-notes --verify-tag
+          fi

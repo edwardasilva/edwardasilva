@@ -1,0 +1,90 @@
+---
+/**
+ * src/pages/experiences.astro
+ * Experience Page
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 10 November, 2026
+ *
+ * The index of roles marked for the site, each linking to its own page, then Other experience
+ * as list-only lines, then the organizations.
+ *
+ * File Structure:
+ * - Roles: title, company, and dates, linking to the role page
+ * - Other experience: title, company, and dates, with no role page
+ * - Organizations
+ *
+ * Where this file is used within the repository:
+ * - Route: /experiences
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import {
+    asSentence,
+    getExperienceHref,
+    otherExperiences,
+    resume,
+    visibleExperiences,
+    visibleOrganizations,
+} from '../data/resume';
+---
+
+<StarlightPage
+    frontmatter={{
+        title: 'Experience',
+        description: asSentence(resume.site.pages.experiences.description),
+        tableOfContents: false,
+    }}
+>
+    <ul class="es-roles">
+        {visibleExperiences.map((experience) => (
+            <li>
+                <a href={getExperienceHref(experience)}>{experience.title}</a>, {experience.company}
+                . <span class="es-role-meta">{experience.duration}.</span>
+            </li>
+        ))}
+    </ul>
+
+    {otherExperiences.length > 0 && (
+        <>
+            <h2 id="other-experience">Other experience</h2>
+            <ul class="es-roles">
+                {otherExperiences.map((experience) => (
+                    <li>
+                        {experience.title}, {experience.company}.{' '}
+                        <span class="es-role-meta">{experience.duration}.</span>
+                    </li>
+                ))}
+            </ul>
+        </>
+    )}
+
+    {visibleOrganizations.length > 0 && (
+        <>
+            <h2 id="organizations">Organizations</h2>
+            <ul class="es-roles">
+                {visibleOrganizations.map((organization) => (
+                    <li>
+                        {organization.url ? (
+                            <ExternalLink href={organization.url}>{organization.name}</ExternalLink>
+                        ) : (
+                            organization.name
+                        )}
+                        {organization.chapter && `, ${organization.chapter}`}.{' '}
+                        <span class="es-role-meta">
+                            {organization.role}, {organization.duration}.
+                        </span>
+                        {organization.Summary && ` ${asSentence(organization.Summary)}`}
+                    </li>
+                ))}
+            </ul>
+        </>
+    )}
+</StarlightPage>
