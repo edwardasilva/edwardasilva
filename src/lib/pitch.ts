@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 13 November, 2026
  *
  * Runs the two pitch detectors from the EENG 411 project on a test tone in the browser. The detectors
  * are a port of Run.m: the Hamming window, 8192-bin FFT, and parabolic peak fit, and the normalized
@@ -29,7 +29,8 @@
 
 const C_FS_IN = 48000;
 const C_FS = 8000;
-const C_FRAME = Math.floor(4096 / 6);
+// MATLAB's decimate keeps ceil(n / r) samples, so a 4096-sample frame becomes 1366, then 683.
+const C_FRAME = Math.ceil(Math.ceil(4096 / 3) / 2);
 const C_HISTORY = 2048;
 const C_NFFT = 8192;
 const C_MIN_F = 55;
