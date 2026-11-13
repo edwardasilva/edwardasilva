@@ -10,7 +10,7 @@ slug: projects/EKF-project
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 09 November, 2026
+  Last Update: 13 November, 2026
 
   Built from the EENG 519 report in src/assets/EKF and the project's Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -24,11 +24,11 @@ import EstimationFigure from '../../../components/EstimationFigure.astro';
 import Figure from '../../../components/Figure.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-The unscented filter pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sampling spread, it cut the force error from 624 N to 401 N. It also kept every sample inside its bounds. At the report's parameters the two filters agree to within 0.4 N.
+For my EENG 519 final project, I ran two Kalman filters on a model of my capstone team's mountain bike damper. A Kalman filter estimates values a sensor cannot read by combining a model with noisy measurements. The project ran in MATLAB and Simulink, and nothing here ran on the bike.
 
-A Kalman filter estimates values a sensor cannot read by combining a model with noisy measurements. This was my final project for EENG 519. It ran in MATLAB and Simulink, and nothing here ran on the bike.
+In a browser port of the project's code (Figure 5), the extended and unscented Kalman filters (EKF and UKF) agree to within 0.4 N at the report's parameters. The UKF pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sigma point spread, its RMS force error was 401 N, against 624 N for the EKF. It also kept every sample inside its bounds.
 
-The [EMBR damper](/projects/capstone-project/) changes its damping by changing the yield stress of a magnetorheological (MR) fluid. Low-cost sensors cannot measure the field intensity or the force coming up from the trail. So the filters infer them from a string potentiometer and accelerometers.
+The [EMBR damper](/projects/capstone-project/) changes its damping by changing the yield stress of a magnetorheological (MR) fluid. Low-cost sensors cannot measure the field intensity or the force coming up from the trail, so the filters infer them from a string potentiometer and accelerometers.
 
 <Figure name="damper/cross-section" number={1} alt="Cross section of the damper showing the MR fluid, internal floating piston, electromagnet core and coil, rebound piston, and the control system with MOSFET, microcontroller, battery, and accelerometers.">
   The damper and its control system, from the capstone team's design work.
@@ -163,7 +163,7 @@ The EKF becomes overconfident, so its errors leave its bounds. The UKF with a wi
 
 Fitting $K_m$ to dynamometer data would settle which of these cases describes the real fork. The report's stated next step is to run the UKF on a microcontroller and measure its cost against the EKF.
 
-If I did this again, I would tune the filters for biking. I tuned them for the simulation and simple inputs, and I want more randomness in those inputs and more tuning against them.
+If I did this again, I would tune the filters for real riding. I tuned them against the simulation's simple inputs. Next time I would add more randomness to those inputs and tune against them.
 
 ## Report
 
