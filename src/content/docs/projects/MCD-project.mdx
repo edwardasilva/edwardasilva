@@ -10,7 +10,7 @@ slug: projects/MCD-project
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 09 November, 2026
+  Last Update: 13 November, 2026
 
   Built from the two gantry crane reports in src/assets/MCD and the project repository. Figures are the repository's own files, except Figures 6 and 7, which scripts/digitize-gantry-pulse.py redraws from the report's PNGs as SVG. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -25,7 +25,7 @@ import GantryDelay from '../../../components/GantryDelay.astro';
 import GantryWeight from '../../../components/GantryWeight.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-My team built two controllers for one simulated crane. The first moves the load 1 m in just under 2 minutes with no overshoot. The second settles in under 4 seconds, and its two versions have phase margins of 36.9 and 24.2 degrees, against the first design's 48. Phase margin is how much extra lag a loop can take before it goes unstable. Figures 8 and 9 run the second design in your browser.
+My team built two controllers for one simulated crane. The first moves the load 1 m in just under 2 minutes with no overshoot. The second settles in under 4 seconds. It came in two versions, with phase margins of 36.9 and 24.2 degrees, against 48 degrees for the first design. Phase margin is how much extra lag a loop can take before it goes unstable. Figures 8 and 9 run the second design in your browser.
 
 An operator on a gantry crane controls only the direction and speed, so where the load ends up depends on the operator's skill. This work comes from two projects in EENG 417. It all ran in MATLAB and Simulink, with no physical crane.
 
@@ -95,7 +95,7 @@ $$
 \omega_c \tau = \phi_m \quad\Rightarrow\quad \tau = \frac{48^\circ \cdot \pi / 180}{1.62} = 0.52\ \text{s}
 $$
 
-That is about 26 samples at 50 Hz. The report rounds it to 0.5 s and 25 samples, and we added a 25-sample delay to check. The instability was marginal, and the response never settled.
+That is about 26 samples at 50 Hz. The report rounds it to 0.5 s and 25 samples, and we added a 25-sample delay to check. The loop sat at the edge of stability, and the response never settled.
 
 <Figure name="gantry/slow-delay" number={5} alt="Load position with a 25-sample delay. The response keeps oscillating around the reference and does not settle.">
   The same command with a 25-sample delay added.
@@ -167,7 +167,7 @@ Augmentation removes the overshoot and costs 12.7 degrees of phase margin. The r
 
 ## Changing the LQR weight
 
-The report says we raised the ratio of $Q$ to $R$ until the design met spec. This figure shows what that does. With the 1 m/s limit on, more weight speeds up the response until Q is near 100. Past that, the gains ask for more than the actuator can give. At Q = 500 the saturated loop runs away, though the linear analysis still shows 25.6 degrees of margin.
+The report says we raised the ratio of $Q$ to $R$ until the design met spec. With the 1 m/s limit on, more weight speeds up the response until Q is near 100. Past that, the gains ask for more than the actuator can give. At Q = 500 the saturated loop goes unstable, though the linear analysis still shows 25.6 degrees of margin.
 
 <GantryWeight number={8} />
 
@@ -177,7 +177,7 @@ Part 1 tested its delay prediction in simulation, and Part 2 did not. The Part 2
 
 <GantryDelay number={9} />
 
-The response rings longer as the delay grows. At 0.18 s it takes about 49 s to settle. At 0.19 s the swing grows and never settles, which agrees with the 0.1878 s prediction. With the 1 m/s limit on, the result is the same: it settles at 0.18 s and grows at 0.19 s.
+The response rings longer as the delay grows. With a 0.18 s delay it takes about 49 s to settle. At 0.19 s the swing grows and never settles, which agrees with the 0.1878 s prediction. With the 1 m/s limit on, the result is the same: it settles at 0.18 s and grows at 0.19 s.
 
 ## Reports
 
