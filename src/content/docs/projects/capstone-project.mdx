@@ -96,7 +96,7 @@ The final build used a wider gap. The team ran the same flow model and CFD for 1
 
 The fluid resists flow most when the field crosses the gap perpendicular to the flow. Getting the field to cross the gap that way, within limits on space, power draw, and heat, was my part of the project.
 
-The final coil is 160 turns of 26 AWG copper on a 9 mm steel core, run at about 2 A from an 8 V supply. I first modeled it in Python by summing the field of each loop, since the infinite solenoid approximation does not hold for a coil this short. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
+The final coil is 160 turns of 26 AWG copper on a 9 mm steel core, run at about 2 A from an 8 V supply. Earlier in the design, I modeled the coil in Python by summing the field of each loop, since the infinite solenoid approximation does not hold for a coil this short. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
 
 $$
 B_z = \frac{\mu_0 I}{2\pi}\frac{1}{\sqrt{(a+r)^2 + z^2}}\left[K + \frac{a^2 - r^2 - z^2}{(a-r)^2 + z^2}E\right]
