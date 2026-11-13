@@ -5,17 +5,18 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 13 November, 2026
  *
- * Adds the share image, author, llms.txt link, structured data, and font preload to the head
- * Starlight builds. Drops Starlight's rel="shortcut icon" link, because astro.config.mjs links the
- * icons with rel="icon".
+ * Adds the share image, author, llms.txt link, structured data, speculation rules, and font preload
+ * to the head Starlight builds. Drops Starlight's rel="shortcut icon" link, because astro.config.mjs
+ * links the icons with rel="icon".
  *
  * File Structure:
  * - Author and llms.txt link
  * - Share image from the OG route
  * - No canonical link, og:url, or page and breadcrumb data on the 404 page, which gets a noindex
  * - Structured data: page, site, and breadcrumbs
+ * - Speculation rules: prefetch a same-site page when the reader starts to hover on its link
  *
  * Where this file is used within the repository:
  * - Starlight Head override, set in astro.config.mjs
@@ -49,6 +50,24 @@ const cardSlug = isHome
       : undefined;
 const isNotFound = route.entry.id === '404';
 
+// Prefetch a same-site page when the reader starts to hover on its link, so the next page opens
+// faster. Files, the resume viewer, new-tab links, and downloads are left alone. Browsers without
+// speculation rules skip the script.
+const C_SPECULATION_RULES = {
+    prefetch: [
+        {
+            where: {
+                and: [
+                    { href_matches: '/*' },
+                    { not: { href_matches: ['/*.*', '/resume/*'] } },
+                    { not: { selector_matches: '[target="_blank"], [download]' } },
+                ],
+            },
+            eagerness: 'moderate',
+        },
+    ],
+};
+
 route.head = route.head.filter(
     (tag) =>
         !(
@@ -68,6 +87,11 @@ route.head.push(
     {
         tag: 'meta',
         attrs: { name: 'twitter:card', content: cardSlug ? 'summary_large_image' : 'summary' },
+    },
+    {
+        tag: 'script',
+        attrs: { type: 'speculationrules' },
+        content: JSON.stringify(C_SPECULATION_RULES),
     }
 );
 
