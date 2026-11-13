@@ -40,7 +40,7 @@ Audio comes in at 48 kHz and goes through a cascaded Butterworth band-pass filte
 
 ### FFT detector
 
-The FFT reads the current frame, 682 samples after decimation. It applies a Hamming window and zero-pads the frame to an 8192-point FFT, then fits a parabola through the peak and its neighbors to resolve pitch between bins:
+The FFT reads the current frame, 683 samples after decimation. It applies a Hamming window and zero-pads the frame to an 8192-point FFT, then fits a parabola through the peak and its neighbors to resolve pitch between bins:
 
 ```matlab title="Run.m"
 spectraPitch = fft(pitchSignal_NoDc .* hamming(L_pitch), nfft_hires);
@@ -72,7 +72,7 @@ segment = acor(searchIndices);
 
 ### Retuning
 
-The retuning stage picks the nearest note in 12-tone equal temperament, the standard Western scale. An exponential moving average with $\alpha = 0.2$ smooths the target, so it jumps between notes less often. The stage then resamples the frame by the pitch ratio, applies a Hann window, and normalizes it.
+The retuning stage picks the nearest note in 12-tone equal temperament, the standard Western scale. It shifts the frame toward that note with MATLAB's `shiftPitch`, by the distance in semitones, then applies a Hann window and normalizes it. An exponential moving average with $\alpha = 0.2$ smooths the note the stage reports, so the readout jumps between notes less often.
 
 ## Latency
 
