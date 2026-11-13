@@ -10,7 +10,7 @@ slug: projects/dsp-final
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 09 November, 2026
+  Last Update: 13 November, 2026
 
   Built from the EENG 411 report in src/assets/DSP and the project's Run.m and Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -24,13 +24,13 @@ import Figure from '../../../components/Figure.astro';
 import PitchFigure from '../../../components/PitchFigure.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-The FFT found the pitch 2.68 times faster than autocorrelation, and it kept tracking about 200 Hz higher in the test sweep. Either method works for a simple auto-tune. For the EENG 411 final project, I built the real-time MATLAB pipeline that runs both detectors and measured the results. Jonas Krider and I wrote the detector code on this page together.
+The FFT found the pitch 2.68 times faster than autocorrelation, and in the test sweep it kept tracking to about 200 Hz higher than autocorrelation did. Either method works for a simple auto-tune. For the EENG 411 final project, I built the real-time MATLAB pipeline that runs both detectors and measured the results. Jonas Krider and I wrote the detector code on this page together.
 
 An FFT finds the pitch by looking for the strongest frequency bin. Autocorrelation (ACF) looks for the lag where a signal best matches itself.
 
 ## The signal chain
 
-The pipeline is two files. `Main.m` runs the test or live input, and `Run.m` does the calculation once per frame: filtering, decimation, both detectors, and the timing. The code isn't public because it was course or sponsor work.
+Two files do most of the work. `Main.m` runs the test or live input, and `Run.m` does the calculation once per frame: filtering, decimation, both detectors, and the timing. The code isn't public because it was course or sponsor work.
 
 Audio comes in at 48 kHz and goes through a cascaded Butterworth band-pass filter that keeps the vocal range. Decimation keeps every Nth sample, and two stages, by 3 and then by 2, bring the rate down to 8 kHz.
 
@@ -56,7 +56,7 @@ f0_fft = (I - 1 + p) * (Fs_pitch / nfft_hires);
 
 ### Autocorrelation detector
 
-The ACF reads a longer 2048-sample history. It limits its lags to 55 to 2000 Hz and takes the first local maximum, as long as it clears a 0.2 threshold:
+The ACF reads a longer 2048-sample history. It searches only the lags that match pitches from 55 to 2000 Hz and takes the first local maximum, as long as it clears a 0.2 threshold:
 
 ```matlab title="Run.m"
 minLag = floor(Fs_pitch / 2000);
@@ -76,7 +76,7 @@ The retuning stage picks the nearest note in 12-tone equal temperament, the stan
 
 ## Latency
 
-On paper the FFT is $O(n \log n)$ and the ACF is $O(n^2)$. I timed each detector with `tic` and `toc` around its own block on every frame. The FFT was faster and more consistent. I did not record the computer, the MATLAB release, or how many frames I timed, so read these as a comparison between the two detectors, not as absolute speeds:
+On paper the FFT is $O(n \log n)$ and the ACF is $O(n^2)$. I timed each detector with `tic` and `toc` around its own block on every frame. The FFT was faster and more consistent. I didn't record the computer, the MATLAB release, or how many frames I timed. So read these as a comparison between the two detectors, not as absolute speeds:
 
 | Per frame | FFT | ACF |
 | --- | --- | --- |
@@ -100,17 +100,17 @@ We swept a chirp, a tone that rises in frequency, from 50 Hz toward 4 kHz. Both 
 
 ### The lag grid
 
-The report puts both failures down to the filter. Running the detectors on a steady tone shows the ACF has a second limit of its own. At 8 kHz a 1700 Hz tone has a period of only 4.7 samples, so the lag grid is coarse and the error grows. The search also starts at lag 4, and a peak needs a neighbor on each side. Once the period drops below about 4.5 samples, the first peak is lost and the search takes the second one, at twice the lag:
+The report blames both failures on the filter. Running the detectors on a steady tone shows the ACF has a second limit of its own. At the 8 kHz sample rate, a 1700 Hz tone has a period of only 4.7 samples, so the lag grid is coarse and the error grows. The search also starts at lag 4, and a peak needs a neighbor on each side. Once the period drops below about 4.5 samples, the first peak is lost and the search takes the second one, at twice the lag:
 
 $$
 f_{est} = \frac{f_s}{2 \cdot f_s / f} = \frac{f}{2}
 $$
 
-Set the tone to 1800 Hz in Figure 4 and the ACF reports about 900 Hz. The filter has cut that tone by 48 dB, but it is still above the noise, so the lag grid is what fails. The FFT has no such limit. It holds until the tone drops under the noise, near 1935 Hz.
+If you set the tone to 1800 Hz in Figure 4, the ACF reports about 900 Hz. The filter has cut that tone by 48 dB, but it is still above the noise, so the lag grid is what fails. The FFT has no such limit. It holds until the tone drops under the noise, near 1935 Hz.
 
 <PitchFigure number={4} />
 
-A steady tone loses the ACF near 1780 Hz, and the report's sweep loses it about 180 Hz earlier, near 1600 Hz. The sweep also has a falling second chirp and the real decimation filters, which this figure leaves out.
+On a steady tone the ACF fails near 1780 Hz. In the report's sweep it fails about 180 Hz earlier, near 1600 Hz. The sweep also has a falling second chirp and the real decimation filters, which this figure leaves out.
 
 ### Retuning across the sweep
 
@@ -126,6 +126,6 @@ The report found both methods accurate within about the same margins for a simpl
 
 ## Report
 
-The report's contribution list follows the course rubric, so it leaves out the pipeline.
+The pipeline I built isn't in the report's contribution list, which follows the course rubric.
 
 <ProofList slug="dsp-final" />
