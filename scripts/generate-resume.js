@@ -270,6 +270,16 @@ function renderSkills(skills) {
 }
 
 /**
+ * @brief Renders one header line through the template's \\cvline macro
+ * @param left LaTeX for the left text
+ * @param right LaTeX for the right text, a date or a location, or an empty string
+ * @return LaTeX line with the right text flush with the right margin
+ */
+function headerLine(left, right) {
+    return `\\cvline{${left}}{${right}}`;
+}
+
+/**
  * @brief Renders one experience entry
  * @param experience Experience entry
  * @return LaTeX for the entry
@@ -277,12 +287,13 @@ function renderSkills(skills) {
 function renderExperience(experience) {
     const skills = renderSkills(experience.skills);
     const location = experience.location ? escapeLatex(experience.location) : '';
-    const details =
-        skills && location
-            ? `${skills} \\hfill ${location}`
-            : skills || (location && `\\hfill ${location}`);
+    const head = headerLine(
+        `\\textbf{${escapeLatex(experience.title)}}, ${escapeLatex(experience.company)}`,
+        escapeLatex(formatDateRange(experience.duration))
+    );
+    const details = skills || location ? `\\nopagebreak\n${headerLine(skills, location)}\n` : '';
 
-    return `\\textbf{${escapeLatex(experience.title)}}, ${escapeLatex(experience.company)} \\hfill ${escapeLatex(formatDateRange(experience.duration))} \\\\\n${details}\n${renderBullets(experience.Resume)}`;
+    return `${head}\n${details}${renderBullets(experience.Resume)}`;
 }
 
 /**
@@ -293,7 +304,9 @@ function renderExperience(experience) {
 function renderProject(project) {
     const repository = project.github ? `\\href{${escapeUrl(project.github)}}{GitHub}` : '';
 
-    return `\\textbf{${escapeLatex(project.title)}}, ${renderSkills(project.skills)} ${repository} \\hfill ${escapeLatex(formatDateRange(project.duration))}\n${renderBullets(project.Resume)}`;
+    const label = `\\textbf{${escapeLatex(project.title)}}, ${renderSkills(project.skills)} ${repository}`;
+
+    return `${headerLine(label.trim(), escapeLatex(formatDateRange(project.duration)))}\n${renderBullets(project.Resume)}`;
 }
 
 /**
@@ -302,13 +315,13 @@ function renderProject(project) {
  * @return LaTeX lines for the school and degree
  */
 function renderEducation(education) {
-    const date = education.graduationDate ? `\\hfill ${escapeLatex(education.graduationDate)}` : '';
+    const date = education.graduationDate ? escapeLatex(education.graduationDate) : '';
     const degree = `\\textbf{${escapeLatex(education.degree)}}`;
     const degreeLine = education.minor
         ? `${degree}, ${escapeLatex(education.minor)}`
         : `${degree}${education.specialization ? ` -- ${escapeLatex(education.specialization)}` : ''}`;
 
-    return `\\textbf{${escapeLatex(education.institution)}} ${date} \\\\\n${degreeLine} \\\\`;
+    return `${headerLine(`\\textbf{${escapeLatex(education.institution)}}`, date)}\n${degreeLine} \\\\`;
 }
 
 /**

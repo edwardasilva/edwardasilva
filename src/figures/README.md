@@ -37,3 +37,7 @@ These two have no generator line. They were converted from a plot in a report PD
 ## Built from TikZ
 
 `pitch/filters.svg` is built from `pitch/filters.tex` with XeLaTeX and dvisvgm. The commands are in the header of the `.tex` file. It is set in Source Serif 4 and uses glyph paths, not text.
+
+## From eeprep's brand files
+
+`eeprep/op-amp.svg` is the eeprep mark, `public/brand/eeprep-mark-outlined.svg` in the eeprep repo. Its paths are unchanged. Only the canvas is wider, at 3:2, so the project card's figure is as tall as the others. The eeprep name and logo are outside eeprep's open licenses, and this site uses them as the owner's mark.

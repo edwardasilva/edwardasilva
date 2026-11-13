@@ -41,6 +41,20 @@ const TEMPLATE_PATH = path.join(ROOT_DIR, 'scripts', 'cv-template.tex');
 const C_JOB_NAME = 'Edward_Silva_CV';
 const C_MAX_PAGES = 2;
 
+// The PDF date: the commit time of information/, or 11 November 2026 at noon Central when that
+// checkout has no git history.
+const C_FALLBACK_SOURCE_DATE = '1794420000';
+const C_SOURCE_DATE = (() => {
+    const result = spawnSync(
+        'git',
+        ['-C', path.join(ROOT_DIR, 'information'), 'log', '-1', '--format=%ct'],
+        { encoding: 'utf8' }
+    );
+    const seconds = result.status === 0 ? result.stdout.trim() : '';
+
+    return /^\d+$/.test(seconds) ? seconds : C_FALLBACK_SOURCE_DATE;
+})();
+
 // Layouts to try, roomiest first: font size in points and margin in inches. The floors match the
 // resume's rules in information/.agents/docs/resume_rules.md: 10.5 pt text and 0.5 in margins.
 const C_LAYOUTS = [
@@ -131,7 +145,9 @@ function latexError(log) {
  * @param fill Spacing position
  * @return Page count and log text
  * @details SOURCE_DATE_EPOCH pins pdflatex's timestamps so the PDF is byte-identical across
- * rebuilds on the same TeX distribution when the content is unchanged.
+ * rebuilds on the same TeX distribution when the content is unchanged. The date is the commit
+ * date of information/, the source of the CV text, so CreationDate and ModDate show when that
+ * content last changed instead of 1 January 1970.
  */
 function compileOnce(font, margin, fill) {
     writeSettings(font, margin, fill);
@@ -151,7 +167,7 @@ function compileOnce(font, margin, fill) {
         ],
         {
             cwd: C_BUILD_DIR,
-            env: { ...process.env, SOURCE_DATE_EPOCH: '0', FORCE_SOURCE_DATE: '1' },
+            env: { ...process.env, SOURCE_DATE_EPOCH: C_SOURCE_DATE, FORCE_SOURCE_DATE: '1' },
             stdio: 'ignore',
         }
     );
