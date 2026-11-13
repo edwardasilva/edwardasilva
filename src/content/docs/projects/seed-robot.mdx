@@ -84,25 +84,33 @@ except queue.Full:
 
 ## Doubles over I2C
 
-The first I2C packets sent the angle and distance as doubles, which are 8 bytes in Python. The Arduino read only 4 bytes, the size of a float, for each value.
+The first I2C packets sent the angle and distance as doubles, 8 bytes each in Python, with the most significant byte first. The sketch read 8 bytes for each value, reversed their order, and copied them into a `double`. On the Arduino Uno a `double` is only 4 bytes, the same size as a `float`, so each copy wrote 8 bytes into a 4-byte variable.
 
 ```python title="Demo2/src/main.py, first version"
 struct.pack(">dd???", 13.0, 15.0, found, lr, LorR)
 ```
 
-```cpp title="Demo2/src/robotPositionControl/robotPositionControl.ino"
-for(int i=0; i<4; i++){
-  bytes[i] = Wire.read();
+```cpp title="Demo2/src/robotPositionControl/robotPositionControl.ino, first version"
+byte angleInputBytes[8];
+for(int i=7; i>=0; i--){
+angleInputBytes[i]=Wire.read();
 }
-memcpy(&desiredAngle,bytes,4);
+memcpy(&desiredAngle,angleInputBytes,8);
 ```
 
 ### The fix
 
-We changed the packet to floats and the byte order to little-endian.
+We changed the packet to 4-byte floats in little-endian order, the order the Uno uses, and the sketch to read 4 bytes for each value.
 
 ```python title="FinalDemo/src/main.py"
 struct.pack("<ff???", angle_val, dist_val, found, lr, LorR)
+```
+
+```cpp title="Demo2/src/robotPositionControl/robotPositionControl.ino, after the fix"
+for(int i=0; i<4; i++){
+  bytes[i] = Wire.read();
+}
+memcpy(&desiredAngle,bytes,4);
 ```
 
 I knew how to debug this because of my internship at Kratos, where the SIMD work taught me a lot about registers and floating-point conversions.
