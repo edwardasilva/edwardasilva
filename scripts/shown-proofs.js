@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 09 November, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 13 November, 2026
  *
  * Works out which proof files in resume-data.json a page really shows. A project page shows a
  * proof through a ProofList tag, or links it by hand with an /assets/ path in the page text. A
@@ -75,7 +75,8 @@ function readPageSources(dir = PAGE_DIR) {
  * @param data Parsed resume-data.json contents
  * @param sources Page texts
  * @return Array of proof entries
- * @details A tag with only="video" keeps just the proofs of that type, as ProofList.astro does
+ * @details A tag with only="video" keeps just the proofs of that type, and a tag with url="..." keeps
+ * just that file, as ProofList.astro does
  */
 function listedProofs(data, sources) {
     const proofs = [];
@@ -88,7 +89,10 @@ function listedProofs(data, sources) {
             const project = (data.projects ?? []).find((entry) => entry.slug === attributes.slug);
 
             for (const proof of project?.proof ?? []) {
-                if (!attributes.only || proof.type === attributes.only) {
+                const typeMatches = !attributes.only || proof.type === attributes.only;
+                const urlMatches = !attributes.url || proof.url === attributes.url;
+
+                if (typeMatches && urlMatches) {
                     proofs.push(proof);
                 }
             }
