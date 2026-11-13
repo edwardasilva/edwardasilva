@@ -10,7 +10,7 @@ slug: projects/capstone-project
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 09 November, 2026
+  Last Update: 13 November, 2026
 
   Built from the capstone poster in src/assets/Capstone, the team's critical design report, and the project entry in resume-data.json. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -40,9 +40,9 @@ Our capstone team put a damper with electronically adjustable damping in a produ
 | RockShox Lyrik Flight Attendant | \$1700 | 2340 g |
 | Fox 36 Factory Live Valve | \$1600 | 2140 g |
 
-The EMBR price is the total cost of the entire prototype. The RockShox and Fox figures come from the team's supplementary research on similar systems such as Live Valve. The source and date of those prices and weights were not recorded, and neither was whether the 2360 g was weighed or summed from parts.
+The EMBR price is what the whole prototype cost. The RockShox and Fox figures come from the team's research on similar systems, such as Fox's Live Valve. The team didn't record the sources or dates for those figures, or whether the 2360 g was weighed or added up from parts.
 
-The damper uses magnetorheological (MR) fluid, a carrier fluid with microscopic iron particles in it. With no magnetic field it flows like an ordinary fluid. With a field it becomes a Bingham plastic, which resists flow until the force passes a yield stress. A stronger field gives more damping force. Cars and seismic dampers already use this fluid.
+The damper uses magnetorheological (MR) fluid, a carrier fluid with microscopic iron particles in it. With no magnetic field it flows like an ordinary fluid. With a field it becomes a Bingham plastic, which does not flow until the stress on it passes a yield stress. A stronger field gives more damping force. Car suspensions and seismic dampers already use this fluid.
 
 ## The first design failed
 
@@ -68,7 +68,7 @@ EMBR V2 moves the coil inside the pressure tube onto a steel piston, which chann
 
 ### The flow model
 
-The team modeled the gap as flow between two flat plates. That gives a pressure gradient, and the pressure drop pushes on the piston head:
+The team modeled the flow through the gap as flow between two flat plates. That gives a pressure gradient, and the pressure drop pushes on the piston head:
 
 $$
 \frac{dP}{dy} = -\frac{12\,Q\,\mu}{a^3 W}, \qquad F = \left|\frac{dP}{dy}\right| L\, A_p
@@ -83,15 +83,15 @@ deltaP2 = abs(dPdy2).*L;                            % [Pa] pressure drop across
 force_lbf = (deltaP2 .* A_p);                       % [N] force vs. velocity
 ```
 
-The gap is cubed, so it dominates. V1's gap was 1.94 mm and V2's is 0.5 mm, which alone gives a factor of 58. The longer piston, larger area, and wider channel bring the total to 330 times the force, from 0.94 N to 310 N at 8 m/s.
+The gap is cubed, so it dominates. V1's gap was 1.94 mm and V2's is 0.5 mm, which alone gives a factor of 58. The longer piston and larger area more than make up for the slightly wider channel, and bring the total to 330 times the force, from 0.94 N to 310 N at 8 m/s.
 
 <DamperFigure number={5} />
 
 ## The electromagnet
 
-The fluid only resists flow if the field crosses the gap perpendicular to the flow. That was the problem I worked on, with limits on space, power draw, and heat.
+The fluid resists flow most when the field crosses the gap perpendicular to the flow. Getting the field to cross the gap that way, within limits on space, power draw, and heat, was my part of the project.
 
-The coil is about 250 turns of 26 AWG copper on a 9 mm steel core. It runs at 2 A. I modeled it in Python by summing the field of each loop, since a coil this short does not match the infinite solenoid approximation. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
+The coil is about 250 turns of 26 AWG copper on a 9 mm steel core. It runs at 2 A. I modeled it in Python by summing the field of each loop, since the infinite solenoid approximation does not hold for a coil this short. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
 
 $$
 B_z = \frac{\mu_0 I}{2\pi}\frac{1}{\sqrt{(a+r)^2 + z^2}}\left[K + \frac{a^2 - r^2 - z^2}{(a-r)^2 + z^2}E\right]
@@ -101,13 +101,13 @@ $K$ and $E$ are complete elliptic integrals. They have no closed form, and SciPy
 
 ## Control and heat
 
-Two accelerometers track the motion of the uppers against the lowers, and an Arduino drives the electromagnet. It uses PWM (pulse-width modulation, switching quickly between on and off) to vary the coil current, and with it the field. Graham Adleman programmed the Arduino, and I helped him design the system. Control is needed for two reasons. Holding the field on during rebound would trap fluid and risk cavitation. And the coil turns 20 to 40 W into heat at full power, so it can only run when damping is needed. Curb tests at 15 mph with BMI160 accelerometers showed the pair could tell when a compression starts, when it peaks, and when rebound begins.
+Two accelerometers track how the fork's upper and lower halves move against each other, and an Arduino drives the electromagnet. It uses PWM (pulse-width modulation, switching quickly between on and off) to vary the coil current, and with it the field. Graham Adleman programmed the Arduino, and I helped him design the system. Control is needed for two reasons. Holding the field on during rebound would trap fluid and risk cavitation. And the coil turns 20 to 40 W into heat at full power, so it can run only when damping is needed. Curb tests at 15 mph with BMI160 accelerometers showed the pair could tell when a compression starts, when it peaks, and when rebound begins.
 
 ## How we checked it
 
 ### Flow model against CFD
 
-The team compared a flow model of the gap against Ansys Fluent computational fluid dynamics (CFD) at three axle velocities. The difference shrinks as velocity rises. These numbers come from the poster and use an earlier piston geometry, so they are lower than the model in Figure 5. The forces are rounded to the newton, and the differences were computed before rounding.
+The team compared a flow model of the gap against Ansys Fluent computational fluid dynamics (CFD) at three axle velocities. The difference shrinks as velocity rises. These numbers come from the poster and use an earlier piston geometry, so they are lower than the model in Figure 5. The forces are rounded to the nearest newton, and the differences were computed before rounding.
 
 | Axle velocity | Flow model | Fluent CFD | Difference |
 | --- | --- | --- | --- |
