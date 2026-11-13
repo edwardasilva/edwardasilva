@@ -21,10 +21,13 @@ slug: projects/capstone-project
 */}
 
 import DamperFigure from '../../../components/DamperFigure.astro';
+import ProofList from '../../../components/ProofList.astro';
 import VideoEmbed from '../../../components/VideoEmbed.astro';
 import Figure from '../../../components/Figure.astro';
 
-Our capstone team put a damper with electronically adjustable damping in a production mountain bike fork. The electromagnet did what we designed it to do, and you could feel the difference by hand. The whole prototype cost \$1400, which is \$200 to \$300 below the price of the two commercial forks we compared. It weighs 20 g more than the RockShox and 220 g more than the Fox. Getting there took two designs, because the first one barely responded to current.
+Our capstone team put a damper with electronically adjustable damping in a production mountain bike fork. The electromagnet did what we designed it to do, and the first test found a noticeable change in damping at each level of current. Getting there took two designs, because the first one barely responded to current.
+
+The team estimated a retail price of about \$1400, which is \$200 to \$300 below the two commercial forks we compared. The prototype's parts cost \$975.59: \$415.59 the team bought, plus the \$560 fork and damper the client supplied. The finished fork weighs 20 g more than the RockShox and 220 g more than the Fox.
 
 <VideoEmbed
     id="ix0n2-wJunM"
@@ -40,7 +43,7 @@ Our capstone team put a damper with electronically adjustable damping in a produ
 | RockShox Lyrik Flight Attendant | \$1700 | 2340 g |
 | Fox 36 Factory Live Valve | \$1600 | 2140 g |
 
-The EMBR price is what the whole prototype cost. The RockShox and Fox figures come from the team's research on similar systems, such as Fox's Live Valve. The team didn't record the sources or dates for those figures, or whether the 2360 g was weighed or added up from parts.
+The EMBR price is the team's estimate: about \$200 to \$250 of added parts on a fork that retails for \$700 to \$900, plus a markup for research and labor. The RockShox and Fox figures come from the team's research on similar systems, such as Fox's Live Valve. The team didn't record the sources or dates for those figures, or whether the 2360 g was weighed or added up from parts.
 
 The damper uses magnetorheological (MR) fluid, a carrier fluid with microscopic iron particles in it. With no magnetic field it flows like an ordinary fluid. With a field it becomes a Bingham plastic, which does not flow until the stress on it passes a yield stress. A stronger field gives more damping force. Car suspensions and seismic dampers already use this fluid.
 
@@ -83,41 +86,44 @@ deltaP2 = abs(dPdy2).*L;                            % [Pa] pressure drop across
 force_lbf = (deltaP2 .* A_p);                       % [N] force vs. velocity
 ```
 
-The gap is cubed, so it dominates. V1's gap was 1.94 mm and V2's is 0.5 mm, which alone gives a factor of 58. The longer piston and larger area more than make up for the slightly wider channel, and bring the total to 330 times the force, from 0.94 N to 310 N at 8 m/s.
+The gap is cubed, so it dominates. V1's gap was 1.94 mm and the V2 concept's is 0.5 mm, which alone gives a factor of 58. The longer piston and larger area more than make up for the slightly wider channel, and bring the total to 330 times the force, from 0.94 N to 310 N at 8 m/s.
 
 <DamperFigure number={5} />
+
+The final build used a wider gap. The team ran the same flow model and CFD for 18, 18.5, and 19 mm pistons and found that damping climbs steeply as the piston nears the tube wall. They chose an 18.5 mm steel piston, the least damping with the coil off that still kept the gap small, and checked the trend by cycling the damper by hand with 3D-printed mock pistons.
 
 ## The electromagnet
 
 The fluid resists flow most when the field crosses the gap perpendicular to the flow. Getting the field to cross the gap that way, within limits on space, power draw, and heat, was my part of the project.
 
-The coil is about 250 turns of 26 AWG copper on a 9 mm steel core. It runs at 2 A. I modeled it in Python by summing the field of each loop, since the infinite solenoid approximation does not hold for a coil this short. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
+The final coil is 160 turns of 26 AWG copper on a 9 mm steel core, run at about 2 A from an 8 V supply. I first modeled it in Python by summing the field of each loop, since the infinite solenoid approximation does not hold for a coil this short. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
 
 $$
 B_z = \frac{\mu_0 I}{2\pi}\frac{1}{\sqrt{(a+r)^2 + z^2}}\left[K + \frac{a^2 - r^2 - z^2}{(a-r)^2 + z^2}E\right]
 $$
 
-$K$ and $E$ are complete elliptic integrals. They have no closed form, and SciPy evaluates them directly. Adding the magnetized core gives an estimated peak of 0.15 T across the 2.5 mm radial gap modeled at the time. That number comes from the model, and the design report calls the geometry difficult to model. The steel parts carry the flux, so the field crosses the gap where the fluid flows.
+$K$ and $E$ are complete elliptic integrals. They have no closed form, and SciPy evaluates them directly. Adding the magnetized core gives an estimated peak of 0.15 T across the 2.5 mm radial gap modeled at the time. That number comes from the model, and the critical design report calls the geometry difficult to model. For the final design, a 2D nonlinear finite element model in MATLAB's PDE Toolbox traced the flux through the steel parts. A steel sleeve around the outside of the tube completes the magnetic circuit, so the field crosses the gap where the fluid flows.
 
 ## Control and heat
 
-Two accelerometers track how the fork's upper and lower halves move against each other, and an Arduino drives the electromagnet. It uses PWM (pulse-width modulation, switching quickly between on and off) to vary the coil current, and with it the field. Graham Adleman programmed the Arduino, and I helped him design the system. Control is needed for two reasons. Holding the field on during rebound would trap fluid and risk cavitation. And the coil turns 20 to 40 W into heat at full power, so it can run only when damping is needed. Curb tests at 15 mph with BMI160 accelerometers showed the pair could tell when a compression starts, when it peaks, and when rebound begins.
+Two accelerometers track how the fork's upper and lower halves move against each other, and an Arduino drives the electromagnet. It uses PWM (pulse-width modulation, switching quickly between on and off) to vary the coil current, and with it the field. Graham Adleman programmed the Arduino, and I helped him design the system. Control is needed for two reasons. Holding the field on during rebound would trap fluid and risk cavitation. And the coil is effectively a resistive heater, so running it only when damping is needed limits the heat it adds to the damper and saves battery. Curb tests at 15 mph with BMI160 accelerometers showed the pair could tell when a compression starts, when it peaks, and when rebound begins.
 
 ## How we checked it
 
 ### Flow model against CFD
 
-The team compared a flow model of the gap against Ansys Fluent computational fluid dynamics (CFD) at three axle velocities. The difference shrinks as velocity rises. These numbers come from the poster and use an earlier piston geometry, so they are lower than the model in Figure 5. The forces are rounded to the nearest newton, and the differences were computed before rounding.
+The team compared the flow model against Ansys Fluent computational fluid dynamics (CFD) for the final 18.5 mm piston at four axle velocities. The difference shrinks as velocity rises. The final piston's wider gap gives much lower forces than the V2 concept in Figure 5. Final design report, Table 1.
 
 | Axle velocity | Flow model | Fluent CFD | Difference |
 | --- | --- | --- | --- |
-| 2 m/s | 20 N | 16 N | 16.5% |
-| 4 m/s | 45 N | 40 N | 10.9% |
-| 6 m/s | 80 N | 74 N | 7.2% |
+| 1 m/s | 8.42 N | 6.71 N | 20.3% |
+| 2 m/s | 18.75 N | 15.65 N | 16.5% |
+| 4 m/s | 45.15 N | 40.21 N | 10.9% |
+| 6 m/s | 79.18 N | 73.48 N | 7.21% |
 
 ### Dynamometer
 
-A shock dynamometer then measured damper performance against velocity. The final numbers can't be made public.
+A shock dynamometer then measured the finished damper, and the results were inconclusive. The school's dyno reaches only 14 in/s, while mountain bike dampers are usually tested to about 80 in/s, so only low-speed damping could be measured. On constant power from a power supply, the damper cavitated. With the control system wired in, its early algorithm could not pick out compression and rebound on the dyno. The final numbers can't be made public.
 
 <Figure name="damper/test-rig" number={6} narrow plate={false} alt="The fork mounted vertically in a dynamometer test rig.">
   The fork on the dynamometer.
@@ -132,3 +138,9 @@ A shock dynamometer then measured damper performance against velocity. The final
 <Figure name="damper/poster" number={8} wide plate={false} alt="The EMBR capstone poster, covering motivation, key technology, the damper design, cost analysis, and testing.">
   The final poster. [Open it as a PDF](/assets/Capstone/Poster.pdf) to zoom in.
 </Figure>
+
+## Final design report
+
+The team's final design report covers both prototypes, the CFD study, the electromagnet, the control system, testing, and cost.
+
+<ProofList slug="capstone-project" url="/assets/Capstone/FDR.pdf" />
