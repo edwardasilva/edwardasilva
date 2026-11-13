@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 13 November, 2026
  *
  * The long version of how I got here. Held back by site.aboutPublished in resume-data.json until
  * the narrative is written. Anything still marked [INSERT ...] is stripped first.
@@ -14,8 +14,8 @@
  * - Route: a single path, or none while held back
  * - headingId, headings: ids for the chapter headings, so the table of contents lists them
  * - The story, one section per chapter in about.chapters
- * - Long-term plans
- * - Before engineering: the jobs list, kept after the story so it does not interrupt it
+ * - Plans
+ * - Jobs outside engineering: the jobs list, kept after the story so it does not interrupt it
  *
  * Where this file is used within the repository:
  * - Route: /about
@@ -41,14 +41,11 @@ export function getStaticPaths() {
 const { about } = resume;
 const { Summary: earlyWorkSummary, roles } = about.earlyWork;
 
-const narrativeSections = [
-    ...about.chapters,
-    { title: 'Long-term plans', paragraphs: about.future },
-]
+const narrativeSections = [...about.chapters, { title: 'Plans', paragraphs: about.future }]
     .filter((section) => section.paragraphs.length > 0)
     .map((section) => ({ ...section, id: headingId(section.title) }));
 
-const C_BEFORE_ENGINEERING = 'Before engineering';
+const C_BEFORE_ENGINEERING = 'Jobs outside engineering';
 const hasEarlyWork = Boolean(earlyWorkSummary) || roles.length > 0;
 
 // The chapter headings, so the page's table of contents lists them.
