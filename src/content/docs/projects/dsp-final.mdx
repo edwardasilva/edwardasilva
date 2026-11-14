@@ -84,7 +84,7 @@ On paper the FFT is $O(n \log n)$ and the ACF is $O(n^2)$. I timed each detector
 | Standard deviation | 0.26 ms | 0.74 ms |
 | Maximum | 1.18 ms | 3.21 ms |
 
-Our report's table labels the second row variance, but `latencyplots.m` computes it with `std`, so it is a standard deviation in milliseconds.
+I found that our report's table labels the second row variance, but `latencyplots.m` computes it with `std`, so it is a standard deviation in milliseconds.
 
 <Figure name="pitch/latency" number={2} alt="Latency per frame across the test run. ACF sits higher than FFT, with spikes up to about 3 milliseconds.">
   Latency for each frame across the test run.
@@ -100,7 +100,7 @@ We swept a chirp, a tone that rises in frequency, from 50 Hz toward 4 kHz. Both 
 
 ### The lag grid
 
-In the report we blamed both failures on the filter. On a steady tone, the ACF has a second limit of its own. At the 8 kHz sample rate, a 1700 Hz tone has a period of only 4.7 samples, so the lag grid is coarse and the error grows. The search also starts at lag 4, and a peak needs a neighbor on each side. Once the period drops below about 4.5 samples, the first peak is lost and the search takes the second one, at twice the lag:
+In the report we blamed both failures on the filter. I found that on a steady tone, the ACF has a second limit of its own. At the 8 kHz sample rate, a 1700 Hz tone has a period of only 4.7 samples, so the lag grid is coarse and the error grows. The search also starts at lag 4, and a peak needs a neighbor on each side. Once the period drops below about 4.5 samples, the first peak is lost and the search takes the second one, at twice the lag:
 
 $$
 f_{est} = \frac{f_s}{2 \cdot f_s / f} = \frac{f}{2}
