@@ -10,7 +10,7 @@
  * finished PDF has to contain. Entries with Visibility "All", "Site", "List", or "CV" reach the CV
  * and "Hide" stays off it. "cvHide": true keeps an entry off the CV without changing its
  * Visibility, and "cvTitle", "cvCompany", and "cvSkills" replace an entry's title, employer, and
- * skills on the CV only. "cvLink" links a project's CV title, and "cvSection": "teaching" moves an
+ * skills on the CV only. An experience's "cvDetail" replaces its tools line with other text. "cvLink" links a project's CV title, and "cvSection": "teaching" moves an
  * experience under the Teaching heading. The cv object sets the section order and titles, whether
  * the GPA prints, an optional research interests line (cv.interests), the categorized skills lines
  * (cv.skills), and the coursework lines
@@ -204,7 +204,8 @@ function collectSkills(data) {
 /**
  * @brief Gets the CV skills block
  * @param data Resume data
- * @return One { label, items } per line: cv.skills when set, otherwise one unlabelled line of
+ * @return One { label, items } per line: cv.skills when set (an empty list prints no Skills
+ * section), otherwise one unlabelled line of
  * TopSkills then ResumeSkills
  */
 function cvSkillGroups(data) {
@@ -264,6 +265,11 @@ function validate(data) {
         requireField(isTextList(entry.CV), `${field}.CV`, 'a list of text');
         requireField(isTextList(entry.Resume), `${field}.Resume`, 'a list of text');
         requireField(isTextList(entry.cvSkills), `${field}.cvSkills`, 'a list of text');
+        requireField(
+            entry.cvDetail === undefined || isText(entry.cvDetail),
+            `${field}.cvDetail`,
+            'text'
+        );
     });
 
     onCv(data.projects).forEach((entry, index) => {
@@ -394,19 +400,20 @@ function educationOrganizations(data) {
  * @return LaTeX for the entry, with no list when it has no bullets
  */
 function renderExperience(experience) {
-    const skills = renderList(experience.cvSkills ?? experience.skills);
+    // The second line's left side is cvDetail when set (courses taught, or a note such as
+    // "Freelance"), and otherwise the role's tools.
+    const detail = experience.cvDetail
+        ? escapeLatex(experience.cvDetail)
+        : renderList(experience.cvSkills ?? experience.skills);
     const location = experience.location ? escapeLatex(experience.location) : '';
     const title = `\\textbf{${escapeLatex(cvTitle(experience))}}`;
     const company = linked(cvCompany(experience), experience.companyUrl);
     const dates = escapeLatex(formatDateRange(experience.duration));
     const bullets = cvBullets(experience);
-    // The location sits right-aligned under the dates. A role with a skills line puts it at the
-    // end of that line. A role without one, as in Teaching, moves the company down to that line
-    // instead, so the location never sits on a line by itself.
-    const stacked = location && !skills;
-    const head = cvLine(stacked ? title : `${title}, ${company}`, dates);
-    const left = stacked ? company : skills;
-    const details = left || location ? cvLine(left, location) : '';
+    // Every role has the same shape: title and employer on the first line with the dates, then the
+    // detail on the left of the second line with the location right-aligned under the dates.
+    const head = cvLine(`${title}, ${company}`, dates);
+    const details = detail || location ? cvLine(detail, location) : '';
 
     return joinParts(
         [
