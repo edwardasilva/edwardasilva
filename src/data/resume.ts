@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 14 November, 2026
  *
  * Reads information/resume-data.json once, cleans it for the site, and exports what the pages render.
  * That file is the only source of the site's data, including the site-only fields and the site
@@ -334,8 +334,16 @@ function normalizeAboutChapter(chapter: AboutChapter): AboutChapter | null {
  * @param about Raw about object, including the Resume line the generator also reads
  * @return About with placeholders stripped from every block
  */
-function normalizeAbout(about: Partial<About> & { Resume?: string }): About {
-    const roles = about.earlyWork?.roles;
+function normalizeAbout(
+    about: Partial<Omit<About, 'earlyWork'>> & {
+        Resume?: string;
+        earlyWork?: Partial<About['earlyWork']> & { Visibility?: string };
+    }
+): About {
+    // earlyWork.Visibility "Hide" keeps the Jobs outside engineering section off the page and leaves
+    // the roles in resume-data.json. Without a Visibility, the section shows as before.
+    const showEarlyWork = about.earlyWork?.Visibility !== 'Hide';
+    const roles = showEarlyWork ? about.earlyWork?.roles : [];
     const chapters = about.chapters;
 
     return {
@@ -343,7 +351,7 @@ function normalizeAbout(about: Partial<About> & { Resume?: string }): About {
         Summary: filledText(about.Summary),
         intro: filledList(about.intro),
         earlyWork: {
-            Summary: filledText(about.earlyWork?.Summary),
+            Summary: showEarlyWork ? filledText(about.earlyWork?.Summary) : undefined,
             roles: (Array.isArray(roles) ? roles : [])
                 .map(normalizeAboutRole)
                 .filter((role): role is AboutRole => role !== null),

@@ -95,6 +95,7 @@ export const GET: APIRoute = async ({ site }) => {
         '## More projects',
         '',
         ...projectLines('more'),
+        ...projectLines('index'),
         '',
         '## Experience',
         '',

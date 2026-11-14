@@ -96,7 +96,8 @@ function navLabel(entry) {
 
 /**
  * @brief Lists the sidebar links to the project pages in one home page group
- * @param {'selected' | 'writing' | 'more'} group Selected work, more projects, or the unused writing group
+ * @param {'selected' | 'writing' | 'more' | 'index'} group Selected work, more projects, projects listed
+ * only on the projects page and here, or the unused writing group
  * @return {{ label: string, slug: string }[]} Links in the order resume-data.json gives
  * @details Matches getHomeProjectPages in src/data/projects.ts. A personal project without a home
  * field falls under writing, and a home value of false keeps a project out of every group.
@@ -370,6 +371,7 @@ export default defineConfig({
                         { label: 'Projects', link: '/projects/' },
                         ...projectLinks('selected'),
                         ...projectLinks('more'),
+                        ...projectLinks('index'),
                     ],
                 },
                 {

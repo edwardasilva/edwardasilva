@@ -28,7 +28,11 @@ import { getHomeProjectPages, getPageSlug } from '../data/projects';
 import { asSentence, resume } from '../data/resume';
 import { itemListSchema, jsonLdHeadTag } from '../data/structured-data';
 
-const projects = [...getHomeProjectPages('selected'), ...getHomeProjectPages('more')];
+const projects = [
+    ...getHomeProjectPages('selected'),
+    ...getHomeProjectPages('more'),
+    ...getHomeProjectPages('index'),
+];
 const site = Astro.site ?? Astro.url;
 
 const schema = itemListSchema(

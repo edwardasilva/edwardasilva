@@ -119,7 +119,8 @@ export interface Experience extends WorkEntry {
 
 export type ProjectKind = 'project' | 'personal';
 
-export type HomeGroup = 'selected' | 'writing' | 'more';
+// index lists a project on the projects page and in the sidebar, but not on the home page.
+export type HomeGroup = 'selected' | 'writing' | 'more' | 'index';
 
 export interface ProjectLink {
     label: string;
