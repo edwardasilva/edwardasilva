@@ -27,6 +27,7 @@
 import type { APIRoute } from 'astro';
 import { getHomeProjectPages } from '../data/projects';
 import {
+    asSentence,
     getExperienceHref,
     hasAboutContent,
     otherExperiences,
@@ -37,7 +38,7 @@ import type { HomeGroup } from '../data/types';
 
 const C_SECTION_PAGES = [
     ...(hasAboutContent
-        ? [['About', '/about/', 'How I got from the jobs before engineering to embedded software.']]
+        ? [['About', '/about/', asSentence(resume.about.Summary ?? resume.about.Highlights)]]
         : []),
     ['Experience', '/experiences/', 'Current and past engineering roles, and organizations.'],
     [
