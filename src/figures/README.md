@@ -2,24 +2,24 @@
 
 The plot SVGs in this folder are kept as exported. They were not redrawn in pgfplots, so no script or data for them is committed here. This file records where each one came from. The `-dark.svg` copies are written from the light files by `npm run figures`, so they are not listed.
 
-Entries that read `[INSERT ...]` are facts only the original MATLAB files and reports hold. They are left open on purpose and must be filled in from those sources.
-
 ## MATLAB exports
 
 Each file carries the generator line "MATLAB, The MathWorks, Inc." in its `<desc>` tag, and was exported as SVG from a MATLAB figure. The MATLAB version is the one in that line.
 
-| File                         | MATLAB version                              | Report          | MATLAB script and commit   |
-| ---------------------------- | ------------------------------------------- | --------------- | -------------------------- |
-| `pitch/latency.svg`          | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `pitch/residual.svg`         | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `pitch/retuning.svg`         | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `gantry/step-response.svg`   | R2025b (25.2.0.2998904)                     | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `gantry/slow-swing.svg`      | R2025b (25.2.0.2998904)                     | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `gantry/cable-length.svg`    | R2025b (25.2.0.2998904)                     | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `gantry/slow-position.svg`   | R2025b (25.2.0.2998904)                     | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `estimation/ekf-force.svg`   | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `estimation/ukf-force.svg`   | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `estimation/disturbance.svg` | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
+The scripts that drew these plots stay in each project's private course repository. The last column names the page that shows the plot and the report that page is built from.
+
+| File                         | MATLAB version                              | Page and report                                         |
+| ---------------------------- | ------------------------------------------- | ------------------------------------------------------- |
+| `pitch/latency.svg`          | R2026a Prerelease Update 3 (26.1.0.3133997) | `dsp-final`, EENG 411 report in `src/assets/DSP`        |
+| `pitch/residual.svg`         | R2026a Prerelease Update 3 (26.1.0.3133997) | `dsp-final`, EENG 411 report in `src/assets/DSP`        |
+| `pitch/retuning.svg`         | R2026a Prerelease Update 3 (26.1.0.3133997) | `dsp-final`, EENG 411 report in `src/assets/DSP`        |
+| `gantry/step-response.svg`   | R2025b (25.2.0.2998904)                     | `MCD-project`, gantry crane reports in `src/assets/MCD` |
+| `gantry/slow-swing.svg`      | R2025b (25.2.0.2998904)                     | `MCD-project`, gantry crane reports in `src/assets/MCD` |
+| `gantry/cable-length.svg`    | R2025b (25.2.0.2998904)                     | `MCD-project`, gantry crane reports in `src/assets/MCD` |
+| `gantry/slow-position.svg`   | R2025b (25.2.0.2998904)                     | `MCD-project`, gantry crane reports in `src/assets/MCD` |
+| `estimation/ekf-force.svg`   | R2026a Prerelease Update 3 (26.1.0.3133997) | `EKF-project`, EENG 519 report in `src/assets/EKF`      |
+| `estimation/ukf-force.svg`   | R2026a Prerelease Update 3 (26.1.0.3133997) | `EKF-project`, EENG 519 report in `src/assets/EKF`      |
+| `estimation/disturbance.svg` | R2026a Prerelease Update 3 (26.1.0.3133997) | `EKF-project`, EENG 519 report in `src/assets/EKF`      |
 
 ## Converted from report PDFs
 
@@ -27,7 +27,7 @@ These two have no generator line. They were converted from a plot in a report PD
 
 | File                    | Report                                              | Conversion                                                                                                                               |
 | ----------------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `damper/v1-dyno.svg`    | [INSERT REPORT]                                     | [INSERT HOW IT WAS CONVERTED]                                                                                                            |
+| `damper/v1-dyno.svg`    | Critical design report, Fig. 12                     | Not recorded.                                                                                                                            |
 | `gantry/slow-delay.svg` | Part 1 report, `src/assets/MCD/MCD_P1.pdf`, Fig. 10 | Re-exported from the report's vector figure with a tight crop of the full frame, then the two data-series colors were mapped as in #119. |
 
 ## Raster plots from report PDFs
