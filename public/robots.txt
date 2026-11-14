@@ -1,3 +1,17 @@
+# public/robots.txt
+# Crawler Rules
+#
+# Author: Edward Silva
+# Creation Date: 01 November, 2026
+# Last Update: 14 November, 2026
+#
+# Lets every crawler read the whole site and points it at the sitemap and llms.txt.
+#
+# Usage:
+# Served as-is at https://edwardasilva.com/robots.txt
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
 User-agent: *
 Allow: /
 

@@ -1,3 +1,19 @@
+<!--
+  src/figures/README.md
+  Figure Provenance
+
+  Author: Edward Silva
+  Creation Date: 10 November, 2026
+  Last Update: 14 November, 2026
+
+  Records where each plot in src/figures came from. The site does not read this file.
+
+  Usage:
+  $ `npm run figures` : Writes the -dark.svg copies this file leaves out
+
+  Copyright (c) 2026 Edward Silva. All rights reserved.
+-->
+
 # Figure provenance
 
 The plot SVGs in this folder are kept as exported. They were not redrawn in pgfplots, so no script or data for them is committed here. This file records where each one came from. The `-dark.svg` copies are written from the light files by `npm run figures`, so they are not listed.

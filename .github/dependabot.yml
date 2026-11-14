@@ -1,5 +1,18 @@
+# .github/dependabot.yml
+# Dependency Updates
+#
+# Author: Edward Silva
+# Creation Date: 08 November, 2026
+# Last Update: 14 November, 2026
+#
 # Monthly and grouped, so each ecosystem opens at most one pull request a month and CI runs
 # once for it. Security updates still open on their own when an advisory lands.
+#
+# Usage:
+# Read by Dependabot on GitHub. Nothing runs it by hand.
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
 version: 2
 updates:
   - package-ecosystem: npm

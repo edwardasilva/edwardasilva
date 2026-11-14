@@ -1,4 +1,19 @@
 #!/usr/bin/env sh
+# .githooks/pre-commit
+# Pre-commit Hook
+#
+# Author: Edward Silva
+# Creation Date: 01 November, 2026
+# Last Update: 14 November, 2026
+#
+# Rebuilds the resume PDF and stages it only when its text changed, then runs
+# scripts/scrub-private.js on the staged files.
+#
+# Usage:
+# $ `npm run hooks:install` : Registers .githooks, so git runs this before every commit
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
 set -e
 
 PDF=public/resume/Edward_Silva_Resume.pdf

@@ -1,3 +1,18 @@
+# .github/workflows/claude.yml
+# Claude
+#
+# Author: Edward Silva
+# Creation Date: 09 November, 2026
+# Last Update: 14 November, 2026
+#
+# Runs the coding agent on an issue or pull request when the owner adds the claude label or
+# comments @claude.
+#
+# Usage:
+# Starts from the claude label or an @claude comment by the repository owner.
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
 name: Claude
 
 # Claude Code works an issue and answers review feedback. Add the claude label to an issue, or
