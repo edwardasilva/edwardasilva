@@ -24,7 +24,7 @@ These files have other authors or owners, so Edward Silva does not hold sole cop
 - Two-author DSP report: `src/assets/DSP/Writeup.pdf`, written with Jonas Krider. See the DSP project page.
 - Gantry crane team reports: `src/assets/MCD/MCD_P1.pdf` and `src/assets/MCD/MCD_P2.pdf`. See the gantry project page.
 - Maze robot team photos and video: `src/assets/SEED/FinalDemo.mp4`, `src/assets/SEED/FrontFace.jpg`, `src/assets/SEED/TopFace.jpg`, and `src/figures/robot/`. A four-person team built the robot.
-- Ram pump team poster: `src/assets/Cornerstone/Poster.jpg` and `src/figures/pump/poster.jpg`.
+- Ram pump team poster: `src/assets/Cornerstone/Poster.jpg` and `src/figures/pump/`. The folder holds the poster and the system sketch from it.
 - Figures from those team reports: `src/figures/damper/`, `src/figures/gantry/`, and `src/figures/pitch/`. Some were exported from the reports, and some were redrawn in this repository from the reports' data. `src/figures/README.md` records the source of each one.
 - Page thumbnails made from those reports: `src/assets/thumbs/Capstone-FDR.webp`, `src/assets/thumbs/Capstone-Poster.webp`, `src/assets/thumbs/DSP-Writeup.webp`, `src/assets/thumbs/MCD-MCD_P1.webp`, and `src/assets/thumbs/MCD-MCD_P2.webp`.
 - Certificates issued by Microsoft: `src/assets/MTA/Java.pdf` and `src/assets/MTA/Python.pdf`.
