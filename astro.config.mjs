@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 14 November, 2026
  *
  * Defines site, base path, the Markdown pipeline, and the Starlight integration that
  * supplies search, navigation, table of contents, dark mode, and the sitemap. Copies the PDF.js
@@ -359,16 +359,17 @@ export default defineConfig({
             },
             // Every page except the home page is listed here. A group whose first link shares its
             // label opens with that page. The role and project links come from resume-data.json, in
-            // its order, so a Visibility change there updates them. About appears once
-            // site.aboutPublished is true and the story has text.
+            // its order, so a Visibility change there updates them. Projects are one list in order
+            // of importance: selected work, then more projects. Only the home page splits them.
+            // About appears once site.aboutPublished is true and the story has text.
             sidebar: [
                 ...(C_HAS_ABOUT ? [{ label: 'About', link: '/about/' }] : []),
                 {
                     label: 'Projects',
                     items: [
                         { label: 'Projects', link: '/projects/' },
-                        { label: 'Selected work', items: projectLinks('selected') },
-                        { label: 'More projects', items: projectLinks('more') },
+                        ...projectLinks('selected'),
+                        ...projectLinks('more'),
                     ],
                 },
                 {

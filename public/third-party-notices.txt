@@ -1,8 +1,8 @@
 # Third-party notices
 
-The built site redistributes the third-party fonts and libraries listed below. Each one stays under its own license, and this file reproduces those licenses.
+The built site redistributes the third-party fonts and libraries listed below. Each one stays under its own license, and this file reproduces those licenses. The repository and the site also show team reports, team photos, and certificates, which are not solely Edward Silva's work. The next section lists them.
 
-These notices cover the third-party items only. Everything else in this repository, code and content, is Copyright (c) 2026 Edward Silva, all rights reserved. See the `LICENSE` file in the repository. Nothing in this file grants a license to any of it.
+Everything not named in this file, code and content, is Copyright (c) 2026 Edward Silva, all rights reserved. See the `LICENSE` file in the repository. Nothing in this file grants a license to any of it.
 
 The copyright lines and license texts are copied from each package's own license file under `node_modules/`, or from the notice inside the shipped file where that is stated. Package versions are pinned in `package.json`.
 
@@ -15,6 +15,21 @@ The copyright lines and license texts are copied from each package's own license
 - Starlight client code and styles, in `_astro/*.js` and `_astro/*.css`: MIT.
 - Pagefind, in `pagefind/` and `_astro/ui-core.*.js`: MIT.
 - Expressive Code, in `_astro/ec.*.js` and `_astro/ec.*.css`: MIT.
+
+## Team and third-party works
+
+These files have other authors or owners, so Edward Silva does not hold sole copyright in them. Each file belongs to its authors or issuer. No license to use, copy, modify, or distribute them is granted here.
+
+- Capstone team reports: `src/assets/Capstone/FDR.pdf` and `src/assets/Capstone/Poster.pdf`. The capstone project page credits the team.
+- Two-author DSP report: `src/assets/DSP/Writeup.pdf`, written with Jonas Krider. See the DSP project page.
+- Gantry crane team reports: `src/assets/MCD/MCD_P1.pdf` and `src/assets/MCD/MCD_P2.pdf`. See the gantry project page.
+- Maze robot team photos and video: `src/assets/SEED/FinalDemo.mp4`, `src/assets/SEED/FrontFace.jpg`, `src/assets/SEED/TopFace.jpg`, and `src/figures/robot/`. A four-person team built the robot.
+- Ram pump team poster: `src/assets/Cornerstone/Poster.jpg` and `src/figures/pump/`. The folder holds the poster and the system sketch from it.
+- Figures from those team reports: `src/figures/damper/`, `src/figures/gantry/`, and `src/figures/pitch/`. Some were exported from the reports, and some were redrawn in this repository from the reports' data. `src/figures/README.md` records the source of each one.
+- Page thumbnails made from those reports: `src/assets/thumbs/Capstone-FDR.webp`, `src/assets/thumbs/Capstone-Poster.webp`, `src/assets/thumbs/DSP-Writeup.webp`, `src/assets/thumbs/MCD-MCD_P1.webp`, and `src/assets/thumbs/MCD-MCD_P2.webp`.
+- Certificates issued by Microsoft: `src/assets/MTA/Java.pdf` and `src/assets/MTA/Python.pdf`.
+
+`src/figures/eeprep/op-amp.svg` is the eeprep mark. eeprep is Edward Silva's own project, so the mark is not a third-party work. It is outside eeprep's open licenses, and the all rights reserved notice above covers it.
 
 ## Source Serif 4 and Source Code Pro
 

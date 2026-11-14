@@ -4,13 +4,13 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 14 November, 2026
  *
  * Renders 1200x630 share cards for the home page and every project page.
  *
  * File Structure:
  * - Fonts: static Source Serif 4, since Satori cannot read woff2
- * - getStaticPaths: home, projects, tools
+ * - getStaticPaths: home, then every project and personal project page
  * - node: builds one element for Satori
  * - GET: lays out the card and rasterizes it
  *
