@@ -78,7 +78,9 @@ jobs:
           package-manager-cache: false
 
       - name: Install dependencies
-        run: npm ci
+        # Same install as CI and the link check: skip lifecycle scripts, so prepare does not write
+        # git hook config and no dependency install script runs in the production job.
+        run: npm ci --ignore-scripts
 
       - name: Build
         env:
