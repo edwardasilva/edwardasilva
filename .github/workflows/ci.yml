@@ -1,3 +1,18 @@
+# .github/workflows/ci.yml
+# CI
+#
+# Author: Edward Silva
+# Creation Date: 08 November, 2026
+# Last Update: 14 November, 2026
+#
+# Checks a pull request into main: lint, format, Vale, type check, dark figures, build, and
+# internal links. The workflow is disabled, so these checks run locally before each merge.
+#
+# Usage:
+# Runs on pull requests into main while the workflow is enabled.
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
 name: CI
 
 # Every change reaches main through a pull request, and this workflow checks each one.

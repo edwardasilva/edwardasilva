@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 08 November, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 14 November, 2026
  *
  * Writes /llms.txt, a Markdown index of the site in the llmstxt.org format, so language models
  * and other crawlers can find each page and what it covers. It reads the same project pages and
@@ -45,7 +45,11 @@ const C_SECTION_PAGES = [
         '/education/',
         'Degree, honors, certifications, and which classes fed which project.',
     ],
-    ['Coursework', '/education/coursework/', 'Every course, with a short description of each.'],
+    [
+        'Coursework',
+        '/education/coursework/',
+        'The computer science and electrical engineering courses behind the projects, each with a short description.',
+    ],
     ['Skills', '/skills/', 'Each skill, with the projects and courses that back it.'],
     ['Resume', resume.personal.resumePdfUrl, 'The one-page PDF resume.'],
 ] as const;

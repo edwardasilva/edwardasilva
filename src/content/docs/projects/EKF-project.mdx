@@ -10,7 +10,7 @@ slug: projects/EKF-project
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 13 November, 2026
+  Last Update: 14 November, 2026
 
   Built from the EENG 519 report in src/assets/EKF and the project's Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -62,7 +62,9 @@ The $\tanh(\alpha\dot{z})$ term models the fluid's yield transition. With $\alph
 | Field time constant $\tau$ | 0.05 s |
 | Sample time $T_s$ | 0.01 s |
 
-The simulated trail combines 1.5 Hz roughness, 8 Hz chatter, Gaussian surface noise, and two obstacles at $t = 1$ s and $t = 2$ s. Coil current sits at 1 A during chatter and steps to 2 A when obstacle force passes 750 N. The code isn't public because it was course or sponsor work.
+The simulated trail combines 1.5 Hz roughness, 8 Hz chatter, Gaussian surface noise, and two obstacles at $t = 1$ s and $t = 2$ s. Coil current sits at 1 A during chatter and steps to 2 A when obstacle force passes 750 N.
+
+This excerpt from `Main.m`, which stays private as EENG 519 course work, builds the trail force:
 
 ```matlab title="Main.m"
 F_harmonic = ...

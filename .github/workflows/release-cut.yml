@@ -1,3 +1,18 @@
+# .github/workflows/release-cut.yml
+# Release Cut
+#
+# Author: Edward Silva
+# Creation Date: 09 November, 2026
+# Last Update: 14 November, 2026
+#
+# Sweeps the repo before a release, opens one release-sweep issue per finding, and drafts a fix
+# for each one.
+#
+# Usage:
+# $ `gh workflow run release-cut.yml` : Runs the sweep on the current main
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
 # Before a release, run this workflow and land or close every release-sweep issue.
 name: Release cut
 

@@ -1,3 +1,18 @@
+# .github/workflows/deploy.yml
+# Deploy to Cloudflare Pages
+#
+# Author: Edward Silva
+# Creation Date: 01 November, 2026
+# Last Update: 14 November, 2026
+#
+# Builds the site and deploys it to Cloudflare Pages: main to the dev site, a version tag to
+# edwardasilva.com.
+#
+# Usage:
+# $ `gh workflow run deploy.yml -f target=dev` : Deploys the dev site from main
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
 name: Deploy to Cloudflare Pages
 
 # A merge to main deploys the dev site, the "dev" preview branch of the edwardasilva Pages project.
@@ -78,7 +93,9 @@ jobs:
           package-manager-cache: false
 
       - name: Install dependencies
-        run: npm ci
+        # Same install as CI and the link check: skip lifecycle scripts, so prepare does not write
+        # git hook config and no dependency install script runs in the production job.
+        run: npm ci --ignore-scripts
 
       - name: Build
         env:
