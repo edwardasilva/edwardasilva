@@ -25,7 +25,7 @@ import ProofList from '../../../components/ProofList.astro';
 import VideoEmbed from '../../../components/VideoEmbed.astro';
 import Figure from '../../../components/Figure.astro';
 
-Our capstone team put a damper with electronically adjustable damping in a production mountain bike fork. The electromagnet did what we designed it to do, and the first test found a noticeable change in damping at each level of current. Getting there took two designs, because the first one barely responded to current.
+Our capstone team put a damper with electronically adjustable damping in a production mountain bike fork. The electromagnet did what we designed it to do. In physical tests we could feel the damping change with current, though the dynamometer could not measure it. Getting there took two designs, because the first one barely responded to current.
 
 The team estimated a retail price of about \$1400, which is \$200 to \$300 below the two commercial forks we compared. The prototype's parts cost \$975.59: \$415.59 the team bought, plus the \$560 fork and damper the client supplied. The finished fork weighs 20 g more than the RockShox and 220 g more than the Fox.
 
@@ -102,7 +102,7 @@ $$
 B_z = \frac{\mu_0 I}{2\pi}\frac{1}{\sqrt{(a+r)^2 + z^2}}\left[K + \frac{a^2 - r^2 - z^2}{(a-r)^2 + z^2}E\right]
 $$
 
-$K$ and $E$ are complete elliptic integrals. They have no closed form, and SciPy evaluates them directly. Adding the magnetized core gives an estimated peak of 0.15 T across the 2.5 mm radial gap modeled at the time. That number comes from the model, and the critical design report calls the geometry difficult to model. For the final design, a 2D nonlinear finite element model in MATLAB's PDE Toolbox traced the flux through the steel parts. A steel sleeve around the outside of the tube completes the magnetic circuit, so the field crosses the gap where the fluid flows.
+$K$ and $E$ are complete elliptic integrals. They have no closed form, and SciPy evaluates them directly. Adding the magnetized core gives an estimated peak of 0.15 T across the 2.5 mm radial gap modeled at the time. That number comes from the model, and the critical design report calls the geometry difficult to model. For the final design, I checked the geometry with a 2D nonlinear finite element model in MATLAB's PDE Toolbox, which traced the flux through the steel parts. A steel sleeve around the outside of the tube completes the magnetic circuit, so the field crosses the gap where the fluid flows.
 
 ## Control and heat
 

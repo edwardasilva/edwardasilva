@@ -12,7 +12,8 @@
  * Visibility, and "cvTitle", "cvCompany", and "cvSkills" replace an entry's title, employer, and
  * skills on the CV only. "cvLink" links a project's CV title, and "cvSection": "teaching" moves an
  * experience under the Teaching heading. The cv object sets the section order and titles, whether
- * the GPA prints, the categorized skills lines (cv.skills), and the coursework lines
+ * the GPA prints, an optional research interests line (cv.interests), the categorized skills lines
+ * (cv.skills), and the coursework lines
  * (cv.coursework). The education entry's gpaScale, cvHonors, and cvScholarships are CV-only. A
  * project's cvSkills replaces its skills, as an experience's does. Company names link to the
  * entry's companyUrl, the school to its url, and a project on the site links its title to its
@@ -234,6 +235,11 @@ function validate(data) {
         value === undefined || (Array.isArray(value) && value.every(isText));
 
     requireField(isText(data.personal?.name), 'personal.name', 'text');
+    requireField(
+        data.cv?.interests === undefined || isText(data.cv.interests),
+        'cv.interests',
+        'text'
+    );
     requireField(
         Array.isArray(data.cv?.sections) && data.cv.sections.length > 0,
         'cv.sections',
@@ -604,6 +610,13 @@ function generateBody(data) {
         `\\centerline{\\huge ${name}}%`,
         '\\vspace{3pt}%',
         `\\centerline{${renderContact(data.personal)}}%`,
+        // cv.interests, when set, is one centered line of research interests under the contact line.
+        ...(data.cv.interests
+            ? [
+                  '\\vspace{\\listitem}%',
+                  `\\centerline{\\textbf{Research interests:} ${escapeLatex(data.cv.interests)}}%`,
+              ]
+            : []),
         '\\vspace{\\afterheader}%',
         ...sections,
         '',
@@ -662,6 +675,7 @@ export function expectedText(data) {
         ...[linkedin, website].filter(Boolean).map(shortUrl),
         email,
         ...(C_SHOW_PHONE && phone ? [phone] : []),
+        ...(data.cv.interests ? [data.cv.interests] : []),
         ...data.cv.sections
             .filter((section) => C_RENDERERS[section.id](data) !== '')
             .flatMap((section) => [section.title, ...entries[section.id]()]),
