@@ -4,15 +4,16 @@
  *
  * Author: Edward Silva
  * Creation Date: 11 November, 2026
- * Last Update: 12 November, 2026
+ * Last Update: 14 November, 2026
  *
  * Generates the CV and fits it on two pages with the same method as scripts/build-resume.js:
  * compile, measure the real page, step the size and margins down until it fits, then grow the
  * spacing to fill the second page. It checks the PDF text the way an applicant tracking system
  * reads it. A failed compile or a CV that will not fit in two pages stops with an error. No entry
  * is dropped to make it fit. This script has its own build directory, template, job name, and
- * output, and it does not touch the resume or public/assets. The CV stays off the site: the PDF is
- * written to build/cv, which is not committed or deployed.
+ * output, and it does not touch the resume or public/assets. The finished PDF is copied to
+ * public/cv, where the site's CV page under Resume shows it, and the pre-commit hook stages it
+ * when its text changes, the same way it handles the resume.
  *
  * File Structure:
  * - Layout constants: the size and margin ladder, the spacing ranges, and the page ceiling
@@ -25,7 +26,7 @@
  * - npm run build:cv, run by hand. npm run build does not run it.
  *
  * Usage:
- * $ `npm run build:cv` : Fits the CV and writes build/cv/Edward_Silva_CV.pdf
+ * $ `npm run build:cv` : Fits the CV, writes build/cv/Edward_Silva_CV.pdf, and copies it to public/cv
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
  */
@@ -40,6 +41,7 @@ const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const TEMPLATE_PATH = path.join(ROOT_DIR, 'scripts', 'cv-template.tex');
 const C_JOB_NAME = 'Edward_Silva_CV';
 const C_MAX_PAGES = 2;
+const C_PUBLIC_DIR = path.join(ROOT_DIR, 'public', 'cv');
 
 // The PDF date: the commit time of information/, or 11 November 2026 at noon Central when that
 // checkout has no git history.
@@ -397,6 +399,9 @@ function buildPdf(data) {
     const pdfPath = path.join(C_BUILD_DIR, `${C_JOB_NAME}.pdf`);
 
     reportChecks(pdfPath, data, layout);
+
+    fs.mkdirSync(C_PUBLIC_DIR, { recursive: true });
+    fs.copyFileSync(pdfPath, path.join(C_PUBLIC_DIR, `${C_JOB_NAME}.pdf`));
 
     console.log(
         `[SUCCESS] CV fits ${pages} pages at ${layout.font} pt, ${layout.margin} in margins, ${Math.round(layout.fill * 100)}% spacing, ${layout.freeLines.toFixed(1)} lines free. Wrote ${path.relative(ROOT_DIR, pdfPath)}.`

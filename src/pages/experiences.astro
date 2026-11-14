@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 14 November, 2026
  *
  * The index of roles marked for the site, each linking to its own page, then Other experience
  * as list-only lines, then the organizations.
@@ -58,8 +58,15 @@ import {
             <ul class="es-roles">
                 {otherExperiences.map((experience) => (
                     <li>
-                        {experience.title}, {experience.company}.{' '}
-                        <span class="es-role-meta">{experience.duration}.</span>
+                        {experience.title},{' '}
+                        {experience.companyUrl ? (
+                            <ExternalLink href={experience.companyUrl}>
+                                {experience.company}
+                            </ExternalLink>
+                        ) : (
+                            experience.company
+                        )}
+                        . <span class="es-role-meta">{experience.duration}.</span>
                     </li>
                 ))}
             </ul>

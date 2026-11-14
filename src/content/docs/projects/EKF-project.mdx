@@ -26,7 +26,7 @@ import ProofList from '../../../components/ProofList.astro';
 
 For my EENG 519 final project, I ran two Kalman filters on a model of my capstone team's mountain bike damper. A Kalman filter estimates values a sensor cannot read by combining a model with noisy measurements. The project ran in MATLAB and Simulink, and nothing here ran on the bike.
 
-In a browser port of the project's code (Figure 5), the extended and unscented Kalman filters (EKF and UKF) agree to within 0.4 N at the report's parameters. The UKF pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sigma point spread, its RMS force error was 401 N, against 624 N for the EKF. It also kept every sample inside its bounds.
+After the course, I went back to the project's code. I found that the extended and unscented Kalman filters (EKF and UKF) agree to within 0.4 N at my report's parameters. Figure 5 is a browser port of that code. The UKF pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sigma point spread, its RMS force error was 401 N, against 624 N for the EKF. It also kept every sample inside its bounds.
 
 The [EMBR damper](/projects/capstone-project/) changes its damping by changing the yield stress of a magnetorheological (MR) fluid. Low-cost sensors cannot measure the field intensity or the force coming up from the trail, so the filters infer them from a string potentiometer and accelerometers.
 
@@ -101,7 +101,7 @@ da_dh   = -(Km/m)*tanh(alpha*zd_hat);
 
 ### Results
 
-The EKF tracked displacement, velocity, and the low-frequency terrain, and its errors stayed inside the $\pm 3\sigma$ bounds (three standard deviations) for the whole 3 s run. The force estimate lags slightly, and the report attributes that to the 8 Hz chatter.
+The EKF tracked displacement, velocity, and the low-frequency terrain, and its errors stayed inside the $\pm 3\sigma$ bounds (three standard deviations) for the whole 3 s run. The force estimate lags slightly, and in the report I attributed that lag to the 8 Hz chatter.
 
 <Figure name="estimation/ekf-force" number={3} alt="EKF force estimate against true force over three seconds, with wide dotted three-sigma bounds.">
   EKF estimate of the terrain force.
@@ -159,11 +159,11 @@ Raising $K_m$ makes that term matter. Over eight noise seeds at $K_m = 500$, whe
 | UKF, $\alpha = 0.001$ | 675 N | 74% |
 | UKF, $\alpha = 1$ | 401 N | 100% |
 
-The EKF becomes overconfident, so its errors leave its bounds. The UKF with a wide spread stays inside its bounds. The UKF with the report's spread does no better than the EKF on error. So the report's argument for the UKF holds, but only with a larger $K_m$ and a wider $\alpha_{ukf}$ than it used.
+The EKF becomes overconfident, so its errors leave its bounds. The UKF with a wide spread stays inside its bounds. The UKF with the report's spread does no better than the EKF on error. So my report's argument for the UKF holds, but only with a larger $K_m$ and a wider $\alpha_{ukf}$ than I used.
 
 <EstimationFigure number={5} />
 
-Fitting $K_m$ to dynamometer data would settle which of these cases describes the real fork. The report's stated next step is to run the UKF on a microcontroller and measure its cost against the EKF.
+Fitting $K_m$ to dynamometer data would settle which of these cases describes the real fork. In the report, my next step was to run the UKF on a microcontroller and measure its cost against the EKF.
 
 If I did this again, I would tune the filters for real riding. I tuned them against the simulation's simple inputs. Next time I would add more randomness to those inputs and tune against them.
 

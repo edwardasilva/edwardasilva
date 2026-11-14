@@ -3,7 +3,7 @@
 #
 # Author: Edward Silva
 # Creation Date: 09 November, 2026
-# Last Update: 10 November, 2026
+# Last Update: 14 November, 2026
 #
 # Lists the files Git leaves untracked, including build output, secrets, and the private resume and agent files that the hooks keep off GitHub.
 #
@@ -30,8 +30,9 @@ out/
 
 # resume and local content artifacts
 public/resume/*.tex
-# The CV builds into build/cv and never ships with the site.
-public/cv/
+# The CV builds into build/cv and is copied to public/cv/Edward_Silva_CV.pdf, which ships like the resume.
+public/cv/*
+!public/cv/Edward_Silva_CV.pdf
 public/vendor/
 public/assets/
 previousjobs/

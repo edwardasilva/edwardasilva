@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 14 November, 2026
  *
  * Types for the normalized resume data the site renders. Field names match
  * resume-data.json, and fields only the resume generator reads are left out.
@@ -32,6 +32,7 @@ export interface PersonalInfo {
     linkedin: string;
     github: string;
     resumePdfUrl?: string;
+    cvPdfUrl?: string;
 }
 
 export interface AboutRole {
@@ -118,7 +119,8 @@ export interface Experience extends WorkEntry {
 
 export type ProjectKind = 'project' | 'personal';
 
-export type HomeGroup = 'selected' | 'writing' | 'more';
+// index lists a project on the projects page and in the sidebar, but not on the home page.
+export type HomeGroup = 'selected' | 'writing' | 'more' | 'index';
 
 export interface ProjectLink {
     label: string;
@@ -176,7 +178,8 @@ export interface Site {
     pages: Record<
         'home' | 'projects' | 'experiences' | 'coursework' | 'skills' | 'resume',
         PageCopy
-    >;
+    > &
+        Partial<Record<'cv', PageCopy>>;
 }
 
 export interface ResumeData {

@@ -25,7 +25,7 @@ import ProofList from '../../../components/ProofList.astro';
 import VideoEmbed from '../../../components/VideoEmbed.astro';
 import Figure from '../../../components/Figure.astro';
 
-Our capstone team put a damper with electronically adjustable damping in a production mountain bike fork. The electromagnet did what we designed it to do, and the first test found a noticeable change in damping at each level of current. Getting there took two designs, because the first one barely responded to current.
+Our capstone team put a damper with electronically adjustable damping in a production mountain bike fork. The electromagnet did what we designed it to do. In physical tests we could feel the damping change with current, though the dynamometer could not measure it. Getting there took two designs, because the first one barely responded to current.
 
 The team estimated a retail price of about \$1400, which is \$200 to \$300 below the two commercial forks we compared. The prototype's parts cost \$975.59: \$415.59 the team bought, plus the \$560 fork and damper the client supplied. The finished fork weighs 20 g more than the RockShox and 220 g more than the Fox.
 
@@ -90,7 +90,7 @@ The gap is cubed, so it dominates. V1's gap was 1.94 mm and the V2 concept's is 
 
 <DamperFigure number={5} />
 
-The final build used a wider gap. The team ran the same flow model and CFD for 18, 18.5, and 19 mm pistons and found that damping climbs steeply as the piston nears the tube wall. They chose an 18.5 mm steel piston, the least damping with the coil off that still kept the gap small, and checked the trend by cycling the damper by hand with 3D-printed mock pistons.
+The final build used a wider gap. The team ran the same flow model and CFD for 18, 18.5, and 19 mm pistons and found that damping climbs steeply as the piston nears the tube wall. They chose an 18.5 mm steel piston, the least damping with the coil off that still kept the gap small. They checked the trend by cycling the damper by hand with 3D-printed mock pistons.
 
 ## The electromagnet
 
@@ -102,7 +102,7 @@ $$
 B_z = \frac{\mu_0 I}{2\pi}\frac{1}{\sqrt{(a+r)^2 + z^2}}\left[K + \frac{a^2 - r^2 - z^2}{(a-r)^2 + z^2}E\right]
 $$
 
-$K$ and $E$ are complete elliptic integrals. They have no closed form, and SciPy evaluates them directly. Adding the magnetized core gives an estimated peak of 0.15 T across the 2.5 mm radial gap modeled at the time. That number comes from the model, and the critical design report calls the geometry difficult to model. For the final design, a 2D nonlinear finite element model in MATLAB's PDE Toolbox traced the flux through the steel parts. A steel sleeve around the outside of the tube completes the magnetic circuit, so the field crosses the gap where the fluid flows.
+$K$ and $E$ are complete elliptic integrals. They have no closed form, and SciPy evaluates them directly. Adding the magnetized core gives an estimated peak of 0.15 T across the 2.5 mm radial gap modeled at the time. That number comes from the model, and the critical design report calls the geometry difficult to model. For the final design, I checked the geometry with a 2D nonlinear finite element model in MATLAB's PDE Toolbox, which traced the flux through the steel parts. A steel sleeve around the outside of the tube completes the magnetic circuit, so the field crosses the gap where the fluid flows.
 
 ## Control and heat
 
@@ -125,15 +125,19 @@ The team compared the flow model against Ansys Fluent computational fluid dynami
 
 A shock dynamometer then measured the finished damper, and the results were inconclusive. The school's dyno reaches only 14 in/s, while mountain bike dampers are usually tested to about 80 in/s, so only low-speed damping could be measured. On constant power from a power supply, the damper cavitated. With the control system wired in, its early algorithm could not pick out compression and rebound on the dyno.
 
-<Figure name="damper/final-dyno" number={6} alt="Force against velocity from -14 to 14 in/s for no power and 1 to 4 amps. On the negative side, 3 and 4 amps sit below the others; on the positive side, they reach about 17 lbf against about 15 lbf.">
+<Figure name="damper/final-dyno" number={6} alt="Force against velocity from -14 to 14 in/s for no power and 1 to 4 amps. On the negative side, 3 and 4 amps sit below the others. On the positive side, they reach about 17 lbf against about 15 lbf.">
   The final damper on the dynamometer at no power and 1, 2, 3, and 4 A, in the report's units, pounds-force (lbf) and inches per second (in/s). Final design report, Fig. 16.
 </Figure>
 
-At 1 and 2 A, the curves nearly match the curve with no power. At 3 and 4 A, the force at 14 in/s rises from about 15 lbf to about 17 lbf in one direction. In the other direction, it falls from about 5 lbf to about 3.5 lbf. The report reads the compression force falling as current rises, the opposite of what more current should do, as a sign of cavitation. A look through a port in the cartridge tube showed that the internal floating piston didn't move on rebound, so no fluid refilled the space the shaft left.
+At 1 and 2 A, the curves nearly match the curve with no power. At 3 and 4 A, the force at 14 in/s rises from about 15 lbf to about 17 lbf in one direction. In the other direction, it falls from about 5 lbf to about 3.5 lbf. In the final design report, we read the compression force falling as current rises, the opposite of what more current should do, as a sign of cavitation. A look through a port in the cartridge tube showed that the internal floating piston didn't move on rebound, so no fluid refilled the space the shaft left.
 
 <Figure name="damper/test-rig" number={7} narrow plate={false} alt="The fork mounted vertically in a dynamometer test rig.">
   The fork on the dynamometer.
 </Figure>
+
+### Physical tests
+
+The physical tests were conclusive where the dyno was not. The team could feel the damping change when the electromagnet was powered, but had no good way to measure that change.
 
 <Figure name="damper/on-bike" number={8} plate={false} alt="The EMBR fork on a mountain bike, with the front wheel lifted over a stone wall.">
   The finished fork on a bike.
