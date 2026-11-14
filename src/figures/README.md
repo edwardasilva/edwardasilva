@@ -8,26 +8,26 @@ Entries that read `[INSERT ...]` are facts only the original MATLAB files and re
 
 Each file carries the generator line "MATLAB, The MathWorks, Inc." in its `<desc>` tag, and was exported as SVG from a MATLAB figure. The MATLAB version is the one in that line.
 
-| File | MATLAB version | Report | MATLAB script and commit |
-| --- | --- | --- | --- |
-| `pitch/latency.svg` | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `pitch/residual.svg` | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `pitch/retuning.svg` | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `gantry/step-response.svg` | R2025b (25.2.0.2998904) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `gantry/slow-swing.svg` | R2025b (25.2.0.2998904) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `gantry/cable-length.svg` | R2025b (25.2.0.2998904) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `gantry/slow-position.svg` | R2025b (25.2.0.2998904) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `estimation/ekf-force.svg` | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
-| `estimation/ukf-force.svg` | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
+| File                         | MATLAB version                              | Report          | MATLAB script and commit   |
+| ---------------------------- | ------------------------------------------- | --------------- | -------------------------- |
+| `pitch/latency.svg`          | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
+| `pitch/residual.svg`         | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
+| `pitch/retuning.svg`         | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
+| `gantry/step-response.svg`   | R2025b (25.2.0.2998904)                     | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
+| `gantry/slow-swing.svg`      | R2025b (25.2.0.2998904)                     | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
+| `gantry/cable-length.svg`    | R2025b (25.2.0.2998904)                     | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
+| `gantry/slow-position.svg`   | R2025b (25.2.0.2998904)                     | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
+| `estimation/ekf-force.svg`   | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
+| `estimation/ukf-force.svg`   | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
 | `estimation/disturbance.svg` | R2026a Prerelease Update 3 (26.1.0.3133997) | [INSERT REPORT] | [INSERT SCRIPT AND COMMIT] |
 
 ## Converted from report PDFs
 
 These two have no generator line. They were converted from a plot in a report PDF, and the glyphs are cairo paths, not text.
 
-| File | Report | Conversion |
-| --- | --- | --- |
-| `damper/v1-dyno.svg` | [INSERT REPORT] | [INSERT HOW IT WAS CONVERTED] |
+| File                    | Report                                              | Conversion                                                                                                                               |
+| ----------------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `damper/v1-dyno.svg`    | [INSERT REPORT]                                     | [INSERT HOW IT WAS CONVERTED]                                                                                                            |
 | `gantry/slow-delay.svg` | Part 1 report, `src/assets/MCD/MCD_P1.pdf`, Fig. 10 | Re-exported from the report's vector figure with a tight crop of the full frame, then the two data-series colors were mapped as in #119. |
 
 ## Generated in this repo
