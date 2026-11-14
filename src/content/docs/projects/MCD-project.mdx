@@ -33,7 +33,7 @@ An operator on a gantry crane controls only the direction and speed, so where th
 
 ### Fitting the data
 
-The project gave us measured crane data and no cable length. We tried a range of lengths, compared each one's steady-state oscillation to the data, and narrowed the range. The answer was $\ell = 3.6644$ m, which the reports round to 3.7 m.
+The project gave us measured crane data and no cable length. We tried a range of lengths, compared each one's steady-state oscillation to the data, and narrowed the range. The answer was $\ell = 3.6644$ m, which we rounded to 3.7 m in the reports.
 
 <Figure name="gantry/cable-length" number={1} alt="Experimental data overlaid with the linear and nonlinear model responses. All three nearly coincide over ten seconds.">
   The measured response against the nonlinear model and its small-angle linearization.
@@ -61,7 +61,7 @@ We assumed a heavy load and traded time for safety. The specs were zero overshoo
 
 ### Rounding in the report
 
-Equation (7) in the report rounds these coefficients, and the rounding changes the zeros from complex to real. The model's numerator is $z^2 - 1.9986z + 0.9989$, and its discriminant is negative:
+Equation (7) in our report rounds these coefficients, and the rounding changes the zeros from complex to real. The model's numerator is $z^2 - 1.9986z + 0.9989$, and its discriminant is negative:
 
 $$
 1.9986^2 - 4(0.9989) = -0.0012
@@ -73,7 +73,7 @@ $$
 1.999^2 - 4(0.9989) = +0.0004
 $$
 
-The real pair puts a zero outside the unit circle and turns the DC gain negative. Use the values in the model to reproduce the result. Against the linearized plant, the model's values give no overshoot and a 112.6 s settling time, which matches the report's "just under 2 minutes".
+The real pair puts a zero outside the unit circle and turns the DC gain negative, so the printed values do not reproduce our result. Against the linearized plant, the model's values give no overshoot and a 112.6 s settling time, which matches the report's "just under 2 minutes".
 
 <Figure name="gantry/slow-position" number={3} alt="Load position rising slowly and smoothly to the 1 meter reference over about 120 seconds, with no overshoot.">
   Load position for a 1 m command.
@@ -81,7 +81,7 @@ The real pair puts a zero outside the unit circle and turns the DC gain negative
 
 ### Swing
 
-The report gives a load swing of no more than 1 degree. On this cable that is an arc of 6.4 cm, about 2.5 inches, which the report rounds to 3 inches. Its swing plot does show a brief first peak near 1.5 degrees.
+In the report we gave a load swing of no more than 1 degree. On this cable that is an arc of 6.4 cm, about 2.5 inches, which we rounded to 3 inches. Our swing plot does show a brief first peak near 1.5 degrees.
 
 <Figure name="gantry/slow-swing" number={4} alt="Load swing angle decaying from a first peak near 1.5 degrees to zero over about 150 seconds.">
   Load swing over the same move.
@@ -95,7 +95,7 @@ $$
 \omega_c \tau = \phi_m \quad\Rightarrow\quad \tau = \frac{48^\circ \cdot \pi / 180}{1.62} = 0.52\ \text{s}
 $$
 
-That is about 26 samples at 50 Hz. The report rounds it to 0.5 s and 25 samples, and we added a 25-sample delay to check. The loop sat at the edge of stability, and the response never settled.
+That is about 26 samples at 50 Hz. We rounded it to 0.5 s and 25 samples in the report, and added a 25-sample delay to check. The loop sat at the edge of stability, and the response never settled.
 
 <Figure name="gantry/slow-delay" number={5} alt="Load position with a 25-sample delay. The response keeps oscillating around the reference and does not settle.">
   The same command with a 25-sample delay added.
@@ -136,7 +136,7 @@ $$
 u = Nr - Kx = Nr - K_1 r = 0 \quad\Rightarrow\quad N = K_1
 $$
 
-The report's $N = 4.4721$ is the first entry of $K_{ref} = [4.4721,\ 2.7148,\ 1.4310]$.
+Our report's $N = 4.4721$ is the first entry of $K_{ref} = [4.4721,\ 2.7148,\ 1.4310]$.
 
 State augmentation adds an integrated error state. That design needed anti-windup (a term that stops the integrator from growing while the actuator is saturated), with a back-calculation gain of $K_b = 10$.
 
@@ -148,7 +148,7 @@ State augmentation adds an integrated error state. That design needed anti-windu
 | Gain margin | Factor of 3.18, or 10.05 dB | Factor of 2.02, or 6.11 dB |
 | Phase margin | 36.9 degrees at 3.43 rad/s | 24.2 degrees at 5.09 rad/s |
 
-The report's text labels the gain margins 3.18 and 2.02 dB. The repository's script computes `Kunst = 20*log10(gmr)`, so those two numbers are ratios, and the table gives both forms.
+Our report labels the gain margins 3.18 and 2.02 dB, but our script computes `Kunst = 20*log10(gmr)`, so those two numbers are ratios. The table gives both forms.
 
 <Figure name="gantry/reference-scaling" number={6} alt="Reference-scaling response to a 2 meter pulse with a small step disturbance at 10 seconds. The load overshoots slightly and settles.">
   Reference scaling on a 2 m pulse, with a 0.1 step disturbance at 10 s. Redrawn from the Part 2 report, Fig. 3, so it follows the site theme.
@@ -160,7 +160,7 @@ The report's text labels the gain margins 3.18 and 2.02 dB. The repository's scr
 
 ### What the report left open
 
-Augmentation removes the overshoot and costs 12.7 degrees of phase margin. The report also records four things we did not solve:
+Augmentation removes the overshoot and costs 12.7 degrees of phase margin. In the report we also listed four things we did not solve:
 
 - An LQG design (an LQR with a noise-aware estimator) to reject the disturbance did not work.
 - The large $K_b$ may be sensitive to noise.
@@ -169,13 +169,13 @@ Augmentation removes the overshoot and costs 12.7 degrees of phase margin. The r
 
 ## Changing the LQR weight
 
-The report says we raised the ratio of $Q$ to $R$ until the design met spec. With the 1 m/s limit on, more weight speeds up the response until Q is near 100. Past that, the gains ask for more than the actuator can give. At Q = 500 the saturated loop goes unstable, though the linear analysis still shows 25.6 degrees of margin.
+We raised the ratio of $Q$ to $R$ until the design met spec. With the 1 m/s limit on, more weight speeds up the response until Q is near 100. Past that, the gains ask for more than the actuator can give. At Q = 500 the saturated loop goes unstable, though the linear analysis still shows 25.6 degrees of margin.
 
 <GantryWeight number={8} />
 
 ## Adding delay
 
-Part 1 tested its delay prediction in simulation, and Part 2 did not. The Part 2 report calculates a limit of $36.8925^\circ \times \frac{\pi}{180} / 3.4293 = 0.1878$ s, then says the phase margin "was not validated". This figure runs that test on the reference-scaling design.
+We tested the Part 1 delay prediction in simulation, but not the Part 2 one. In the Part 2 report we calculated a limit of $36.8925^\circ \times \frac{\pi}{180} / 3.4293 = 0.1878$ s, then wrote that the phase margin "was not validated". Figure 9 runs that test on the reference-scaling design.
 
 <GantryDelay number={9} />
 

@@ -6,7 +6,7 @@
 # Creation Date: 01 November, 2026
 # Last Update: 14 November, 2026
 #
-# Rebuilds the resume PDF and stages it only when its text changed, then runs
+# Rebuilds the resume and CV PDFs and stages each only when its text changed, then runs
 # scripts/scrub-private.js on the staged files.
 #
 # Usage:
@@ -35,6 +35,25 @@ if command -v pdftotext >/dev/null 2>&1 && git cat-file -e "HEAD:$PDF" 2>/dev/nu
   fi
 else
   git add "$PDF"
+fi
+
+CV=public/cv/Edward_Silva_CV.pdf
+
+echo "[pre-commit] Building CV PDF locally..."
+npm run --silent build:cv
+
+if command -v pdftotext >/dev/null 2>&1 && git cat-file -e "HEAD:$CV" 2>/dev/null; then
+  old_text=$(git show "HEAD:$CV" | pdftotext -layout - - | cksum)
+  new_text=$(pdftotext -layout "$CV" - | cksum)
+
+  if [ "$old_text" = "$new_text" ]; then
+    git checkout HEAD -- "$CV"
+    echo "[pre-commit] CV text unchanged. Kept the committed PDF."
+  else
+    git add "$CV"
+  fi
+else
+  git add "$CV"
 fi
 
 node scripts/scrub-private.js staged
