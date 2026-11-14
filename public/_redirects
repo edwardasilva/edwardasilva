@@ -3,7 +3,7 @@
 #
 # Author: Edward Silva
 # Creation Date: 10 November, 2026
-# Last Update: 10 November, 2026
+# Last Update: 14 November, 2026
 #
 # Sends old URLs to their current pages with a real 301 on Cloudflare Pages. The targets end in a
 # slash because the site serves every page as a folder, so a target without one costs a second hop.
@@ -31,3 +31,5 @@
 /profile / 301
 /profile/ / 301
 /resume/viewer.html /resume/viewer/ 301
+/ekf /projects/EKF-project/ 301
+/ekf/ /projects/EKF-project/ 301

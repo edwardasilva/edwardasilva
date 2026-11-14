@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 11 November, 2026
- * Last Update: 11 November, 2026
+ * Last Update: 14 November, 2026
  *
  * Turns resume-data.json into the LaTeX body of the two-page CV, and into the list of text the
  * finished PDF has to contain. Entries with Visibility "All", "Site", "List", or "CV" reach the CV
@@ -13,10 +13,11 @@
  * skills on the CV only. "cvLink" links a project's CV title, and "cvSection": "teaching" moves an
  * experience under the Teaching heading. The cv object sets the section order and titles, whether
  * the GPA prints, the categorized skills lines (cv.skills), and the coursework lines
- * (cv.coursework). The education entry's gpaScale and cvScholarships are CV-only. An entry's CV
- * bullet list is used when it has items, and its Resume list otherwise. Coursework prints by
- * course name, with no course codes. A field with the wrong kind of value stops the build and
- * names the field. Fitting the pages happens in scripts/build-cv.js.
+ * (cv.coursework). The education entry's gpaScale, cvHonors, and cvScholarships are CV-only. A
+ * project's cvSkills replaces its skills, as an experience's does. An entry's CV bullet list is
+ * used when it has items, and its Resume list otherwise. Coursework prints by course name, with no
+ * course codes. A field with the wrong kind of value stops the build and names the field. Fitting
+ * the pages happens in scripts/build-cv.js.
  *
  * File Structure:
  * - Global Constants: file paths and the Visibility values the CV shows
@@ -261,6 +262,7 @@ function validate(data) {
         requireField(isText(entry.duration), `${field}.duration`, 'text');
         requireField(isTextList(entry.CV), `${field}.CV`, 'a list of text');
         requireField(isTextList(entry.Resume), `${field}.Resume`, 'a list of text');
+        requireField(isTextList(entry.cvSkills), `${field}.cvSkills`, 'a list of text');
     });
 
     requireField(cvEducation(data).length > 0, 'education', 'a list with an entry for the CV');
@@ -276,6 +278,11 @@ function validate(data) {
         requireField(
             isTextList(entry.cvScholarships),
             `education[${index}].cvScholarships`,
+            'a list of text'
+        );
+        requireField(
+            entry.cvHonors === undefined || isTextList(entry.cvHonors),
+            `education[${index}].cvHonors`,
             'a list of text'
         );
         requireField(
@@ -393,7 +400,10 @@ function renderProject(project) {
     const title = `\\textbf{${escapeLatex(cvTitle(project))}}${site}`;
     const repository =
         project.github && !project.cvLink ? `\\href{${escapeUrl(project.github)}}{GitHub}` : '';
-    const label = joinParts([title, renderList(project.skills), repository], ', ');
+    const label = joinParts(
+        [title, renderList(project.cvSkills ?? project.skills), repository],
+        ', '
+    );
     const bullets = cvBullets(project);
 
     return joinParts(
@@ -409,11 +419,11 @@ function renderProject(project) {
  * @brief Renders a bold label followed by plain items on one line
  * @param label Label text
  * @param items Plain items
- * @return LaTeX line with the items separated by pipes, or an empty string when there are none
+ * @return LaTeX line with the items separated by commas, or an empty string when there are none
  */
 function renderLabelledLine(label, items) {
     return items?.length > 0
-        ? `\\textbf{${escapeLatex(label)}:} ${items.map(escapeLatex).join(' | ')}`
+        ? `\\textbf{${escapeLatex(label)}:} ${items.map(escapeLatex).join(', ')}`
         : '';
 }
 
@@ -444,7 +454,7 @@ function renderEducation(education, data) {
                 joinParts([degree, gpa], ', '),
                 education.location ? escapeLatex(education.location) : ''
             ),
-            renderLabelledLine('Honors', education.honors),
+            renderLabelledLine('Honors', education.cvHonors ?? education.honors),
             renderLabelledLine('Scholarships', education.cvScholarships ?? education.scholarships),
             ...coursework,
         ],
@@ -587,7 +597,7 @@ export function expectedText(data) {
             cvEducation(data).flatMap((entry) => [
                 entry.institution,
                 entry.degree,
-                ...(entry.honors ?? []),
+                ...(entry.cvHonors ?? entry.honors ?? []),
                 ...(entry.cvScholarships ?? entry.scholarships ?? []),
                 ...cvCourseGroups(entry, data).flatMap(({ label, names }) => [label, ...names]),
             ]),
