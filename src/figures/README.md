@@ -30,6 +30,10 @@ These two have no generator line. They were converted from a plot in a report PD
 | `damper/v1-dyno.svg`    | [INSERT REPORT]                                     | [INSERT HOW IT WAS CONVERTED]                                                                                                            |
 | `gantry/slow-delay.svg` | Part 1 report, `src/assets/MCD/MCD_P1.pdf`, Fig. 10 | Re-exported from the report's vector figure with a tight crop of the full frame, then the two data-series colors were mapped as in #119. |
 
+## Raster plots from report PDFs
+
+`damper/final-dyno.png` is the embedded image of Fig. 16 in the final design report, `src/assets/Capstone/FDR.pdf`, extracted unchanged with `pdfimages -png`.
+
 ## Generated in this repo
 
 `gantry/augmented.svg` and `gantry/reference-scaling.svg` are written by `scripts/digitize-gantry-pulse.py`. That script reads each curve back out of the report's PNG screenshots, which are not committed. See its header for the details.
