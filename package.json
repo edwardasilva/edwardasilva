@@ -2,7 +2,7 @@
   "name": "edwardasilva.com",
   "license": "UNLICENSED",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "prettier": "./.lint/.prettierrc.json",
   "scripts": {
     "dev": "astro dev",
