@@ -10,7 +10,7 @@ slug: projects/resume-generator
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 09 November, 2026
+  Last Update: 13 November, 2026
 
   Short description of resume-generator, from its public README. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -31,16 +31,17 @@ The Python script runs LuaLaTeX and reads the page measurements back from its lo
 3. If nothing fits at the tightest layout, it stops and says about how many lines to cut.
 
 ```python title="build.py"
-def fit(typeface):
-    """Find the roomiest layout that fits on one page, then fill the page.
+def fit(doc, typeface):
+    """Find the roomiest layout that fits the page cap, then fill the pages.
 
-    Returns (font, margin, fill, free lines), or None and the log of the
-    tightest try when nothing fits.
+    Returns (font, margin, fill, free lines, pages), or None and the log of
+    the tightest try when nothing fits.
     """
     for font, margin in LAYOUTS:
-        pages, log = compile_once(typeface, font, margin)
-        if pages == 1:
-            return (font, margin, *fill_page(typeface, font, margin, log)), log
+        pages, log = compile_once(doc, typeface, font, margin)
+        if pages <= doc["cap"]:
+            fill, free = fill_page(doc, typeface, font, margin, log, pages)
+            return (font, margin, fill, free, pages), log
     return None, log
 ```
 
@@ -48,8 +49,8 @@ Spacing never moves a line break, so page height grows in a straight line with s
 
 ## How it checks the result
 
-Applicant tracking systems read a PDF's text layer. So each build extracts the text with `pdftotext` and confirms that every heading, entry, and bullet comes out whole and in reading order. It also notes bullets with a short last line and pages with more than 3 empty lines.
+Applicant tracking systems read a PDF's text layer. So when `pdftotext` is installed, each build extracts the text and confirms that every heading, entry, and bullet comes out whole and in reading order. It also notes bullets with a short last line and pages with more than 3 empty lines.
 
-The fonts ship with the project, so the PDF looks the same on every system. CI builds every example and fails if a PDF is not exactly one page.
+The fonts ship with the project, so the PDF looks the same on every system. Its CI checks that every example resume builds to exactly one page.
 
 The [resume on this site](/resume/viewer/) uses a JavaScript port of the same steps.

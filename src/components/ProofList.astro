@@ -5,12 +5,12 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 13 November, 2026
  *
  * The reports, posters, photos, and video listed for a project in resume-data.json.
  *
  * File Structure:
- * - Props: project slug, an optional file type to keep, and an optional figure number
+ * - Props: project slug, an optional file type or file URL to keep, and an optional figure number
  * - One ProofRenderer per file
  *
  * Where this file is used within the repository:
@@ -28,17 +28,18 @@ import { getProjectSlug, resume } from '../data/resume';
 interface Props {
     slug: string;
     only?: string;
+    url?: string;
     number?: number;
 }
 
-const { only, number } = Astro.props;
+const { only, url, number } = Astro.props;
 const project = resume.projects.find((candidate) => getProjectSlug(candidate) === Astro.props.slug);
 ---
 
 {project && project.proof.length > 0 && (
     <div class="es-proof-list not-content">
         {project.proof
-            .filter((proof) => !only || proof.type === only)
+            .filter((proof) => (!only || proof.type === only) && (!url || proof.url === url))
             .map((proof) => (
                 <ProofRenderer proof={proof} number={number} />
             ))}
