@@ -14,8 +14,11 @@
  * experience under the Teaching heading. The cv object sets the section order and titles, whether
  * the GPA prints, the categorized skills lines (cv.skills), and the coursework lines
  * (cv.coursework). The education entry's gpaScale, cvHonors, and cvScholarships are CV-only. A
- * project's cvSkills replaces its skills, as an experience's does. An entry's CV bullet list is
- * used when it has items, and its Resume list otherwise. Coursework prints by course name, with no
+ * project's cvSkills replaces its skills, as an experience's does. Company names link to the
+ * entry's companyUrl, the school to its url, and a project on the site links its title to its
+ * page there. An organization with "cvSection": "education" prints on the Organizations line in
+ * Education, and a cv.sections entry with "newPage": true starts on a new page. An entry's CV
+ * bullet list is used when it has items, and its Resume list otherwise. Coursework prints by course name, with no
  * course codes. A field with the wrong kind of value stops the build and names the field. Fitting
  * the pages happens in scripts/build-cv.js.
  *
@@ -55,6 +58,8 @@ const C_DATA_PATH = path.join(ROOT_DIR, 'information', 'resume-data.json');
 export const C_BUILD_DIR = path.join(ROOT_DIR, 'build', 'cv');
 
 const C_CV_VISIBILITY = ['All', 'Site', 'List', 'CV'];
+// Projects with these Visibility values have a page on the site that the CV title can link to.
+const C_SITE_VISIBILITY = ['All', 'Site'];
 
 /**
  * @brief Stops the build when a field has the wrong kind of value
@@ -357,6 +362,27 @@ function cvLine(left, right) {
 }
 
 /**
+ * @brief Renders text as an embedded link when a URL is given
+ * @param text Plain text
+ * @param url Link target, or a falsy value for plain text
+ * @return Escaped LaTeX, wrapped in \\href when url is set
+ */
+function linked(text, url) {
+    const escaped = escapeLatex(text);
+
+    return url ? `\\href{${escapeUrl(url)}}{${escaped}}` : escaped;
+}
+
+/**
+ * @brief Gets the organizations that print on the Education line instead of their own heading
+ * @param data Resume data
+ * @return CV-visible organizations with cvSection "education"
+ */
+function educationOrganizations(data) {
+    return onCv(data.organizations).filter((entry) => entry.cvSection === 'education');
+}
+
+/**
  * @brief Renders one experience entry
  * @param experience Experience entry
  * @return LaTeX for the entry, with no list when it has no bullets
@@ -365,7 +391,7 @@ function renderExperience(experience) {
     const skills = renderList(experience.cvSkills ?? experience.skills);
     const location = experience.location ? escapeLatex(experience.location) : '';
     const title = `\\textbf{${escapeLatex(cvTitle(experience))}}`;
-    const company = escapeLatex(cvCompany(experience));
+    const company = linked(cvCompany(experience), experience.companyUrl);
     const dates = escapeLatex(formatDateRange(experience.duration));
     const bullets = cvBullets(experience);
     // The location sits right-aligned under the dates. A role with a skills line puts it at the
@@ -389,15 +415,21 @@ function renderExperience(experience) {
 /**
  * @brief Renders one project entry
  * @param project Project entry
+ * @param website The site's address, for the project page link
  * @return LaTeX for the entry, with no list when it has no bullets
  */
-function renderProject(project) {
+function renderProject(project, website) {
     // A project with its own site shows that address, linked, in the title line, as in
     // "eeprep (eeprep.com)", instead of a GitHub link.
     const site = project.cvLink
         ? ` (\\href{${escapeUrl(project.cvLink)}}{${escapeLatex(shortUrl(project.cvLink))}})`
         : '';
-    const title = `\\textbf{${escapeLatex(cvTitle(project))}}${site}`;
+    // A project with a page on the site and no cvLink links its title to that page.
+    const page =
+        !project.cvLink && website && project.slug && C_SITE_VISIBILITY.includes(project.Visibility)
+            ? `${website.replace(/\/$/, '')}/projects/${project.slug}/`
+            : '';
+    const title = `\\textbf{${linked(cvTitle(project), page)}}${site}`;
     const repository =
         project.github && !project.cvLink ? `\\href{${escapeUrl(project.github)}}{GitHub}` : '';
     const label = joinParts(
@@ -445,10 +477,13 @@ function renderEducation(education, data) {
     const coursework = cvCourseGroups(education, data).map(
         ({ label, names }) => `\\textbf{${escapeLatex(label)}:} ${renderList(names)}`
     );
+    const organizations = educationOrganizations(data).map((entry) =>
+        linked(entry.cvTitle ?? entry.name, entry.url)
+    );
 
     return joinParts(
         [
-            cvLine(`\\textbf{${escapeLatex(education.institution)}}`, date),
+            cvLine(`\\textbf{${linked(education.institution, education.url)}}`, date),
             // The location sits right-aligned under the graduation date, as on every entry.
             cvLine(
                 joinParts([degree, gpa], ', '),
@@ -457,6 +492,7 @@ function renderEducation(education, data) {
             renderLabelledLine('Honors', education.cvHonors ?? education.honors),
             renderLabelledLine('Scholarships', education.cvScholarships ?? education.scholarships),
             ...coursework,
+            organizations.length > 0 ? `\\textbf{Organizations:} ${organizations.join(', ')}` : '',
         ],
         '\n\\par\\vspace{\\listitem}\n'
     );
@@ -506,7 +542,10 @@ const C_RENDERERS = {
         cvExperiences(data, 'experience').map(renderExperience).join('\n\\entrygap\n'),
     teaching: (data) =>
         cvExperiences(data, 'teaching').map(renderExperience).join('\n\\entrygap\n'),
-    projects: (data) => onCv(data.projects).map(renderProject).join('\n\\entrygap\n'),
+    projects: (data) =>
+        onCv(data.projects)
+            .map((project) => renderProject(project, data.personal.website))
+            .join('\n\\entrygap\n'),
     skills: (data) =>
         cvSkillGroups(data)
             .map(({ label, items }) => `\\textbf{${escapeLatex(label)}:} ${renderList(items)}`)
@@ -516,7 +555,11 @@ const C_RENDERERS = {
             .map((entry) => renderEducation(entry, data))
             .join('\n\\entrygap\n'),
     certifications: (data) => onCv(data.certifications).map(renderCertification).join(' \\\\\n'),
-    organizations: (data) => onCv(data.organizations).map(renderOrganization).join('\n'),
+    organizations: (data) =>
+        onCv(data.organizations)
+            .filter((entry) => entry.cvSection !== 'education')
+            .map(renderOrganization)
+            .join('\n'),
 };
 
 /**
@@ -549,7 +592,11 @@ function generateBody(data) {
     const sections = data.cv.sections
         .map((section) => ({ section, body: C_RENDERERS[section.id](data) }))
         .filter(({ body }) => body !== '')
-        .flatMap(({ section, body }) => [renderSectionTitle(section), body]);
+        .flatMap(({ section, body }) => [
+            ...(section.newPage === true ? ['\\clearpage'] : []),
+            renderSectionTitle(section),
+            body,
+        ]);
 
     return [
         `\\hypersetup{pdftitle={${name} - Curriculum Vitae}, pdfauthor={${name}}, pdfsubject={Curriculum Vitae}, pdfkeywords={${pdfKeywords}}}`,
@@ -600,10 +647,14 @@ export function expectedText(data) {
                 ...(entry.cvHonors ?? entry.honors ?? []),
                 ...(entry.cvScholarships ?? entry.scholarships ?? []),
                 ...cvCourseGroups(entry, data).flatMap(({ label, names }) => [label, ...names]),
+                ...educationOrganizations(data).map((org) => org.cvTitle ?? org.name),
             ]),
         certifications: () =>
             onCv(data.certifications).flatMap((entry) => [entry.name, entry.organization]),
-        organizations: () => onCv(data.organizations).map((entry) => entry.name),
+        organizations: () =>
+            onCv(data.organizations)
+                .filter((entry) => entry.cvSection !== 'education')
+                .map((entry) => entry.name),
     };
 
     return [

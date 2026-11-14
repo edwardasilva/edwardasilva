@@ -384,7 +384,13 @@ export default defineConfig({
                     ],
                 },
                 { label: 'Skills', link: '/skills/' },
-                { label: 'Resume', link: '/resume/viewer/' },
+                {
+                    label: 'Resume',
+                    items: [
+                        { label: 'Resume', link: '/resume/viewer/' },
+                        { label: 'CV', link: '/resume/cv/' },
+                    ],
+                },
             ],
         }),
     ],

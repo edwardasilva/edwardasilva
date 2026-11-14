@@ -52,6 +52,7 @@ const C_SECTION_PAGES = [
     ],
     ['Skills', '/skills/', 'Each skill, with the projects and courses that back it.'],
     ['Resume', resume.personal.resumePdfUrl, 'The one-page PDF resume.'],
+    ['CV', resume.personal.cvPdfUrl, 'The two-page PDF CV, for graduate applications.'],
 ] as const;
 
 /**
