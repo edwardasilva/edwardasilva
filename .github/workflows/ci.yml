@@ -18,8 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 # One job runs every check, so the information checkout and npm ci run once. A failed check
-# does not stop the others, so one run lists every problem. The protect-main ruleset requires
-# this job by its name, Checks, so keep the name.
+# does not stop the others, so one run lists every problem. The protect-main ruleset does not
+# require this job or any other status check.
 jobs:
   checks:
     name: Checks
@@ -34,8 +34,7 @@ jobs:
           persist-credentials: false
 
       # A pull request that changes only repo docs, such as README.md or CLAUDE.md, skips the
-      # type check, the figure check and the build. Lint, Prettier and Vale still run, and the
-      # Checks job still reports, so the protect-main ruleset is satisfied.
+      # type check, the figure check and the build. Lint, Prettier and Vale still run.
       - name: Find what the pull request changes
         id: scope
         run: |
