@@ -10,7 +10,7 @@ slug: projects/dsp-final
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 13 November, 2026
+  Last Update: 14 November, 2026
 
   Built from the EENG 411 report in src/assets/DSP and the project's Run.m and Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -30,7 +30,7 @@ An FFT finds the pitch by looking for the strongest frequency bin. Autocorrelati
 
 ## The signal chain
 
-Two files do most of the work. `Main.m` runs the test or live input, and `Run.m` does the calculation once per frame: filtering, decimation, both detectors, and the timing. The code isn't public because it was course or sponsor work.
+Two files do most of the work. `Main.m` runs the test or live input, and `Run.m` does the calculation once per frame: filtering, decimation, both detectors, and the timing. Both stay private as EENG 411 course work, so the snippets below are short excerpts from `Run.m`.
 
 Audio comes in at 48 kHz and goes through a cascaded Butterworth band-pass filter that keeps the vocal range. Decimation keeps every Nth sample, and two stages, by 3 and then by 2, bring the rate down to 8 kHz.
 
