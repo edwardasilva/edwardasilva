@@ -5,14 +5,13 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 13 November, 2026
+ * Last Update: 14 November, 2026
  *
- * Every project under the headings the home page uses, in the same order: selected work, then
- * more projects.
+ * Every project in one list, in order of importance: selected work, then more projects. Only the
+ * home page splits them under two headings.
  *
  * File Structure:
- * - Selected work
- * - More projects
+ * - One list of project cards
  *
  * Where this file is used within the repository:
  * - Route: /projects
@@ -29,13 +28,12 @@ import { getHomeProjectPages, getPageSlug } from '../data/projects';
 import { asSentence, resume } from '../data/resume';
 import { itemListSchema, jsonLdHeadTag } from '../data/structured-data';
 
-const selected = getHomeProjectPages('selected');
-const more = getHomeProjectPages('more');
+const projects = [...getHomeProjectPages('selected'), ...getHomeProjectPages('more')];
 const site = Astro.site ?? Astro.url;
 
 const schema = itemListSchema(
     'Projects',
-    [...selected, ...more].map(({ entry }) => ({
+    projects.map(({ entry }) => ({
         name: entry.data.title,
         path: `/projects/${getPageSlug(entry.id)}`,
     })),
@@ -55,9 +53,5 @@ const schema = itemListSchema(
         The <a href="/skills/">skills page</a> lists projects under the tools they used.
     </p>
 
-    <h2 id="selected">Selected work</h2>
-    <ProjectCards pages={selected} />
-
-    <h2 id="more">More projects</h2>
-    <ProjectCards pages={more} />
+    <ProjectCards pages={projects} />
 </StarlightPage>
