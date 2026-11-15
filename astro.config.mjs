@@ -232,7 +232,6 @@ export default defineConfig({
             title: C_RESUME.personal.name,
             description: /[.!?]$/.test(C_DESCRIPTION) ? C_DESCRIPTION : `${C_DESCRIPTION}.`,
             credits: false,
-            lastUpdated: true,
             favicon: '/favicon.svg',
             customCss: [
                 './src/styles/fonts.css',
@@ -331,7 +330,7 @@ export default defineConfig({
                     codeFontSize: '0.875rem',
                     codeLineHeight: '1.75',
                     uiFontFamily: 'var(--es-font-serif)',
-                    uiFontSize: '0.8125rem',
+                    uiFontSize: '0.875rem',
                     uiFontWeight: '400',
                     codePaddingBlock: '1.125rem',
                     codePaddingInline: '1.375rem',

@@ -7,12 +7,13 @@
  * Creation Date: 16 March, 2026
  * Last Update: 15 November, 2026
  *
- * Starlight previous and next links, then contact links and the all rights reserved line.
+ * Starlight previous and next links, then contact links, the site's one last-updated date, and the
+ * all rights reserved line.
  *
  * File Structure:
  * - Default footer
  * - Contact links
- * - License notice
+ * - Last-updated date and license notice
  *
  * Where this file is used within the repository:
  * - Starlight Footer override, set in astro.config.mjs
@@ -26,6 +27,7 @@
 import Default from '@astrojs/starlight/components/Footer.astro';
 import ExternalLink from './ExternalLink.astro';
 import { resume } from '../data/resume';
+import { siteUpdated, siteUpdatedText } from '../data/site-updated';
 
 const { email, linkedin, name } = resume.personal;
 ---
@@ -39,5 +41,8 @@ const { email, linkedin, name } = resume.personal;
         </ExternalLink>
         <a href="/skills/">Skills</a>
     </nav>
-    <p>Copyright {name}. All rights reserved.</p>
+    <p>
+        Last updated <time datetime={siteUpdated.toISOString()}>{siteUpdatedText}</time>. Copyright{' '}
+        {name}. All rights reserved.
+    </p>
 </div>
