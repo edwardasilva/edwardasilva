@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 14 November, 2026
+ * Last Update: 15 November, 2026
  *
  * Reads information/resume-data.json once, cleans it for the site, and exports what the pages render.
  * That file is the only source of the site's data, including the site-only fields and the site
@@ -220,6 +220,9 @@ function normalizeProject(project: Project): Project {
         figure: filledText(project.figure),
         figureAlt: filledText(project.figureAlt),
         team: filledText(project.team),
+        client: filledText(project.client),
+        sponsor: filledText(project.sponsor),
+        advisors: filledText(project.advisors),
         myPart: filledText(project.myPart),
         links: linkList(project.links),
     };

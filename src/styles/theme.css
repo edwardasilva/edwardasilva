@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 15 November, 2026
  *
  * Design tokens, the Starlight variable mapping, and base typography. The system is shared with
  * eeprep.com: Source Serif 4, Source Code Pro, one crimson accent, night navy in dark mode.
@@ -12,10 +12,10 @@
  * :root[data-theme='light'] as light.
  *
  * File Structure:
- * - Tokens: type, spacing, measure, radii
+ * - Tokens: the type scale, spacing, measure, radii
  * - Colors: light, then dark
  * - Starlight variable mapping
- * - Base typography, figures, equations, sidebar
+ * - Base typography, lists, tables, figures, equations, sidebar
  *
  * Where this file is used within the repository:
  * - Loaded through customCss in astro.config.mjs
@@ -33,17 +33,25 @@
     --es-font-mono:
         'Source Code Pro Variable', 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo,
         monospace;
+    /* The type scale. Every size on the site is one of these, so the same kind of text is the
+       same size on every page. h4 is also the card title and the wordmark. small is the facts
+       blocks, card text, and ledger details. meta is captions, the footer, legends, and controls.
+       eyebrow is figure numbers and small labels. */
     --es-text-h1: 3.5rem;
     --es-text-h2: 2.125rem;
     --es-text-h3: 1.5rem;
-    --es-text-h4: 1.1875rem;
     --es-text-lede: 1.4375rem;
-    --es-text-body: 1.0625rem;
-    --es-text-caption: 0.84375rem;
+    --es-text-h4: 1.375rem;
+    --es-text-body: 1rem;
+    --es-text-small: 0.9375rem;
+    --es-text-meta: 0.875rem;
     --es-text-eyebrow: 0.75rem;
     --es-text-code: 0.875rem;
     --es-text-eq: 1.12em;
     --es-lh-body: 1.7;
+    --es-lh-lede: 1.4;
+    --es-lh-small: 1.5;
+    --es-lh-title: 1.2;
     --es-lh-heading: 1.08;
     --es-track-h1: -0.025em;
     --es-space-1: 0.25rem;
@@ -55,6 +63,9 @@
     --es-space-7: 2.5rem;
     --es-space-8: 3rem;
     --es-measure: 40em;
+    /* The label column of the facts blocks and ledgers, and the indent of a list. */
+    --es-label-width: 5.5rem;
+    --es-list-indent: 1.125rem;
     /* Radii & borders */
     --es-radius-sm: 2px;
     --es-radius: 4px;
@@ -161,8 +172,15 @@
 :root[data-theme='light']:not([data-has-sidebar]) {
     --sl-content-width: 67.5rem;
 }
+
+/* A page with a sidebar has a column narrow enough to read, so text runs its full width and its
+   edges line up with the figures, tables, and cards. The wide home page keeps the measure. */
+:root[data-has-sidebar] {
+    --es-measure: none;
+}
 body {
     background: var(--es-paper);
+    font-size: var(--es-text-body);
     -webkit-font-smoothing: antialiased;
     font-feature-settings: 'cv11', 'ss01';
 }
@@ -177,7 +195,7 @@ h1#_top {
 h1#_top {
     font-size: clamp(2.5rem, 5vw, var(--es-text-h1));
     letter-spacing: var(--es-track-h1);
-    line-height: 1.02;
+    line-height: var(--es-lh-heading);
 }
 .sl-markdown-content h2 {
     font-size: var(--es-text-h2);
@@ -213,7 +231,41 @@ h1#_top {
 .sl-markdown-content code:not(pre code) {
     border-radius: var(--es-radius-sm);
     padding: 0.1em 0.35em;
-    font-size: 0.88em;
+    font-size: 0.875em;
+}
+
+/* Lists. The bullet sits on the text edge, so a list lines up with the paragraphs and the facts
+   block above it, and the text keeps a small indent. The native marker stays for screen readers,
+   which drop a list whose style is none, and is painted transparent. */
+.sl-markdown-content :is(ul, ol):not(:where(.not-content, .not-content *)) {
+    padding-inline-start: var(--es-list-indent);
+}
+.sl-markdown-content ul:not(:where(.not-content, .not-content *)) > li {
+    position: relative;
+}
+.sl-markdown-content ul:not(:where(.not-content, .not-content *)) > li::marker {
+    color: transparent;
+}
+.sl-markdown-content ul:not(:where(.not-content, .not-content *)) > li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: calc(-1 * var(--es-list-indent));
+    top: calc(var(--es-lh-body) * 0.5em - 0.15625rem);
+    width: 0.3125rem;
+    height: 0.3125rem;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+/* Tables fill the text column, with the same space above and below. */
+.sl-markdown-content table:not(:where(.not-content *)) {
+    display: table;
+    width: 100%;
+    margin-block: var(--es-space-5);
+    font-variant-numeric: tabular-nums;
+}
+.sl-markdown-content th:not(:where(.not-content *)) {
+    padding-top: 0;
 }
 figure.es-fig {
     margin: var(--es-space-7) 0 var(--es-space-2);
@@ -227,28 +279,26 @@ figure.es-fig {
     border: var(--es-border);
     border-radius: var(--es-radius);
 }
-figure.es-fig > :is(svg, img) {
+figure.es-fig > svg {
     display: block;
     width: 100%;
     max-width: 560px;
     height: auto;
     margin: 0 auto;
 }
-figure.es-fig.wide > :is(svg, img) {
-    max-width: none;
-}
 figure.es-fig figcaption {
     display: flex;
     gap: var(--es-space-3);
-    margin-top: 1.125rem;
-    padding-top: 0.875rem;
+    align-items: baseline;
+    margin-top: var(--es-space-4);
+    padding-top: var(--es-space-3);
     border-top: var(--es-border);
-    font-size: var(--es-text-caption);
-    line-height: 1.55;
+    font-size: var(--es-text-meta);
+    line-height: var(--es-lh-small);
     color: var(--es-ink-2);
 }
 figure.es-fig figcaption .es-fignum {
-    font: 600 var(--es-text-eyebrow)/1.9 var(--es-font-serif);
+    font: 600 var(--es-text-eyebrow) / var(--es-lh-small) var(--es-font-serif);
     color: var(--es-mute);
     white-space: nowrap;
 }
