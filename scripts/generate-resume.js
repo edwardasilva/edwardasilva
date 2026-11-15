@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 11 November, 2026
+ * Last Update: 14 November, 2026
  *
  * Turns resume-data.json into the LaTeX body of the resume, and into the list of text the finished
  * PDF has to contain. Only entries marked Visibility "All" reach the resume. A field with the wrong
@@ -228,7 +228,8 @@ function collectCourses(data) {
 /**
  * @brief Gets the coursework names for the resume
  * @param courses Courses marked for the resume
- * @return Display names, with both Signals and Systems courses merged into one
+ * @return Display names, with both Signals and Systems courses merged into one line under their
+ * transcript name, Information Systems Science I/II
  */
 function courseworkNames(courses) {
     const aliases = courses.map((course) => course.alias);
@@ -237,7 +238,7 @@ function courseworkNames(courses) {
         .filter((course) => !(mergeSignals && C_SIGNALS_ALIASES.includes(course.alias)))
         .map((course) => course.alias || course.name);
 
-    return mergeSignals ? ['Signals and Systems I/II', ...names] : names;
+    return mergeSignals ? ['Information Systems Science I/II', ...names] : names;
 }
 
 /**

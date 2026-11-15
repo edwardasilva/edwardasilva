@@ -61,7 +61,7 @@ We assumed a heavy load and traded time for safety. The specs were zero overshoo
 
 ### Rounding in the report
 
-Equation (7) in our report rounds these coefficients, and the rounding changes the zeros from complex to real. The model's numerator is $z^2 - 1.9986z + 0.9989$, and its discriminant is negative:
+I found that Equation (7) in our report rounds these coefficients, and the rounding changes the zeros from complex to real. The model's numerator is $z^2 - 1.9986z + 0.9989$, and its discriminant is negative:
 
 $$
 1.9986^2 - 4(0.9989) = -0.0012
@@ -148,7 +148,7 @@ State augmentation adds an integrated error state. That design needed anti-windu
 | Gain margin | Factor of 3.18, or 10.05 dB | Factor of 2.02, or 6.11 dB |
 | Phase margin | 36.9 degrees at 3.43 rad/s | 24.2 degrees at 5.09 rad/s |
 
-Our report labels the gain margins 3.18 and 2.02 dB, but our script computes `Kunst = 20*log10(gmr)`, so those two numbers are ratios. The table gives both forms.
+I found that our report labels the gain margins 3.18 and 2.02 dB, but our script computes `Kunst = 20*log10(gmr)`, so those two numbers are ratios. The table gives both forms.
 
 <Figure name="gantry/reference-scaling" number={6} alt="Reference-scaling response to a 2 meter pulse with a small step disturbance at 10 seconds. The load overshoots slightly and settles.">
   Reference scaling on a 2 m pulse, with a 0.1 step disturbance at 10 s. Redrawn from the Part 2 report, Fig. 3, so it follows the site theme.
