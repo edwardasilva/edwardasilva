@@ -434,7 +434,7 @@ a.external-link .es-ext-last::after {
     max-width: var(--es-measure);
     font-size: var(--es-text-lede);
     line-height: var(--es-lh-lede);
-    color: var(--es-ink-2);
+    color: var(--es-ink);
     font-variation-settings: 'opsz' 28;
 }
 .es-hero .es-lede {
@@ -445,7 +445,7 @@ a.external-link .es-ext-last::after {
     text-wrap: pretty;
     font-size: var(--es-text-lede);
     line-height: var(--es-lh-lede);
-    color: var(--es-ink-2);
+    color: var(--es-ink);
 }
 
 /* Every card figure has the same frame: the card's width, a 16:10 shape, and at most 12rem tall,
@@ -488,7 +488,7 @@ a.external-link .es-ext-last::after {
     mix-blend-mode: screen;
 }
 .es-card-dek {
-    color: var(--es-ink-2);
+    color: var(--es-ink);
     font-size: var(--es-text-small);
     line-height: var(--es-lh-small);
 }
@@ -586,7 +586,7 @@ a.external-link .es-ext-last::after {
 }
 
 .es-role-meta {
-    color: var(--es-ink-2);
+    color: var(--es-ink);
 }
 
 .es-skills {
@@ -697,7 +697,6 @@ a.external-link .es-ext-last::after {
 .es-course-body p {
     max-width: var(--es-measure);
     margin: 0;
-    color: var(--es-ink-2);
 }
 .es-course-body .es-facts {
     margin-top: var(--es-space-3);

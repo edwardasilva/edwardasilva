@@ -82,7 +82,11 @@
     --es-rule-2: #c4c8cf;
     --es-ink: #16233a;
     /* Three text roles: ink, ink-2 (secondary) and accent (current item and
-	   figures only). Silver is never text. Older names alias onto them. */
+	   figures only). Silver is never text. Older names alias onto them.
+	   Every sentence or line a reader reads is ink: paragraphs, ledes, list items
+	   and the dates in them, and card and course text. ink-2 is only for labels
+	   and metadata in their own column or at caption size: fact labels, the honors
+	   detail column, captions, figure numbers, the footer, and the table of contents. */
     --es-text: var(--es-ink);
     --es-ink-2: #424d63;
     --es-mute: var(--es-ink-2);
