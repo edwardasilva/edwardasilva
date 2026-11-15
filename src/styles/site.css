@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 15 November, 2026
  *
  * Header, cards, external link marks, page lists, the project facts block, figures, the live
  * figures, and the sidebar. Adapted from eeprep.com.
@@ -32,7 +32,7 @@
     min-width: 0;
 }
 .es-nav a {
-    font: 500 0.875rem/1 var(--es-font-sans);
+    font: 500 var(--es-text-meta) / 1 var(--es-font-sans);
     color: var(--es-ink);
     text-decoration: none;
     white-space: nowrap;
@@ -96,6 +96,19 @@
     }
 }
 
+/* Up to 64rem the search box is too narrow for its shortcut, and up to 55rem for its label too.
+   Either would spill over the theme toggle. A script shows the shortcut, hence !important. */
+@media (min-width: 50rem) and (max-width: 64rem) {
+    .header button[data-open-modal] > kbd {
+        display: none !important;
+    }
+}
+@media (min-width: 50rem) and (max-width: 55rem) {
+    .header button[data-open-modal] > span {
+        display: none;
+    }
+}
+
 /* Suggested pages in the search dialog, shown only while the query is empty. */
 .es-suggest {
     margin-top: 1rem;
@@ -105,7 +118,7 @@
 }
 .es-suggest p {
     margin: 0 0 0.5rem;
-    font: 600 0.75rem/1 var(--es-font-sans);
+    font: 600 var(--es-text-eyebrow) / 1 var(--es-font-sans);
     color: var(--es-ink-2);
 }
 .es-suggest ul {
@@ -135,35 +148,37 @@
     padding: 2.5rem 0 1rem;
     max-width: 46rem;
 }
+/* The size and line height come from the page title rule in theme.css, so the home page title
+   matches every other page title. */
 .es-hero h1 {
-    font-family: var(--es-font-serif);
-    font-weight: 500;
-    font-size: clamp(2.25rem, 4vw, 3.25rem);
-    line-height: 1.08;
-    letter-spacing: var(--es-track-h1);
-    color: var(--es-ink);
-    font-variation-settings: 'opsz' 72;
     margin: 0.75rem 0 1rem;
 }
 /* Starlight sets the shortcut in the UI font. The theme's code font is mono. */
 button[data-open-modal] kbd {
     font-family: var(--es-font-mono);
 }
+/* Project cards. The grid follows the width of the column it sits in, not the window, so the same
+   list fills its rows cleanly on the home page and in the narrower projects column: one card on a
+   phone, two across from 30rem, and three across from 48rem where the list asks for three. */
+.es-cards-frame {
+    container: es-cards / inline-size;
+    margin: var(--es-space-7) 0;
+}
 .es-cards {
-    list-style: none;
-    padding: 0;
-    margin: 2.5rem 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--es-space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
-/* Selected work on the home page has three cards: 1 column on phones, 3
-   across from 640 px. More projects keeps the auto-fit row above. */
-.es-cards--selected {
-    grid-template-columns: 1fr;
+@container es-cards (min-width: 30rem) {
+    .es-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
-@media (min-width: 40rem) {
-    .es-cards--selected {
+@container es-cards (min-width: 48rem) {
+    .es-cards--three {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
@@ -173,17 +188,16 @@ button[data-open-modal] kbd {
     margin-top: 0;
 }
 .es-cards a {
-    display: grid;
-    gap: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--es-space-2);
     height: 100%;
-    padding: 1.1rem 1.15rem 1.2rem;
+    padding: var(--es-space-4);
     border: var(--es-border);
     border-radius: var(--es-radius-lg);
     background: var(--es-surface);
     color: inherit;
     text-decoration: none;
-    grid-template-rows: auto auto 1fr;
-    align-content: start;
 }
 @media (hover: hover) {
     .es-cards a:hover {
@@ -191,12 +205,9 @@ button[data-open-modal] kbd {
     }
 }
 .es-cards strong {
-    font: 550 1.35rem/1.2 var(--es-font-serif);
+    margin-top: var(--es-space-2);
+    font: 550 var(--es-text-h4) / var(--es-lh-title) var(--es-font-serif);
     color: var(--es-ink);
-}
-.es-cards span:last-child {
-    color: var(--es-ink-2);
-    font-size: 0.9375rem;
 }
 /* Phone header: two fixed rows inside Starlight's header, so nothing spills
    onto the page or the "On this page" bar below it.
@@ -281,10 +292,6 @@ button[data-open-modal] kbd {
     .es-hero {
         padding-top: 1.5rem;
     }
-    .es-hero h1 {
-        font-size: clamp(1.875rem, 5vw + 0.75rem, 2.25rem);
-        line-height: 1.12;
-    }
 }
 
 /* Small phones: one size down and no gap, so all six section links fit from 360px. Below
@@ -297,7 +304,7 @@ button[data-open-modal] kbd {
     }
     .es-nav a {
         min-width: 0;
-        font-size: 0.75rem;
+        font-size: var(--es-text-eyebrow);
     }
 }
 
@@ -426,30 +433,45 @@ a.external-link .es-ext-last::after {
 .es-lede {
     max-width: var(--es-measure);
     font-size: var(--es-text-lede);
-    line-height: 1.4;
+    line-height: var(--es-lh-lede);
     color: var(--es-ink-2);
     font-variation-settings: 'opsz' 28;
 }
 .es-hero .es-lede {
     margin-top: 0;
 }
-
-.es-cards img {
-    display: block;
-    width: 100%;
-    height: 10rem;
-    object-fit: contain;
+/* The 404 page's line under the title is Starlight's hero tagline. It reads as the home page lede. */
+.hero .tagline {
+    text-wrap: pretty;
+    font-size: var(--es-text-lede);
+    line-height: var(--es-lh-lede);
+    color: var(--es-ink-2);
 }
-/* An SVG plot has a dark copy and sits straight on the card. A photo fills the frame. A drawing on
-   white paper blends into the card, and inverts to light lines in dark mode. */
+
+/* Every card figure has the same frame: the card's width, a 16:10 shape, and at most 12rem tall,
+   so titles line up across a row. An SVG plot has a dark copy and sits straight on the card, inset
+   by the frame's padding. A photo fills the frame. A drawing on white paper blends into the card,
+   and inverts to light lines in dark mode. No image is stretched: plots fit and photos crop. */
 .es-card-figure {
     display: block;
-    padding: 0.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    max-height: 12rem;
+    padding: var(--es-space-2);
     border-radius: var(--es-radius);
+    overflow: hidden;
+}
+.es-card-figure :is(picture, img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.es-card-figure img {
+    object-fit: contain;
 }
 .es-card-photo {
     padding: 0;
-    overflow: hidden;
 }
 .es-card-photo img {
     object-fit: cover;
@@ -467,21 +489,64 @@ a.external-link .es-ext-last::after {
 }
 .es-card-dek {
     color: var(--es-ink-2);
-    font-size: 0.9375rem;
-    line-height: 1.5;
+    font-size: var(--es-text-small);
+    line-height: var(--es-lh-small);
 }
 
+/* Facts blocks. Each fact is a label and a value, with every label in one column. */
 .es-facts {
     display: grid;
-    gap: 0.375rem;
+    gap: var(--es-space-2);
     margin: var(--es-space-5) 0 0;
-    font-size: 0.9375rem;
-    line-height: 1.5;
+    font-size: var(--es-text-small);
+    line-height: var(--es-lh-small);
 }
 .es-facts > div {
     display: grid;
-    grid-template-columns: 5.5rem minmax(0, 1fr);
+    grid-template-columns: var(--es-label-width) minmax(0, 1fr);
     gap: var(--es-space-3);
+}
+
+/* Under a project or role title the short facts sit in two columns once the column has room, and
+   the long ones span both, so every value starts on one of two lines. A role reads Role and Links
+   on the left, When and Where on the right, then Skills across. On a phone it is one column, in
+   the order the markup gives. */
+.es-facts-frame {
+    container: es-facts / inline-size;
+    margin: var(--es-space-5) 0 0;
+}
+.es-facts-frame > .es-facts {
+    margin: 0;
+}
+@container es-facts (min-width: 36rem) {
+    .es-facts-split {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: var(--es-space-6);
+    }
+    .es-facts-split > .es-facts-wide {
+        grid-column: 1 / -1;
+    }
+    .es-facts-role {
+        grid-template-areas:
+            'role when'
+            'links where'
+            'skills skills';
+    }
+    .es-facts-role > [data-fact='role'] {
+        grid-area: role;
+    }
+    .es-facts-role > [data-fact='when'] {
+        grid-area: when;
+    }
+    .es-facts-role > [data-fact='where'] {
+        grid-area: where;
+    }
+    .es-facts-role > [data-fact='links'] {
+        grid-area: links;
+    }
+    .es-facts-role > [data-fact='skills'] {
+        grid-area: skills;
+    }
 }
 .es-facts dt {
     font-weight: 400;
@@ -539,8 +604,8 @@ a.external-link .es-ext-last::after {
     margin: var(--es-space-1) 0 0;
     padding: 0;
     list-style: none;
-    font-size: 0.9375rem;
-    line-height: 1.5;
+    font-size: var(--es-text-small);
+    line-height: var(--es-lh-small);
 }
 .es-skills ul a {
     display: inline-block;
@@ -566,7 +631,7 @@ a.external-link .es-ext-last::after {
 }
 .es-course summary {
     display: grid;
-    grid-template-columns: 5.5rem minmax(0, 1fr) 0.75rem;
+    grid-template-columns: var(--es-label-width) minmax(0, 1fr) 0.75rem;
     gap: var(--es-space-3);
     align-items: baseline;
     padding-block: var(--es-space-2);
@@ -582,13 +647,13 @@ a.external-link .es-ext-last::after {
     padding: 0;
     background: none;
     color: var(--es-ink-2);
-    font: 0.8125rem/1.5 var(--es-font-mono);
+    font: var(--es-text-code) / var(--es-lh-small) var(--es-font-mono);
     white-space: nowrap;
 }
 .es-course-name,
 .es-ledger-name {
     font-weight: 500;
-    line-height: 1.45;
+    line-height: var(--es-lh-small);
 }
 /* Chevron at the end of the row. It points down when closed and up when open. */
 .es-course summary::after {
@@ -624,9 +689,10 @@ a.external-link .es-ext-last::after {
 }
 /* The open course lines up under the name, so the codes stay a clean column. */
 .es-course-body {
-    padding: 0 calc(0.75rem + var(--es-space-3)) var(--es-space-4) calc(5.5rem + var(--es-space-3));
-    font-size: 0.9375rem;
-    line-height: 1.6;
+    padding: 0 calc(0.75rem + var(--es-space-3)) var(--es-space-4)
+        calc(var(--es-label-width) + var(--es-space-3));
+    font-size: var(--es-text-small);
+    line-height: var(--es-lh-small);
 }
 .es-course-body p {
     max-width: var(--es-measure);
@@ -658,12 +724,12 @@ a.external-link .es-ext-last::after {
     padding-block: var(--es-space-2);
 }
 .es-ledger-coded {
-    grid-template-columns: 5.5rem minmax(0, 1fr) min(15rem, 35%);
+    grid-template-columns: var(--es-label-width) minmax(0, 1fr) min(15rem, 35%);
 }
 .es-ledger-detail {
     color: var(--es-ink-2);
-    font-size: 0.9375rem;
-    line-height: 1.5;
+    font-size: var(--es-text-small);
+    line-height: var(--es-lh-small);
 }
 .es-ledger-row:target .es-ledger-name,
 .es-ledger-row:target .es-ledger-name a {
@@ -732,15 +798,16 @@ a.external-link .es-ext-last::after {
 .es-proof-media figcaption {
     display: flex;
     gap: var(--es-space-3);
-    margin-top: 1.125rem;
-    padding-top: 0.875rem;
+    align-items: baseline;
+    margin-top: var(--es-space-4);
+    padding-top: var(--es-space-3);
     border-top: var(--es-border);
-    font-size: var(--es-text-caption);
-    line-height: 1.55;
+    font-size: var(--es-text-meta);
+    line-height: var(--es-lh-small);
     color: var(--es-ink-2);
 }
 .es-proof-media figcaption .es-fignum {
-    font: 600 var(--es-text-eyebrow)/1.9 var(--es-font-serif);
+    font: 600 var(--es-text-eyebrow) / var(--es-lh-small) var(--es-font-serif);
     color: var(--es-mute);
     white-space: nowrap;
 }
@@ -751,20 +818,30 @@ a.external-link .es-ext-last::after {
     }
 }
 
-figure.es-fig-plate > img {
-    padding: 0.75rem;
-    border-radius: var(--es-radius);
-    background: var(--es-plate);
+/* A raster figure comes through Picture, so its img sits inside a picture element. Both forms
+   take the same rules: centered, at most 640px wide, 320px when narrow, and on the white plate
+   when the figure has one. Figure.astro sets --es-fig-px to a raster's own pixel width, so a small
+   drawing such as the V2 section stays sharp instead of being scaled up. */
+figure.es-fig > picture {
+    display: block;
 }
-figure.es-fig > img {
+figure.es-fig > img,
+figure.es-fig > picture > img {
     display: block;
     width: 100%;
-    max-width: 640px;
+    max-width: min(640px, var(--es-fig-px, 640px));
     height: auto;
     margin: 0 auto;
 }
-figure.es-fig-narrow > img {
-    max-width: 320px;
+figure.es-fig-plate > img,
+figure.es-fig-plate > picture > img {
+    padding: var(--es-space-3);
+    border-radius: var(--es-radius);
+    background: var(--es-plate);
+}
+figure.es-fig-narrow > img,
+figure.es-fig-narrow > picture > img {
+    max-width: min(320px, var(--es-fig-px, 320px));
 }
 /* A plot with a dark copy carries both images, one per theme. Starlight's own light: and dark:
    utilities sit in a layer, and the unlayered figure rules above would beat them, so the pair is
@@ -782,7 +859,8 @@ figure.es-fig-narrow > img {
     margin-top: var(--es-space-6);
     padding-top: var(--es-space-4);
     border-top: var(--es-border);
-    font-size: 0.875rem;
+    font-size: var(--es-text-meta);
+    line-height: var(--es-lh-small);
     color: var(--es-ink-2);
 }
 .es-footer nav {
@@ -831,7 +909,7 @@ figure.es-fig-narrow > img {
     background: transparent;
     color: var(--es-ink);
     font: inherit;
-    font-size: 0.875rem;
+    font-size: var(--es-text-meta);
     cursor: pointer;
 }
 @media (hover: hover) {
@@ -844,7 +922,7 @@ figure.es-fig-narrow > img {
     display: flex;
     gap: var(--es-space-2);
     align-items: center;
-    font-size: 0.9375rem;
+    font-size: var(--es-text-small);
 }
 .es-live-legend {
     display: flex;
@@ -853,7 +931,7 @@ figure.es-fig-narrow > img {
     margin: 0 0 var(--es-space-2);
     padding: 0;
     list-style: none;
-    font-size: 0.875rem;
+    font-size: var(--es-text-meta);
     color: var(--es-ink-2);
 }
 .es-live-legend li {
@@ -923,8 +1001,8 @@ figure.es-fig-narrow > img {
     border-radius: var(--es-radius);
     background: var(--es-surface);
     color: var(--es-ink);
-    font-size: 0.8125rem;
-    line-height: 1.35;
+    font-size: var(--es-text-meta);
+    line-height: var(--es-lh-small);
     pointer-events: none;
 }
 .es-live-read {
@@ -952,8 +1030,8 @@ figure.es-fig-narrow > img {
 
 /* Sidebar. Every top-level row has one size and weight, and every nested row has another. */
 :root {
-    --es-side-top-size: 1rem;
-    --es-side-sub-size: 0.875rem;
+    --es-side-top-size: var(--es-text-body);
+    --es-side-sub-size: var(--es-text-meta);
 }
 @media (max-width: 50rem) {
     :root {
@@ -1067,8 +1145,9 @@ details[open] > summary .es-side-caret {
     border: var(--es-border);
     background: var(--es-plate);
 }
-figure.es-fig-wide > img {
-    max-width: none;
+figure.es-fig-wide > img,
+figure.es-fig-wide > picture > img {
+    max-width: var(--es-fig-px, none);
 }
 .es-band {
     fill: var(--es-ink);
@@ -1083,7 +1162,7 @@ figure.es-fig-wide > img {
 }
 .es-live-title {
     margin: var(--es-space-4) 0 var(--es-space-1);
-    font-size: 0.875rem;
+    font-size: var(--es-text-meta);
     color: var(--es-ink-2);
 }
 
@@ -1099,7 +1178,7 @@ figure.es-fig-wide > img {
 /* Phones: tables shrink a step so four columns fit. */
 @media (max-width: 30rem) {
     .sl-markdown-content table {
-        font-size: 0.8125rem;
+        font-size: var(--es-text-meta);
     }
     .sl-markdown-content :is(th, td) {
         padding-inline-end: 0.5rem;

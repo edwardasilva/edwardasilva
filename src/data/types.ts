@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 14 November, 2026
+ * Last Update: 15 November, 2026
  *
  * Types for the normalized resume data the site renders. Field names match
  * resume-data.json, and fields only the resume generator reads are left out.
@@ -137,6 +137,9 @@ export interface Project extends WorkEntry {
     figure?: string;
     figureAlt?: string;
     team?: string;
+    client?: string;
+    sponsor?: string;
+    advisors?: string;
     myPart?: string;
     links: ProjectLink[];
 }
