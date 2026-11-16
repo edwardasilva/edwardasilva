@@ -47,6 +47,12 @@ const project = isHome ? undefined : getPageProject(route.entry.id);
 const cardSlug = isHome ? 'home' : project?.kind ? pathname.split('/').at(-1) : undefined;
 const cardImage = cardSlug ? new URL(`/og/${cardSlug}.png`, site).href : undefined;
 const isNotFound = route.entry.id === '404';
+// A project page gets a TechArticle with its card and skills. Checking both narrows project and
+// cardImage, since only a project page with a card has both.
+const article =
+    project?.kind && cardImage
+        ? { image: cardImage, keywords: [...project.skills, ...(project.siteSkills ?? [])] }
+        : undefined;
 
 // Prefetch a same-site page when the reader starts to hover on its link, so the next page opens
 // faster. Files, the resume viewer, new-tab links, and downloads are left alone. Browsers without
@@ -94,15 +100,13 @@ route.head.push(
 );
 
 if (cardImage) {
-    const image = cardImage;
-
     route.head.push(
-        { tag: 'meta', attrs: { property: 'og:image', content: image } },
+        { tag: 'meta', attrs: { property: 'og:image', content: cardImage } },
         { tag: 'meta', attrs: { property: 'og:image:alt', content: title } },
         { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
         { tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
         { tag: 'meta', attrs: { property: 'og:image:type', content: 'image/png' } },
-        { tag: 'meta', attrs: { name: 'twitter:image', content: image } }
+        { tag: 'meta', attrs: { name: 'twitter:image', content: cardImage } }
     );
 }
 
@@ -126,13 +130,7 @@ const breadcrumbs = isNotFound ? undefined : breadcrumbSchema(pathname, site, ti
                 title,
                 description: pageDescription,
                 isHome,
-                article:
-                    project?.kind && cardImage
-                        ? {
-                              image: cardImage,
-                              keywords: [...project.skills, ...(project.siteSkills ?? [])],
-                          }
-                        : undefined,
+                article,
             },
             site
         )}

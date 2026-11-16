@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 14 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Turns resume-data.json into the LaTeX body of the resume, and into the list of text the finished
  * PDF has to contain. Only entries marked Visibility "All" reach the resume. A field with the wrong
@@ -13,7 +13,7 @@
  *
  * File Structure:
  * - Global Constants: file paths and month abbreviations
- * - Text helpers: LaTeX escaping and date formatting
+ * - Text helpers: LaTeX escaping, links, and date formatting
  * - Validation: names the first field that cannot be rendered
  * - Data helpers: resume-visible courses, skills, and profile text
  * - Rendering: LaTeX for each section and the full body
@@ -97,6 +97,18 @@ export function escapeLatex(text) {
  */
 export function escapeUrl(url) {
     return String(url).replace(/[\\#%{}]/g, (character) => `\\${character}`);
+}
+
+/**
+ * @brief Renders text as an embedded link when a URL is given
+ * @param text Plain text
+ * @param url Link target, or a falsy value for plain text
+ * @return Escaped LaTeX, wrapped in \\href when url is set
+ */
+export function linked(text, url) {
+    const escaped = escapeLatex(text);
+
+    return url ? `\\href{${escapeUrl(url)}}{${escaped}}` : escaped;
 }
 
 /**
@@ -303,7 +315,7 @@ function renderExperience(experience) {
  * @return LaTeX for the entry
  */
 function renderProject(project) {
-    const repository = project.github ? `\\href{${escapeUrl(project.github)}}{GitHub}` : '';
+    const repository = project.github ? linked('GitHub', project.github) : '';
 
     const label = `\\textbf{${escapeLatex(project.title)}}, ${renderSkills(project.skills)} ${repository}`;
 
@@ -343,19 +355,19 @@ export function renderContact({ linkedin, website, email, phone }) {
     const parts = [];
 
     if (linkedin) {
-        parts.push(`\\href{${escapeUrl(linkedin)}}{${escapeLatex(shortUrl(linkedin))}}`);
+        parts.push(linked(shortUrl(linkedin), linkedin));
     }
 
     if (website) {
-        parts.push(`\\href{${escapeUrl(website)}}{${escapeLatex(shortUrl(website))}}`);
+        parts.push(linked(shortUrl(website), website));
     }
 
     if (email) {
-        parts.push(`\\href{mailto:${escapeUrl(email)}}{${escapeLatex(email)}}`);
+        parts.push(linked(email, `mailto:${email}`));
     }
 
     if (C_SHOW_PHONE && phone) {
-        parts.push(`\\href{tel:${phone.replace(/\D/g, '')}}{${escapeLatex(phone)}}`);
+        parts.push(linked(phone, `tel:${phone.replace(/\D/g, '')}`));
     }
 
     return parts.join(' | ');

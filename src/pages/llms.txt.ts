@@ -14,7 +14,8 @@
  * - C_SECTION_PAGES: the data pages, in sidebar order
  * - linkLine: one Markdown list item. Every list item links somewhere, as the format asks, so an
  *   Other experience line links to that section of the experience page
- * - GET: builds the file at build time
+ * - GET: builds the file at build time. projectLines and experienceLine build the repeated
+ *   project and experience list items
  *
  * Where this file is used within the repository:
  * - Linked from src/components/Head.astro and public/robots.txt
@@ -35,7 +36,7 @@ import {
     resume,
     visibleExperiences,
 } from '../data/resume';
-import type { HomeGroup } from '../data/types';
+import type { Experience, HomeGroup } from '../data/types';
 
 const C_SECTION_PAGES = [
     ...(hasAboutContent
@@ -86,6 +87,8 @@ export const GET: APIRoute = async ({ site }) => {
         getHomeProjectPages(group).map(({ entry, href }) =>
             linkLine(entry.data.title, href, origin, entry.data.description)
         );
+    const experienceLine = (experience: Experience, href: string) =>
+        linkLine(`${experience.title}, ${experience.company}`, href, origin, experience.duration);
 
     const lines = [
         `# ${resume.personal.name}`,
@@ -106,12 +109,7 @@ export const GET: APIRoute = async ({ site }) => {
         '## Experience',
         '',
         ...visibleExperiences.map((experience) =>
-            linkLine(
-                `${experience.title}, ${experience.company}`,
-                getExperienceHref(experience),
-                origin,
-                experience.duration
-            )
+            experienceLine(experience, getExperienceHref(experience))
         ),
         ...(otherExperiences.length > 0
             ? [
@@ -119,12 +117,7 @@ export const GET: APIRoute = async ({ site }) => {
                   '## Other experience',
                   '',
                   ...otherExperiences.map((experience) =>
-                      linkLine(
-                          `${experience.title}, ${experience.company}`,
-                          '/experiences/#other-experience',
-                          origin,
-                          experience.duration
-                      )
+                      experienceLine(experience, '/experiences/#other-experience')
                   ),
               ]
             : []),

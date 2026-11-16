@@ -5,8 +5,9 @@
 # Creation Date: 08 November, 2026
 # Last Update: 16 November, 2026
 #
-# Checks a pull request into main: lint, format, Vale, type check, dark figures, build, and
-# internal links. The workflow is disabled, so these checks run locally before each merge.
+# Checks a pull request into main: lint, theme colour copies, format, Vale, type check, dark
+# figures, build, internal links, and that the Vale rules still match eeprep's. The workflow is
+# disabled, so these checks run locally before each merge.
 #
 # Usage:
 # Runs on pull requests into main while the workflow is enabled.
@@ -84,6 +85,12 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run lint
 
+      # Files that cannot read theme.css keep their own copy of its colours, and each must be one
+      # of the palette's.
+      - name: Theme colour copies
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run check:theme
+
       - name: Format (Prettier)
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: npm run format
@@ -139,3 +146,18 @@ jobs:
       - name: Date ranges in the build
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: npm run check:dates
+
+      # .lint/vale/styles/Eeprep is a copy of eeprep's rules, and this fails when the two differ. It
+      # runs last so the eeprep checkout is not in the tree while ESLint and Prettier walk it.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: ${{ !cancelled() }}
+        with:
+          repository: edwardasilva/eeprep
+          path: eeprep
+          sparse-checkout: .github/vale
+          persist-credentials: false
+      - name: Vale rules match eeprep
+        if: ${{ !cancelled() }}
+        env:
+          EEPREP_DIR: eeprep
+        run: node scripts/sync-vale-style.js --check

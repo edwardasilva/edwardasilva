@@ -25,6 +25,7 @@
 
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import PdfPages from '../../components/PdfPages.astro';
+import { pdfAlternate, pdfFileName } from '../../lib/pdf-link';
 import { asSentence, resume } from '../../data/resume';
 
 const { cvPdfUrl } = resume.personal;
@@ -33,8 +34,6 @@ const page = resume.site.pages.cv;
 if (!cvPdfUrl || !page) {
     throw new Error('[ERROR] resume-data.json needs personal.cvPdfUrl and site.pages.cv');
 }
-
-const pdfName = cvPdfUrl.split('/').at(-1);
 ---
 
 <StarlightPage
@@ -43,21 +42,11 @@ const pdfName = cvPdfUrl.split('/').at(-1);
         description: asSentence(page.description),
         tableOfContents: false,
         pagefind: false,
-        head: [
-            {
-                tag: 'link',
-                attrs: {
-                    rel: 'alternate',
-                    type: 'application/pdf',
-                    href: cvPdfUrl,
-                    title: 'CV (PDF)',
-                },
-            },
-        ],
+        head: [pdfAlternate(cvPdfUrl, 'CV')],
     }}
 >
     <p>
-        <a href={cvPdfUrl} download={pdfName}>
+        <a href={cvPdfUrl} download={pdfFileName(cvPdfUrl)}>
             Download the PDF
         </a>
         . The two-page CV is built from the same data file as the resume, with the same page-fitting

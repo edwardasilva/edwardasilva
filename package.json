@@ -15,6 +15,7 @@
     "icons": "node scripts/render-icons.js",
     "check:links": "node scripts/check-links.js",
     "check:dates": "node scripts/check-dates.js",
+    "check:theme": "node scripts/check-theme.js",
     "check:external-links": "node scripts/check-external-links.js",
     "prose": "vale --config .lint/vale/.vale.ini src/content/docs",
     "prose:sync": "node scripts/sync-vale-style.js",

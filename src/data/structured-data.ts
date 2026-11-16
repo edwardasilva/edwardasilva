@@ -10,6 +10,7 @@
  * employer, school, and topics come from resume-data.json.
  *
  * File Structure:
+ * - personId and websiteId: the JSON-LD ids the other objects point to
  * - personSchema: the person the site belongs to, shared by every page
  * - pageSchema: the page, the person, and on a project page the write-up, as one graph
  * - websiteSchema: the site itself
@@ -34,6 +35,24 @@ const [C_GIVEN_NAME, ...C_FAMILY_NAMES] = name.split(' ');
 const C_NO_PAGE = new Set(['resume']);
 
 /**
+ * @brief Gets the JSON-LD id of the person the site belongs to
+ * @param site Site origin
+ * @return The id, the home page URL with #person
+ */
+function personId(site: URL) {
+    return new URL('/#person', site).href;
+}
+
+/**
+ * @brief Gets the JSON-LD id of the site itself
+ * @param site Site origin
+ * @return The id, the home page URL with #website
+ */
+function websiteId(site: URL) {
+    return new URL('/#website', site).href;
+}
+
+/**
  * @brief Builds the person the site belongs to
  * @param site Site origin
  * @return Person schema, with the job, school, topics, and profiles from resume-data.json
@@ -41,7 +60,7 @@ const C_NO_PAGE = new Set(['resume']);
 function personSchema(site: URL) {
     return {
         '@type': 'Person',
-        '@id': new URL('/#person', site).href,
+        '@id': personId(site),
         name,
         givenName: C_GIVEN_NAME,
         familyName: C_FAMILY_NAMES.join(' '),
@@ -88,8 +107,8 @@ export function pageSchema(
     },
     site: URL
 ) {
-    const person = { '@id': new URL('/#person', site).href };
-    const website = { '@id': new URL('/#website', site).href };
+    const personRef = { '@id': personId(site) };
+    const websiteRef = { '@id': websiteId(site) };
     const articleId = `${page.url}#article`;
     const graph: object[] = [
         {
@@ -99,10 +118,10 @@ export function pageSchema(
             name: page.title,
             description: page.description,
             inLanguage: 'en',
-            isPartOf: website,
+            isPartOf: websiteRef,
             ...(page.isHome
-                ? { mainEntity: person }
-                : { author: person, ...(page.article && { mainEntity: { '@id': articleId } }) }),
+                ? { mainEntity: personRef }
+                : { author: personRef, ...(page.article && { mainEntity: { '@id': articleId } }) }),
         },
         personSchema(site),
     ];
@@ -116,8 +135,8 @@ export function pageSchema(
             url: page.url,
             image: page.article.image,
             inLanguage: 'en',
-            author: person,
-            isPartOf: website,
+            author: personRef,
+            isPartOf: websiteRef,
             mainEntityOfPage: { '@id': page.url },
             ...(page.article.keywords.length > 0 && { keywords: page.article.keywords.join(', ') }),
         });
@@ -135,12 +154,12 @@ export function websiteSchema(site: URL) {
     return {
         '@context': 'https://schema.org',
         '@type': 'WebSite',
-        '@id': new URL('/#website', site).href,
+        '@id': websiteId(site),
         name: `${name} Portfolio`,
         url: website,
         description: asSentence(resume.site.description),
         inLanguage: 'en',
-        publisher: { '@id': new URL('/#person', site).href },
+        publisher: { '@id': personId(site) },
     };
 }
 

@@ -584,10 +584,6 @@ a.external-link .es-ext-last::after {
     }
 }
 
-.es-role-meta {
-    color: var(--es-ink);
-}
-
 .es-skills {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
@@ -793,24 +789,10 @@ a.external-link .es-ext-last::after {
 .es-proof-media {
     container: es-proof-media / inline-size;
 }
-.es-proof-media figcaption {
-    display: flex;
-    gap: var(--es-space-3);
-    align-items: baseline;
-    margin-top: var(--es-space-4);
-    padding-top: var(--es-space-3);
-    border-top: var(--es-border);
-    font-size: var(--es-text-meta);
-    line-height: var(--es-lh-small);
-    color: var(--es-ink-2);
-}
-.es-proof-media figcaption .es-fignum {
-    font: 600 var(--es-text-eyebrow) / var(--es-lh-small) var(--es-font-serif);
-    color: var(--es-mute);
-    white-space: nowrap;
-}
+/* The caption shares figure.es-fig's rule in theme.css. The figure tag here gives this selector
+   that rule's specificity, so the narrow layout still wins. */
 @container es-proof-media (max-width: 25rem) {
-    .es-proof-media figcaption {
+    figure.es-proof-media figcaption {
         flex-direction: column;
         gap: 0.25rem;
     }

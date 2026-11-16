@@ -4,14 +4,14 @@
  *
  * Author: Edward Silva
  * Creation Date: 14 April, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Defines repository linting rules for JavaScript, TypeScript, and Astro files.
  *
  * File Structure:
  * - Imports
  * - Ignored paths
- * - Recommended rule sets and Node globals for scripts
+ * - Recommended rule sets, Node globals for scripts, and browser globals for public/scripts
  *
  * Where this file is used within the repository:
  * - Invoked by npm run lint and npm run lint:fix via --config .lint/eslint.config.js
@@ -54,6 +54,12 @@ export default tseslint.config(
         languageOptions: {
             globals: globals.node,
             sourceType: 'module',
+        },
+    },
+    {
+        files: ['public/scripts/**/*.mjs'],
+        languageOptions: {
+            globals: globals.browser,
         },
     }
 );

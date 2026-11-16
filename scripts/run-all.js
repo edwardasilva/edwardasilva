@@ -4,10 +4,10 @@
  *
  * Author: Edward Silva
  * Creation Date: 06 August, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Runs the full local pipeline in order and stops at the first failure: lint and format fixes,
- * then the production build. Can then start the dev server.
+ * the theme colour check, then the production build. Can then start the dev server.
  *
  * File Structure:
  * - Global Constants: repository root, pipeline steps
@@ -18,7 +18,7 @@
  * - Invoked via npm run all
  *
  * Usage:
- * $ `npm run all` : Runs code clean/format, then the project build
+ * $ `npm run all` : Runs code clean/format and the theme colour check, then the project build
  * $ `npm run all -- --dev` : Runs the same pipeline, then launches the local dev server
  *
  * Copyright (c) 2026 Edward Silva. All rights reserved.
@@ -29,7 +29,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const C_STEPS = ['npm run clean:code', 'npm run build'];
+const C_STEPS = ['npm run clean:code', 'npm run check:theme', 'npm run build'];
 
 const C_START_DEV = process.argv.includes('--dev');
 
@@ -50,7 +50,7 @@ function runStep(command) {
 }
 
 C_STEPS.forEach(runStep);
-console.log('\n[SUCCESS] Lint, format, and build steps completed.');
+console.log('\n[SUCCESS] Lint, format, theme check, and build steps completed.');
 
 if (C_START_DEV) {
     runStep('npm run dev');

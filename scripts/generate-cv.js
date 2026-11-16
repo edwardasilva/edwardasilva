@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 11 November, 2026
- * Last Update: 14 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Turns resume-data.json into the LaTeX body of the two-page CV, and into the list of text the
  * finished PDF has to contain. Entries with Visibility "All", "Site", "List", or "CV" reach the CV
@@ -46,8 +46,8 @@ import { fileURLToPath } from 'node:url';
 import {
     C_SHOW_PHONE,
     escapeLatex,
-    escapeUrl,
     formatDateRange,
+    linked,
     renderBullets,
     renderContact,
     shortUrl,
@@ -374,24 +374,21 @@ function cvLine(left, right) {
 }
 
 /**
- * @brief Renders text as an embedded link when a URL is given
- * @param text Plain text
- * @param url Link target, or a falsy value for plain text
- * @return Escaped LaTeX, wrapped in \\href when url is set
- */
-function linked(text, url) {
-    const escaped = escapeLatex(text);
-
-    return url ? `\\href{${escapeUrl(url)}}{${escaped}}` : escaped;
-}
-
-/**
  * @brief Gets the organizations that print on the Education line instead of their own heading
  * @param data Resume data
  * @return CV-visible organizations with cvSection "education"
  */
 function educationOrganizations(data) {
     return onCv(data.organizations).filter((entry) => entry.cvSection === 'education');
+}
+
+/**
+ * @brief Gets the organizations that print under their own heading
+ * @param data Resume data
+ * @return CV-visible organizations without cvSection "education"
+ */
+function ownOrganizations(data) {
+    return onCv(data.organizations).filter((entry) => entry.cvSection !== 'education');
 }
 
 /**
@@ -434,17 +431,14 @@ function renderExperience(experience) {
 function renderProject(project, website) {
     // A project with its own site shows that address, linked, in the title line, as in
     // "eeprep (eeprep.com)", instead of a GitHub link.
-    const site = project.cvLink
-        ? ` (\\href{${escapeUrl(project.cvLink)}}{${escapeLatex(shortUrl(project.cvLink))}})`
-        : '';
+    const site = project.cvLink ? ` (${linked(shortUrl(project.cvLink), project.cvLink)})` : '';
     // A project with a page on the site and no cvLink links its title to that page.
     const page =
         !project.cvLink && website && project.slug && C_SITE_VISIBILITY.includes(project.Visibility)
             ? `${website.replace(/\/$/, '')}/projects/${project.slug}/`
             : '';
     const title = `\\textbf{${linked(cvTitle(project), page)}}${site}`;
-    const repository =
-        project.github && !project.cvLink ? `\\href{${escapeUrl(project.github)}}{GitHub}` : '';
+    const repository = project.github && !project.cvLink ? linked('GitHub', project.github) : '';
     const label = joinParts(
         [title, renderList(project.cvSkills ?? project.skills), repository],
         ', '
@@ -568,11 +562,7 @@ const C_RENDERERS = {
             .map((entry) => renderEducation(entry, data))
             .join('\n\\entrygap\n'),
     certifications: (data) => onCv(data.certifications).map(renderCertification).join(' \\\\\n'),
-    organizations: (data) =>
-        onCv(data.organizations)
-            .filter((entry) => entry.cvSection !== 'education')
-            .map(renderOrganization)
-            .join('\n'),
+    organizations: (data) => ownOrganizations(data).map(renderOrganization).join('\n'),
 };
 
 /**
@@ -671,10 +661,7 @@ export function expectedText(data) {
             ]),
         certifications: () =>
             onCv(data.certifications).flatMap((entry) => [entry.name, entry.organization]),
-        organizations: () =>
-            onCv(data.organizations)
-                .filter((entry) => entry.cvSection !== 'education')
-                .map((entry) => entry.name),
+        organizations: () => ownOrganizations(data).map((entry) => entry.name),
     };
 
     return [

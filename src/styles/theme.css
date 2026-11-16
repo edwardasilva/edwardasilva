@@ -301,7 +301,8 @@ figure.es-fig > svg {
     height: auto;
     margin: 0 auto;
 }
-figure.es-fig figcaption {
+/* A proof's photo or video (.es-proof-media in site.css) takes the same caption as a figure. */
+:is(figure.es-fig, .es-proof-media) figcaption {
     display: flex;
     gap: var(--es-space-3);
     align-items: baseline;
@@ -312,7 +313,7 @@ figure.es-fig figcaption {
     line-height: var(--es-lh-small);
     color: var(--es-ink-2);
 }
-figure.es-fig figcaption .es-fignum {
+:is(figure.es-fig, .es-proof-media) figcaption .es-fignum {
     font: 600 var(--es-text-eyebrow) / var(--es-lh-small) var(--es-font-serif);
     color: var(--es-mute);
     white-space: nowrap;
