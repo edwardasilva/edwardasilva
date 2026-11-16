@@ -10,7 +10,7 @@ slug: projects/capstone-project
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 14 November, 2026
+  Last Update: 16 November, 2026
 
   Built from the capstone poster in src/assets/Capstone, the team's critical design report, the final design report (src/assets/Capstone/FDR.pdf), and the project entry in resume-data.json. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -86,17 +86,17 @@ deltaP2 = abs(dPdy2).*L;                            % [Pa] pressure drop across
 force_lbf = (deltaP2 .* A_p);                       % [N] force vs. velocity
 ```
 
-The gap is cubed, so it dominates. V1's gap was 1.94 mm and the V2 concept's is 0.5 mm, which alone gives a factor of 58. The longer piston and larger area more than make up for the slightly wider channel, and bring the total to 330 times the force, from 0.94 N to 310 N at 8 m/s.
+The gap is cubed, so it dominates. V1's gap was 1.94 mm and the V2 concept's is 0.5 mm, which alone gives a factor of 58. The longer piston and larger area more than make up for the slightly wider channel. Together they bring the total to 330 times the force, from 0.94 N to 310 N at 8 m/s.
 
 <DamperFigure number={5} />
 
-The final build used a wider gap. The team ran the same flow model and CFD for 18, 18.5, and 19 mm pistons and found that damping climbs steeply as the piston nears the tube wall. They chose an 18.5 mm steel piston, the least damping with the coil off that still kept the gap small. They checked the trend by cycling the damper by hand with 3D-printed mock pistons.
+The final build used a wider gap. The team ran the same flow model and computational fluid dynamics (CFD) for 18, 18.5, and 19 mm pistons. They found that damping climbs steeply as the piston nears the tube wall. They chose an 18.5 mm steel piston, the least damping with the coil off that still kept the gap small. They checked the trend by cycling the damper by hand with 3D-printed mock pistons.
 
 ## The electromagnet
 
 The fluid resists flow most when the field crosses the gap perpendicular to the flow. Getting the field to cross the gap that way, within limits on space, power draw, and heat, was my part of the project.
 
-The final coil is 160 turns of 26 AWG copper on a 9 mm steel core, run at about 2 A from an 8 V supply. Earlier in the design, I modeled the coil in Python by summing the field of each loop, since the infinite solenoid approximation does not hold for a coil this short. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
+The final coil is 160 turns of 26 AWG copper on a 9 mm steel core, run at about 2 A from an 8 V supply. Earlier in the design, I modeled the coil in Python by summing the field of each loop. The infinite solenoid approximation does not hold for a coil this short. For one loop of radius $a$ carrying current $I$, at a point $(r, z)$:
 
 $$
 B_z = \frac{\mu_0 I}{2\pi}\frac{1}{\sqrt{(a+r)^2 + z^2}}\left[K + \frac{a^2 - r^2 - z^2}{(a-r)^2 + z^2}E\right]
@@ -112,7 +112,7 @@ Two accelerometers track how the fork's upper and lower halves move against each
 
 ### Flow model against CFD
 
-The team compared the flow model against Ansys Fluent computational fluid dynamics (CFD) for the final 18.5 mm piston at four axle velocities. The difference shrinks as velocity rises. The final piston's wider gap gives much lower forces than the V2 concept in Figure 5. Final design report, Table 1.
+The team compared the flow model against Ansys Fluent CFD for the final 18.5 mm piston at four axle velocities. The difference shrinks as velocity rises. The final piston's wider gap gives much lower forces than the V2 concept in Figure 5. Final design report, Table 1.
 
 | Axle velocity | Flow model | Fluent CFD | Difference |
 | --- | --- | --- | --- |
@@ -129,7 +129,7 @@ A shock dynamometer then measured the finished damper, and the results were inco
   The final damper on the dynamometer at no power and 1, 2, 3, and 4 A, in the report's units, pounds-force (lbf) and inches per second (in/s). Final design report, Fig. 16.
 </Figure>
 
-At 1 and 2 A, the curves nearly match the curve with no power. At 3 and 4 A, the force at 14 in/s rises from about 15 lbf to about 17 lbf in one direction. In the other direction, it falls from about 5 lbf to about 3.5 lbf. In the final design report, we read the compression force falling as current rises, the opposite of what more current should do, as a sign of cavitation. A look through a port in the cartridge tube showed that the internal floating piston didn't move on rebound, so no fluid refilled the space the shaft left.
+At 1 and 2 A, the curves nearly match the curve with no power. At 3 and 4 A, the force at 14 in/s rises from about 15 lbf to about 17 lbf in one direction. In the other direction, it falls from about 5 lbf to about 3.5 lbf. The compression force falls as current rises, the opposite of what more current should do. In the final design report, we read that as a sign of cavitation. A look through a port in the cartridge tube showed that the internal floating piston didn't move on rebound, so no fluid refilled the space the shaft left.
 
 <Figure name="damper/test-rig" number={7} narrow plate={false} alt="The fork mounted vertically in a dynamometer test rig.">
   The fork on the dynamometer.
