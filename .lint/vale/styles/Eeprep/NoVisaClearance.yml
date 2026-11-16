@@ -1,8 +1,6 @@
-# The guide doesn't give visa, immigration, or clearance advice. Keep that
-# content out. The disclaimer sentence passes, and the Roadmap is excluded in
-# .vale.ini so it can list the topic as future work.
+# The guide doesn't give visa, immigration, or clearance advice. Keep that content out.
 extends: existence
-message: "Remove '%s'. The guide doesn't cover visas or clearances. See the Roadmap."
+message: "Remove '%s'. The guide doesn't cover visas or clearances."
 level: error
 ignorecase: true
 tokens:

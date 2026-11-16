@@ -3,5 +3,6 @@ message: 'No semicolons. Write two sentences, or use because, but, or so.'
 level: error
 scope: sentence
 nonword: true
+# The one exception is the TLDR; heading on long pages (STYLE.md 4.10).
 tokens:
-  - ';'
+  - '(?<!\bTLDR);'

@@ -1,0 +1,9 @@
+# A range between two full dates takes a space on each side of the en dash, as in May 2023 – Aug 2024 (STYLE.md 2.11). Dates in URLs are not linted.
+extends: existence
+message: 'Put a space on each side of the en dash between two full dates, as in May 2023 – Aug 2024.'
+level: error
+nonword: true
+tokens:
+  - '\b(19|20)\d{2}–(Present|[A-Z][a-z]+\.? (19|20)\d{2})\b'
+  - '\b(19|20)\d{2} –(Present|[A-Z][a-z]+\.? (19|20)\d{2})\b'
+  - '\b(19|20)\d{2}– (Present|[A-Z][a-z]+\.? (19|20)\d{2})\b'

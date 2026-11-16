@@ -22,6 +22,7 @@ Only the repository owner can start the workflow. It works on a branch and opens
 
 - No emoji anywhere: files, commits, pull requests, comments, or output.
 - Do not put bot or tool names in repo text or commit messages.
+- The repository owner is the sole author of every commit. Do not add a `Co-authored-by` line, a session link, or any other trailer to a commit message or a pull request body, and write the squash-merge message without one.
 - Keep examples neutral, such as Alex Doe with they and them.
 - This repo is all rights reserved, with no MIT and no CC BY. Third-party font and dependency notices keep their own licenses.
 - Every file header in this repo ends with `Copyright (c) 2026 Edward Silva. All rights reserved.`

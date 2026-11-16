@@ -106,7 +106,7 @@ $K$ and $E$ are complete elliptic integrals. They have no closed form, and SciPy
 
 ## Control and heat
 
-Two accelerometers track how the fork's upper and lower halves move against each other, and an Arduino drives the electromagnet. It uses PWM (pulse-width modulation, switching quickly between on and off) to vary the coil current, and with it the field. Graham Adleman programmed the Arduino, and I helped him design the system. Control is needed for two reasons. Holding the field on during rebound would trap fluid and risk cavitation. And the coil is effectively a resistive heater, so running it only when damping is needed limits the heat it adds to the damper and saves battery. Curb tests at 15 mph with BMI160 accelerometers showed the pair could tell when a compression starts, when it peaks, and when rebound begins.
+Two accelerometers track how the fork's upper and lower halves move against each other, and an Arduino drives the electromagnet. It uses PWM (pulse-width modulation, switching quickly between on and off) to vary the coil current, and with it the field. Graham Adleman programmed the Arduino, and I helped design the system. Control is needed for two reasons. Holding the field on during rebound would trap fluid and risk cavitation. And the coil is effectively a resistive heater, so running it only when damping is needed limits the heat it adds to the damper and saves battery. Curb tests at 15 mph with BMI160 accelerometers showed the pair could tell when a compression starts, when it peaks, and when rebound begins.
 
 ## How we checked it
 
