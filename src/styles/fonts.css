@@ -1,0 +1,22 @@
+/**
+ * src/styles/fonts.css
+ * Self-Hosted Fonts
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Imports Source Serif 4 and Source Code Pro from Fontsource.
+ *
+ * Where this file is used within the repository:
+ * - Loaded through customCss in astro.config.mjs
+ *
+ * Usage:
+ * $ `npm run dev` : Applied to every page
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+@import '@fontsource-variable/source-serif-4/opsz.css';
+@import '@fontsource-variable/source-serif-4/opsz-italic.css';
+@import '@fontsource-variable/source-code-pro';

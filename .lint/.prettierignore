@@ -1,0 +1,32 @@
+# .lint/.prettierignore
+# Prettier Ignore Rules
+#
+# Author: Edward Silva
+# Creation Date: 09 November, 2026
+# Last Update: 10 November, 2026
+#
+# Lists the paths Prettier skips. MDX is skipped because Prettier breaks its multi-line comments.
+# The Vale rules under .lint/vale/styles/Eeprep/ are an exact copy of eeprep's, so they are not
+# reformatted here.
+#
+# Usage:
+# $ `npm run format` : Checks formatting on every path not listed here
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
+node_modules/
+dist/
+.astro/
+**/public/resume/
+**/public/assets/
+**/public/vendor/
+resume-data.json
+information/
+.agents/
+.gemini/
+.claude/
+.copilot/
+.cursor/
+**/*.mdx
+build/
+.lint/vale/styles/Eeprep/

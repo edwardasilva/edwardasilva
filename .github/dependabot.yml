@@ -1,0 +1,57 @@
+# .github/dependabot.yml
+# Dependency Updates
+#
+# Author: Edward Silva
+# Creation Date: 08 November, 2026
+# Last Update: 14 November, 2026
+#
+# Monthly and grouped, so each ecosystem opens at most one pull request a month and CI runs
+# once for it. Security updates still open on their own when an advisory lands.
+#
+# Usage:
+# Read by Dependabot on GitHub. Nothing runs it by hand.
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    target-branch: main
+    labels:
+      - dependencies
+    # typescript-eslint 8.x only accepts TypeScript below 6.1. A minor or major bump in
+    # the grouped npm pull request breaks npm ci. Keep patch TypeScript updates until
+    # typescript-eslint widens its range.
+    ignore:
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-minor
+          - version-update:semver-major
+    groups:
+      astro-starlight:
+        patterns:
+          - astro
+          - '@astrojs/*'
+      npm:
+        patterns:
+          - '*'
+  - package-ecosystem: github-actions
+    directories:
+      - /
+      - /.github/actions/information
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    target-branch: main
+    labels:
+      - dependencies
+    groups:
+      github-actions:
+        patterns:
+          - '*'

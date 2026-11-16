@@ -1,0 +1,84 @@
+---
+/**
+ * src/components/RoleFacts.astro
+ * Role Facts
+ *
+ * Author: Edward Silva
+ * Creation Date: 08 November, 2026
+ * Last Update: 15 November, 2026
+ *
+ * The role, dates, employment type, place, skills, and employer link under a role page title, in
+ * the same block the project pages use. Once the column has room it is two columns: Role and Links
+ * on the left, When and Where on the right, and Skills across both. The employment type follows
+ * the dates in When.
+ *
+ * File Structure:
+ * - Match the page to resume-data.json by slug
+ * - Definition list of facts, in reading order for one column
+ *
+ * Where this file is used within the repository:
+ * - src/components/PageTitle.astro
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import ExternalLink from './ExternalLink.astro';
+import SkillLinks from './SkillLinks.astro';
+import { getExperienceSlug, visibleExperiences } from '../data/resume';
+
+interface Props {
+    slug: string;
+}
+
+const { slug } = Astro.props;
+const experience = visibleExperiences.find((candidate) => getExperienceSlug(candidate) === slug);
+
+if (!experience) {
+    throw new Error(`[ERROR] No visible experience in resume-data.json has the slug ${slug}`);
+}
+
+// The employment type reads as part of the dates, as in "June–August 2025, internship".
+const when = experience.employmentType
+    ? `${experience.duration}, ${experience.employmentType.toLowerCase()}`
+    : experience.duration;
+---
+
+{/* The page body repeats these facts. Left out of search, the labels and values no longer
+    run together in excerpts ("WhenOngoing"). */}
+<div class="es-facts-frame">
+    <dl class="es-facts es-facts-split es-facts-role" data-pagefind-ignore>
+        <div data-fact="role">
+            <dt>Role</dt>
+            <dd>{experience.title}</dd>
+        </div>
+        <div data-fact="when">
+            <dt>When</dt>
+            <dd>{when}</dd>
+        </div>
+        {experience.location && (
+            <div data-fact="where">
+                <dt>Where</dt>
+                <dd>{experience.location}</dd>
+            </div>
+        )}
+        {experience.companyUrl && (
+            <div data-fact="links">
+                <dt>Links</dt>
+                <dd class="es-facts-links">
+                    <ExternalLink href={experience.companyUrl}>{experience.company}</ExternalLink>
+                </dd>
+            </div>
+        )}
+        {experience.skills.length > 0 && (
+            <div data-fact="skills" class="es-facts-wide">
+                <dt>Skills</dt>
+                <dd>
+                    <SkillLinks skills={experience.skills} />
+                </dd>
+            </div>
+        )}
+    </dl>
+</div>

@@ -1,0 +1,4 @@
+[submodule "information"]
+	path = information
+	url = https://github.com/edwardasilva/information.git
+	branch = main

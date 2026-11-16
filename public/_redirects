@@ -1,0 +1,33 @@
+# public/_redirects
+# Legacy Route Redirects
+#
+# Author: Edward Silva
+# Creation Date: 10 November, 2026
+# Last Update: 10 November, 2026
+#
+# Sends old URLs to their current pages with a real 301 on Cloudflare Pages. The targets end in a
+# slash because the site serves every page as a folder, so a target without one costs a second hop.
+#
+# File Structure:
+# - One rule per line: source, target, status code
+#
+# Where this file is used within the repository:
+# - Astro copies public/ into dist/, and Cloudflare Pages reads dist/_redirects on deploy
+# - Not applied by astro dev or astro preview
+#
+# Usage:
+# $ `curl -D - https://dev.edwardasilva.pages.dev/classes` : Shows one 301 to /education/coursework/
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
+/experience /experiences/ 301
+/experience/ /experiences/ 301
+/classes /education/coursework/ 301
+/classes/ /education/coursework/ 301
+/coursework /education/coursework/ 301
+/coursework/ /education/coursework/ 301
+/portfolio /projects/ 301
+/portfolio/ /projects/ 301
+/profile / 301
+/profile/ / 301
+/resume/viewer.html /resume/viewer/ 301

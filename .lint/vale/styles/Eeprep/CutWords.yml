@@ -1,0 +1,49 @@
+# Decorative groups of three are banned in .github/STYLE.md section 3.
+# Vale cannot tell a real list of three from a decorative one, so this style does not flag them.
+extends: existence
+message: "Cut '%s'. See .github/STYLE.md section 3."
+level: error
+ignorecase: true
+tokens:
+  - '(?:^|[.!?]\s+)additionally\b'
+  - '\baligns? with\b'
+  - '\bboasts?\b'
+  - '\bbolsters?\b'
+  - '\bcrucial\b'
+  - '\bdeep dives?\b'
+  - '\bdelv(?:e|es|ed|ing)\b'
+  - '\bemphasiz(?:e|es|ed|ing)\b'
+  - '\benduring\b'
+  - '\benhanc(?:e|es|ed|ing)\b'
+  - '\bfosters?\b'
+  - '\bgarners?\b'
+  - '\bhighlights?\b'
+  - '\binterplay\b'
+  - '\bintricate\b'
+  - '\bkey (?:takeaways?|insights?|factors?|points?|roles?|aspects?|steps?|skills?|lessons?|concepts?|ideas?|things?)\b'
+  - '\blandscape\b'
+  - '\bleverag(?:e|es|ed|ing)\b'
+  - '\bmeticulous(?:ly)?\b'
+  - '\bmultifaceted\b'
+  - '\bpivotal\b'
+  - '\bquietly\b'
+  - '\brobust\b'
+  - '\bseamless(?:ly)?\b'
+  - '\bshowcas(?:e|es|ed|ing)\b'
+  - '\btapestry\b'
+  - '\btestament\b'
+  - '\bunderscor(?:e|es|ed|ing)\b'
+  - '\bvaluable\b'
+  - '\bvibrant\b'
+  - '\bcomprehensive\b'
+  - '\bpowerful\b'
+  - '\bsimply\b'
+  - 'in order to'
+  - 'it is worth noting'
+  - "in today's fast-paced world"
+  - 'not just'
+  - 'not only'
+  - 'rather than'
+exceptions:
+  # The resume page keeps this hedged ATS sentence exactly as approved.
+  - resume rather than auto-rejecting

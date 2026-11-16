@@ -1,0 +1,141 @@
+/**
+ * src/pages/llms.txt.ts
+ * LLM Site Index
+ *
+ * Author: Edward Silva
+ * Creation Date: 08 November, 2026
+ * Last Update: 16 November, 2026
+ *
+ * Writes /llms.txt, a Markdown index of the site in the llmstxt.org format, so language models
+ * and other crawlers can find each page and what it covers. It reads the same project pages and
+ * resume data as the site, so it never goes stale.
+ *
+ * File Structure:
+ * - C_SECTION_PAGES: the data pages, in sidebar order
+ * - linkLine: one Markdown list item. Every list item links somewhere, as the format asks, so an
+ *   Other experience line links to that section of the experience page
+ * - GET: builds the file at build time. projectLines and experienceLine build the repeated
+ *   project and experience list items
+ *
+ * Where this file is used within the repository:
+ * - Linked from src/components/Head.astro and public/robots.txt
+ *
+ * Usage:
+ * $ `npm run build` : Writes dist/llms.txt
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import type { APIRoute } from 'astro';
+import { getHomeProjectPages } from '../data/projects';
+import {
+    asSentence,
+    getExperienceHref,
+    hasAboutContent,
+    otherExperiences,
+    resume,
+    visibleExperiences,
+} from '../data/resume';
+import type { Experience, HomeGroup } from '../data/types';
+
+const C_SECTION_PAGES = [
+    ...(hasAboutContent
+        ? [['About', '/about/', asSentence(resume.about.Summary ?? resume.about.Highlights)]]
+        : []),
+    ['Experience', '/experiences/', asSentence(resume.site.pages.experiences.description)],
+    [
+        'Education',
+        '/education/',
+        'Degree, honors, certifications, and which classes fed which project.',
+    ],
+    ['Coursework', '/education/coursework/', asSentence(resume.site.pages.coursework.description)],
+    ['Skills', '/skills/', asSentence(resume.site.pages.skills.description)],
+    [
+        'Resume (PDF)',
+        resume.personal.resumePdfUrl,
+        'The one-page resume. The PDF has a text layer.',
+    ],
+    [
+        'CV (PDF)',
+        resume.personal.cvPdfUrl,
+        'The two-page CV, for graduate applications. The PDF has a text layer.',
+    ],
+] as const;
+
+/**
+ * @brief Formats one page as a Markdown list item
+ * @param title Link text
+ * @param href Path or absolute URL
+ * @param site Site origin for relative paths
+ * @param note Short description after the link
+ * @return The list item
+ */
+function linkLine(title: string, href: string, site: URL, note?: string): string {
+    const url = new URL(href, site).href;
+
+    return note ? `- [${title}](${url}): ${note}` : `- [${title}](${url})`;
+}
+
+/**
+ * @brief Builds the llms.txt file
+ * @param context Astro endpoint context, used for the site URL
+ * @return Plain-text Markdown response
+ */
+export const GET: APIRoute = async ({ site }) => {
+    const origin = site ?? new URL(resume.personal.website);
+    const projectLines = (group: HomeGroup) =>
+        getHomeProjectPages(group).map(({ entry, href }) =>
+            linkLine(entry.data.title, href, origin, entry.data.description)
+        );
+    const experienceLine = (experience: Experience, href: string) =>
+        linkLine(`${experience.title}, ${experience.company}`, href, origin, experience.duration);
+
+    const lines = [
+        `# ${resume.personal.name}`,
+        '',
+        `> ${resume.about.Highlights}.`,
+        '',
+        asSentence(resume.site.pages.projects.description),
+        '',
+        '## Selected work',
+        '',
+        ...projectLines('selected'),
+        '',
+        '## More projects',
+        '',
+        ...projectLines('more'),
+        ...projectLines('index'),
+        '',
+        '## Experience',
+        '',
+        ...visibleExperiences.map((experience) =>
+            experienceLine(experience, getExperienceHref(experience))
+        ),
+        ...(otherExperiences.length > 0
+            ? [
+                  '',
+                  '## Other experience',
+                  '',
+                  ...otherExperiences.map((experience) =>
+                      experienceLine(experience, '/experiences/#other-experience')
+                  ),
+              ]
+            : []),
+        '',
+        '## Pages',
+        '',
+        ...C_SECTION_PAGES.flatMap(([title, href, note]) =>
+            href ? [linkLine(title, href, origin, note)] : []
+        ),
+        '',
+        '## Optional',
+        '',
+        linkLine('LinkedIn', resume.personal.linkedin, origin),
+        linkLine('GitHub', resume.personal.github, origin),
+        '',
+    ];
+
+    return new Response(lines.join('\n'), {
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    });
+};

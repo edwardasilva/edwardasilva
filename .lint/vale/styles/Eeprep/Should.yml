@@ -1,0 +1,7 @@
+# Turn a required "should" into "must", and delete an optional one.
+extends: existence
+message: "Replace '%s' with 'must', or cut it if the step is optional."
+level: warning
+ignorecase: true
+tokens:
+  - '\bshould\b'

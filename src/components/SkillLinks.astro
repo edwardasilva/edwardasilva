@@ -1,0 +1,39 @@
+---
+/**
+ * src/components/SkillLinks.astro
+ * Skill Links
+ *
+ * Author: Edward Silva
+ * Creation Date: 06 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Comma-separated links from a piece of work to its row on the skills page.
+ *
+ * File Structure:
+ * - Props: skill labels
+ * - One link per skill
+ *
+ * Where this file is used within the repository:
+ * - Project facts, the experience page, and coursework
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import { getSkillHref } from '../data/resume';
+
+interface Props {
+    skills: string[];
+}
+
+const { skills } = Astro.props;
+---
+
+{skills.map((skill, index) => (
+    <>
+        {index > 0 && ', '}
+        <a href={getSkillHref(skill)}>{skill}</a>
+    </>
+))}

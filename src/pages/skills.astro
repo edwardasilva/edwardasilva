@@ -1,0 +1,64 @@
+---
+/**
+ * src/pages/skills.astro
+ * Skills Index
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 09 November, 2026
+ *
+ * Every skill, listed with the work it came from. A skill only appears here if a role, project,
+ * course, or certification on this site names it.
+ *
+ * File Structure:
+ * - Intro
+ * - One group of links per skill
+ *
+ * Where this file is used within the repository:
+ * - Route: /skills
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getDisplayTitle } from '../data/projects';
+import { asSentence, resume, skillIndex } from '../data/resume';
+import { itemListSchema, jsonLdHeadTag } from '../data/structured-data';
+
+const schema = itemListSchema(
+    'Technical Skills Directory',
+    skillIndex.map((skill) => ({ name: skill.name, path: `/skills/#${skill.slug}` })),
+    Astro.site ?? Astro.url
+);
+---
+
+<StarlightPage
+    frontmatter={{
+        title: 'Skills',
+        description: asSentence(resume.site.pages.skills.description),
+        head: [jsonLdHeadTag(schema)],
+        tableOfContents: false,
+    }}
+>
+    <p>Each skill links to the role, project, course, or certification where I used it.</p>
+
+    <ul class="es-skills not-content">
+        {skillIndex.map((skill) => (
+            <li id={skill.slug}>
+                <strong>{skill.name}</strong>
+                <ul>
+                    {skill.references.map((reference) => (
+                        <li>
+                            <a href={reference.href}>
+                                {getDisplayTitle(reference.href, reference.label)}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </li>
+        ))}
+    </ul>
+</StarlightPage>

@@ -1,0 +1,14 @@
+# Use "is" and "has". Warning for now: an existing page still uses one. See .github/STYLE.md section 6.
+extends: existence
+message: "Use 'is' or 'has' instead of '%s'."
+level: warning
+ignorecase: true
+tokens:
+  - '\bserves as\b'
+  - '\bstands as\b'
+  - '\bfunctions as\b'
+  - '\bacts as\b'
+  - '\brepresents an?\b'
+  - '\bfeatures an?\b'
+  - '\boffers an?\b'
+  - '\brefers to\b'

@@ -1,0 +1,10 @@
+Kalman
+LQR
+Python
+MATLAB
+Simulink
+Arduino
+EMBR
+I2C
+FFT
+CFD

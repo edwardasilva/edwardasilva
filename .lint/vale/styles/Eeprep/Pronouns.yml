@@ -1,0 +1,7 @@
+# Do not guess the gender of an unnamed person. Use they, or name the role. For a quote, wrap it in {/* vale Eeprep.Pronouns = NO */} and {/* vale Eeprep.Pronouns = YES */} in an MDX file.
+extends: existence
+message: "Do not use the gendered pronoun '%s' for an unnamed person. Use 'they' or name the role."
+level: error
+ignorecase: true
+tokens:
+  - '\b(he|she|his|her|hers|him)\b'

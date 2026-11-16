@@ -1,0 +1,57 @@
+---
+/**
+ * src/pages/projects.astro
+ * Projects Index
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 14 November, 2026
+ *
+ * Every project in one list, in order of importance: selected work, then more projects. Only the
+ * home page splits them under two headings.
+ *
+ * File Structure:
+ * - One list of project cards
+ *
+ * Where this file is used within the repository:
+ * - Route: /projects
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ProjectCards from '../components/ProjectCards.astro';
+import { getHomeProjectPages, getPageSlug } from '../data/projects';
+import { asSentence, resume } from '../data/resume';
+import { itemListSchema, jsonLdHeadTag } from '../data/structured-data';
+
+const projects = [
+    ...getHomeProjectPages('selected'),
+    ...getHomeProjectPages('more'),
+    ...getHomeProjectPages('index'),
+];
+const site = Astro.site ?? Astro.url;
+
+const schema = itemListSchema(
+    'Projects',
+    projects.map(({ entry }) => ({
+        name: entry.data.title,
+        path: `/projects/${getPageSlug(entry.id)}`,
+    })),
+    site
+);
+---
+
+<StarlightPage
+    frontmatter={{
+        title: 'Projects',
+        description: asSentence(resume.site.pages.projects.description),
+        head: [jsonLdHeadTag(schema)],
+        tableOfContents: false,
+    }}
+>
+    <ProjectCards pages={projects} />
+</StarlightPage>
