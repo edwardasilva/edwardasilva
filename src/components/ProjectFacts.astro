@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 15 November, 2026
+ * Last Update: 16 November, 2026
  *
  * When, which course, who was on the team, and which part was mine, under a project title. This is
  * what a profile page flattens. Every fact comes from the page's entry in resume-data.json. A page
@@ -50,6 +50,13 @@ const {
 } = project;
 const course = courseCode ? getCourseByCode(courseCode) : undefined;
 const courseHref = courseCode ? getCourseHref(courseCode) : undefined;
+// Team, then the client, the sponsor, and the advisors, each on a row of its own.
+const people = [
+    ['Team', team],
+    ['Client', client],
+    ['Sponsor', sponsor],
+    ['Advisors', advisors],
+] as const;
 const allLinks = [
     ...project.links,
     ...(project.github ? [{ label: 'Source on GitHub', href: project.github }] : []),
@@ -75,29 +82,14 @@ const allLinks = [
                 </dd>
             </div>
         )}
-        {team && (
-            <div class="es-facts-wide">
-                <dt>Team</dt>
-                <dd>{team}</dd>
-            </div>
-        )}
-        {client && (
-            <div class="es-facts-wide">
-                <dt>Client</dt>
-                <dd>{client}</dd>
-            </div>
-        )}
-        {sponsor && (
-            <div class="es-facts-wide">
-                <dt>Sponsor</dt>
-                <dd>{sponsor}</dd>
-            </div>
-        )}
-        {advisors && (
-            <div class="es-facts-wide">
-                <dt>Advisors</dt>
-                <dd>{advisors}</dd>
-            </div>
+        {people.map(
+            ([label, value]) =>
+                value && (
+                    <div class="es-facts-wide">
+                        <dt>{label}</dt>
+                        <dd>{value}</dd>
+                    </div>
+                )
         )}
         {myPart && (
             <div class="es-facts-wide">

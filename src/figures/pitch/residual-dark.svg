@@ -8,7 +8,7 @@
 </defs>
 <g fill="none" stroke="#eceef2" stroke-width="1" fill-rule="evenodd" stroke-linecap="square" stroke-linejoin="bevel" >
 
-<g fill="#131c2e" fill-opacity="1" stroke="none" transform="matrix(6e-05,0,0,6e-05,-2.67646,-2.8772)"
+<g fill="#1c1d20" fill-opacity="1" stroke="none" transform="matrix(6e-05,0,0,6e-05,-2.67646,-2.8772)"
 font-family="Segoe UI" font-size="9" font-weight="400" font-style="normal" 
 >
 <path vector-effect="none" fill-rule="evenodd" d="M620000,260000 L620000,2.39e+06 L4.34e+06,2.39e+06 L4.34e+06,260000 L620000,260000"/>
@@ -607,7 +607,7 @@ font-family="Segoe UI" font-size="9" font-weight="400" font-style="normal"
 <polyline fill="none" vector-effect="none" points="62,45.3636 434,45.3636 " />
 </g>
 
-<g fill="#131c2e" fill-opacity="1" stroke="none" transform="matrix(6e-05,0,0,6e-05,-2.67646,-2.8772)"
+<g fill="#1c1d20" fill-opacity="1" stroke="none" transform="matrix(6e-05,0,0,6e-05,-2.67646,-2.8772)"
 font-family="Segoe UI" font-size="9" font-weight="400" font-style="normal" 
 >
 <path vector-effect="none" fill-rule="evenodd" d="M440000,2.94e+06 L440000,3.17e+06 L4.34e+06,3.17e+06 L4.34e+06,2.94e+06 L440000,2.94e+06"/>

@@ -4,7 +4,7 @@
 #
 # Author: Edward Silva
 # Creation Date: 01 November, 2026
-# Last Update: 14 November, 2026
+# Last Update: 16 November, 2026
 #
 # Rebuilds the resume and CV PDFs and stages each only when its text changed, then runs
 # scripts/scrub-private.js on the staged files.
@@ -16,45 +16,31 @@
 
 set -e
 
-PDF=public/resume/Edward_Silva_Resume.pdf
-
-echo "[pre-commit] Building resume PDF locally..."
-npm run --silent build:resume
-
 # A different TeX distribution changes the PDF bytes with no content change, so the hook keeps
 # the committed file when the text matches HEAD and stages the rebuild only when the text differs.
-if command -v pdftotext >/dev/null 2>&1 && git cat-file -e "HEAD:$PDF" 2>/dev/null; then
-  old_text=$(git show "HEAD:$PDF" | pdftotext -layout - - | cksum)
-  new_text=$(pdftotext -layout "$PDF" - | cksum)
+# $1 is the npm script, $2 the PDF it writes, and $3 and $4 the document name as it reads
+# mid-sentence and at the start of a sentence.
+build_pdf() {
+  echo "[pre-commit] Building $3 PDF locally..."
+  npm run --silent "$1"
 
-  if [ "$old_text" = "$new_text" ]; then
-    git checkout HEAD -- "$PDF"
-    echo "[pre-commit] Resume text unchanged. Kept the committed PDF."
+  if command -v pdftotext >/dev/null 2>&1 && git cat-file -e "HEAD:$2" 2>/dev/null; then
+    old_text=$(git show "HEAD:$2" | pdftotext -layout - - | cksum)
+    new_text=$(pdftotext -layout "$2" - | cksum)
+
+    if [ "$old_text" = "$new_text" ]; then
+      git checkout HEAD -- "$2"
+      echo "[pre-commit] $4 text unchanged. Kept the committed PDF."
+    else
+      git add "$2"
+    fi
   else
-    git add "$PDF"
+    git add "$2"
   fi
-else
-  git add "$PDF"
-fi
+}
 
-CV=public/cv/Edward_Silva_CV.pdf
-
-echo "[pre-commit] Building CV PDF locally..."
-npm run --silent build:cv
-
-if command -v pdftotext >/dev/null 2>&1 && git cat-file -e "HEAD:$CV" 2>/dev/null; then
-  old_text=$(git show "HEAD:$CV" | pdftotext -layout - - | cksum)
-  new_text=$(pdftotext -layout "$CV" - | cksum)
-
-  if [ "$old_text" = "$new_text" ]; then
-    git checkout HEAD -- "$CV"
-    echo "[pre-commit] CV text unchanged. Kept the committed PDF."
-  else
-    git add "$CV"
-  fi
-else
-  git add "$CV"
-fi
+build_pdf build:resume public/resume/Edward_Silva_Resume.pdf resume Resume
+build_pdf build:cv public/cv/Edward_Silva_CV.pdf CV CV
 
 node scripts/scrub-private.js staged
 echo "[pre-commit] Resume check done. Proceeding with commit."

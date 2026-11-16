@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 14 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Renders 1200x630 share cards for the home page and every project page.
  *
@@ -36,6 +36,10 @@ import { asSentence, resume } from '../../data/resume';
 
 const C_WIDTH = 1200;
 const C_HEIGHT = 630;
+// Satori defaults to content-box, so a box of the full image size with padding grows past the image
+// and pushes the last line off the bottom. The card sets boxSizing: 'border-box' to keep the
+// padding inside it.
+const C_PADDING = 72;
 // satori needs static .woff files, which only @fontsource/source-serif-4 ships. The site font is the
 // variable package, @fontsource-variable/source-serif-4, so both stay.
 const C_FONT_DIR = path.resolve('node_modules/@fontsource/source-serif-4/files');
@@ -61,7 +65,7 @@ export async function getStaticPaths() {
     return [
         {
             params: { slug: 'home' },
-            props: { title: resume.personal.name, line: resume.about.Highlights },
+            props: { title: resume.personal.name, line: asSentence(resume.about.Highlights) },
         },
         ...pages.map(({ entry, project }) => ({
             params: { slug: getPageSlug(entry.id) },
@@ -95,10 +99,11 @@ export const GET: APIRoute = async ({ props }) => {
         {
             display: 'flex',
             flexDirection: 'column',
+            boxSizing: 'border-box',
             width: C_WIDTH,
             height: C_HEIGHT,
             backgroundColor: '#fbfbfc',
-            padding: 72,
+            padding: C_PADDING,
             justifyContent: 'space-between',
             fontFamily: 'Source Serif 4',
         },
@@ -114,7 +119,7 @@ export const GET: APIRoute = async ({ props }) => {
                     {
                         fontSize: 76,
                         fontWeight: 600,
-                        color: '#16233a',
+                        color: '#24272b',
                         margin: '0 0 24px',
                         lineHeight: 1.08,
                     },
@@ -125,7 +130,7 @@ export const GET: APIRoute = async ({ props }) => {
                     {
                         fontSize: 32,
                         fontWeight: 400,
-                        color: '#424d63',
+                        color: '#50555c',
                         margin: 0,
                         lineHeight: 1.35,
                     },

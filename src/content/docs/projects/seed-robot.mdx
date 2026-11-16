@@ -10,7 +10,7 @@ slug: projects/seed-robot
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 14 November, 2026
+  Last Update: 16 November, 2026
 
   Built from the project entry in resume-data.json and the team's repository. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -23,7 +23,7 @@ slug: projects/seed-robot
 import Figure from '../../../components/Figure.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-Our robot had the second-fastest final run in its cohort. The vision code finds ArUco markers (printed square codes a camera can locate) and works out the angle and distance to each one. It reads a green or red arrow beside the marker to pick left or right, and sends the angle, distance, and direction over I2C to the team's Arduino motor controller.
+Our robot had the second-fastest final run in its cohort. The vision code finds ArUco markers (printed square codes a camera can locate) and works out the angle and distance to each one. It reads a green or red arrow beside the marker to pick left or right. Then it sends the angle, distance, and direction over I2C to the team's Arduino motor controller.
 
 <Figure name="robot/front" number={1} narrow plate={false} alt="The robot from the front, showing its two large wheels, drive motors, and electronics.">
   The robot from the front.

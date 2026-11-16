@@ -10,7 +10,7 @@ slug: projects/EKF-project
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 14 November, 2026
+  Last Update: 16 November, 2026
 
   Built from the EENG 519 report in src/assets/EKF and the project's Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -26,7 +26,7 @@ import ProofList from '../../../components/ProofList.astro';
 
 For my EENG 519 final project, I ran two Kalman filters on a model of my capstone team's mountain bike damper. A Kalman filter estimates values a sensor cannot read by combining a model with noisy measurements. The project ran in MATLAB and Simulink, and nothing here ran on the bike.
 
-After the course, I went back to the project's code. I found that the extended and unscented Kalman filters (EKF and UKF) agree to within 0.4 N at my report's parameters. Figure 5 is a browser port of that code. The UKF pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sigma point spread, its RMS force error was 401 N, against 624 N for the EKF. It also kept every sample inside its bounds.
+After the course, I went back to the project's code. I found that the extended and unscented Kalman filters (EKF and UKF) agree to within 0.4 N at my report's parameters. Figure 5 is a browser port of that code. The UKF pulls ahead when the fluid's yield force gets large. With a larger yield constant and a wider sigma point spread, its root-mean-square (RMS) force error was 401 N, against 624 N for the EKF. It also kept every sample inside its bounds.
 
 The [EMBR damper](/projects/capstone-project/) changes its damping by changing the yield stress of a magnetorheological (MR) fluid. Low-cost sensors cannot measure the field intensity or the force coming up from the trail, so the filters infer them from a string potentiometer and accelerometers.
 

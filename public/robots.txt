@@ -3,14 +3,33 @@
 #
 # Author: Edward Silva
 # Creation Date: 01 November, 2026
-# Last Update: 14 November, 2026
+# Last Update: 16 November, 2026
 #
-# Lets every crawler read the whole site and points it at the sitemap and llms.txt.
+# Lets every crawler read the whole site and points it at the sitemap and llms.txt. Search engines
+# and AI crawlers are also named in their own group, so a crawler that only reads the group with
+# its name still finds an explicit allow. Under RFC 9309 a group may list several user agents.
 #
 # Usage:
 # Served as-is at https://edwardasilva.com/robots.txt
 #
 # Copyright (c) 2026 Edward Silva. All rights reserved.
+
+User-agent: Googlebot
+User-agent: Google-Extended
+User-agent: Bingbot
+User-agent: DuckDuckBot
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: CCBot
+Allow: /
 
 User-agent: *
 Allow: /

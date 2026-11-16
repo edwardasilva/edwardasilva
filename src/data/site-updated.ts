@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 15 November, 2026
- * Last Update: 15 November, 2026
+ * Last Update: 16 November, 2026
  *
  * The one "Last updated" date in the site footer: the date of the newest commit in the build.
  * The deploy job checks out full history, so this is the date the site last changed. A build
@@ -12,7 +12,8 @@
  *
  * File Structure:
  * - siteUpdated: the date
- * - siteUpdatedText: the date as the footer shows it, such as "Nov 15, 2026"
+ * - siteUpdatedText: the date as the footer shows it, such as "November 15, 2026", with the month
+ *   in full as on the rest of the site
  *
  * Where this file is used within the repository:
  * - src/components/Footer.astro
@@ -25,6 +26,10 @@
 
 import { execSync } from 'node:child_process';
 
+/**
+ * @brief Reads the date of the newest commit
+ * @return The commit date, or today when git or the history is missing
+ */
 function newestCommitDate(): Date {
     try {
         const iso = execSync('git log -1 --format=%cI', {
@@ -41,7 +46,7 @@ function newestCommitDate(): Date {
 export const siteUpdated = newestCommitDate();
 
 export const siteUpdatedText = siteUpdated.toLocaleDateString('en-US', {
-    month: 'short',
+    month: 'long',
     day: 'numeric',
     year: 'numeric',
     timeZone: 'America/Denver',

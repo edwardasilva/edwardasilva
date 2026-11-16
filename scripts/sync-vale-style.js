@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 09 November, 2026
- * Last Update: 09 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Copies eeprep's Vale style, .github/vale/styles/Eeprep in the eeprep repo, into
  * .lint/vale/styles/Eeprep here, so the project pages are checked against the same plain-English
@@ -19,7 +19,8 @@
  * File Structure:
  * - C_SOURCE, C_TARGET: the eeprep style folder and the copy here
  * - listRules: the .yml files in one folder, sorted
- * - main: copies the rules, or compares them with --check
+ * - main: copies the rules, or compares them with --check. Any other argument is an error, so a
+ *   mistyped flag never overwrites the copy
  *
  * Where this file is used within the repository:
  * - npm run prose:sync copies the rules and npm run prose:sync -- --check reports drift
@@ -42,6 +43,12 @@ const C_EEPREP_DIR = path.resolve(ROOT_DIR, process.env.EEPREP_DIR ?? '../eeprep
 const C_SOURCE = path.join(C_EEPREP_DIR, '.github', 'vale', 'styles', 'Eeprep');
 const C_TARGET = path.join(ROOT_DIR, '.lint', 'vale', 'styles', 'Eeprep');
 const C_CHECK = process.argv.includes('--check');
+const C_UNKNOWN = process.argv.slice(2).filter((arg) => arg !== '--check');
+
+if (C_UNKNOWN.length > 0) {
+    console.error(`[ERROR] Unknown argument: ${C_UNKNOWN.join(' ')}. The only flag is --check.`);
+    process.exit(1);
+}
 
 /**
  * Lists the rule files in one style folder.

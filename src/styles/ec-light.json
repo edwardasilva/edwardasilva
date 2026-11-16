@@ -3,7 +3,7 @@
   "type": "light",
   "colors": {
     "editor.background": "#f3f4f6",
-    "editor.foreground": "#16233a"
+    "editor.foreground": "#24272b"
   },
   "tokenColors": [
     {
@@ -15,13 +15,13 @@
     {
       "scope": ["keyword.operator"],
       "settings": {
-        "foreground": "#16233a"
+        "foreground": "#24272b"
       }
     },
     {
       "scope": ["comment", "punctuation.definition.comment"],
       "settings": {
-        "foreground": "#424d63",
+        "foreground": "#50555c",
         "fontStyle": "italic"
       }
     }

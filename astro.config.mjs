@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 14 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Defines site, base path, the Markdown pipeline, and the Starlight integration that
  * supplies search, navigation, table of contents, dark mode, and the sitemap. Copies the PDF.js
@@ -300,7 +300,7 @@ export default defineConfig({
                     tag: 'meta',
                     attrs: {
                         name: 'theme-color',
-                        content: '#0d1524',
+                        content: '#151618',
                         media: '(prefers-color-scheme: dark)',
                     },
                 },

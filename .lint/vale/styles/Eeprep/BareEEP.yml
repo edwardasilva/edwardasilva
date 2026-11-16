@@ -1,0 +1,7 @@
+# The short brand form EEP is not used. Write eeprep. A hyphenated compound such as EEP-based is left alone.
+extends: existence
+message: "Write 'eeprep' instead of the short form '%s'."
+level: error
+nonword: true
+tokens:
+  - '(?-i:\bEEP\b)(?!-)'

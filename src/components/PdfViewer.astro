@@ -5,14 +5,14 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 07 November, 2026
+ * Last Update: 16 November, 2026
  *
  * A report on the page: closed by default. PDF.js loads and draws it the first time a reader opens it.
  *
  * File Structure:
  * - Props: file URL and label
  * - Details element
- * - Script: draws each page once
+ * - Script: draws each page once, with the loop in public/scripts/draw-pdf.mjs
  *
  * Where this file is used within the repository:
  * - src/components/ProofRenderer.astro
@@ -40,46 +40,20 @@ const { url, label } = Astro.props;
 </details>
 
 <script is:inline type="module">
+    import { drawPdf } from '/scripts/draw-pdf.mjs';
+
     /**
      * @brief Draws every page of a PDF into its viewer
      * @param viewer Details element holding the viewer
      * @return {Promise<void>} Resolves when every page has been painted
      */
-    async function drawPdf(viewer) {
+    async function drawViewer(viewer) {
         const status = viewer.querySelector('[data-pdf-status]');
-        const host = viewer.querySelector('[data-pdf-pages]');
 
         status.hidden = false;
 
         try {
-            const { getDocument, GlobalWorkerOptions } = await import('/vendor/pdf.min.mjs');
-
-            GlobalWorkerOptions.workerSrc = '/vendor/pdf.worker.min.mjs';
-
-            const pdf = await getDocument({ url: viewer.dataset.pdf }).promise;
-            const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-
-            for (let number = 1; number <= pdf.numPages; number += 1) {
-                const page = await pdf.getPage(number);
-                const base = page.getViewport({ scale: 1 });
-                const viewport = page.getViewport({
-                    scale: (host.clientWidth / base.width) * pixelRatio,
-                });
-                const canvas = document.createElement('canvas');
-
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-                canvas.setAttribute('role', 'img');
-                canvas.setAttribute('aria-label', `Page ${number} of ${pdf.numPages}`);
-                host.append(canvas);
-
-                await page.render({
-                    canvasContext: canvas.getContext('2d'),
-                    viewport,
-                    canvas,
-                }).promise;
-            }
-
+            await drawPdf(viewer.querySelector('[data-pdf-pages]'), viewer.dataset.pdf, 'Page');
             status.hidden = true;
         } catch {
             status.textContent = 'The file could not be drawn. Use the link to open it.';
@@ -92,7 +66,7 @@ const { url, label } = Astro.props;
         viewer.addEventListener(
             'toggle',
             () => {
-                drawPdf(viewer);
+                drawViewer(viewer);
             },
             { once: true }
         );

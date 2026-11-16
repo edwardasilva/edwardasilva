@@ -2,7 +2,7 @@
   "name": "site-dark",
   "type": "dark",
   "colors": {
-    "editor.background": "#101828",
+    "editor.background": "#18191b",
     "editor.foreground": "#eceef2"
   },
   "tokenColors": [
@@ -21,7 +21,7 @@
     {
       "scope": ["comment", "punctuation.definition.comment"],
       "settings": {
-        "foreground": "#a6afbf",
+        "foreground": "#aeb1b7",
         "fontStyle": "italic"
       }
     }

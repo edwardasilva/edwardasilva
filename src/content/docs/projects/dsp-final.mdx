@@ -10,7 +10,7 @@ slug: projects/dsp-final
 
   Author: Edward Silva
   Creation Date: 07 November, 2026
-  Last Update: 14 November, 2026
+  Last Update: 16 November, 2026
 
   Built from the EENG 411 report in src/assets/DSP and the project's Run.m and Main.m. Figures are the repository's own files. Written to the rules in eeprep's .github/STYLE.md.
 
@@ -24,7 +24,7 @@ import Figure from '../../../components/Figure.astro';
 import PitchFigure from '../../../components/PitchFigure.astro';
 import ProofList from '../../../components/ProofList.astro';
 
-The FFT found the pitch 2.68 times faster than autocorrelation, and in the test sweep it kept tracking to about 200 Hz higher than autocorrelation did. Either method works for a simple auto-tune. For the EENG 411 final project, I built the real-time MATLAB pipeline that runs both detectors and measured the results. Jonas Krider and I wrote the detector code on this page together.
+The fast Fourier transform (FFT) found the pitch 2.68 times faster than autocorrelation. In the test sweep it also kept tracking to about 200 Hz higher than autocorrelation did. Either method works for a simple auto-tune. For the EENG 411 final project, I built the real-time MATLAB pipeline that runs both detectors and measured the results. Jonas Krider and I wrote the detector code on this page together.
 
 An FFT finds the pitch by looking for the strongest frequency bin. Autocorrelation (ACF) looks for the lag where a signal best matches itself.
 
@@ -40,7 +40,7 @@ Audio comes in at 48 kHz and goes through a cascaded Butterworth band-pass filte
 
 ### FFT detector
 
-The FFT reads the current frame, 683 samples after decimation. It applies a Hamming window and zero-pads the frame to an 8192-point FFT, then fits a parabola through the peak and its neighbors to resolve pitch between bins:
+The FFT reads the current frame, 683 samples after decimation. It applies a Hamming window and zero-pads the frame to an 8192-point FFT. Then it fits a parabola through the peak and its neighbors to resolve pitch between bins:
 
 ```matlab title="Run.m"
 spectraPitch = fft(pitchSignal_NoDc .* hamming(L_pitch), nfft_hires);

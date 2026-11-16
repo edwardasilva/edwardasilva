@@ -3,7 +3,7 @@
   Site Icon
 
   Author: Edward Silva
-  Last Update: 10 November, 2026
+  Last Update: 16 November, 2026
 
   Browser tab icon, with light and dark colors. A rounded oscilloscope screen with the red waveform,
   drawn to fill the 32 by 32 box with a 2 px margin. Stroke centers sit on odd coordinates so the
@@ -15,10 +15,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <defs>
     <style>
-      .screen { fill: #fbfbfc; stroke: #16233a; stroke-width: 2; }
+      .screen { fill: #fbfbfc; stroke: #24272b; stroke-width: 2; }
       .waveform { stroke: #a3201d; stroke-width: 2; fill: none; stroke-linecap: round; }
       @media (prefers-color-scheme: dark) {
-        .screen { fill: #0d1524; stroke: #eceef2; }
+        .screen { fill: #151618; stroke: #eceef2; }
         .waveform { stroke: #e06a5f; }
       }
     </style>
