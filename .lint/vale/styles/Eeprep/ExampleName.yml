@@ -1,0 +1,8 @@
+# The one example person is Alex Doe, with they and them. Any other first name with Doe is wrong.
+extends: existence
+message: "Use 'Alex Doe' as the example name, not '%s'."
+level: error
+ignorecase: false
+nonword: true
+tokens:
+  - '\b(?!Alex )[A-Z][a-z]+ Doe\b'

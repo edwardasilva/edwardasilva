@@ -1,0 +1,304 @@
+---
+/**
+ * src/components/EstimationFigure.astro
+ * Estimation Figure
+ *
+ * Author: Edward Silva
+ * Creation Date: 07 November, 2026
+ * Last Update: 07 November, 2026
+ *
+ * Live figure: run the damper simulation and both filters in the browser, and change how strong the
+ * fluid's yield term is. The build fails if the two claims in the page text stop being true: the
+ * filters agree at the report's value, and they separate once the term is large.
+ *
+ * File Structure:
+ * - Build-time checks over several noise seeds
+ * - Controls, prerendered plot at the report's value, and results table
+ * - Script: reruns the plant and all three filters
+ *
+ * Where this file is used within the repository:
+ * - src/content/docs/projects/EKF-project.mdx
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import Plot from './Plot.astro';
+import {
+    C_DEFAULT_ALPHA_UKF,
+    C_DEFAULT_QS,
+    C_REPORT_KM,
+    runEkf,
+    runPlant,
+    runUkf,
+    summarize,
+} from '../lib/estimation';
+import { bandPath, linePath, makePlot } from '../lib/plot';
+
+interface Props {
+    number: number;
+}
+
+const C_SEEDS = [1, 2, 3, 4, 5, 6];
+
+for (const seed of C_SEEDS) {
+    const plant = runPlant(seed);
+    const ekf = runEkf(plant, C_DEFAULT_QS);
+    const ukf = runUkf(plant, C_DEFAULT_QS, C_DEFAULT_ALPHA_UKF);
+    const worst = Math.max(
+        ...ekf.force.slice(10).map((value, index) => Math.abs(value - ukf.force[index + 10]))
+    );
+
+    if (worst > 1) {
+        throw new Error(`[ERROR] Filters no longer agree at the report's Km: ${worst} N`);
+    }
+}
+
+const strong = runPlant(1, 500);
+const strongEkf = summarize(strong, runEkf(strong, C_DEFAULT_QS, 500));
+const strongUkf = summarize(strong, runUkf(strong, C_DEFAULT_QS, 1, 500));
+
+if (strongUkf.inside - strongEkf.inside < 0.2) {
+    throw new Error('[ERROR] The filters no longer separate at Km = 500');
+}
+
+const plot = makePlot(0, 3, -1500, 3000);
+const plant = runPlant(1);
+const run = runEkf(plant, C_DEFAULT_QS);
+const lows = run.force.map((value, index) => value - 3 * run.sigma[index]);
+const highs = run.force.map((value, index) => value + 3 * run.sigma[index]);
+const filters = [
+    { key: 'ekf', label: 'EKF' },
+    { key: 'ukf', label: 'UKF, alpha = 0.001 (the report)' },
+    { key: 'wide', label: 'UKF, alpha = 1' },
+];
+---
+
+<figure class="es-fig es-live" data-estimation data-plot-config={JSON.stringify(plot)}>
+    <div class="es-live-controls not-content" data-controls hidden>
+        <label for="estimation-km">Magnetic yield constant Km</label>
+        <input
+            id="estimation-km"
+            type="range"
+            min="-2.3"
+            max="3"
+            step="0.01"
+            value={Math.log10(C_REPORT_KM)}
+            data-slider
+        />
+        <div class="es-live-presets">
+            <button type="button" data-preset={C_REPORT_KM}>
+                0.005, the report's value
+            </button>
+            <button type="button" data-preset="50">
+                50
+            </button>
+            <button type="button" data-preset="500">
+                500
+            </button>
+            <button type="button" data-seed>
+                New noise
+            </button>
+        </div>
+        <div class="es-live-presets" role="radiogroup" aria-label="Filter drawn on the plot">
+            {filters.map((filter, index) => (
+                <label class="es-live-check">
+                    <input
+                        type="radio"
+                        name="estimation-filter"
+                        value={filter.key}
+                        checked={index === 0}
+                        data-filter
+                    />
+                    {filter.label}
+                </label>
+            ))}
+        </div>
+    </div>
+
+    <ul class="es-live-legend not-content" aria-hidden="true">
+        <li>
+            <span class="es-swatch es-swatch-live"></span>Estimated force
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-base"></span>True force
+        </li>
+        <li>
+            <span class="es-swatch es-swatch-band"></span>3 sigma bound
+        </li>
+    </ul>
+
+    <Plot
+        id="estimation-plot"
+        plot={plot}
+        xTicks={[0, 1, 2, 3]}
+        yTicks={[-1000, 0, 1000, 2000, 3000]}
+        xLabel="Time (s)"
+        yLabel="Force (N)"
+        label="Estimated and true terrain force over three seconds, with three-sigma bounds"
+        paths={[
+            { key: 'band', class: 'es-band', d: bandPath(plant.time, lows, highs, plot) },
+            { key: 'true', class: 'es-line-base', d: linePath(plant.time, plant.force, plot) },
+            { key: 'live', class: 'es-line-live', d: linePath(plant.time, run.force, plot) },
+        ]}
+    />
+
+    <p class="es-live-read" aria-live="polite" data-read>
+        Km = {C_REPORT_KM}. The largest yield force in this run is {(C_REPORT_KM * 2).toFixed(2)} N.
+    </p>
+    <noscript>
+        <p>The controls need JavaScript. The curve above is the EKF at the report's value.</p>
+    </noscript>
+
+    <div class="es-table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Filter</th>
+                    <th scope="col">RMS error</th>
+                    <th scope="col">Mean 3 sigma</th>
+                    <th scope="col">Inside the bound</th>
+                </tr>
+            </thead>
+            <tbody>
+                {filters.map((filter) => {
+                    const result = summarize(
+                        plant,
+                        filter.key === 'ekf'
+                            ? run
+                            : runUkf(
+                                  plant,
+                                  C_DEFAULT_QS,
+                                  filter.key === 'ukf' ? C_DEFAULT_ALPHA_UKF : 1
+                              )
+                    );
+
+                    return (
+                        <tr data-row={filter.key}>
+                            <td>{filter.label}</td>
+                            <td data-cell="rmse">{result.rmse.toFixed(1)} N</td>
+                            <td data-cell="bound">{result.bound.toFixed(0)} N</td>
+                            <td data-cell="inside">{(result.inside * 100).toFixed(0)}%</td>
+                        </tr>
+                    );
+                })}
+            </tbody>
+        </table>
+    </div>
+
+    <figcaption>
+        <span class="es-fignum">Figure {Astro.props.number}</span>
+        <span>
+            A port of the project's Main.m, run in your browser with seeded noise. It uses the same
+            terrain, noise levels, and filter settings. The plant steps with Euler at 1 ms where the
+            project used Simulink. The numbers skip the first 0.1 s, while each filter converges
+            from its starting guess.
+        </span>
+    </figcaption>
+</figure>
+
+<script>
+    import {
+        C_DEFAULT_ALPHA_UKF,
+        C_DEFAULT_QS,
+        runEkf,
+        runPlant,
+        runUkf,
+        summarize,
+    } from '../lib/estimation';
+    import { attachCrosshair, bandPath, linePath, type PlotConfig } from '../lib/plot';
+
+    const C_LIMIT = 100000;
+
+    for (const root of document.querySelectorAll<HTMLElement>('[data-estimation]')) {
+        const plot = JSON.parse(root.dataset.plotConfig ?? '{}') as PlotConfig;
+        const slider = root.querySelector<HTMLInputElement>('[data-slider]')!;
+        const read = root.querySelector<HTMLElement>('[data-read]')!;
+        const band = root.querySelector<SVGPathElement>('[data-path="band"]')!;
+        const truth = root.querySelector<SVGPathElement>('[data-path="true"]')!;
+        const live = root.querySelector<SVGPathElement>('[data-path="live"]')!;
+        const radios = [...root.querySelectorAll<HTMLInputElement>('[data-filter]')];
+        let km = 10 ** Number(slider.value);
+        let seed = 1;
+        let plant = runPlant(seed, km);
+        let shown = runEkf(plant, C_DEFAULT_QS, km);
+
+        root.querySelector<HTMLElement>('[data-controls]')!.hidden = false;
+
+        /**
+         * @brief Reruns the plant and filters and redraws the chart and table
+         * @return Nothing
+         */
+        const update = () => {
+            plant = runPlant(seed, km);
+
+            const runs: Record<string, ReturnType<typeof runEkf>> = {
+                ekf: runEkf(plant, C_DEFAULT_QS, km),
+                ukf: runUkf(plant, C_DEFAULT_QS, C_DEFAULT_ALPHA_UKF, km),
+                wide: runUkf(plant, C_DEFAULT_QS, 1, km),
+            };
+
+            for (const [key, run] of Object.entries(runs)) {
+                const { rmse, bound, inside } = summarize(plant, run);
+                const row = root.querySelector<HTMLElement>(`[data-row="${key}"]`)!;
+
+                row.querySelector('[data-cell="rmse"]')!.textContent = `${rmse.toFixed(1)} N`;
+                row.querySelector('[data-cell="bound"]')!.textContent = `${bound.toFixed(0)} N`;
+                row.querySelector('[data-cell="inside"]')!.textContent =
+                    `${(inside * 100).toFixed(0)}%`;
+            }
+
+            shown = runs[radios.find((radio) => radio.checked)?.value ?? 'ekf'];
+
+            /**
+             * @brief Keeps a value inside the range an SVG path can hold
+             * @param value Force in newtons
+             * @return Clamped force
+             */
+            const clamp = (value: number) => Math.max(-C_LIMIT, Math.min(C_LIMIT, value));
+            const estimate = shown.force.map(clamp);
+            const lows = shown.force.map((value, index) => clamp(value - 3 * shown.sigma[index]));
+            const highs = shown.force.map((value, index) => clamp(value + 3 * shown.sigma[index]));
+
+            band.setAttribute('d', bandPath(plant.time, lows, highs, plot));
+            truth.setAttribute('d', linePath(plant.time, plant.force, plot));
+            live.setAttribute('d', linePath(plant.time, estimate, plot));
+
+            const label = km < 1 ? km.toFixed(3) : km < 10 ? km.toFixed(1) : km.toFixed(0);
+
+            read.textContent = `Km = ${label}. The largest yield force in this run is ${(km * 2).toFixed(km < 1 ? 2 : 0)} N.`;
+        };
+
+        slider.addEventListener('input', () => {
+            km = 10 ** Number(slider.value);
+            update();
+        });
+
+        for (const radio of radios) {
+            radio.addEventListener('change', update);
+        }
+
+        for (const button of root.querySelectorAll<HTMLButtonElement>('[data-preset]')) {
+            button.addEventListener('click', () => {
+                km = Number(button.dataset.preset);
+                slider.value = String(Math.log10(km));
+                update();
+            });
+        }
+
+        root.querySelector('[data-seed]')!.addEventListener('click', () => {
+            seed += 1;
+            update();
+        });
+
+        attachCrosshair(root.querySelector<HTMLElement>('[data-plot]')!, plot, (time) => {
+            const index = Math.min(plant.time.length - 1, Math.max(0, Math.round(time / 0.01)));
+
+            return `${time.toFixed(2)} s: true ${plant.force[index].toFixed(0)} N, estimate ${shown.force[index].toFixed(0)} N, plus or minus ${(3 * shown.sigma[index]).toFixed(0)} N`;
+        });
+
+        update();
+    }
+</script>

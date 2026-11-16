@@ -1,0 +1,59 @@
+---
+/**
+ * src/pages/resume/viewer.astro
+ * Resume Viewer
+ *
+ * Author: Edward Silva
+ * Creation Date: 16 March, 2026
+ * Last Update: 16 November, 2026
+ *
+ * Draws the resume PDF in the page with PDF.js, with a direct download link.
+ *
+ * File Structure:
+ * - Download link
+ * - PdfPages viewer
+ *
+ * Where this file is used within the repository:
+ * - Route: /resume/viewer
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import PdfPages from '../../components/PdfPages.astro';
+import { pdfAlternate, pdfFileName } from '../../lib/pdf-link';
+import { asSentence, resume } from '../../data/resume';
+
+const { resumePdfUrl } = resume.personal;
+const generatorUrl = resume.projects.find((project) => project.slug === 'resume-generator')?.github;
+
+if (!resumePdfUrl || !generatorUrl) {
+    throw new Error(
+        '[ERROR] resume-data.json needs personal.resumePdfUrl and the resume-generator github link'
+    );
+}
+---
+
+<StarlightPage
+    frontmatter={{
+        title: 'Resume',
+        description: asSentence(resume.site.pages.resume.description),
+        tableOfContents: false,
+        pagefind: false,
+        head: [pdfAlternate(resumePdfUrl, 'Resume')],
+    }}
+>
+    <p>
+        <a href={resumePdfUrl} download={pdfFileName(resumePdfUrl)}>
+            Download the PDF
+        </a>
+        . A script builds it from one data file with the same page-fitting method as{' '}
+        <ExternalLink href={generatorUrl}> resume-generator </ExternalLink>.
+    </p>
+
+    <PdfPages url={resumePdfUrl} name="resume" />
+</StarlightPage>

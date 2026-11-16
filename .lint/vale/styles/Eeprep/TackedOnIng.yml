@@ -1,0 +1,7 @@
+# A trailing "-ing" clause that comments on the sentence before it.
+extends: existence
+message: "Cut the tacked-on clause '%s'. Say it in its own sentence."
+level: error
+ignorecase: true
+tokens:
+  - ',\s(?:highlighting|underscoring|emphasizing|showcasing|reflecting|symbolizing|ensuring|contributing to|making it|fostering|enhancing)\b'

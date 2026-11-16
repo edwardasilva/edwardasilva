@@ -1,0 +1,57 @@
+---
+/**
+ * src/pages/resume/cv.astro
+ * CV Viewer
+ *
+ * Author: Edward Silva
+ * Creation Date: 14 November, 2026
+ * Last Update: 16 November, 2026
+ *
+ * Draws the two-page CV PDF in the page with PDF.js, with a direct download link, in the same
+ * manner as the resume page.
+ *
+ * File Structure:
+ * - Download link
+ * - PdfPages viewer
+ *
+ * Where this file is used within the repository:
+ * - Route: /resume/cv, the CV tab under Resume in the sidebar
+ *
+ * Usage:
+ * $ `npm run dev` : Renders in the local development server
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import PdfPages from '../../components/PdfPages.astro';
+import { pdfAlternate, pdfFileName } from '../../lib/pdf-link';
+import { asSentence, resume } from '../../data/resume';
+
+const { cvPdfUrl } = resume.personal;
+const page = resume.site.pages.cv;
+
+if (!cvPdfUrl || !page) {
+    throw new Error('[ERROR] resume-data.json needs personal.cvPdfUrl and site.pages.cv');
+}
+---
+
+<StarlightPage
+    frontmatter={{
+        title: 'CV',
+        description: asSentence(page.description),
+        tableOfContents: false,
+        pagefind: false,
+        head: [pdfAlternate(cvPdfUrl, 'CV')],
+    }}
+>
+    <p>
+        <a href={cvPdfUrl} download={pdfFileName(cvPdfUrl)}>
+            Download the PDF
+        </a>
+        . The two-page CV is built from the same data file as the resume, with the same page-fitting
+        method.
+    </p>
+
+    <PdfPages url={cvPdfUrl} name="CV" />
+</StarlightPage>

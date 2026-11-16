@@ -1,0 +1,46 @@
+#!/usr/bin/env sh
+# .githooks/pre-commit
+# Pre-commit Hook
+#
+# Author: Edward Silva
+# Creation Date: 01 November, 2026
+# Last Update: 16 November, 2026
+#
+# Rebuilds the resume and CV PDFs and stages each only when its text changed, then runs
+# scripts/scrub-private.js on the staged files.
+#
+# Usage:
+# $ `npm run hooks:install` : Registers .githooks, so git runs this before every commit
+#
+# Copyright (c) 2026 Edward Silva. All rights reserved.
+
+set -e
+
+# A different TeX distribution changes the PDF bytes with no content change, so the hook keeps
+# the committed file when the text matches HEAD and stages the rebuild only when the text differs.
+# $1 is the npm script, $2 the PDF it writes, and $3 and $4 the document name as it reads
+# mid-sentence and at the start of a sentence.
+build_pdf() {
+  echo "[pre-commit] Building $3 PDF locally..."
+  npm run --silent "$1"
+
+  if command -v pdftotext >/dev/null 2>&1 && git cat-file -e "HEAD:$2" 2>/dev/null; then
+    old_text=$(git show "HEAD:$2" | pdftotext -layout - - | cksum)
+    new_text=$(pdftotext -layout "$2" - | cksum)
+
+    if [ "$old_text" = "$new_text" ]; then
+      git checkout HEAD -- "$2"
+      echo "[pre-commit] $4 text unchanged. Kept the committed PDF."
+    else
+      git add "$2"
+    fi
+  else
+    git add "$2"
+  fi
+}
+
+build_pdf build:resume public/resume/Edward_Silva_Resume.pdf resume Resume
+build_pdf build:cv public/cv/Edward_Silva_CV.pdf CV CV
+
+node scripts/scrub-private.js staged
+echo "[pre-commit] Resume check done. Proceeding with commit."

@@ -1,0 +1,12 @@
+# Template and tracking leftovers that must never ship.
+extends: existence
+message: "Remove the leftover '%s'."
+level: error
+scope: raw
+nonword: true
+tokens:
+  - 'utm_source='
+  - 'referrer='
+  - '\[Your Name\]'
+  - 'INSERT_'
+  - 'example\.com/source'

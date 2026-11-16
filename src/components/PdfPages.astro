@@ -1,0 +1,55 @@
+---
+/**
+ * src/components/PdfPages.astro
+ * PDF Page Viewer
+ *
+ * Author: Edward Silva
+ * Creation Date: 14 November, 2026
+ * Last Update: 16 November, 2026
+ *
+ * Draws every page of one PDF into the page with PDF.js, scaled to the content column. Moved out
+ * of src/pages/resume/viewer.astro so the resume and the CV share one viewer. The drawing loop is
+ * public/scripts/draw-pdf.mjs, which src/components/PdfViewer.astro also uses.
+ *
+ * File Structure:
+ * - Props: the PDF's URL and the document name used in status text and page labels
+ * - Status line and page host
+ * - Inline script: draws the PDF and updates the status line
+ *
+ * Where this file is used within the repository:
+ * - src/pages/resume/viewer.astro and src/pages/resume/cv.astro
+ *
+ * Usage:
+ * $ `<PdfPages url="/resume/Edward_Silva_Resume.pdf" name="resume" />` : Draws the resume
+ *
+ * Copyright (c) 2026 Edward Silva. All rights reserved.
+ */
+
+interface Props {
+    /** URL of the PDF to draw */
+    url: string;
+    /** Document name as it reads mid-sentence, such as "resume" or "CV" */
+    name: string;
+}
+
+const { url, name } = Astro.props;
+---
+
+<p id="pdf-status">Loading {name}.</p>
+<div id="pdf-pages" data-pdf-url={url} data-pdf-name={name} class="es-resume not-content"></div>
+
+<script is:inline type="module">
+    import { drawPdf } from '/scripts/draw-pdf.mjs';
+
+    const status = document.getElementById('pdf-status');
+    const host = document.getElementById('pdf-pages');
+    const name = host.dataset.pdfName;
+    const label = name.charAt(0).toUpperCase() + name.slice(1);
+
+    try {
+        await drawPdf(host, host.dataset.pdfUrl, `${label} page`);
+        status.hidden = true;
+    } catch {
+        status.textContent = `The ${name} could not be drawn. Use the download link above.`;
+    }
+</script>
