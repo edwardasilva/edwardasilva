@@ -36,6 +36,9 @@ import { asSentence, resume } from '../../data/resume';
 
 const C_WIDTH = 1200;
 const C_HEIGHT = 630;
+// Satori sizes a box without its padding, so the card's box is the image less the padding on each
+// side. A box of the full image size grows past it and pushes the last line off the bottom.
+const C_PADDING = 72;
 // satori needs static .woff files, which only @fontsource/source-serif-4 ships. The site font is the
 // variable package, @fontsource-variable/source-serif-4, so both stay.
 const C_FONT_DIR = path.resolve('node_modules/@fontsource/source-serif-4/files');
@@ -61,7 +64,7 @@ export async function getStaticPaths() {
     return [
         {
             params: { slug: 'home' },
-            props: { title: resume.personal.name, line: resume.about.Highlights },
+            props: { title: resume.personal.name, line: asSentence(resume.about.Highlights) },
         },
         ...pages.map(({ entry, project }) => ({
             params: { slug: getPageSlug(entry.id) },
@@ -95,10 +98,10 @@ export const GET: APIRoute = async ({ props }) => {
         {
             display: 'flex',
             flexDirection: 'column',
-            width: C_WIDTH,
-            height: C_HEIGHT,
+            width: C_WIDTH - 2 * C_PADDING,
+            height: C_HEIGHT - 2 * C_PADDING,
             backgroundColor: '#fbfbfc',
-            padding: 72,
+            padding: C_PADDING,
             justifyContent: 'space-between',
             fontFamily: 'Source Serif 4',
         },

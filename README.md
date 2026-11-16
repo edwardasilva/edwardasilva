@@ -10,8 +10,8 @@ Electrical engineering grad from Colorado School of Mines (May 2026), now an emb
 > These are open to contribution!
 
 - [eeprep](https://eeprep.com): a free guide I write for EECS students looking for a first job. Source: [edwardasilva/eeprep](https://github.com/edwardasilva/eeprep).
-- [resume-generator](https://github.com/edwardasilva/resume-generator): turns one JSON file into a one-page PDF resume.
-- [company-lists](https://github.com/edwardasilva/company-lists): plain lists of companies for seven metro areas and every US state.
+- [resume-generator](https://github.com/edwardasilva/resume-generator): turns one JSON file into a one-page PDF resume, or a CV of up to two pages.
+- [company-lists](https://github.com/edwardasilva/company-lists): plain lists of companies for every US state.
 
 Parts of the code and drafts were written with AI tools; I review everything.
 

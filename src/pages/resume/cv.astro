@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 14 November, 2026
- * Last Update: 14 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Draws the two-page CV PDF in the page with PDF.js, with a direct download link, in the same
  * manner as the resume page.
@@ -43,6 +43,17 @@ const pdfName = cvPdfUrl.split('/').at(-1);
         description: asSentence(page.description),
         tableOfContents: false,
         pagefind: false,
+        head: [
+            {
+                tag: 'link',
+                attrs: {
+                    rel: 'alternate',
+                    type: 'application/pdf',
+                    href: cvPdfUrl,
+                    title: 'CV (PDF)',
+                },
+            },
+        ],
     }}
 >
     <p>

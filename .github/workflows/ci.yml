@@ -3,7 +3,7 @@
 #
 # Author: Edward Silva
 # Creation Date: 08 November, 2026
-# Last Update: 14 November, 2026
+# Last Update: 16 November, 2026
 #
 # Checks a pull request into main: lint, format, Vale, type check, dark figures, build, and
 # internal links. The workflow is disabled, so these checks run locally before each merge.
@@ -48,7 +48,7 @@ jobs:
           fetch-depth: 2
           persist-credentials: false
 
-      # A pull request that changes only repo docs, such as README.md or CLAUDE.md, skips the
+      # A pull request that changes only repo docs, such as README.md or LICENSE, skips the
       # type check, the figure check and the build. Lint, Prettier and Vale still run.
       - name: Find what the pull request changes
         id: scope

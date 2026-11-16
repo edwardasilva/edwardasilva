@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 14 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Draws the resume PDF in the page with PDF.js, with a direct download link.
  *
@@ -45,6 +45,17 @@ const pdfName = resumePdfUrl.split('/').at(-1);
         description: asSentence(resume.site.pages.resume.description),
         tableOfContents: false,
         pagefind: false,
+        head: [
+            {
+                tag: 'link',
+                attrs: {
+                    rel: 'alternate',
+                    type: 'application/pdf',
+                    href: resumePdfUrl,
+                    title: 'Resume (PDF)',
+                },
+            },
+        ],
     }}
 >
     <p>

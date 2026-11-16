@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 08 November, 2026
- * Last Update: 14 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Writes /llms.txt, a Markdown index of the site in the llmstxt.org format, so language models
  * and other crawlers can find each page and what it covers. It reads the same project pages and
@@ -12,7 +12,8 @@
  *
  * File Structure:
  * - C_SECTION_PAGES: the data pages, in sidebar order
- * - linkLine: one Markdown list item
+ * - linkLine: one Markdown list item. Every list item links somewhere, as the format asks, so an
+ *   Other experience line links to that section of the experience page
  * - GET: builds the file at build time
  *
  * Where this file is used within the repository:
@@ -40,20 +41,24 @@ const C_SECTION_PAGES = [
     ...(hasAboutContent
         ? [['About', '/about/', asSentence(resume.about.Summary ?? resume.about.Highlights)]]
         : []),
-    ['Experience', '/experiences/', 'Current and past engineering roles, and organizations.'],
+    ['Experience', '/experiences/', asSentence(resume.site.pages.experiences.description)],
     [
         'Education',
         '/education/',
         'Degree, honors, certifications, and which classes fed which project.',
     ],
+    ['Coursework', '/education/coursework/', asSentence(resume.site.pages.coursework.description)],
+    ['Skills', '/skills/', asSentence(resume.site.pages.skills.description)],
     [
-        'Coursework',
-        '/education/coursework/',
-        'The computer science and electrical engineering courses behind the projects, each with a short description.',
+        'Resume (PDF)',
+        resume.personal.resumePdfUrl,
+        'The one-page resume. The PDF has a text layer.',
     ],
-    ['Skills', '/skills/', 'Each skill, with the projects and courses that back it.'],
-    ['Resume', resume.personal.resumePdfUrl, 'The one-page PDF resume.'],
-    ['CV', resume.personal.cvPdfUrl, 'The two-page PDF CV, for graduate applications.'],
+    [
+        'CV (PDF)',
+        resume.personal.cvPdfUrl,
+        'The two-page CV, for graduate applications. The PDF has a text layer.',
+    ],
 ] as const;
 
 /**
@@ -87,7 +92,7 @@ export const GET: APIRoute = async ({ site }) => {
         '',
         `> ${resume.about.Highlights}.`,
         '',
-        'Write-ups of school and personal engineering projects, with the equations, the measured results, who did which part, and the reports behind them.',
+        asSentence(resume.site.pages.projects.description),
         '',
         '## Selected work',
         '',
@@ -113,9 +118,13 @@ export const GET: APIRoute = async ({ site }) => {
                   '',
                   '## Other experience',
                   '',
-                  ...otherExperiences.map(
-                      (experience) =>
-                          `- ${experience.title}, ${experience.company}. ${experience.duration}`
+                  ...otherExperiences.map((experience) =>
+                      linkLine(
+                          `${experience.title}, ${experience.company}`,
+                          '/experiences/#other-experience',
+                          origin,
+                          experience.duration
+                      )
                   ),
               ]
             : []),

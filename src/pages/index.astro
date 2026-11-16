@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 15 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Who this is, the strongest technical work first, then experience, more projects, and what
  * comes next.
@@ -34,8 +34,6 @@ import { asSentence, getExperienceHref, resume, visibleExperiences } from '../da
 const selected = getHomeProjectPages('selected');
 const more = getHomeProjectPages('more');
 const { home } = resume.site.pages;
-const C_FOCUS_FALLBACK = 'My projects are in state estimation, signal processing, and control';
-const focus = home.focus ?? C_FOCUS_FALLBACK;
 const next = resume.about.future.slice(0, 2);
 ---
 
@@ -54,7 +52,7 @@ const next = resume.about.future.slice(0, 2);
     <section class="es-hero">
         <h1 id="_top">{resume.personal.name}</h1>
         {home.intro && <p class="es-lede">{asSentence(home.intro)}</p>}
-        <p class="es-lede">{asSentence(focus)}</p>
+        {home.focus && <p class="es-lede">{asSentence(home.focus)}</p>}
     </section>
 
     <h2>Selected work</h2>
