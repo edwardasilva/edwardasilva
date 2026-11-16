@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 15 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Header, cards, external link marks, page lists, the project facts block, figures, the live
  * figures, and the sidebar. Adapted from eeprep.com.
@@ -39,7 +39,7 @@
 }
 .es-nav a[aria-current='page'] {
     color: var(--es-ink);
-    box-shadow: inset 0 -1.5px 0 var(--es-accent);
+    box-shadow: inset 0 calc(-1 * var(--es-toc-bar)) 0 var(--es-accent);
 }
 @media (hover: hover) {
     .es-nav a:hover {
@@ -261,9 +261,6 @@ button[data-open-modal] kbd {
         min-height: var(--es-tap);
         padding-inline: 0;
     }
-    .es-nav a[aria-current='page'] {
-        box-shadow: inset 0 -2px 0 var(--es-accent);
-    }
     .es-theme,
     .header button[data-open-modal] {
         width: var(--es-tap);
@@ -375,14 +372,13 @@ select,
 textarea {
     font-size: max(1rem, 16px);
 }
+/* The reserved scrollbar gutter keeps the header in the same place on every page. Short pages have
+   no vertical scrollbar and long pages do, so without it the viewport, and the fixed header with
+   it, changes width between pages. */
 html {
     -webkit-tap-highlight-color: transparent;
     scrollbar-gutter: stable;
 }
-
-/* Keep the header in the same place on every page. Short pages have no
-   vertical scrollbar and long pages do, so without a reserved gutter the
-   viewport, and the fixed header with it, changes width between pages. */
 
 /* The splash page has no title, which leaves an empty bordered band at the top. */
 .content-panel:has(> .sl-container:empty) {
@@ -439,6 +435,9 @@ a.external-link .es-ext-last::after {
 }
 .es-hero .es-lede {
     margin-top: 0;
+}
+.es-hero .es-lede + .es-lede {
+    margin-top: var(--es-space-4);
 }
 /* The 404 page's line under the title is Starlight's hero tagline. It reads as the home page lede. */
 .hero .tagline {
@@ -1009,10 +1008,6 @@ figure.es-fig-narrow > picture > img {
     font-variant-numeric: tabular-nums;
 }
 
-.es-cards li + li {
-    margin-top: 0;
-}
-
 /* The chart scales down with its column, so phone widths need larger text in SVG units. */
 .es-grid,
 .es-ref,
@@ -1034,7 +1029,7 @@ figure.es-fig-narrow > picture > img {
 }
 @media (max-width: 50rem) {
     :root {
-        --es-side-top-size: 1.125rem;
+        --es-side-top-size: var(--es-text-h5);
     }
 }
 .es-side {
@@ -1105,7 +1100,11 @@ figure.es-fig-narrow > picture > img {
 }
 .es-side-caret {
     flex-shrink: 0;
-    transition: transform 0.2s ease-out;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .es-side-caret {
+        transition: transform 0.15s ease-out;
+    }
 }
 details[open] > summary .es-side-caret {
     transform: rotate(90deg);
@@ -1114,7 +1113,7 @@ details[open] > summary .es-side-caret {
     color: var(--es-accent);
     font-weight: 600;
     background: transparent;
-    box-shadow: inset 2px 0 0 var(--es-accent);
+    box-shadow: inset var(--es-toc-bar) 0 0 var(--es-accent);
     border-radius: 0;
 }
 @media (hover: hover) {

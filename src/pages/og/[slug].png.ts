@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 14 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Renders 1200x630 share cards for the home page and every project page.
  *

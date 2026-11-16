@@ -8,7 +8,7 @@
 </defs>
 <g fill="none" stroke="#eceef2" stroke-width="1" fill-rule="evenodd" stroke-linecap="square" stroke-linejoin="bevel" >
 
-<g fill="#131c2e" fill-opacity="1" stroke="none" transform="matrix(6e-05,0,0,6e-05,-10.2272,-3.83655)"
+<g fill="#1c1d20" fill-opacity="1" stroke="none" transform="matrix(6e-05,0,0,6e-05,-10.2272,-3.83655)"
 font-family="Segoe UI" font-size="9" font-weight="400" font-style="normal" 
 >
 <path vector-effect="none" fill-rule="evenodd" d="M620000,250000 L620000,2.49e+06 L4.34e+06,2.49e+06 L4.34e+06,250000 L620000,250000"/>
@@ -471,7 +471,7 @@ font-family="Segoe UI" font-size="9" font-weight="400" font-style="normal"
 <polyline fill="none" vector-effect="none" points="369.784,249 370.76,237.952 372,226.161 373.24,231.737 374.48,230.039 375.72,232.351 376.96,213.877 378.2,224.315 379.44,215.339 380.68,220.335 381.92,232.954 383.16,223.897 384.4,238.946 385.64,233.851 386.88,238.813 388.12,234.541 389.36,220.546 390.6,209.285 391.84,220.093 393.08,219.308 394.32,232.089 395.56,222.225 396.8,209.435 398.04,223.089 399.28,244.889 400.52,228.447 401.76,204.113 403,207.977 404.24,212.135 405.48,211.326 406.72,206.752 407.96,191.626 409.2,200.639 410.44,208.504 411.68,221.74 412.92,222.257 414.16,239.944 415.4,220.297 416.64,228.925 417.88,207.258 419.12,211.354 420.36,194.527 421.6,231.683 422.84,210.718 424.08,222.735 425.32,227.736 426.56,226.851 427.8,232.427 429.04,224.294 430.28,218.907 431.52,214.988 432.76,228.519 434,216.706 " />
 </g>
 
-<g fill="#131c2e" fill-opacity="1" stroke="none" transform="matrix(6e-05,0,0,6e-05,-10.2272,-3.83655)"
+<g fill="#1c1d20" fill-opacity="1" stroke="none" transform="matrix(6e-05,0,0,6e-05,-10.2272,-3.83655)"
 font-family="Segoe UI" font-size="9" font-weight="400" font-style="normal" 
 >
 <path vector-effect="none" fill-rule="evenodd" d="M850000,2.97e+06 L850000,3.23e+06 L4.11e+06,3.23e+06 L4.11e+06,2.97e+06 L850000,2.97e+06"/>

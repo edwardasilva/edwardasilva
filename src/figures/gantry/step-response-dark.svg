@@ -8,13 +8,13 @@
 </defs>
 <g fill="none" stroke="#eceef2" stroke-width="1" fill-rule="evenodd" stroke-linecap="square" stroke-linejoin="bevel" >
 
-<g fill="#131c2e" fill-opacity="1" stroke="none" transform="matrix(0.610054,0,0,0.613338,-118.579,-17.8967)"
+<g fill="#1c1d20" fill-opacity="1" stroke="none" transform="matrix(0.610054,0,0,0.613338,-118.579,-17.8967)"
 font-family="MS Shell Dlg 2" font-size="7.8" font-weight="400" font-style="normal" 
 >
 <path vector-effect="none" fill-rule="evenodd" d="M193,28 L2188,28 L2188,1149 L193,1149 L193,28"/>
 </g>
 
-<g fill="#131c2e" fill-opacity="1" stroke="none" transform="matrix(6.10054e-05,0,0,6.13338e-05,-118.579,-17.8967)"
+<g fill="#1c1d20" fill-opacity="1" stroke="none" transform="matrix(6.10054e-05,0,0,6.13338e-05,-118.579,-17.8967)"
 font-family="MS Shell Dlg 2" font-size="7.8" font-weight="400" font-style="normal" 
 >
 <path vector-effect="none" fill-rule="evenodd" d="M3.11e+06,870000 L3.11e+06,1.037e+07 L2.165e+07,1.037e+07 L2.165e+07,870000 L3.11e+06,870000"/>
@@ -481,7 +481,7 @@ font-family="MS Shell Dlg 2" font-size="7.8" font-weight="400" font-style="norma
 <polyline fill="none" vector-effect="none" points="311,1037 311,1037 311.037,1037 311.224,1037 312.155,1037 316.812,1037 340.097,1036.86 377.177,1035.38 414.257,1031.04 451.337,1022.65 488.417,1009.46 525.497,991.218 562.577,968.162 599.657,941.008 636.737,910.921 673.817,879.423 710.897,848.213 747.977,818.955 785.057,793.065 822.137,771.568 859.217,755.021 896.297,743.492 933.377,736.56 970.457,733.331 1007.54,732.485 1044.62,732.41 1081.7,731.393 1118.78,727.843 1155.86,720.48 1192.94,708.455 1230.02,691.396 1267.1,669.422 1304.18,643.138 1341.26,613.613 1378.34,582.296 1415.42,550.864 1452.5,521.01 1489.58,494.224 1526.66,471.63 1563.74,453.899 1600.82,441.215 1637.9,433.27 1674.98,429.278 1712.06,428.01 1749.14,427.908 1786.22,427.262 1823.3,424.434 1860.38,418.057 1897.46,407.176 1934.54,391.303 1971.62,370.443 2008.7,345.089 2045.78,316.205 2082.86,285.163 2119.94,253.603 2157.02,223.235 2165,217.009 " />
 </g>
 
-<g fill="#131c2e" fill-opacity="1" stroke="none" transform="matrix(6.10054e-05,0,0,6.13338e-05,-118.579,-17.8967)"
+<g fill="#1c1d20" fill-opacity="1" stroke="none" transform="matrix(6.10054e-05,0,0,6.13338e-05,-118.579,-17.8967)"
 font-family="MS Shell Dlg 2" font-size="7.8" font-weight="400" font-style="normal" 
 >
 <path vector-effect="none" fill-rule="evenodd" d="M1.845e+07,9.44e+06 L1.845e+07,1.024e+07 L2.152e+07,1.024e+07 L2.152e+07,9.44e+06 L1.845e+07,9.44e+06"/>

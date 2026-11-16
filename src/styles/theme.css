@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 07 November, 2026
- * Last Update: 15 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Design tokens, the Starlight variable mapping, and base typography. The system is shared with
  * eeprep.com: Source Serif 4, Source Code Pro, one crimson accent, night charcoal in dark mode.
@@ -36,12 +36,14 @@
     /* The type scale. Every size on the site is one of these, so the same kind of text is the
        same size on every page. h4 is also the card title and the wordmark. small is the facts
        blocks, card text, and ledger details. meta is captions, the footer, legends, and controls.
-       eyebrow is figure numbers and small labels. */
+       eyebrow is figure numbers and small labels. h5 is Starlight's own large UI text, such as the
+       "On this page" heading, and the top sidebar rows on a phone. */
     --es-text-h1: 3.5rem;
     --es-text-h2: 2.125rem;
     --es-text-h3: 1.5rem;
     --es-text-lede: 1.4375rem;
     --es-text-h4: 1.375rem;
+    --es-text-h5: 1.125rem;
     --es-text-body: 1rem;
     --es-text-small: 0.9375rem;
     --es-text-meta: 0.875rem;
@@ -71,6 +73,8 @@
     --es-radius: 4px;
     --es-radius-lg: 8px;
     --es-border: 1px solid var(--es-rule);
+    /* The bar that marks the current item: the header link, the sidebar link. */
+    --es-toc-bar: 1.5px;
     /* White plate behind PDF pages and light-only images. Same in both themes. */
     --es-plate: #ffffff;
 }
@@ -82,7 +86,7 @@
     --es-rule-2: #c4c8cf;
     --es-ink: #24272b;
     /* Three text roles: ink, ink-2 (secondary) and accent (current item and
-	   figures only). Silver is never text. Older names alias onto them.
+	   site chrome only, never figures). Silver is never text. Older names alias onto them.
 	   Every sentence or line a reader reads is ink: paragraphs, ledes, list items
 	   and the dates in them, and card and course text. ink-2 is only for labels
 	   and metadata in their own column or at caption size: fact labels, the honors
@@ -163,7 +167,14 @@
     --sl-shadow-sm: none;
     --sl-shadow-md: 0 1px 0 var(--es-rule);
     --sl-shadow-lg: 0 8px 24px rgb(0 0 0 / 0.08);
+    /* Starlight's own sizes follow the same scale, so its chrome (table of contents, pagination,
+       search) matches the theme's text. */
+    --sl-text-xs: var(--es-text-meta);
+    --sl-text-sm: var(--es-text-meta);
+    --sl-text-base: var(--es-text-body);
+    --sl-text-lg: var(--es-text-h5);
     --sl-text-body: var(--es-text-body);
+    --sl-text-body-sm: var(--es-text-meta);
     --sl-text-code: var(--es-text-code);
     --sl-line-height: var(--es-lh-body);
     --sl-line-height-headings: var(--es-lh-heading);

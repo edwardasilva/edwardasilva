@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 09 November, 2026
- * Last Update: 10 November, 2026
+ * Last Update: 16 November, 2026
  *
  * Writes a dark-theme copy of every SVG plot under src/figures. The plots come from MATLAB and
  * matplotlib reports drawn for a white page, so Figure.astro used to put them on a white plate in
@@ -44,10 +44,10 @@ const C_DARK_SUFFIX = '-dark.svg';
 // The dark theme in src/styles/theme.css: the figure surface, text ink, the secondary line
 // colour, and the stronger rule. Keep them in step with that file.
 const C_DARK = {
-    surface: [0x13, 0x1c, 0x2e],
+    surface: [0x1c, 0x1d, 0x20],
     ink: [0xec, 0xee, 0xf2],
-    silver: [0x76, 0x80, 0x8f],
-    rule: [0x3b, 0x43, 0x52],
+    silver: [0x7c, 0x80, 0x87],
+    rule: [0x44, 0x47, 0x4c],
 };
 
 // The four series colours in the light plots and the dark value each one takes. These bypass the
