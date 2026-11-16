@@ -300,7 +300,7 @@ export default defineConfig({
                     tag: 'meta',
                     attrs: {
                         name: 'theme-color',
-                        content: '#0d1524',
+                        content: '#151618',
                         media: '(prefers-color-scheme: dark)',
                     },
                 },

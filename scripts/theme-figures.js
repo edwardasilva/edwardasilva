@@ -8,9 +8,9 @@
  *
  * Writes a dark-theme copy of every SVG plot under src/figures. The plots come from MATLAB and
  * matplotlib reports drawn for a white page, so Figure.astro used to put them on a white plate in
- * both themes. This script recolors each one for the night navy theme instead: white becomes the
+ * both themes. This script recolors each one for the night charcoal theme instead: white becomes the
  * figure surface, black and dark grey become ink, light greys become the rule colour, and every
- * other colour is lightened until it reads on navy. The light source file is never changed, so
+ * other colour is lightened until it reads on charcoal. The light source file is never changed, so
  * the figure in light mode stays exactly as the report drew it.
  *
  * File Structure:
@@ -53,13 +53,13 @@ const C_DARK = {
 // The four series colours in the light plots and the dark value each one takes. These bypass the
 // generic lighten step. Keep them in step with the series palette in the issue that set it.
 const C_SERIES = {
-    '#16233a': '#eceef2',
+    '#24272b': '#eceef2',
     '#1d5f8a': '#7fb3d9',
     '#3f6b22': '#9cc77a',
-    '#838c9a': '#76808f',
+    '#878b91': '#7c8087',
 };
 
-// The smallest relative luminance a coloured line or marker keeps on navy paper.
+// The smallest relative luminance a coloured line or marker keeps on charcoal paper.
 const C_MIN_LUMINANCE = 0.3;
 
 const C_NAMED = {
@@ -126,7 +126,7 @@ function luminance(channels) {
 }
 
 /**
- * @brief Mixes a colour toward white until it reads on navy
+ * @brief Mixes a colour toward white until it reads on charcoal
  * @param channels Red, green, and blue from 0 to 255
  * @return The lightened channels, with the hue kept
  */

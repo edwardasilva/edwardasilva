@@ -7,7 +7,7 @@
  * Last Update: 15 November, 2026
  *
  * Design tokens, the Starlight variable mapping, and base typography. The system is shared with
- * eeprep.com: Source Serif 4, Source Code Pro, one crimson accent, night navy in dark mode.
+ * eeprep.com: Source Serif 4, Source Code Pro, one crimson accent, night charcoal in dark mode.
  * Unlayered CSS beats Starlight's @layer rules. Starlight treats :root as dark and
  * :root[data-theme='light'] as light.
  *
@@ -80,7 +80,7 @@
     --es-sunken: #f3f4f6;
     --es-rule: #e2e4e8;
     --es-rule-2: #c4c8cf;
-    --es-ink: #16233a;
+    --es-ink: #24272b;
     /* Three text roles: ink, ink-2 (secondary) and accent (current item and
 	   figures only). Silver is never text. Older names alias onto them.
 	   Every sentence or line a reader reads is ink: paragraphs, ledes, list items
@@ -88,9 +88,9 @@
 	   and metadata in their own column or at caption size: fact labels, the honors
 	   detail column, captions, figure numbers, the footer, and the table of contents. */
     --es-text: var(--es-ink);
-    --es-ink-2: #424d63;
+    --es-ink-2: #50555c;
     --es-mute: var(--es-ink-2);
-    --es-silver: #838c9a;
+    --es-silver: #878b91;
     --es-accent: #a3201d;
     --es-accent-hover: #7d1714;
     --es-accent-soft: #f8ecea;
@@ -100,23 +100,23 @@
     --es-dg-grid: #e9ecf0;
 }
 :root {
-    --es-paper: #0d1524;
-    --es-surface: #131c2e;
-    --es-sunken: #101828;
-    --es-rule: #232b3a;
-    --es-rule-2: #3b4352;
+    --es-paper: #151618;
+    --es-surface: #1c1d20;
+    --es-sunken: #18191b;
+    --es-rule: #2b2d31;
+    --es-rule-2: #44474c;
     --es-ink: #eceef2;
     --es-text: var(--es-ink);
-    --es-ink-2: #a6afbf;
+    --es-ink-2: #aeb1b7;
     --es-mute: var(--es-ink-2);
-    --es-silver: #76808f;
+    --es-silver: #7c8087;
     --es-accent: #e06a5f;
     --es-accent-hover: #f08b81;
-    --es-accent-soft: #2a1a24;
-    --es-on-accent: #0d1524;
+    --es-accent-soft: #2a1b1b;
+    --es-on-accent: #151618;
     --es-ex: #7fb3d9;
-    --es-ex-soft: #14243a;
-    --es-dg-grid: #1c2537;
+    --es-ex-soft: #18232c;
+    --es-dg-grid: #232529;
 }
 :root,
 :root[data-theme='light'] {

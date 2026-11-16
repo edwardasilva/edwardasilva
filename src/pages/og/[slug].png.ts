@@ -114,7 +114,7 @@ export const GET: APIRoute = async ({ props }) => {
                     {
                         fontSize: 76,
                         fontWeight: 600,
-                        color: '#16233a',
+                        color: '#24272b',
                         margin: '0 0 24px',
                         lineHeight: 1.08,
                     },
@@ -125,7 +125,7 @@ export const GET: APIRoute = async ({ props }) => {
                     {
                         fontSize: 32,
                         fontWeight: 400,
-                        color: '#424d63',
+                        color: '#50555c',
                         margin: 0,
                         lineHeight: 1.35,
                     },
