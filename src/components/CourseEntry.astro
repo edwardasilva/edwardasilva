@@ -5,7 +5,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 06 November, 2026
- * Last Update: 08 November, 2026
+ * Last Update: 19 November, 2026
  *
  * One row of the coursework ledger. The closed row shows the code and name. Opened, it shows the
  * description, then the skills and any project from the course as a label and value grid.
@@ -34,6 +34,7 @@ interface Props {
 
 const { course } = Astro.props;
 const projects = getProjectsForCourse(course);
+const meta = [course.term?.trim(), course.graduate ? 'Graduate' : ''].filter(Boolean).join(', ');
 ---
 
 <details id={getCourseSlug(course)} class="es-course">
@@ -42,6 +43,7 @@ const projects = getProjectsForCourse(course);
         <span class="es-course-name">
             {course.name}
             {course.alias && ` (${course.alias})`}
+            {meta && <span class="es-course-term">{meta}</span>}
         </span>
     </summary>
     <div class="es-course-body">
