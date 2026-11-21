@@ -4,7 +4,7 @@
  *
  * Author: Edward Silva
  * Creation Date: 16 March, 2026
- * Last Update: 15 November, 2026
+ * Last Update: 19 November, 2026
  *
  * Reads information/resume-data.json once, cleans it for the site, and exports what the pages render.
  * That file is the only source of the site's data, including the site-only fields and the site
@@ -531,12 +531,44 @@ function courseNumber(code: string): number {
     return Number(code.match(/\b(\d{3,4})\b/)?.[1] ?? 0);
 }
 
+const C_TERM_SEASONS = ['spring', 'summer', 'fall'];
+
+/**
+ * @brief Turns a term such as Fall 2025 into a number that sorts by date
+ * @param term Term string from the data, which may end in a note such as (NOVA transfer)
+ * @return Year times 10 plus the season position, 0 for a term that does not parse, or -1 for none
+ */
+function termRank(term: string | undefined): number {
+    if (!term?.trim()) {
+        return -1;
+    }
+
+    const match = term.trim().match(/^(spring|summer|fall)\s+(\d{4})\b/i);
+
+    if (!match) {
+        return 0;
+    }
+
+    return Number(match[2]) * 10 + C_TERM_SEASONS.indexOf(match[1].toLowerCase()) + 1;
+}
+
+/**
+ * @brief Orders courses newest term first, then by course number, with undated courses last
+ * @param left First course
+ * @param right Second course
+ * @return Negative when left comes first, positive when right does
+ */
+function compareCourses(left: Course, right: Course): number {
+    return (
+        termRank(right.term) - termRank(left.term) ||
+        courseNumber(right.code) - courseNumber(left.code)
+    );
+}
+
 export const courseCategories = Object.entries(primaryEducation?.courses ?? {})
     .map(([category, courses]) => ({
         category,
-        courses: courses
-            .filter(isSiteCourse)
-            .sort((left, right) => courseNumber(right.code) - courseNumber(left.code)),
+        courses: courses.filter(isSiteCourse).sort(compareCourses),
     }))
     .filter((entry) => entry.courses.length > 0);
 
