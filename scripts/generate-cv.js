@@ -139,8 +139,8 @@ function cvEducation(data) {
  * @return One { label, names } per coursework line
  * @details Names only, with no course codes, because a reader outside the school does not know
  * the codes. The full course name prints, not the shorter alias the one-page resume uses. When
- * cv.coursework is set, it picks the lines, their labels, the courses by code, an optional
- * grade, and an optional shorter name. Otherwise each course group in the data is one line of
+ * cv.coursework is set, it picks the lines, their labels, the courses by code, and an optional
+ * shorter name. Otherwise each course group in the data is one line of
  * its CV-visible courses, ordered by Priority, then by code. The one-page Signals and Systems
  * merge does not apply here.
  */
@@ -157,11 +157,7 @@ function cvCourseGroups(education, data) {
                         course: onCv(courses).find((course) => course.code === pick.code),
                     }))
                     .filter(({ course }) => course)
-                    .map(({ pick, course }) =>
-                        pick.grade
-                            ? `${pick.name ?? course.name} (${pick.grade})`
-                            : (pick.name ?? course.name)
-                    ),
+                    .map(({ pick, course }) => pick.name ?? course.name),
             }))
             .filter(({ names }) => names.length > 0);
     }
