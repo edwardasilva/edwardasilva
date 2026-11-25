@@ -168,7 +168,7 @@ function save(message) {
 
     if (!message) {
         console.error(
-            '[ERROR] Give the change a message: npm run info:save -- "Add Python to the SpaceX skills"'
+            '[ERROR] Give the change a message: npm run info:save -- "Add a skill to the Kratos entry"'
         );
         process.exit(1);
     }

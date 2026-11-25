@@ -3,7 +3,7 @@
   <img src=".github/brand/edwardasilva-lockup-outlined.svg" alt="edwardasilva" width="320">
 </picture>
 
-Electrical engineering grad from Colorado School of Mines (May 2026), now an embedded software engineer at SpaceX.
+Electrical engineering grad from Colorado School of Mines (May 2026), now a software engineer at SpaceX.
 
 ## Projects
 
